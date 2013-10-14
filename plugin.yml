@@ -1,0 +1,138 @@
+name: DragonTravel
+main: eu.phiwa.dt.DragonTravelMain
+author: Phiwa, x3nec
+version: Phoenix Alpha v0.0.0.9
+load: STARTUP
+softdepend: [Vault, AntiCheat, NoCheatPlus, Factions]
+permissions:
+    dt.*:
+        default: op
+        description: Full control over the plugin
+        children:
+            dt.admin.*: true           
+    dt.admin.*:
+        default: op
+        description: All administrative functions
+        children:
+            dt.admin.signs: true
+            dt.admin.stations: true
+            dt.admin.flights: true
+            dt.admin.statdragon: true
+            dt.admin.remdragons: true   
+            dt.travel.*: true
+            dt.ctravel: true
+            dt.ptravel: true
+            dt.home: true
+            dt.fhome: true
+            dt.flight.*: true
+            dt.nocost.*: true
+            dt.notrequireitem.*: true
+            dt.ptoggle: true
+    
+    dt.admin.signs:
+        default: op
+        description: Allows travels to all stations
+    dt.admin.stations:
+        default: op
+        description: Allows travels to all stations
+    dt.admin.flights:
+        default: op
+        description: Allows travels to all stations
+    dt.admin.remdragons:
+        default: op
+        description: Allows travels to all stations
+    
+    dt.travel.*:
+        default: op
+        description: Allows travels to all stations
+    dt.ctravel:
+        default: op
+        description: Allows travels to coordinates
+    dt.ptravel:
+        default: op
+        description: Allows travels to players        
+    dt.home:
+        default: op
+        description: Allows travels to home (and to set one)
+    dt.fhome:
+        default: op
+        description: Allows travels to faction-home    
+    dt.flight.*:
+        default: op
+        description: Allows all flights
+       
+    dt.ptoggle:
+        default: op
+        description: Player is allowed to turn of player-travels to himself  
+        
+    dt.nocost.*:
+        default: op
+        description: Player does not need to pay for anything
+        children:
+            dt.nocost.travel.*: true
+            dt.nocost.flight.*: true
+            dt.nocost.randomtravel.*: true
+            dt.nocost.ptravel: true
+            dt.nocost.ctravel: true
+            dt.nocost.fhome: true                  
+            
+    dt.nocost.travel.*:
+        default: op
+        description: Player does not need to pay for anything related to travels       
+    dt.nocost.flight.*:
+        default: op
+        description: Player does not need to pay for anything related to flights           
+    dt.nocost.randomtravel.*:
+        default: op
+        description: Player does not need to pay for anything related to travels to random destinations
+        children:
+            dt.nocost.randomtravel.command: true
+            dt.nocost.randomtravel.sign: true                   
+    dt.nocost.randomtravel.command:
+        default: op
+        description: Player does not need to pay for command-travels to random destinations    
+    dt.nocost.randomtravel.sign:
+        default: op
+        description: Player does not need to pay for sign-travels to random destinations           
+    dt.nocost.ptravel:
+        default: op
+        description: Player does not need to pay for travels to other players        
+    dt.nocost.ctravel:
+        default: op
+        description: Player does not need to pay for travels to coordinations          
+    dt.nocost.fhome:
+        default: op
+        description: Player does not need to pay for travels to the faction-home 
+      
+    dt.notrequireitem.*: 
+        default: op
+        description: Player does not need an item in any situation
+        children:
+            dt.notrequireitem.travel: true
+            dt.notrequireitem.flight: true
+    dt.notrequireitem.travel: 
+        default: op
+        description: Player does not need an item for travel 
+    dt.notrequireitem.flight: 
+        default: op
+        description: Player does not need an item for flight 
+        
+    dt.ignoreusestations.*:
+        default: op
+        description: Player does not need to be at a station to start a travel or flight when station-spawnlimit is enabled
+        children:
+            dt.ignoreusestations.travels: true
+            dt.ignoreusestations.flights: true
+    dt.ignoreusestations.travels:
+        default: op
+        description: Player does not need to be at a station to start a travel when station-spawnlimit is enabled
+    dt.ignoreusestations.flights:
+        default: op
+        description: Player does not need to be at a station to start a flight when station-spawnlimit is enabled       
+    dt.ignoredragonlimit:
+        default: op
+        description: Allows player to mount a dragon, even if the server has already reached the limit of dragons set in the config
+
+commands:
+    dt:
+        usage:

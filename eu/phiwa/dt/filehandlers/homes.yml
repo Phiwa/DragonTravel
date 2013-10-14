@@ -1,0 +1,9 @@
+# Only touch this file if you are sure that you know what you are doing, 
+# otherwise you might corrupt it which leads to serious problems.
+
+Homes:
+    exampleplayer:
+        x: 456
+        y: 75
+        z: 123
+        world: 'world'

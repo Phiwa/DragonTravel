@@ -1,0 +1,124 @@
+#                 INSTRUCTIONS
+#          for the usage of this file
+#
+# There are a few things you should know about when modifying this file.
+# 
+# 1. DO NOT USE TABS
+#       They will corrupt the file and let your server crash.
+# 2. INDENTATION IS IMPORTANT
+#       It is important that you keep the indentation the way it is!
+# 3. SINGLE QUOTES ARE NEEDED
+#       The single quotes at the beginning and the end of each message are necessary.
+# 4. APOSTROPHES
+#       To use an apostrophe, you need to put two of them instead.
+#       This means, you would put
+#           ExampleMessage: 'I like Phiwa''s plugin.'
+#       To get the message
+#           I like Phiwa's plugin.
+#       ingame.
+# 5. COLOR-/FORMATTING-CODES ARE ALLOWED
+#       You can use the normal color/formatting-codes used in Minecraft
+#       (e.g. &a for green, &c for red and &f for white text).
+#       You can find a full list of the codes at
+#       http://www.minecraftwiki.net/wiki/Formatting_codes (they use an '§', use an '&' in DragonTravel!)
+# 6. VARIABLES IN MESSAGES
+#       All variables (marked with curly braces, e.g. {playername})
+#       are automatically replaced with the correct value by the plugin ingame.
+#       The available variables depend on the message, the default message (in the messages-en.yml)
+#       always uses all variables available in the messages.
+#       It is possible to leave variables out in a message.
+# 7. DO NOT TOUCH THE 'File'-PARAGRAPH
+#       It is only used by the plugin to check if you are running the latest version of the messages.yml.
+#       Changing it might cause a crash of your server!
+# 8. ENJOY THE PLUGIN
+#       Should be quite obvious... ;)
+#       Any feedback is appreciated, feel free to propose new features
+#       and please report all bugs you find, otherwise I can't fix them. ;)
+
+File:
+    Version: 0.2
+    Language: 'English'
+
+Messages:
+    General:
+        Successful:
+            AddedStatDragon: '&aSuccessfully created stationary dragon.'
+            DismountedHere: '&aYou successfully dismounted your dragon.'
+            DismountedToStart: '&aYou cancelled your journey and were brought back to your starting-point.'
+            ToggledPTravelOn: '&aYou now allow player-travels to you.'
+            ToggledPTravelOff: '&aYou now don''t allow player-travels to you.'
+        Error:        
+            NoPermission: '&cYou do not have the permission to use this.'
+            NotMounted: '&cYou are not mounted.'
+            RequiredItemMissing: '&cYou do not have the required item in your inventory to use the plugin.'        
+            DatabaseCorrupted: '&cThe database is corrupted, could not load the entry. Please inform the admin.'
+            ReachedDragonLimit: '&cThe server already reached its limit, you cannot spawn another dragon, please wait for another player to dismount.'
+    Payment:
+        Resources:
+            Successful:
+                WithdrawMessage: '&aSay bye to &f{amount}&a gold nugget(s).'
+            Error:
+                NotEnoughResources: '&cYou do not have enough resources.'
+        Economy:
+            Successful:
+                WithdrawMessage: '&aSay bye to &f{amount}&a coins.'
+            Error:
+                NotEnoughMoney: '&cYou do not have enough money.'               
+    Signs:
+        Successful:
+            SignCreated: '&aSign was created successfully.'       
+        Error:
+            SignCorrupted: '&cSign is corrupted.'
+            NoTargetStationSpecified: '&cPlease specify a travel.'
+            NoTargetFlightSpecified: '&cPlease specify a flight.'
+    Flights:
+        Successful:
+            StartingFlight: '&aStarting flight &f{flightname}&a.'
+            NowInFlightCreationMode: '&aYou are now in flight-creation mode. Use &f/dt setwp&a to set waypoints and &f/dt saveflight&a to save the flight and exit the mode.'
+            WaypointAdded: '&aSuccessfully added a waypoint.'
+            WaypointRemoved: '&aSuccessfully removed the last waypoint.'
+            FlightSaved: '&aSuccessfully saved the flight.'
+            RemovedFlight: '&aSuccessfully removed the flight.'
+            SendingPlayer: '&aSending player &f{playername}&a on flight &f{flightname}&a.'
+            SentPlayer: '&aYou were sent on the flight &f{flightname} &aby an admin.'
+        Error:
+            FlightDoesNotExist: '&cFlight does not exist.'
+            FlightAlreadyExists: '&cFlight allready exists.'
+            FlightIsInDifferentWorld: '&cFlight is in a different world.'
+            AlreadyInFlightCreationMode: '&cYou already are in flight-creation mode.'
+            NotInFlightCreationMode: '&cYou are not in flight-creation mode.'
+            AtLeastOneWaypoint: '&cYou must create at least one waypoint.'
+            CannotDestroyMarkerByHand: '&cYou cannot destroy a marker by hand. Use &f/dt remlastwp &cinstead.'
+            CouldNotfindPlayerToSend: '&cCouldn''t find the player &f{playername}&c.'
+            OnlySigns: '&cThis command has been disabled by the admin, you can only use flights using signs.'
+    Travels:
+        Successful:
+            TravellingToRandomLocation: '&aTravelling to a random location.'
+            TravellingToCoordinatesSameWorld: '&aTravelling to coordinates &f{x}&a, &f{y}&a, &f{z}&a.'
+            TravellingToCoordinatesOtherWorld: '&aTravelling to coordinates &f{x}&a, &f{y}&a, &f{z}&a in world &f{worldname}&a.'
+            TravellingToHome: '&aTravelling to your home.'
+            TravellingToStation: '&aTravelling to &f{stationname}&a.'
+        Error:
+            InvalidCoordinates: '&cInvalid Coordinates.'
+            PlayerNotOnline: '&cThe player &f{playername}&a isn''t online.'
+            NoHomeSet: '&cYou didn''t set a home yet.'
+            OnlySigns: '&cThis command has been disabled by the admin, you can only travel using signs.'
+            WorldNotFound: '&cCould not find the specified world.'
+            NotCreateStationWithRandomstatName: '&cYou cannot create a staion with the name of the RandomDest.'
+            TargetPlayerDoesnotAllowPTravel: '&cThe player &f{playername}&a does not allow player-travels to him.'
+            CannotTravelToYourself: '&cIt doesn''t make sense to travel to yourself...'
+    Stations:
+        Successful:
+            StationCreated: '&aSuccessfully created the station &f{stationname}&a.'
+            StationRemoved: '&aSuccessfully removed the station &f{stationname}&a.'
+        Error:
+            StationAlreadyExists: '&cThe station &f{stationname}&a already exists.'
+            StationDoesNotExist: '&cThe station &f{stationname}&a does not exist.'
+            NotAtAStation: '&cYou must be at a station to mount a dragon.'
+            CouldNotCreateStation: '&cCouldn''t create station.'
+            CouldNotRemoveStation: '&cCouldn''t remove station.'
+    Factions:
+        Error:
+            FactionsNotInstalled: '&cFactions is not installed on this server.'
+            NoFactionMember: '&cYou are not a member of a faction.'
+            FactionHasNoHome: '&cYour faction does no have a home-point.'

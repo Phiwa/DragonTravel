@@ -1,0 +1,89 @@
+#                 INSTRUCTIONS
+#          for the usage of this file
+File:
+  Version: 0.1
+  Language: Spanish
+Messages:
+  General:
+    Successful:
+      AddedStatDragon: '&amp;aDragón inmóvil creado con éxito.'
+      DismountedHere: '&amp;aTe has desmontado correctamente de tu dragón.'
+      DismountedToStart: '&amp;aHas cancelado tu vuelo y vas a ser trasladado al punto de salida.'
+      ToggledPTravelOn: '&amp;aAhora permites el viaje de jugadores hacia ti.'
+      ToggledPTravelOff: '&amp;aYa no permites el viaje de jugadores hacia ti.'
+    Error:
+      NoPermission: '&amp;cNo tienes permiso para usar eso.'
+      NotMounted: '&amp;cNo estás montado.'
+      RequiredItemMissing: '&amp;cNo tienes el objeto correcto en tu inventario para usar el plugin.'
+      DatabaseCorrupted: '&amp;cLa base de datos está corrupta, no puede cargar la entrada. Por favor, informe al admin.'
+      ReachedDragonLimit: '&amp;cEl server ha alcanzado sus límites, no puedes sacar otro dragón, por favor espera que otro jugador se desmonte.'
+  Payment:
+    Resources:
+      Successful:
+        WithdrawMessage: '&amp;aDi adiós a &amp;f{amount}&amp;a pepita(s) de oro.'
+      Error:
+        NotEnoughResources: '&amp;cNo tienes recursos suficientes.'
+    Economy:
+      Successful:
+        WithdrawMessage: '&amp;aDi adiós a &amp;f{amount}&amp;a monedas.'
+      Error:
+        NotEnoughMoney: '&amp;cNo tienes suficiente dinero.'
+  Signs:
+    Successful:
+      SignCreated: '&amp;aEl cartel ha sido creado correctamente.'
+    Error:
+      SignCorrupted: '&amp;cEl cartel está corrupto.'
+      NoTargetStationSpecified: '&amp;cPor favor especifica un viaje.'
+      NoTargetFlightSpecified: '&amp;cPor favor especifica un vuelo.'
+  Flights:
+    Successful:
+      StartingFlight: '&amp;aComenzando vuelo &amp;f{flightname}&amp;a.'
+      NowInFlightCreationMode: '&amp;aAhora estás en modo creación de vuelo. Usa &amp;f/dt setwp&amp;a para establecer puntos de paso y &amp;f/dt saveflight&amp;a para salvar el vuelo y salir del modo.'
+      WaypointAdded: '&amp;aPunto de vuelo añadido correctamente.'
+      WaypointRemoved: '&amp;aPunto de vuelo borrado correctamente.'
+      FlightSaved: '&amp;aEl vuelo se ha grabado correctamente.'
+      RemovedFlight: '&amp;aVuelo borrado correctamente.'
+      SendingPlayer: '&amp;aMandando jugador &amp;f{playername}&amp;a en vuelo &amp;f{flightname}&amp;a.'
+      SentPlayer: '&amp;aTu has sido mandado en vuelo &amp;f{flightname} &amp;apor un admin.'
+    Error:
+      FlightDoesNotExist: '&amp;cEl vuelo no existe.'
+      FlightAlreadyExists: '&amp;cEl vuelo ya existe.'
+      FlightIsInDifferentWorld: '&amp;cEl vuelo es de un mundo diferente.'
+      AlreadyInFlightCreationMode: '&amp;cYa estás en modo creación de vuelo.'
+      NotInFlightCreationMode: '&amp;cNo estás en modo creación de vuelo.'
+      AtLeastOneWaypoint: '&amp;cDebes crear al menos un punto de vuelo.'
+      CannotDestroyMarkerByHand: '&amp;cNo puedes detruir una marca a mano. Usa &amp;f/dt remlastwp &amp;cen su lugar.'
+      CouldNotfindPlayerToSend: '&amp;cNo se encuentra el jugador &amp;f{playername}&amp;c.'
+  Travels:
+    Successful:
+      TravellingToRandomLocation: '&amp;aViajando a un punto aleatorio.'
+      TravellingToCoordinatesSameWorld: '&amp;aViajando a las coordenadas &amp;f{x}&amp;a, &amp;f{y}&amp;a,
+        &amp;f{z}&amp;a.'
+      TravellingToCoordinatesOtherWorld: '&amp;aViajando a las coordenadas &amp;f{x}&amp;a, &amp;f{y}&amp;a,
+        &amp;f{z}&amp;a en el mundo &amp;f{worldname}&amp;a.'
+      TravellingToHome: '&amp;aViajando a tu hogar.'
+      TravellingToStation: '&amp;aViajando a &amp;f{stationname}&amp;a.'
+    Error:
+      InvalidCoordinates: '&amp;cCoordenadas inválidas.'
+      PlayerNotOnline: '&amp;cEl jugador &amp;f{playername}&amp;a no está conectado.'
+      NoHomeSet: '&amp;cTodavía no has creado tu hogar.'
+      OnlySigns: '&amp;cEste comando ha sido deshabilitado por el admin, sólo puedes viajar usando carteles.'
+      WorldNotFound: '&amp;cNo se puede encontrar el mundo especificado.'
+      NotCreateStationWithRandomstatName: '&amp;cNo puedes crear una estación con el nombre de destino aleatorio.'
+      TargetPlayerDoesnotAllowPTravel: '&amp;cEl jugador &amp;f{playername}&amp;a no permite viajes hacia él.'
+      CannotTravelToYourself: '&amp;cNo tiene sentido viajar a ti mismo ...'
+  Stations:
+    Successful:
+      StationCreated: '&amp;aEstación &amp;f{stationname}&amp;a creada correctamente.'
+      StationRemoved: '&amp;aEstación &amp;f{stationname}&amp;a borrada correctamente.'
+    Error:
+      StationAlreadyExists: '&amp;cLa estación &amp;f{stationname}&amp;a ya existe.'
+      StationDoesNotExist: '&amp;cLa estación &amp;f{stationname}&amp;a no existe.'
+      NotAtAStation: '&amp;cDebes estar en una estación para montar un dragón.'
+      CouldNotCreateStation: '&amp;cNo se pudo crear la estación.'
+      CouldNotRemoveStation: '&amp;cNo se pudo borrar la estación.'
+  Factions:
+    Error:
+      FactionsNotInstalled: '&amp;cFactions no está instalado en este servidor.'
+      NoFactionMember: '&amp;cTú no eres miembro de una facción.'
+      FactionHasNoHome: '&amp;cTu facción no tiene un punto de hogar.'

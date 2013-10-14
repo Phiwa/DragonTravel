@@ -1,0 +1,95 @@
+File:
+  Version: 0.1
+  Language: 'Danish'
+Messages:
+  General:
+    Successful:
+      AddedStatDragon: '&aSuccessfuldt oprettet stationær drage.'
+      DismountedHere: '&aDu er successfuldt hoppet af din drage.'
+      DismountedToStart: '&aDu afbrød din rejse, og blev bragt tilbage til dit startpunkt.'
+      ToggledPTravelOn: '&aDu tillader nu spilleres rejse til dig.'
+      ToggledPTravelOff: '&aDu tillader ikke mere spilleres rejse til dig.'
+    Error:
+      NoPermission: '&cDu har ikke tilladelse til at bruge dette.'
+      NotMounted: '&cDu er ikke opsadlet.'
+      RequiredItemMissing: '&cDu har ikke det nødvendige objekt i dit inventar for
+        at bruge denne funktion.'
+      DatabaseCorrupted: '&cDatabasen er korrupt, kunne ikke loade info. Venligst
+        informér en admin.'
+      ReachedDragonLimit: '&cBegrænsningen er nået, for antal drager aktive. Venligst
+        vent på at en anden spiller sadler ned.'
+  Payment:
+    Resources:
+      Successful:
+        WithdrawMessage: '&aDu har brugt &f{amount}&a gold nugget(s).'
+      Error:
+        NotEnoughResources: '&cDu har ikke nok resourcer.'
+    Economy:
+      Successful:
+        WithdrawMessage: '&aDu har brugt &f{amount}&a dollars.'
+      Error:
+        NotEnoughMoney: '&cDu har ikke nok penge med.'
+  Signs:
+    Successful:
+      SignCreated: '&aSkilt er oprettet successfuldt.'
+    Error:
+      SignCorrupted: '&cSkilt er korrupt.'
+      NoTargetStationSpecified: '&cVenligst angiv en rejse.'
+      NoTargetFlightSpecified: '&cVenligst angiv en rejse.'
+  Flights:
+    Successful:
+      StartingFlight: '&aStarter rejse &f{flightname}&a.'
+      NowInFlightCreationMode: '&aDu er nu i rejseoprettelsesmode. Brug &f/dt setwp&a
+        at sætte rejse-punkter med, og &f/dt saveflight&a til at gemme rejsen og ende
+        oprettelsestilstand.'
+      WaypointAdded: '&asuccessfuldt tilføjet et rejsepunkt.'
+      WaypointRemoved: '&asuccessfuldt fjernet det sidste rejsepunkt.'
+      FlightSaved: '&asuccessfuldt gemt rejsen.'
+      RemovedFlight: '&asuccessfuldt fjernet rejsen.'
+      SendingPlayer: '&aSender &f{playername}&a på rejse &f{flightname}&a.'
+      SentPlayer: '&aDu er sendt på rejsen &f{flightname} &aaf en admin.'
+    Error:
+      FlightDoesNotExist: '&cRejsen eksisterer ikke.'
+      FlightAlreadyExists: '&cRejsen eksisterer allerede.'
+      FlightIsInDifferentWorld: '&cRejsen er i en anden verden.'
+      AlreadyInFlightCreationMode: '&cDu er allerede i rejseoprettelsesmode.'
+      NotInFlightCreationMode: '&cDu er ikke i rejseoprettelsesmode.'
+      AtLeastOneWaypoint: '&cDu skal oprette mindst ét rejsepunkt.'
+      CannotDestroyMarkerByHand: '&cDu kan ikke fjerne en markør manuelt. Brug &f/dt
+        remlastwp &cistedetfor.'
+      CouldNotfindPlayerToSend: '&cKunne ikke finde &f{playername}&c.'
+  Travels:
+    Successful:
+      TravellingToRandomLocation: '&aRejser til tilfældigt mål.'
+      TravellingToCoordinatesSameWorld: '&aRejser til koordinater &f{x}&a, &f{y}&a,
+        &f{z}&a.'
+      TravellingToCoordinatesOtherWorld: '&aRejser til koordinater &f{x}&a, &f{y}&a,
+        &f{z}&a i verden &f{worldname}&a.'
+      TravellingToHome: '&aRejser til dit hjem.'
+      TravellingToStation: '&aRejser til &f{stationname}&a.'
+    Error:
+      InvalidCoordinates: '&cForkerte koordinater.'
+      PlayerNotOnline: '&cSpilleren &f{playername}&a er ikke online.'
+      NoHomeSet: '&cDu har ikke sat et hjem endnu.'
+      OnlySigns: '&cDenne funktion er deaktiveret, du kan kun rejse ved at bruge skilte.'
+      WorldNotFound: '&cKunne ikke finde den angivne verden.'
+      NotCreateStationWithRandomstatName: '&cDu kan ikke oprette en station ved navn
+        som tilfældigt mål også har.'
+      TargetPlayerDoesnotAllowPTravel: '&f{playername}&a tillader ikke rejse(r) til
+        sig.'
+      CannotTravelToYourself: '&cDet giver ikke mening at rejse til sig selv...'
+  Stations:
+    Successful:
+      StationCreated: '&asuccessfuldt oprettet stationen &f{stationname}&a.'
+      StationRemoved: '&asuccessfuldt fjernet stationen &f{stationname}&a.'
+    Error:
+      StationAlreadyExists: '&cThe station &f{stationname}&a already exists.'
+      StationDoesNotExist: '&cStationen &f{stationname}&a eksisterer ikke.'
+      NotAtAStation: '&cDu skal være på en station for at sadle op på en drage.'
+      CouldNotCreateStation: '&cKunne ikke oprette stationen.'
+      CouldNotRemoveStation: '&cKunne ikke fjerne stationen.'
+  Factions:
+    Error:
+      FactionsNotInstalled: '&cFactions er ikke installeret på denne server.'
+      NoFactionMember: '&cDu er ikke medlem af en faction.'
+      FactionHasNoHome: '&cDin faction har ikke et hjemsted.'

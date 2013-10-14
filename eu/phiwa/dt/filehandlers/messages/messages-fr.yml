@@ -1,0 +1,86 @@
+File:
+    Version: 0.1
+    Language: 'French'
+
+Messages:
+    General:
+        Successful:
+            AddedStatDragon: '&aDragon stationnaire cree avec succes.'
+            DismountedHere: '&aVous etes descendu de votre dragon avec succes.'
+            DismountedToStart: '&aVous avez annule votre voyage et avez ete ramenes a votre point de depart.'
+            ToggledPTravelOn: '&aVous permettez maintenant au joueur de se deplacer pour vous.'
+            ToggledPTravelOff: '&aVous ne permettez pas au joueur de se deplacer pour vous.'
+        Error:        
+            NoPermission: '&cVous n avez pas la permission d utiliser cela.'
+            NotMounted: '&cVous n etes pas monte.'
+            RequiredItemMissing: '&cVous n avez pas l item requis dans votre inventaire pour utiliser le plugin.'        
+            DatabaseCorrupted: '&cLa base de donnees est corrompu, elle n a pas pu charger l entree. S il vous plait informez l administrateur.'
+            ReachedDragonLimit: '&cLe serveur a deja atteint sa limite, vous ne pouvez pas reproduire un autre dragon, veuillez attendre qu un autre joueur soit descendu du sien.'
+    Payment:
+        Resources:
+            Successful:
+                WithdrawMessage: '&aDites au revoir a &f{amount}&a pepite(s) d or.'
+            Error:
+                NotEnoughResources: '&cVous n avez pas assez de ressources.'
+        Economy:
+            Successful:
+                WithdrawMessage: '&aDites au revoir a &f{amount}&a pieces.'
+            Error:
+                NotEnoughMoney: '&cVous n avez pas assez d argent.'               
+    Signs:
+        Successful:
+            SignCreated: '&aLe panneau a ete cree avec succes.'       
+        Error:
+            SignCorrupted: '&cLe panneau a ete detruit.'
+            NoTargetStationSpecified: '&cS il vous plait specifiez un voyage.'
+            NoTargetFlightSpecified: '&cS il vous plait specifier un vol.'
+    Flights:
+        Successful:
+            StartingFlight: '&aDepart du vol &f{flightname}&a.'
+            NowInFlightCreationMode: '&aVous etes maintenant en mode de vol creatif. Utilisez &f/dt setwp&a pour definir des points de passage et &f/dt saveflight&a pour enregistrer le vol et quitter le mode.'
+            WaypointAdded: '&aLe point de passage a ete ajoute avec succes.'
+            WaypointRemoved: '&aLe dernier point de passage a ete enleve avec succes.'
+            FlightSaved: '&aLe vol a ete sauvegarder avec succes.'
+            RemovedFlight: '&aLe vol a ete enleve avec succes.'
+            SendingPlayer: '&aEnvoi du joueur &f{playername}&a sur le vol &f{flightname}&a.'
+            SentPlayer: '&aVous avez ete envoye sur le vol &f{flightname} &apar un administrateur.'
+        Error:
+            FlightDoesNotExist: '&cLe vol n existe pas.'
+            FlightAlreadyExists: '&cLe vol existe deja.'
+            FlightIsInDifferentWorld: '&cLe vol est dans un monde different.'
+            AlreadyInFlightCreationMode: '&cVous etes deja en mode de vol creatif.'
+            NotInFlightCreationMode: '&cVous n etes pas en mode de vol creatif.'
+            AtLeastOneWaypoint: '&cVous devez creer au moins un point de passage.'
+            CannotDestroyMarkerByHand: '&cVous ne pouvez pas detruire un marqueur a la main. Utilisez &f/dt remlastwp &ca la place.'
+            CouldNotfindPlayerToSend: '&cImpossible de trouver le joueur &f{playername}&c.'
+    Travels:
+        Successful:
+            TravellingToRandomLocation: '&aVoyage vers un endroit aleatoire.'
+            TravellingToCoordinatesSameWorld: '&aVoyage vers les coordonees &f{x}&a, &f{y}&a, &f{z}&a.'
+            TravellingToCoordinatesOtherWorld: '&aVoyage vers les coordonees &f{x}&a, &f{y}&a, &f{z}&a dans le monde &f{worldname}&a.'
+            TravellingToHome: '&aVoyage vers votre home.'
+            TravellingToStation: '&aVoyage vers &f{stationname}&a.'
+        Error:
+            InvalidCoordinates: '&cCoordonnees invalides.'
+            PlayerNotOnline: '&cLe joueur &f{playername}&a n est pas connecte.'
+            NoHomeSet: '&cVous n avez pas encore defini de home.'
+            OnlySigns: '&cCette commande ete desactive par l administrateur, vous ne pouvez pas voyager en utilisant des panneaux.'
+            WorldNotFound: '&cImpossible de trouver le monde specifie.'
+            NotCreateStationWithRandomstatName: '&cVous ne pouvez pas creer une station avec le nom du RandomDest.'
+            TargetPlayerDoesnotAllowPTravel: '&cLe joueur &f{playername}&a ne permet pas au joueur se deplacer pour lui.'
+            CannotTravelToYourself: '&cCela n a pas de sens de voyager vers vous meme...'
+    Stations:
+        Successful:
+            StationCreated: '&aLa station &f{stationname}&a a ete cree avec succes.'
+            StationRemoved: '&aLa station &f{stationname}&a a ete enlevee avec succes.'
+        Error:
+            StationAlreadyExists: '&cLa station &f{stationname}&a existe deja.'
+            StationDoesNotExist: '&cLa station &f{stationname}&a n existe pas.'
+            NotAtAStation: '&cVous devez etre dans une station pour monter un dragon.'
+            CouldNotCreateStation: '&cImpossible de creer la station.'
+            CouldNotRemoveStation: '&cImpossible de supprimer la station.'
+    Factions:
+        Error:
+            FactionsNotInstalled: '&cFactions n est pas installe sur ce serveur.'
+            NoFactionMember: '&cVous n etes pas un membre d une faction.'
+            FactionHasNoHome: '&cVotre faction ne dispose pas de home point.'
