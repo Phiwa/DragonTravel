@@ -2,6 +2,7 @@ package eu.phiwa.dt;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -134,18 +135,9 @@ public class DragonTravelMain extends JavaPlugin {
 		plugin = this;
 
 		// Add the new entity to Minecraft's (Craftbukkit's) entities
-		try {
-			Method method = EntityTypes.class.getDeclaredMethod("a", new Class[] { Class.class, String.class, int.class });
-			method.setAccessible(true);
-			method.invoke(EntityTypes.class, RyeDragon.class, "RyeDragon", 63);
-		}
-		catch (Exception e) {
-			logger.info("[DragonTravel] [Error] Could not register the RyeDragon-entity!");
-			e.printStackTrace();
-			pm.disablePlugin(this);
-			return;
-		}
-		
+		// Returns false if plugin disabled
+		if (!registerEntity()) return;
+
 		// Register EventListener
 		entityListener = new EntityListener(this);
 		playerListener = new PlayerListener(this);
@@ -270,8 +262,44 @@ public class DragonTravelMain extends JavaPlugin {
 		logger.log(Level.SEVERE, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
 		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
 	}
-	
-	
+
+	private boolean registerEntity() {
+		Class<?>[] paramTypes = new Class[] { Class.class, String.class, int.class };
+		try {
+			Method method = EntityTypes.class.getDeclaredMethod("a", paramTypes);
+			method.setAccessible(true);
+			method.invoke(null, RyeDragon.class, "RyeDragon", 63);
+			return true;
+		}
+		catch (Exception e) {
+			// MCPC+ compatibility
+			// Forge Dev environment; names are not translated into func_foo
+			try {
+				Method method = EntityTypes.class.getDeclaredMethod("addMapping", paramTypes);
+				method.setAccessible(true);
+				method.invoke(null, RyeDragon.class, "RyeDragon", 63);
+				return true;
+			} catch (Exception ex) { e.addSuppressed(ex); }
+			// Production environment: search for the method
+			// This is required because the seargenames could change
+			// LAST CHECKED FOR VERSION 1.6.4
+			try {
+				for (Method method : EntityTypes.class.getDeclaredMethods()) {
+					if (Arrays.equals(paramTypes, method.getParameterTypes())) {
+						method.invoke(null, RyeDragon.class, "RyeDragon", 63);
+						return true;
+					}
+				}
+			} catch (Exception ex) { e.addSuppressed(ex); }
+
+			logger.info("[DragonTravel] [Error] Could not register the RyeDragon-entity!");
+			e.printStackTrace();
+			pm.disablePlugin(this);
+		}
+		return false;
+	}
+
+
 	public void reload() {
 		
 		logger.log(Level.INFO, "Reloading all files.");
