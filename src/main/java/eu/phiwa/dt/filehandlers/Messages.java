@@ -45,10 +45,14 @@ public class Messages {
 		DragonTravelMain.messages = YamlConfiguration.loadConfiguration(DragonTravelMain.messagesFile);
 		updateConfig();
 	}
+	
 	private void updateConfig(){
+		
 		if(DragonTravelMain.messages.getDouble("File.Version") != DragonTravelMain.messagesVersion)
 			newlyRequiredMessages();
+		
 		noLongerRequiredMessages();
+		
 		// Refresh file and config variables for persistence.
 		try {
 			DragonTravelMain.messagesFile = new File(plugin.getDataFolder(), "messages-"+language+".yml");
@@ -60,10 +64,14 @@ public class Messages {
 	}
 		
 	private void newlyRequiredMessages(){
+    
 		// Add new keys here!
-		//if (config.get("example-missing-key") == null) {
-		//	config.set("example-missing-key", false);
-		//}
+		
+	  // v0.0.0.9
+        if (DragonTravelMain.config.get("Messages.Flights.Error.OnlySigns") == null)
+        	DragonTravelMain.config.set("Messages.Flights.Error.OnlySigns", "&cThis command has been disabled by the admin, you can only use flights using signs.");      
+        if (DragonTravelMain.config.get("Messages.Stations.Error.NotCreateStationWithRandomstatName") == null)
+        	DragonTravelMain.config.set("Messages.Stations.Error.NotCreateStationWithRandomstatName", "&cYou cannot create a staion with the name of the RandomDest.");
 	}
 	private void noLongerRequiredMessages() {
 		// DragonTravelMain.config.set("example key", null);

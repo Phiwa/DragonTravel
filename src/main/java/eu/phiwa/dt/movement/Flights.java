@@ -39,13 +39,21 @@ public class Flights {
 		Flight flight = DragonTravelMain.dbFlightsHandler.getFlight(flightname);
 		
 		if(flight == null)  {
-			playerToSendMessagesTo.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightDoesNotExist"));
+			// Sent by console
+			if(sentbyadmin && playerToSendMessagesTo == null)
+				System.out.println("[DragonTravel] Flight does not exist!");
+			else	
+				playerToSendMessagesTo.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightDoesNotExist"));
 			// TODO: ---ADD MESSAGE Flight does not exist
 			return;
 		}
 		
 		if(flight.world.getName() != player.getWorld().getName()) {
-			playerToSendMessagesTo.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightIsInDifferentWorld"));
+			// Sent by console
+			if(sentbyadmin && playerToSendMessagesTo == null)
+				System.out.println("[DragonTravel] The flight is in a different world than the player!");
+			else	
+				playerToSendMessagesTo.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightIsInDifferentWorld"));
 			// TODO: ---ADD MESSAGE Flight is in a different world
 			return;
 		}

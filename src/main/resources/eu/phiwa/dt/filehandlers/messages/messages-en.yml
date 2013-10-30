@@ -104,7 +104,6 @@ Messages:
             NoHomeSet: '&cYou didn''t set a home yet.'
             OnlySigns: '&cThis command has been disabled by the admin, you can only travel using signs.'
             WorldNotFound: '&cCould not find the specified world.'
-            NotCreateStationWithRandomstatName: '&cYou cannot create a staion with the name of the RandomDest.'
             TargetPlayerDoesnotAllowPTravel: '&cThe player &f{playername}&a does not allow player-travels to him.'
             CannotTravelToYourself: '&cIt doesn''t make sense to travel to yourself...'
     Stations:
@@ -114,6 +113,7 @@ Messages:
         Error:
             StationAlreadyExists: '&cThe station &f{stationname}&a already exists.'
             StationDoesNotExist: '&cThe station &f{stationname}&a does not exist.'
+            NotCreateStationWithRandomstatName: '&cYou cannot create a staion with the name of the RandomDest.'
             NotAtAStation: '&cYou must be at a station to mount a dragon.'
             CouldNotCreateStation: '&cCouldn''t create station.'
             CouldNotRemoveStation: '&cCouldn''t remove station.'

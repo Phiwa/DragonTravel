@@ -90,6 +90,9 @@ public class DragonManagement {
 
 		Player player = (Player) entity.getPassenger();
 
+		if(player == null)
+			player = getRiderByEntity(entity);	
+		
 		DragonTravelMain.listofDragonriders.remove(player);
 
 		// Interworld
@@ -105,28 +108,15 @@ public class DragonManagement {
 			//TODO: Check if correct if-clause
 						
 			// Teleport player to a safe location
-			Location clone = player.getLocation();
-			int offset = 1;
-
-			for (;;) {
-
-				while (clone.getBlock().isEmpty() && clone.getY() != 0) {
-					clone.setY(clone.getY() - offset);
-				}
-
-				if (clone.getY() != 0)
-					break;
-
-				clone.setY(256);
-			}
-
+			Location saveTeleportLoc = getSaveTeleportLocation(player.getLocation());
+		
 			// Eject player and remove dragon from world
 			entity.eject();
 			entity.remove();
 
 			// Teleport player to safe location
-			clone.setY(clone.getY() + 1.2);
-			player.teleport(clone);
+			saveTeleportLoc.setY(saveTeleportLoc.getY() + 1.2);
+			player.teleport(saveTeleportLoc);
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Successful.DismountedHere"));
 		}
 		// Zurück zum Start
@@ -158,15 +148,8 @@ public class DragonManagement {
 		// If player got dismounted because of water/SHIFT-clicking
 		// and hasn't been mounted again yet by the scheduler
 		// => Get the player using the "scheduler-method"
-		if(player == null) {
-			for(Entry<Player, RyeDragon> entry : DragonTravelMain.listofDragonriders.entrySet()){
-				if(entry.getValue().getEntity() == entity) {
-					player = entry.getKey();
-					break;
-				}
-			}
-		}
-		
+		if(player == null)
+			player = getRiderByEntity(entity);	
 		
 		DragonTravelMain.listofDragonriders.remove(player);
 		entity.eject();
@@ -209,6 +192,58 @@ public class DragonManagement {
 		// TODO: ---ADD MESSAGE x dragons removed
 		String returnMessage = String.format("Removed %d dragons in world ' %s' successfully.", passed, world.getName());
 		return returnMessage;
+	}
+
+	/** Find a safe Location to dismount a player with specified X- and Z-value
+	 * 
+	 * @param loc
+	 * 		Location to find a safe Y-value for
+	 * @return
+	 * 		Location with safe Y-value
+	 */
+	private static Location getSaveTeleportLocation(Location loc) {
+		
+		Location clone = loc;
+		
+		int offset = 1;
+
+		for (;;) {
+
+			while (clone.getBlock().isEmpty() && clone.getY() != 0) {
+				clone.setY(clone.getY() - offset);
+			}
+
+			if (clone.getY() != 0)
+				break;
+
+			clone.setY(256);
+		}
+		
+		return clone;
+	}
+	
+	/** If player got dismounted because of water/SHIFT-clicking and hasn't been mounted again by the scheduler yet
+	 * 
+	 * @param entity
+	 * 		Entity of the dragon the Player is sitting on
+	 * @return
+	 * 		Player riding the specified entity
+	 */
+	private static Player getRiderByEntity(Entity entity) {
+		
+		Player player = null;
+		
+		// If player got dismounted because of water/SHIFT-clicking
+		// and hasn't been mounted again yet by the scheduler
+		// => Get the player using the "scheduler-method"
+		for(Entry<Player, RyeDragon> entry : DragonTravelMain.listofDragonriders.entrySet()){
+			if(entry.getValue().getEntity() == entity) {
+				player = entry.getKey();
+				break;
+			}
+		}
+		
+		return player;
 	}
 
 }

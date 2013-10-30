@@ -125,8 +125,17 @@ public class CommandHandler implements CommandExecutor {
 				case 3:
 					argument1 =  args[1];
 					argument2 =  args[2];
-										
 					
+					if (command.equalsIgnoreCase("flight")) {	
+						Player player = Bukkit.getPlayer(argument2);
+						if(player == null) {
+							System.out.println("[DragonTravel] Couldn't find player '"+argument2+"'!");
+							return false;
+						}
+						Flights.startFlight(player, argument1, false, true, null);					
+						return true;
+					}
+										
 					return false;
 					
 				case 4:
@@ -487,7 +496,7 @@ public class CommandHandler implements CommandExecutor {
 					Location loc = player.getLocation();
 					
 					if(argument1.equalsIgnoreCase(DragonTravelMain.config.getString("RandomDest.Name"))) {
-						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.NotCreateStationWithRandomstatName"));
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.NotCreateStationWithRandomstatName"));
 						// TODO: ---ADD MESSAGE You cannot create a station with the name of the RandomnDest
 						return false;
 					}

@@ -48,7 +48,7 @@ Messages:
             ToggledPTravelOn: '&aDu erlaubst nun Spieler-Reisen zu dir.'
             ToggledPTravelOff: '&aDu erlaubst nun keine Spieler-Reisen zu dir mehr.'
         Error:        
-            NoPermission: '&cDu hast nicht die erforderliche Berechtigung um dies zu nutzen..'
+            NoPermission: '&cDu hast nicht die erforderliche Berechtigung um dies zu nutzen.'
             NotMounted: '&cDu sitzt auf keinem Drachen.'
             RequiredItemMissing: '&cDu hast nicht das benötigte Item in deinem Inventar, um das Plugin zu nutzen.'       
             DatabaseCorrupted: '&cDie Datenbank ist beschädigt, deshalb konnte ein benötigter Eintrag nicht geladen werden. Bitte informiere den Admin.' 
@@ -83,9 +83,9 @@ Messages:
             SentPlayer: '&aDu wurdest von einem Admin auf den Flug &f{flightname} &ageschickt.'
         Error:
             FlightDoesNotExist: '&cFlug existiert nicht.'
-            FlightAlreadyExists: 'cFlug existiert bereits.'
+            FlightAlreadyExists: '&cFlug existiert bereits.'
             FlightIsInDifferentWorld: '&cFlug ist in einer anderen Welt.'
-            AlreadyInFlightCreationMode: '&cDu bist jetzt im Flug-Erstellermodus.'
+            AlreadyInFlightCreationMode: '&cDu bist bereits im Flug-Erstellermodus.'
             NotInFlightCreationMode: '&cDu bist nicht im Flug-Erstellermodus.'
             AtLeastOneWaypoint: '&cDu musst mindestens einen Wegpunkt setzen.'
             CannotDestroyMarkerByHand: '&aDu kannst Marker nicht von Hand zerstören. Nutze stattdessen &f/dt remlastwp.'

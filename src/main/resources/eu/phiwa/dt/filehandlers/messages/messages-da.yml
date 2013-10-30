@@ -1,25 +1,63 @@
+#                 INSTRUCTIONS
+#          for the usage of this file
+#
+# There are a few things you should know about when modifying this file.
+# 
+# 1. DO NOT USE TABS
+#       They will corrupt the file and let your server crash.
+# 2. INDENTATION IS IMPORTANT
+#       It is important that you keep the indentation the way it is!
+# 3. SINGLE QUOTES ARE NEEDED
+#       The single quotes at the beginning and the end of each message are necessary.
+# 4. APOSTROPHES
+#       To use an apostrophe, you need to put two of them instead.
+#       This means, you would put
+#           ExampleMessage: 'I like Phiwa''s plugin.'
+#       To get the message
+#           I like Phiwa's plugin.
+#       ingame.
+# 5. COLOR-/FORMATTING-CODES ARE ALLOWED
+#       You can use the normal color/formatting-codes used in Minecraft
+#       (e.g. &a for green, &c for red and &f for white text).
+#       You can find a full list of the codes at
+#       http://www.minecraftwiki.net/wiki/Formatting_codes (they use an 'Â§', use an '&' in DragonTravel!)
+# 6. VARIABLES IN MESSAGES
+#       All variables (marked with curly braces, e.g. {playername})
+#       are automatically replaced with the correct value by the plugin ingame.
+#       The available variables depend on the message, the default message (in the messages-en.yml)
+#       always uses all variables available in the messages.
+#       It is possible to leave variables out in a message.
+# 7. DO NOT TOUCH THE 'File'-PARAGRAPH
+#       It is only used by the plugin to check if you are running the latest version of the messages.yml.
+#       Changing it might cause a crash of your server!
+# 8. ENJOY THE PLUGIN
+#       Should be quite obvious... ;)
+#       Any feedback is appreciated, feel free to propose new features
+#       and please report all bugs you find, otherwise I can't fix them. ;)
+
 File:
-  Version: 0.1
-  Language: 'Danish'
+    Version: 0.2
+    Language: 'danish'
+
 Messages:
-  General:
+    General:
     Successful:
-      AddedStatDragon: '&aSuccessfuldt oprettet stationær drage.'
+      AddedStatDragon: '&aSuccessfuldt oprettet stationÃ¦r drage.'
       DismountedHere: '&aDu er successfuldt hoppet af din drage.'
-      DismountedToStart: '&aDu afbrød din rejse, og blev bragt tilbage til dit startpunkt.'
+      DismountedToStart: '&aDu afbrÃ¸d din rejse, og blev bragt tilbage til dit startpunkt.'
       ToggledPTravelOn: '&aDu tillader nu spilleres rejse til dig.'
       ToggledPTravelOff: '&aDu tillader ikke mere spilleres rejse til dig.'
     Error:
       NoPermission: '&cDu har ikke tilladelse til at bruge dette.'
       NotMounted: '&cDu er ikke opsadlet.'
-      RequiredItemMissing: '&cDu har ikke det nødvendige objekt i dit inventar for
+      RequiredItemMissing: '&cDu har ikke det nÃ¸dvendige objekt i dit inventar for
         at bruge denne funktion.'
       DatabaseCorrupted: '&cDatabasen er korrupt, kunne ikke loade info. Venligst
-        informér en admin.'
-      ReachedDragonLimit: '&cBegrænsningen er nået, for antal drager aktive. Venligst
-        vent på at en anden spiller sadler ned.'
-  Payment:
-    Resources:
+        informÃ©r en admin.'
+      ReachedDragonLimit: '&cBegrÃ¦nsningen er nÃ¥et, for antal drager aktive. Venligst
+        vent pÃ¥ at en anden spiller sadler ned.'
+    Payment:
+        Resources:
       Successful:
         WithdrawMessage: '&aDu har brugt &f{amount}&a gold nugget(s).'
       Error:
@@ -40,27 +78,27 @@ Messages:
     Successful:
       StartingFlight: '&aStarter rejse &f{flightname}&a.'
       NowInFlightCreationMode: '&aDu er nu i rejseoprettelsesmode. Brug &f/dt setwp&a
-        at sætte rejse-punkter med, og &f/dt saveflight&a til at gemme rejsen og ende
+        at sÃ¦tte rejse-punkter med, og &f/dt saveflight&a til at gemme rejsen og ende
         oprettelsestilstand.'
-      WaypointAdded: '&asuccessfuldt tilføjet et rejsepunkt.'
+      WaypointAdded: '&asuccessfuldt tilfÃ¸jet et rejsepunkt.'
       WaypointRemoved: '&asuccessfuldt fjernet det sidste rejsepunkt.'
       FlightSaved: '&asuccessfuldt gemt rejsen.'
       RemovedFlight: '&asuccessfuldt fjernet rejsen.'
-      SendingPlayer: '&aSender &f{playername}&a på rejse &f{flightname}&a.'
-      SentPlayer: '&aDu er sendt på rejsen &f{flightname} &aaf en admin.'
+      SendingPlayer: '&aSender &f{playername}&a pÃ¥ rejse &f{flightname}&a.'
+      SentPlayer: '&aDu er sendt pÃ¥ rejsen &f{flightname} &aaf en admin.'
     Error:
       FlightDoesNotExist: '&cRejsen eksisterer ikke.'
       FlightAlreadyExists: '&cRejsen eksisterer allerede.'
       FlightIsInDifferentWorld: '&cRejsen er i en anden verden.'
       AlreadyInFlightCreationMode: '&cDu er allerede i rejseoprettelsesmode.'
       NotInFlightCreationMode: '&cDu er ikke i rejseoprettelsesmode.'
-      AtLeastOneWaypoint: '&cDu skal oprette mindst ét rejsepunkt.'
-      CannotDestroyMarkerByHand: '&cDu kan ikke fjerne en markør manuelt. Brug &f/dt
+      AtLeastOneWaypoint: '&cDu skal oprette mindst Ã©t rejsepunkt.'
+      CannotDestroyMarkerByHand: '&cDu kan ikke fjerne en markÃ¸r manuelt. Brug &f/dt
         remlastwp &cistedetfor.'
       CouldNotfindPlayerToSend: '&cKunne ikke finde &f{playername}&c.'
   Travels:
     Successful:
-      TravellingToRandomLocation: '&aRejser til tilfældigt mål.'
+      TravellingToRandomLocation: '&aRejser til tilfÃ¦ldigt mÃ¥l.'
       TravellingToCoordinatesSameWorld: '&aRejser til koordinater &f{x}&a, &f{y}&a,
         &f{z}&a.'
       TravellingToCoordinatesOtherWorld: '&aRejser til koordinater &f{x}&a, &f{y}&a,
@@ -73,8 +111,6 @@ Messages:
       NoHomeSet: '&cDu har ikke sat et hjem endnu.'
       OnlySigns: '&cDenne funktion er deaktiveret, du kan kun rejse ved at bruge skilte.'
       WorldNotFound: '&cKunne ikke finde den angivne verden.'
-      NotCreateStationWithRandomstatName: '&cDu kan ikke oprette en station ved navn
-        som tilfældigt mål også har.'
       TargetPlayerDoesnotAllowPTravel: '&f{playername}&a tillader ikke rejse(r) til
         sig.'
       CannotTravelToYourself: '&cDet giver ikke mening at rejse til sig selv...'
@@ -85,11 +121,13 @@ Messages:
     Error:
       StationAlreadyExists: '&cThe station &f{stationname}&a already exists.'
       StationDoesNotExist: '&cStationen &f{stationname}&a eksisterer ikke.'
-      NotAtAStation: '&cDu skal være på en station for at sadle op på en drage.'
+      NotCreateStationWithRandomstatName: '&cDu kan ikke oprette en station ved navn
+        som tilfÃ¦ldigt mÃ¥l ogsÃ¥ har.'
+      NotAtAStation: '&cDu skal vÃ¦re pÃ¥ en station for at sadle op pÃ¥ en drage.'
       CouldNotCreateStation: '&cKunne ikke oprette stationen.'
       CouldNotRemoveStation: '&cKunne ikke fjerne stationen.'
   Factions:
     Error:
-      FactionsNotInstalled: '&cFactions er ikke installeret på denne server.'
+      FactionsNotInstalled: '&cFactions er ikke installeret pÃ¥ denne server.'
       NoFactionMember: '&cDu er ikke medlem af en faction.'
       FactionHasNoHome: '&cDin faction har ikke et hjemsted.'
