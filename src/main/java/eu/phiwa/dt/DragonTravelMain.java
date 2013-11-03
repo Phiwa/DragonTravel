@@ -21,9 +21,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import eu.phiwa.dt.anticheatplugins.AntiCheatHandler;
 import eu.phiwa.dt.anticheatplugins.CheatProtectionHandler;
-import eu.phiwa.dt.anticheatplugins.NoCheatPlusHandler;
 import eu.phiwa.dt.commands.CommandHandler;
 import eu.phiwa.dt.filehandlers.Config;
 import eu.phiwa.dt.filehandlers.FlightsDB;
@@ -88,10 +86,6 @@ public class DragonTravelMain extends JavaPlugin {
 	public static HashMap<Player, Location> listofDragonsridersStartingpoints = new HashMap<Player, Location>();
 	public static HashMap<Block, Block> globalwaypointmarkers = new HashMap<Block, Block>();
 	public static HashMap<String, Boolean> ptogglers = new HashMap<String, Boolean>();
-
-	// CheatProtection-Pluginstatus
-	public static boolean anticheat;
-	public static boolean nocheatplus;
 
 	// Required Item
 	public static boolean requireItemTravelStation = false;
