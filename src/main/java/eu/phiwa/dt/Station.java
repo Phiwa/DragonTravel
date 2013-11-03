@@ -6,7 +6,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 public class Station {
-
 	public String name;
 	public String displayname;
 
@@ -16,13 +15,6 @@ public class Station {
 	public int z;
 	public World world;
 
-	// Complete Location
-	public Location loc;
-
-
-	/*
-	 * public Station(String name) { this.name = name; }
-	 */
 	public Station(String name, int x, int y, int z, String worldname) {
 		this.displayname = name;
 		this.name = name.toLowerCase();
@@ -44,7 +36,6 @@ public class Station {
 	public Station(String name, Location loc) {
 		this.displayname = name;
 		this.name = name.toLowerCase();
-		this.loc = loc;
 		this.x = (int) loc.getX();
 		this.y = (int) loc.getY();
 		this.z = (int) loc.getZ();

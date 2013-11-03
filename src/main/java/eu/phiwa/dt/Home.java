@@ -15,10 +15,6 @@ public class Home {
 	public int z;
 	public World world;
 
-	// Complete Location
-	public Location loc;
-
-
 	public Home(String playername, int x, int y, int z, String worldname) {
 		this.playername = playername.toLowerCase();
 		this.x = x;
@@ -37,7 +33,6 @@ public class Home {
 
 	public Home(String playername, Location loc) {
 		this.playername = playername.toLowerCase();
-		this.loc = loc;
 		this.x = (int) loc.getX();
 		this.y = (int) loc.getY();
 		this.z = (int) loc.getZ();
