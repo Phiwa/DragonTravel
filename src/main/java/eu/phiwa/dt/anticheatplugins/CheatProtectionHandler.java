@@ -5,36 +5,49 @@ import org.bukkit.entity.Player;
 import eu.phiwa.dt.DragonTravelMain;
 
 public class CheatProtectionHandler {
-	
-	/** 
+    private static NoCheatPlusHandler ncpHandle = null;
+    private static AntiCheatHandler acHandle = null;
+
+    public static void setup() {
+        try {
+            acHandle = new AntiCheatHandler();
+        } catch (Throwable t) {
+            acHandle = null;
+        }
+        if (acHandle != null) {
+            DragonTravelMain.plugin.getLogger().info("[DragonTravel] AntiCheat support enabled");
+        }
+
+        try {
+            ncpHandle = new NoCheatPlusHandler();
+        } catch (Throwable t) {
+            ncpHandle = null;
+        }
+        if (ncpHandle != null) {
+            DragonTravelMain.plugin.getLogger().info("[DragonTravel] NoCheatPlus support enabled");
+        }
+    }
+
+	/**
 	 * Exempts a player from the Cheat-check of AntiCheat-plugins
 	 *
 	 * @param player
 	 * 				the player to exempt from the check
 	 */
 	public static void exemptPlayerFromCheatChecks(Player player) {
-		
+
 		// AntiCheat
-		if (DragonTravelMain.anticheat	&& !net.h31ix.anticheat.api.AnticheatAPI
-							.isExempt(player, net.h31ix.anticheat.manage.CheckType.FLY)) {
-			net.h31ix.anticheat.api.AnticheatAPI.exemptPlayer(player,net.h31ix.anticheat.manage.CheckType.FLY);
-		}
-				
+	    if (acHandle != null) {
+	        acHandle.startExempting(player);
+	    }
+
 		// NoCheatPlus
-		if (DragonTravelMain.nocheatplus
-				&& !fr.neatmonster.nocheatplus.hooks.NCPExemptionManager
-						.isExempted(player, fr.neatmonster.nocheatplus.checks.CheckType.MOVING_SURVIVALFLY)
-				&& !fr.neatmonster.nocheatplus.hooks.NCPExemptionManager
-						.isExempted(player, fr.neatmonster.nocheatplus.checks.CheckType.MOVING_CREATIVEFLY)
-			) {
-			fr.neatmonster.nocheatplus.hooks.NCPExemptionManager
-							.exemptPermanently(player, fr.neatmonster.nocheatplus.checks.CheckType.MOVING_SURVIVALFLY);
-			fr.neatmonster.nocheatplus.hooks.NCPExemptionManager
-							.exemptPermanently(player, fr.neatmonster.nocheatplus.checks.CheckType.MOVING_CREATIVEFLY);		
-		}	
+        if (ncpHandle != null) {
+            ncpHandle.startExempting(player);
+        }
 	}
-	
-	/** 
+
+	/**
 	 * Unexempts a player from the Cheat-check of AntiCheat-plugins
 	 *
 	 * @param player
@@ -42,21 +55,13 @@ public class CheatProtectionHandler {
 	 */
 	public static void unexemptPlayerFromCheatChecks(Player player) {
 		// AntiCheat
-		if (DragonTravelMain.anticheat && net.h31ix.anticheat.api.AnticheatAPI
-							.isExempt(player,net.h31ix.anticheat.manage.CheckType.FLY)) {
-			net.h31ix.anticheat.api.AnticheatAPI
-							.unexemptPlayer(player,net.h31ix.anticheat.manage.CheckType.FLY);
+		if (acHandle != null) {
+		    acHandle.stopExempting(player);
 		}
-		
+
 		// NoCheatPlus
-		if (DragonTravelMain.nocheatplus
-				&& fr.neatmonster.nocheatplus.hooks.NCPExemptionManager
-							.isExempted(player, fr.neatmonster.nocheatplus.checks.CheckType.MOVING_SURVIVALFLY)
-				&& fr.neatmonster.nocheatplus.hooks.NCPExemptionManager
-							.isExempted(player, fr.neatmonster.nocheatplus.checks.CheckType.MOVING_CREATIVEFLY)
-							
-			) {
-			fr.neatmonster.nocheatplus.hooks.NCPExemptionManager.unexempt(player);
+		if (ncpHandle != null) {
+		    ncpHandle.stopExempting(player);
 		}
 	}
 
