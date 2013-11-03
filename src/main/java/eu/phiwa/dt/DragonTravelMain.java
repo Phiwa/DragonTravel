@@ -22,6 +22,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import eu.phiwa.dt.anticheatplugins.AntiCheatHandler;
+import eu.phiwa.dt.anticheatplugins.CheatProtectionHandler;
 import eu.phiwa.dt.anticheatplugins.NoCheatPlusHandler;
 import eu.phiwa.dt.commands.CommandHandler;
 import eu.phiwa.dt.filehandlers.Config;
@@ -185,15 +186,9 @@ public class DragonTravelMain extends JavaPlugin {
 		
 		// Commands
 		getCommand("dt").setExecutor(new CommandHandler(this));
-		
-		// AntiCheat
-		if (AntiCheatHandler.getAntiCheat())
-			logger.info("[DragonTravel] AntiCheat-support enabled");
-		
-		// NoCheatPlus
-		if (NoCheatPlusHandler.getNoCheatPlus())
-			logger.info("[DragonTravel] NoCheatPlus-support enabled");	
-				
+
+		CheatProtectionHandler.setup();
+
 		// Load some variables from config
 		onlydragontraveldragons = config.getBoolean("AntiGriefDragons.ofDragonTravel");
 		alldragons = config.getBoolean("AntiGriefDragons.all");
