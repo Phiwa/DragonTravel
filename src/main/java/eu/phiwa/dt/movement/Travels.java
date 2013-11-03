@@ -187,7 +187,7 @@ public class Travels {
 
 		Home home = DragonTravelMain.dbHomesHandler.getHome(player.getName());
 
-		if ((home) == null) {
+		if (home == null) {
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.NoHomeSet"));
 			// TODO: ---ADD MESSAGE You didn't set a home yet
 			return;
@@ -202,8 +202,7 @@ public class Travels {
 		}
 
 
-		Location destinationLoc = new Location(home.world, home.x, home.y, home.z);
-		travel(player, destinationLoc, checkForStation);
+		travel(player, home.toLocation(), checkForStation);
 
 		player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToHome"));
 		// TODO: ---ADD MESSAGE Travelling to your home

@@ -219,8 +219,8 @@ public class CommandHandler implements CommandExecutor {
 
 					if (DragonTravelMain.dbHomesHandler.getHome(player.getName()) != null)
 						DragonTravelMain.dbHomesHandler.deleteHome(player.getName());
-					Home home = new Home(player.getName(), player.getLocation());
-					DragonTravelMain.dbHomesHandler.createHome(home);
+					Home home = new Home(player.getLocation());
+					DragonTravelMain.dbHomesHandler.saveHome(player.getName(), home);
 					return true;
 				} else {
 					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));

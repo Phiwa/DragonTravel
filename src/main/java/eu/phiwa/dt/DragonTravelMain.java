@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -121,6 +122,11 @@ public class DragonTravelMain extends JavaPlugin {
 	public static Economy economyProvider;
 	public static int paymentItem = 371;
 
+	@Override
+	public void onLoad() {
+		ConfigurationSerialization.registerClass(Home.class);
+		//ConfigurationSerialization.registerClass(Station.class);
+	}
 
 	@Override
 	public void onEnable() {
