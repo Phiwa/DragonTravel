@@ -43,11 +43,10 @@ public class Travels {
 			}
 		}
 
-		player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.displayname));
+		player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.displayName));
 		// TODO: ---ADD MESSAGE Travelling to... (destination.displayname is the destination's name with normal cases)
 
-		Location destinationLoc = new Location(destination.world, destination.x, destination.y, destination.z);
-		travel(player, destinationLoc, checkForStation);
+		travel(player, destination.toLocation(), checkForStation);
 	}
 
 	/**

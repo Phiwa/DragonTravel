@@ -82,6 +82,7 @@ public class CommandHandler implements CommandExecutor {
 			case 2:
 				argument1 = args[1];
 
+
 				if (command.equalsIgnoreCase("remdragons")) {
 					if (argument1 == "all") {
 						for (World world : Bukkit.getWorlds()) {
@@ -477,16 +478,14 @@ public class CommandHandler implements CommandExecutor {
 
 				if (argument1.equalsIgnoreCase(DragonTravelMain.config.getString("RandomDest.Name"))) {
 					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.NotCreateStationWithRandomstatName"));
-					// TODO: ---ADD MESSAGE You cannot create a station with the name of the RandomnDest
 					return false;
 				}
 
 				if (DragonTravelMain.dbStationsHandler.getStation(argument1) != null) {
 					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationAlreadyExists").replace("{stationname}", argument1));
-					// TODO: ---ADD MESSAGE Station already exists
 					return false;
 				} else {
-					if (DragonTravelMain.dbStationsHandler.createStation(new Station(argument1, loc))) {
+					if (DragonTravelMain.dbStationsHandler.saveStation(new Station(argument1, loc))) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Successful.StationCreated").replace("{stationname}", argument1));
 						return true;
 					} else {

@@ -19,6 +19,7 @@ import eu.phiwa.dt.Station;
 public class StationsDB {
 
 	DragonTravelMain plugin;
+	private ConfigurationSection stationSection;
 
 	public StationsDB(DragonTravelMain plugin) {
 		this.plugin = plugin;
@@ -38,6 +39,10 @@ public class StationsDB {
 		DragonTravelMain.dbStationsConfig = new YamlConfiguration();
 		load();
 
+		stationSection = DragonTravelMain.dbStationsConfig.getConfigurationSection("Stations");
+		if (stationSection == null) {
+			stationSection = DragonTravelMain.dbStationsConfig.createSection("Stations");
+		}
 	}
 
 	private void create() {
@@ -90,18 +95,7 @@ public class StationsDB {
 	 * @return The station as a station-object.
 	 */
 	public Station getStation(String stationname) {
-
-		String stationpath = "Stations." + stationname.toLowerCase();
-
-		if (DragonTravelMain.dbStationsConfig.getString(stationpath + ".world") == null)
-			return null;
-
-		Location stationLoc = new Location(Bukkit.getWorld(DragonTravelMain.dbStationsConfig.getString(stationpath + ".world")), (double) DragonTravelMain.dbStationsConfig.getInt(stationpath + ".x"), (double) DragonTravelMain.dbStationsConfig.getInt(stationpath + ".y"), (double) DragonTravelMain.dbStationsConfig.getInt(stationpath + ".z"));
-
-		String displayname = DragonTravelMain.dbStationsConfig.getString(stationpath + ".displayname");
-
-		Station station = new Station(displayname, stationLoc);
-		return station;
+		return (Station) stationSection.get(stationname.toLowerCase(), null);
 	}
 
 	/**
@@ -111,22 +105,8 @@ public class StationsDB {
 	 * @return Returns true if the station was created successfully, false if
 	 *         not.
 	 */
-	@SuppressWarnings("static-access")
-	public boolean createStation(Station station) {
-
-		String path = "Stations." + station.name;
-
-		ConfigurationSection sec = DragonTravelMain.dbStationsConfig.createSection(path);
-		DragonTravelMain.dbStationsConfig.createPath(sec, "displayname");
-		DragonTravelMain.dbStationsConfig.createPath(sec, "x");
-		DragonTravelMain.dbStationsConfig.createPath(sec, "y");
-		DragonTravelMain.dbStationsConfig.createPath(sec, "z");
-		DragonTravelMain.dbStationsConfig.createPath(sec, "world");
-		DragonTravelMain.dbStationsConfig.set(path + ".displayname", station.displayname);
-		DragonTravelMain.dbStationsConfig.set(path + ".x", station.x);
-		DragonTravelMain.dbStationsConfig.set(path + ".y", station.y);
-		DragonTravelMain.dbStationsConfig.set(path + ".z", station.z);
-		DragonTravelMain.dbStationsConfig.set(path + ".world", station.world.getName());
+	public boolean saveStation(Station station) {
+		stationSection.set(station.name, station);
 
 		try {
 			DragonTravelMain.dbStationsConfig.save(DragonTravelMain.dbStationsFile);
@@ -144,9 +124,7 @@ public class StationsDB {
 	 * @return True if successful, false if not.
 	 */
 	public boolean deleteStation(String stationname) {
-
-		String stationpath = "Stations." + stationname.toLowerCase();
-		DragonTravelMain.dbStationsConfig.set(stationpath, null);
+		stationSection.set(stationname.toLowerCase(), null);
 
 		try {
 			DragonTravelMain.dbStationsConfig.save(DragonTravelMain.dbStationsFile);
@@ -219,5 +197,4 @@ public class StationsDB {
 
 		return false;
 	}
-
 }
