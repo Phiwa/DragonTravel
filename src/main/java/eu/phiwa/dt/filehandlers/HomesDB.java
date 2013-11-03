@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -15,8 +13,9 @@ import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.Home;
 
 public class HomesDB {
-
-	DragonTravelMain plugin;
+	@SuppressWarnings("unused")
+	private DragonTravelMain plugin;
+	private ConfigurationSection homeSection;
 
 	public HomesDB(DragonTravelMain plugin) {
 		this.plugin = plugin;
@@ -36,6 +35,10 @@ public class HomesDB {
 		DragonTravelMain.dbHomesConfig = new YamlConfiguration();
 		load();
 
+		homeSection = DragonTravelMain.dbHomesConfig.getConfigurationSection("Homes");
+		if (homeSection == null) {
+			homeSection = DragonTravelMain.dbHomesConfig.createSection("Homes");
+		}
 	}
 
 	private void create() {
@@ -85,43 +88,21 @@ public class HomesDB {
 	 * Returns the details of the home with the given name.
 	 *
 	 * @param homename Name of the home which should be returned.
-	 * @return The home as a home-object.
+	 * @return The home as a home-object, or null if no home is set.
 	 */
-	public Home getHome(String playername) {
-
-		playername = "Homes." + playername.toLowerCase();
-
-		if (DragonTravelMain.dbHomesConfig.getString(playername + ".world") == null)
-			return null;
-
-		Location homeLoc = new Location(Bukkit.getWorld(DragonTravelMain.dbHomesConfig.getString(playername + ".world")), (double) DragonTravelMain.dbHomesConfig.getInt(playername + ".x"), (double) DragonTravelMain.dbHomesConfig.getInt(playername + ".y"), (double) DragonTravelMain.dbHomesConfig.getInt(playername + ".z"));
-
-		Home home = new Home(playername, homeLoc);
-		return home;
-
+	public Home getHome(String playerName) {
+		return (Home) homeSection.get(playerName, null);
 	}
 
 	/**
-	 * Creates a new home.
+	 * Saves a new home.
 	 *
 	 * @param home Home to create.
 	 * @return Returns true if the home was created successfully, false if
 	 *         not.
 	 */
-	@SuppressWarnings("static-access")
-	public boolean createHome(Home home) {
-
-		String path = "Homes." + home.playername;
-
-		ConfigurationSection sec = DragonTravelMain.dbHomesConfig.createSection(path);
-		DragonTravelMain.dbHomesConfig.createPath(sec, "x");
-		DragonTravelMain.dbHomesConfig.createPath(sec, "y");
-		DragonTravelMain.dbHomesConfig.createPath(sec, "z");
-		DragonTravelMain.dbHomesConfig.createPath(sec, "world");
-		DragonTravelMain.dbHomesConfig.set(path + ".x", home.x);
-		DragonTravelMain.dbHomesConfig.set(path + ".y", home.y);
-		DragonTravelMain.dbHomesConfig.set(path + ".z", home.z);
-		DragonTravelMain.dbHomesConfig.set(path + ".world", home.world.getName());
+	public boolean saveHome(String playerName, Home home) {
+		homeSection.set(playerName, home);
 
 		try {
 			DragonTravelMain.dbHomesConfig.save(DragonTravelMain.dbHomesFile);
@@ -168,5 +149,4 @@ public class HomesDB {
 				player.sendMessage("- " + string);
 		}
 	}
-
 }
