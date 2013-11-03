@@ -14,12 +14,12 @@ public class Flight {
 	public World world;
 	public List<Waypoint> waypoints = new ArrayList<Waypoint>();
 	public int wpcount = 0;
-	
+
 	public Flight() {
-		
+
 	}
-	
-	public Flight(World world, String flightname) {		
+
+	public Flight(World world, String flightname) {
 		this.displayname = flightname;
 		this.name = flightname.toLowerCase();
 		this.world = world;
@@ -28,25 +28,25 @@ public class Flight {
 	public String toString() {
 
 		String flightString = displayname + ":\n";
-		
-		for(Waypoint wp: waypoints) {
+
+		for (Waypoint wp : waypoints) {
 			flightString += "- " + wp.x + ", " + wp.y + ", " + wp.z + "\n";
 		}
-		
-		return flightString;		
+
+		return flightString;
 	}
-	
+
 	public void addWaypoint(Waypoint wp) {
 		waypoints.add(wp);
 		wpcount++;
 	}
-	
+
 	public void removelastWaypoint() {
-		
+
 		// Remove marker from waypoint
-		waypoints.get(waypoints.size()-1).removeMarker();
-		
-		waypoints.remove(waypoints.size()-1);
+		waypoints.get(waypoints.size() - 1).removeMarker();
+
+		waypoints.remove(waypoints.size() - 1);
 		wpcount--;
 	}
 

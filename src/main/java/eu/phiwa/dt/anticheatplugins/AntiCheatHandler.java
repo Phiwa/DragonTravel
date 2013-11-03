@@ -27,23 +27,23 @@ import org.bukkit.entity.Player;
  */
 public class AntiCheatHandler implements AbstractHandler {
 
-    static {
-        // This throws an exception if the class isn't loaded
-        AnticheatAPI.getManager();
-    }
+	static {
+		// This throws an exception if the class isn't loaded
+		AnticheatAPI.getManager();
+	}
 
-    @Override
-    public void startExempting(Player player) {
-        if (!AnticheatAPI.isExempt(player, net.h31ix.anticheat.manage.CheckType.FLY)) {
-            AnticheatAPI.exemptPlayer(player, net.h31ix.anticheat.manage.CheckType.FLY);
-        }
+	@Override
+	public void startExempting(Player player) {
+		if (!AnticheatAPI.isExempt(player, net.h31ix.anticheat.manage.CheckType.FLY)) {
+			AnticheatAPI.exemptPlayer(player, net.h31ix.anticheat.manage.CheckType.FLY);
+		}
 
-    }
+	}
 
-    @Override
-    public void stopExempting(Player player) {
-        if (AnticheatAPI.isExempt(player, net.h31ix.anticheat.manage.CheckType.FLY)) {
-            AnticheatAPI.unexemptPlayer(player, net.h31ix.anticheat.manage.CheckType.FLY);
-        }
-    }
+	@Override
+	public void stopExempting(Player player) {
+		if (AnticheatAPI.isExempt(player, net.h31ix.anticheat.manage.CheckType.FLY)) {
+			AnticheatAPI.unexemptPlayer(player, net.h31ix.anticheat.manage.CheckType.FLY);
+		}
+	}
 }

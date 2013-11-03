@@ -16,28 +16,28 @@ import eu.phiwa.dt.Flight;
 public class FlightEditor implements Listener {
 
 	public static HashMap<Player, Flight> editors = new HashMap<Player, Flight>();
-	
-	
+
+
 	public FlightEditor() {
 	}
-	
+
 	public static boolean isEditor(Player player) {
-		if(editors.containsKey(player))
+		if (editors.containsKey(player))
 			return true;
 		else
 			return false;
 	}
-	
+
 	public static void addEditor(Player player, String flightname) {
-		if(!editors.containsKey(player))
-			editors.put(player, new Flight(player.getWorld(), flightname));	
+		if (!editors.containsKey(player))
+			editors.put(player, new Flight(player.getWorld(), flightname));
 	}
-	
+
 	public static void removeEditor(Player player) {
-		if(editors.containsKey(player))
+		if (editors.containsKey(player))
 			editors.remove(player);
 	}
-	
+
 	@EventHandler
 	public void onWP(PlayerInteractEvent event) {
 
@@ -53,7 +53,7 @@ public class FlightEditor implements Listener {
 		if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			Flight flight = editors.get(player);
 			flight.removelastWaypoint();
-			
+
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.WaypointRemoved"));
 			// TODO: ---ADD MESSAGE Successfully removed the last waypoint
 			return;
@@ -66,16 +66,16 @@ public class FlightEditor implements Listener {
 			wp.y = (int) loc.getY();
 			wp.z = (int) loc.getZ();
 			flight.addWaypoint(wp);
-			
+
 			// Create a marker at the waypoint
 			wp.setMarker(player);
-			Block block = player.getLocation().getBlock();	
+			Block block = player.getLocation().getBlock();
 			DragonTravelMain.globalwaypointmarkers.put(block, block);
-			
+
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.WaypointAdded"));
 			// TODO: ---ADD MESSAGE Successfully added a waypoint
 		}
 	}
-	
-	
+
+
 }
