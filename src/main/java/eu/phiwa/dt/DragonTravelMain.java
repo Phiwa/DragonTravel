@@ -14,6 +14,7 @@ import net.minecraft.server.v1_7_R1.EntityTypes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -39,7 +40,6 @@ import eu.phiwa.dt.payment.PaymentHandler;
 
 
 public class DragonTravelMain extends JavaPlugin {
-
 	public static PluginManager pm;
 	public static DragonTravelMain plugin;
 	public static final Logger logger = Logger.getLogger("Minecraft");
@@ -97,7 +97,7 @@ public class DragonTravelMain extends JavaPlugin {
 	public static boolean requireItemTravelHome = false;
 	public static boolean requireItemTravelFactionhome = false;
 	public static boolean requireItemFlight = false;
-	public static int requiredItem = 122;
+	public static Material requiredItem = Material.DRAGON_EGG;
 
 	// Payment-Types
 	public static final int TRAVEL_TOSTATION = 1;
@@ -200,8 +200,11 @@ public class DragonTravelMain extends JavaPlugin {
 		alldragons = config.getBoolean("AntiGriefDragons.all");
 		ignoreAntiMobspawnAreas = config.getBoolean("AntiGriefDragons.bypassWorldGuardAntiSpawn");
 
-		requiredItem = config.getInt("RequiredItem.Item");
-		;
+		Material tmp = Material.matchMaterial(config.getString("RequiredItem.Item", "122"));
+		if (tmp != null) {
+			requiredItem = tmp;
+		}
+
 		requireItemTravelStation = config.getBoolean("RequiredItem.For.toStation");
 		requireItemTravelRandom = config.getBoolean("RequiredItem.For.toRandom");
 		requireItemTravelCoordinates = config.getBoolean("RequiredItem.For.toCoordinates");
