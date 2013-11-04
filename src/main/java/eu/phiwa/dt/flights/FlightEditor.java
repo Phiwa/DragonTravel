@@ -3,6 +3,7 @@ package eu.phiwa.dt.flights;
 import java.util.HashMap;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -47,7 +48,7 @@ public class FlightEditor implements Listener {
 		if (!editors.containsKey(player))
 			return;
 
-		if (player.getItemInHand().getTypeId() != 281)
+		if (player.getItemInHand().getType() != Material.BOWL)
 			return;
 
 		if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
@@ -76,6 +77,4 @@ public class FlightEditor implements Listener {
 			// TODO: ---ADD MESSAGE Successfully added a waypoint
 		}
 	}
-
-
 }
