@@ -91,7 +91,14 @@ public class HomesDB {
 	 * @return The home as a home-object, or null if no home is set.
 	 */
 	public Home getHome(String playerName) {
-		return (Home) homeSection.get(playerName, null);
+		Object obj = homeSection.get(playerName, null);
+		if (obj != null) {
+			// Transition support
+			if (obj instanceof ConfigurationSection) {
+				return new Home(((ConfigurationSection) obj).getValues(true));
+			}
+		}
+		return (Home) obj;
 	}
 
 	/**
