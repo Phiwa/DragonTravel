@@ -97,30 +97,23 @@ public class FlightsDB {
 	 * @return The flight as a flight-object.
 	 */
 	public Flight getFlight(String flightname) {
-		ConfigurationSection section = flightSection.getConfigurationSection(flightname.toLowerCase());
-		if (section == null) {
+		flightname = flightname.toLowerCase();
+		Object obj = flightSection.get(flightname, null);
+		if (obj != null) {
 			return null;
 		}
 
-		Flight flight = new Flight();
-
-		flight.name = flightname.toLowerCase();
-		flight.displayname = section.getString("displayname");
-		flight.worldName = section.getString("world");
-
-		@SuppressWarnings("unchecked")
-		List<String> waypoints = (List<String>) section.getList("waypoints");
-
-		for (String wpData : waypoints) {
-			Waypoint wp = Waypoint.loadFromString(wpData);
-			if (wp == null) {
-				DragonTravelMain.plugin.getLogger().severe("Loading of flight " + flightname + " failed due to malformed waypoint");
-				return null;
-			}
-			flight.addWaypoint(wp);
+		// Transition support
+		if (obj instanceof ConfigurationSection) {
+			Flight f = new Flight(((ConfigurationSection) obj).getValues(true));
+			f.name = flightname;
+			saveFlight(f);
+			return f;
+		} else {
+			Flight f = (Flight) obj;
+			f.name = flightname;
+			return f;
 		}
-
-		return flight;
 	}
 
 	/**
@@ -130,18 +123,8 @@ public class FlightsDB {
 	 * @return Returns true if the flight was created successfully, false if
 	 *         not.
 	 */
-	public boolean createFlight(Flight flight) {
-		ConfigurationSection sec = flightSection.createSection(flight.name);
-		sec.set("displayname", flight.displayname);
-		sec.set("world", flight.worldName);
-
-		List<String> waypointsAsString = new ArrayList<String>();
-
-		for (Waypoint wp : flight.waypoints) {
-			waypointsAsString.add(wp.saveToString());
-		}
-
-		sec.set("waypoints", waypointsAsString);
+	public boolean saveFlight(Flight flight) {
+		flightSection.set(flight.name, flight);
 
 		try {
 			dbFlightsConfig.save(dbFlightsFile);
