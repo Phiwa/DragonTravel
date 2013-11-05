@@ -2,6 +2,7 @@ package eu.phiwa.dt.flights;
 
 import java.util.Collection;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -66,7 +67,7 @@ public class Waypoint {
 
 			if (wp.marker == null)
 				continue;
-			flight.world.getBlockAt(wp.x, wp.y, wp.z).getChunk().load(true);
+			Bukkit.getWorld(flight.worldName).getBlockAt(wp.x, wp.y, wp.z).getChunk().load(false);
 			wp.marker.setType(Material.AIR);
 		}
 	}

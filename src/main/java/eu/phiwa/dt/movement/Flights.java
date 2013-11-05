@@ -44,13 +44,13 @@ public class Flights {
 			return;
 		}
 
-		if (flight.world.getName() != player.getWorld().getName()) {
+		if (!flight.worldName.equals(player.getWorld().getName())) {
 			// Sent by console
-			if (sentbyadmin && playerToSendMessagesTo == null)
+			if (sentbyadmin && playerToSendMessagesTo == null) {
 				System.out.println("[DragonTravel] The flight is in a different world than the player!");
-			else
+			} else {
 				playerToSendMessagesTo.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightIsInDifferentWorld"));
-			// TODO: ---ADD MESSAGE Flight is in a different world
+			}
 			return;
 		}
 

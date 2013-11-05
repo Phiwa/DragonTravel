@@ -11,7 +11,7 @@ public class Flight {
 
 	public String name;
 	public String displayname;
-	public World world;
+	public String worldName;
 	public List<Waypoint> waypoints = new ArrayList<Waypoint>();
 	public int wpcount = 0;
 
@@ -22,7 +22,7 @@ public class Flight {
 	public Flight(World world, String flightname) {
 		this.displayname = flightname;
 		this.name = flightname.toLowerCase();
-		this.world = world;
+		this.worldName = world.getName();
 	}
 
 	public String toString() {
