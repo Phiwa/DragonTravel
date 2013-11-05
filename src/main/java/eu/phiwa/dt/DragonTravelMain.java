@@ -58,31 +58,14 @@ public class DragonTravelMain extends JavaPlugin {
 
 	// Config
 	public static double configVersion = 0.2;
-	public static File configFile;
 	public static FileConfiguration config;
 	public static Config configHandler;
 
 	public static File databaseFolder;
 
-	// Messages
-	public static double messagesVersion = 0.2;
-	public static File messagesFile;
-	public static FileConfiguration messages;
 	public static Messages messagesHandler;
-
-	// StationsDB
-	public static File dbStationsFile;
-	public static FileConfiguration dbStationsConfig;
 	public static StationsDB dbStationsHandler;
-
-	// HomesDB
-	public static File dbHomesFile;
-	public static FileConfiguration dbHomesConfig;
 	public static HomesDB dbHomesHandler;
-
-	// FlightsDB
-	public static File dbFlightsFile;
-	public static FileConfiguration dbFlightsConfig;
 	public static FlightsDB dbFlightsHandler;
 
 	// Hashmaps
@@ -170,8 +153,7 @@ public class DragonTravelMain extends JavaPlugin {
 
 		// Messages-file
 		messagesHandler = new Messages(this);
-		messagesHandler.loadMessages();
-		if (messages == null)
+		if (!messagesHandler.loadMessages())
 			return;
 
 		// StationsDB
@@ -321,10 +303,8 @@ public class DragonTravelMain extends JavaPlugin {
 
 
 		// Messages-file
-		messagesHandler.loadMessages();
-		if (messages == null)
+		if (!messagesHandler.loadMessages())
 			return;
-
 
 		// StationsDB
 		dbStationsHandler.init();

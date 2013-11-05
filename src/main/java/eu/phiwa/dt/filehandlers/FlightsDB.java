@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -17,8 +18,11 @@ import eu.phiwa.dt.Flight;
 import eu.phiwa.dt.flights.Waypoint;
 
 public class FlightsDB {
-
-	DragonTravelMain plugin;
+	@SuppressWarnings("unused")
+	private DragonTravelMain plugin;
+	private File dbFlightsFile;
+	private FileConfiguration dbFlightsConfig;
+	private ConfigurationSection flightSection;
 
 	public FlightsDB(DragonTravelMain plugin) {
 		this.plugin = plugin;
@@ -26,7 +30,7 @@ public class FlightsDB {
 
 	public void init() {
 
-		DragonTravelMain.dbFlightsFile = new File(DragonTravelMain.databaseFolder, "flights.yml");
+		dbFlightsFile = new File(DragonTravelMain.databaseFolder, "flights.yml");
 
 		try {
 			create();
@@ -35,19 +39,23 @@ public class FlightsDB {
 			e.printStackTrace();
 		}
 
-		DragonTravelMain.dbFlightsConfig = new YamlConfiguration();
+		dbFlightsConfig = new YamlConfiguration();
 		load();
 
+		flightSection = dbFlightsConfig.getConfigurationSection("Flights");
+		if (flightSection == null) {
+			flightSection = dbFlightsConfig.createSection("Flights");
+		}
 	}
 
 	private void create() {
 
-		if (DragonTravelMain.dbFlightsFile.exists())
+		if (dbFlightsFile.exists())
 			return;
 
 		try {
-			DragonTravelMain.dbFlightsFile.createNewFile();
-			copy(getClass().getResourceAsStream("flights.yml"), DragonTravelMain.dbFlightsFile);
+			dbFlightsFile.createNewFile();
+			copy(getClass().getResourceAsStream("flights.yml"), dbFlightsFile);
 			DragonTravelMain.logger.info("[DragonTravel] Created flights-database.");
 		} catch (Exception e) {
 			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not create the flights-database!");
@@ -74,7 +82,7 @@ public class FlightsDB {
 
 	private void load() {
 		try {
-			DragonTravelMain.dbFlightsConfig.load(DragonTravelMain.dbFlightsFile);
+			dbFlightsConfig.load(dbFlightsFile);
 			DragonTravelMain.logger.info("[DragonTravel] Loaded flights-database.");
 		} catch (Exception e) {
 			DragonTravelMain.logger.info("[DragonTravel] [Error] No flights-database found");
@@ -90,26 +98,23 @@ public class FlightsDB {
 	 * @return The flight as a flight-object.
 	 */
 	public Flight getFlight(String flightname) {
-
-		String flightpath = "Flights." + flightname.toLowerCase();
-
-		if (DragonTravelMain.dbFlightsConfig.getString(flightpath + ".world") == null)
+		ConfigurationSection section = flightSection.getConfigurationSection(flightname.toLowerCase());
+		if (section == null) {
 			return null;
+		}
 
 		Flight flight = new Flight();
 
 		flight.name = flightname.toLowerCase();
+		flight.displayname = section.getString("displayname");
 
-		@SuppressWarnings("unchecked")
-		List<String> waypoints = (List<String>) DragonTravelMain.dbFlightsConfig.getList(flightpath + ".waypoints");
-		String worldname = DragonTravelMain.dbFlightsConfig.getString(flightpath + ".world");
-
-		flight.displayname = DragonTravelMain.dbFlightsConfig.getString(flightpath + ".displayname");
-
+		String worldname = section.getString("world");
 		if (worldname == null)
 			return null;
-
 		flight.world = Bukkit.getWorld(worldname);
+
+		@SuppressWarnings("unchecked")
+		List<String> waypoints = (List<String>) section.getList("waypoints");
 
 		for (String wpData : waypoints) {
 
@@ -144,17 +149,10 @@ public class FlightsDB {
 	 * @return Returns true if the flight was created successfully, false if
 	 *         not.
 	 */
-	@SuppressWarnings("static-access")
 	public boolean createFlight(Flight flight) {
-
-		String path = "Flights." + flight.name;
-
-		ConfigurationSection sec = DragonTravelMain.dbFlightsConfig.createSection(path);
-		DragonTravelMain.dbStationsConfig.createPath(sec, "displayname");
-		DragonTravelMain.dbStationsConfig.createPath(sec, "world");
-		DragonTravelMain.dbStationsConfig.createPath(sec, "waypoints");
-		DragonTravelMain.dbFlightsConfig.set(path + ".displayname", flight.displayname);
-		DragonTravelMain.dbFlightsConfig.set(path + ".world", flight.world.getName());
+		ConfigurationSection sec = flightSection.createSection(flight.name);
+		sec.set("displayname", flight.displayname);
+		sec.set("world", flight.world.getName());
 
 		List<String> waypointsAsString = new ArrayList<String>();
 
@@ -163,10 +161,10 @@ public class FlightsDB {
 			waypointsAsString.add(wpString);
 		}
 
-		DragonTravelMain.dbFlightsConfig.set(path + ".waypoints", waypointsAsString);
+		sec.set("waypoints", waypointsAsString);
 
 		try {
-			DragonTravelMain.dbFlightsConfig.save(DragonTravelMain.dbFlightsFile);
+			dbFlightsConfig.save(dbFlightsFile);
 			return true;
 		} catch (Exception e) {
 			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not write new flight to config.");
@@ -181,13 +179,10 @@ public class FlightsDB {
 	 * @return True if successful, false if not.
 	 */
 	public boolean deleteFlight(String flightname) {
-
-		flightname = "Flights." + flightname.toLowerCase();
-
-		DragonTravelMain.dbFlightsConfig.set(flightname, null);
+		flightSection.set(flightname.toLowerCase(), null);
 
 		try {
-			DragonTravelMain.dbFlightsConfig.save(DragonTravelMain.dbFlightsFile);
+			dbFlightsConfig.save(dbFlightsFile);
 			return true;
 		} catch (Exception e) {
 			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not delete flight from config.");
@@ -200,9 +195,9 @@ public class FlightsDB {
 	 */
 	public void showFlights() {
 		System.out.println("Available flights: ");
-		for (String string : DragonTravelMain.dbFlightsConfig.getConfigurationSection("Flights").getKeys(true)) {
+		for (String string : dbFlightsConfig.getConfigurationSection("Flights").getKeys(true)) {
 			if (string.contains(".displayname")) {
-				System.out.println("- " + DragonTravelMain.dbFlightsConfig.getString("Flights." + string));
+				System.out.println("- " + dbFlightsConfig.getString("Flights." + string));
 			}
 		}
 	}
@@ -214,10 +209,10 @@ public class FlightsDB {
 	 */
 	public void showFlights(Player player) {
 		player.sendMessage("Available flights: ");
-		for (String string : DragonTravelMain.dbFlightsConfig.getConfigurationSection("Flights").getKeys(true)) {
+		for (String string : dbFlightsConfig.getConfigurationSection("Flights").getKeys(true)) {
 			// TODO: Permission-Check (Normal permission / flight-specific permission) string.split[0] == flight-name
 			if (string.contains(".displayname")) {
-				player.sendMessage("- " + DragonTravelMain.dbFlightsConfig.getString("Flights." + string));
+				player.sendMessage("- " + dbFlightsConfig.getString("Flights." + string));
 			}
 		}
 	}
