@@ -40,6 +40,7 @@ import eu.phiwa.dt.payment.PaymentHandler;
 
 
 public class DragonTravelMain extends JavaPlugin {
+
 	public static PluginManager pm;
 	public static DragonTravelMain plugin;
 	public static final Logger logger = Logger.getLogger("Minecraft");
@@ -61,6 +62,8 @@ public class DragonTravelMain extends JavaPlugin {
 	public static File configFile;
 	public static FileConfiguration config;
 	public static Config configHandler;
+
+	public static File databaseFolder;
 
 	// Messages
 	public static double messagesVersion = 0.2;
@@ -158,8 +161,9 @@ public class DragonTravelMain extends JavaPlugin {
 		pm.registerEvents(flighteditor, this);
 		pm.registerEvents(blocklistener, this);
 
-		if (!(new File(plugin.getDataFolder(), "databases").exists()))
-			new File(plugin.getDataFolder(), "databases").mkdirs();
+		databaseFolder = new File(plugin.getDataFolder(), "databases");
+		if (!(databaseFolder.exists()))
+			databaseFolder.mkdirs();
 
 		// Config
 		configHandler = new Config(this);

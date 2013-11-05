@@ -26,7 +26,7 @@ public class FlightsDB {
 
 	public void init() {
 
-		DragonTravelMain.dbFlightsFile = new File("plugins/DragonTravel/databases", "flights.yml");
+		DragonTravelMain.dbFlightsFile = new File(DragonTravelMain.databaseFolder, "flights.yml");
 
 		try {
 			create();

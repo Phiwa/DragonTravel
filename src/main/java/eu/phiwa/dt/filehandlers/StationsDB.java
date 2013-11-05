@@ -26,7 +26,7 @@ public class StationsDB {
 
 	public void init() {
 
-		DragonTravelMain.dbStationsFile = new File("plugins/DragonTravel/databases", "stations.yml");
+		DragonTravelMain.dbStationsFile = new File(DragonTravelMain.databaseFolder, "stations.yml");
 
 		try {
 			create();
