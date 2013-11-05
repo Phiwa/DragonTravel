@@ -99,13 +99,18 @@ public class StationsDB {
 	 */
 	public Station getStation(String stationname) {
 		Object obj = stationSection.get(stationname, null);
-		if (obj != null) {
-			// Transition support
-			if (obj instanceof ConfigurationSection) {
-				return new Station(((ConfigurationSection) obj).getValues(true));
-			}
+		if (obj == null) {
+			return null;
 		}
-		return (Station) obj;
+
+		// Transition support
+		if (obj instanceof ConfigurationSection) {
+			Station s = new Station(((ConfigurationSection) obj).getValues(true));
+			saveStation(s);
+			return s;
+		} else {
+			return (Station) obj;
+		}
 	}
 
 	/**

@@ -95,13 +95,18 @@ public class HomesDB {
 	 */
 	public Home getHome(String playerName) {
 		Object obj = homeSection.get(playerName, null);
-		if (obj != null) {
-			// Transition support
-			if (obj instanceof ConfigurationSection) {
-				return new Home(((ConfigurationSection) obj).getValues(true));
-			}
+		if (obj == null) {
+			return null;
 		}
-		return (Home) obj;
+
+		// Transition support
+		if (obj instanceof ConfigurationSection) {
+			Home h = new Home(((ConfigurationSection) obj).getValues(true));
+			saveHome(playerName, h);
+			return h;
+		} else {
+			return (Home) obj;
+		}
 	}
 
 	/**

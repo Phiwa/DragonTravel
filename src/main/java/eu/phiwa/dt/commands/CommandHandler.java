@@ -279,7 +279,7 @@ public class CommandHandler implements CommandExecutor {
 						return false;
 					}
 
-					DragonTravelMain.dbFlightsHandler.createFlight(FlightEditor.editors.get(player));
+					DragonTravelMain.dbFlightsHandler.saveFlight(FlightEditor.editors.get(player));
 					Waypoint.removeWaypointMarkersOfFlight(FlightEditor.editors.get(player));
 					FlightEditor.editors.remove(player);
 
