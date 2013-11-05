@@ -273,7 +273,7 @@ public class CommandHandler implements CommandExecutor {
 						return false;
 					}
 
-					if (FlightEditor.editors.get(player).wpcount < 1) {
+					if (FlightEditor.editors.get(player).getWaypointCount() < 1) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.AtLeastOneWaypoint"));
 						// TODO: ---ADD MESSAGE You need to create at least one waypoint
 						return false;
