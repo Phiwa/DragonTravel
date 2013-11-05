@@ -17,7 +17,6 @@ import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.Station;
 
 public class StationsDB {
-
 	DragonTravelMain plugin;
 	private ConfigurationSection stationSection;
 
@@ -95,7 +94,14 @@ public class StationsDB {
 	 * @return The station as a station-object.
 	 */
 	public Station getStation(String stationname) {
-		return (Station) stationSection.get(stationname.toLowerCase(), null);
+		Object obj = stationSection.get(stationname, null);
+		if (obj != null) {
+			// Transition support
+			if (obj instanceof ConfigurationSection) {
+				return new Station(((ConfigurationSection) obj).getValues(true));
+			}
+		}
+		return (Station) obj;
 	}
 
 	/**
