@@ -23,7 +23,7 @@ public class HomesDB {
 
 	public void init() {
 
-		DragonTravelMain.dbHomesFile = new File("plugins/DragonTravel/databases", "homes.yml");
+		DragonTravelMain.dbHomesFile = new File(DragonTravelMain.databaseFolder, "homes.yml");
 
 		try {
 			create();
