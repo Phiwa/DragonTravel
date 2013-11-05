@@ -12,18 +12,18 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import eu.phiwa.dt.DragonTravelMain;
 
 public class Config {
-
-	DragonTravelMain plugin;
+	private DragonTravelMain plugin;
+	private File configFile;
 
 	public Config(DragonTravelMain plugin) {
 		this.plugin = plugin;
 	}
 
 	public void loadConfig() {
-		DragonTravelMain.configFile = new File(plugin.getDataFolder(), "config.yml");
-		if (!DragonTravelMain.configFile.exists())
+		configFile = new File(plugin.getDataFolder(), "config.yml");
+		if (!configFile.exists())
 			deployDefaultFile("config.yml");
-		DragonTravelMain.config = YamlConfiguration.loadConfiguration(DragonTravelMain.configFile);
+		DragonTravelMain.config = YamlConfiguration.loadConfiguration(configFile);
 		updateConfig();
 	}
 
@@ -33,8 +33,8 @@ public class Config {
 		noLongerRequiredConfig();
 		// Refresh file and config variables for persistence.
 		try {
-			DragonTravelMain.config.save(DragonTravelMain.configFile);
-			DragonTravelMain.config = YamlConfiguration.loadConfiguration(DragonTravelMain.configFile);
+			DragonTravelMain.config.save(configFile);
+			DragonTravelMain.config = YamlConfiguration.loadConfiguration(configFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 			DragonTravelMain.logger.log(Level.SEVERE, "Could not update config, disabling plugin!");
@@ -81,5 +81,4 @@ public class Config {
 			DragonTravelMain.logger.info("Could not save default file");
 		}
 	}
-
 }

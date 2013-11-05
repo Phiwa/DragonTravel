@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import eu.phiwa.dt.DragonTravelMain;
@@ -25,8 +26,11 @@ public class Messages {
 
 	private String language = "";
 
+	private static final double messagesVersion = 0.2;
+	private File messagesFile;
+	private FileConfiguration messages;
 
-	public void loadMessages() {
+	public boolean loadMessages() {
 
 		language = this.plugin.getConfig().getString("Language");
 
@@ -34,30 +38,32 @@ public class Messages {
 			DragonTravelMain.logger.log(Level.SEVERE, "Could not load messages-file because the language could not be read from the config! Disabling plugin!");
 
 			DragonTravelMain.pm.disablePlugin(DragonTravelMain.plugin);
-			return;
+			return false;
 		}
 
-		DragonTravelMain.messagesFile = new File(plugin.getDataFolder(), "messages-" + language + ".yml");
+		messagesFile = new File(plugin.getDataFolder(), "messages-" + language + ".yml");
 
-		if (!DragonTravelMain.messagesFile.exists())
+		if (!messagesFile.exists())
 			deployDefaultFile("messages-" + language + ".yml");
 
-		DragonTravelMain.messages = YamlConfiguration.loadConfiguration(DragonTravelMain.messagesFile);
+		messages = YamlConfiguration.loadConfiguration(messagesFile);
 		updateConfig();
+
+		return true;
 	}
 
 	private void updateConfig() {
-
-		if (DragonTravelMain.messages.getDouble("File.Version") != DragonTravelMain.messagesVersion)
+		if (messages.getDouble("File.Version") != messagesVersion) {
 			newlyRequiredMessages();
+		}
 
 		noLongerRequiredMessages();
 
 		// Refresh file and config variables for persistence.
 		try {
-			DragonTravelMain.messagesFile = new File(plugin.getDataFolder(), "messages-" + language + ".yml");
-			DragonTravelMain.messages.save(DragonTravelMain.messagesFile);
-			DragonTravelMain.messages = YamlConfiguration.loadConfiguration(DragonTravelMain.messagesFile);
+			messagesFile = new File(plugin.getDataFolder(), "messages-" + language + ".yml");
+			messages.save(messagesFile);
+			messages = YamlConfiguration.loadConfiguration(messagesFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -112,7 +118,7 @@ public class Messages {
 
 		String message;
 
-		message = replaceColors(DragonTravelMain.messages.getString(path));
+		message = replaceColors(messages.getString(path));
 
 		if (message == null) {
 			DragonTravelMain.logger.log(Level.SEVERE, "[DragonTravel] Could not find the message looking for at path '" + path + "' which leads to a serious problem! Be try to generate a new language file if you previously updated DragonTravel!");

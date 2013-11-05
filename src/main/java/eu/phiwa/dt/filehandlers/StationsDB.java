@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -17,7 +18,10 @@ import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.Station;
 
 public class StationsDB {
-	DragonTravelMain plugin;
+	@SuppressWarnings("unused")
+	private DragonTravelMain plugin;
+	private File dbStationsFile;
+	private FileConfiguration dbStationsConfig;
 	private ConfigurationSection stationSection;
 
 	public StationsDB(DragonTravelMain plugin) {
@@ -26,7 +30,7 @@ public class StationsDB {
 
 	public void init() {
 
-		DragonTravelMain.dbStationsFile = new File(DragonTravelMain.databaseFolder, "stations.yml");
+		dbStationsFile = new File(DragonTravelMain.databaseFolder, "stations.yml");
 
 		try {
 			create();
@@ -35,23 +39,23 @@ public class StationsDB {
 			e.printStackTrace();
 		}
 
-		DragonTravelMain.dbStationsConfig = new YamlConfiguration();
+		dbStationsConfig = new YamlConfiguration();
 		load();
 
-		stationSection = DragonTravelMain.dbStationsConfig.getConfigurationSection("Stations");
+		stationSection = dbStationsConfig.getConfigurationSection("Stations");
 		if (stationSection == null) {
-			stationSection = DragonTravelMain.dbStationsConfig.createSection("Stations");
+			stationSection = dbStationsConfig.createSection("Stations");
 		}
 	}
 
 	private void create() {
 
-		if (DragonTravelMain.dbStationsFile.exists())
+		if (dbStationsFile.exists())
 			return;
 
 		try {
-			DragonTravelMain.dbStationsFile.createNewFile();
-			copy(getClass().getResourceAsStream("stations.yml"), DragonTravelMain.dbStationsFile);
+			dbStationsFile.createNewFile();
+			copy(getClass().getResourceAsStream("stations.yml"), dbStationsFile);
 			DragonTravelMain.logger.info("[DragonTravel] Created stations-database.");
 		} catch (Exception e) {
 			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not create the stations-database!");
@@ -78,7 +82,7 @@ public class StationsDB {
 
 	private void load() {
 		try {
-			DragonTravelMain.dbStationsConfig.load(DragonTravelMain.dbStationsFile);
+			dbStationsConfig.load(dbStationsFile);
 			DragonTravelMain.logger.info("[DragonTravel] Loaded stations-database.");
 		} catch (Exception e) {
 			DragonTravelMain.logger.info("[DragonTravel] [Error] No stations-database found");
@@ -115,7 +119,7 @@ public class StationsDB {
 		stationSection.set(station.name, station);
 
 		try {
-			DragonTravelMain.dbStationsConfig.save(DragonTravelMain.dbStationsFile);
+			dbStationsConfig.save(dbStationsFile);
 			return true;
 		} catch (Exception e) {
 			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not write new station to config.");
@@ -133,7 +137,7 @@ public class StationsDB {
 		stationSection.set(stationname.toLowerCase(), null);
 
 		try {
-			DragonTravelMain.dbStationsConfig.save(DragonTravelMain.dbStationsFile);
+			dbStationsConfig.save(dbStationsFile);
 			return true;
 		} catch (Exception e) {
 			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not delete station from config.");
@@ -143,18 +147,18 @@ public class StationsDB {
 
 	public void showStations() {
 		System.out.println("Available stations: ");
-		for (String string : DragonTravelMain.dbStationsConfig.getConfigurationSection("Stations").getKeys(true)) {
+		for (String string : dbStationsConfig.getConfigurationSection("Stations").getKeys(true)) {
 			if (string.contains(".displayname")) {
-				System.out.println("- " + DragonTravelMain.dbStationsConfig.getString("Stations." + string));
+				System.out.println("- " + dbStationsConfig.getString("Stations." + string));
 			}
 		}
 	}
 
 	public void showStations(Player player) {
 		player.sendMessage("Available stations: ");
-		for (String string : DragonTravelMain.dbStationsConfig.getConfigurationSection("Stations").getKeys(true)) {
+		for (String string : dbStationsConfig.getConfigurationSection("Stations").getKeys(true)) {
 			if (string.contains(".displayname")) {
-				player.sendMessage("- " + DragonTravelMain.dbStationsConfig.getString("Stations." + string));
+				player.sendMessage("- " + dbStationsConfig.getString("Stations." + string));
 			}
 		}
 	}
@@ -166,15 +170,15 @@ public class StationsDB {
 		Location tempLoc;
 		Location playerLoc = player.getLocation();
 
-		for (String string : DragonTravelMain.dbStationsConfig.getConfigurationSection("Stations").getKeys(true)) {
+		for (String string : dbStationsConfig.getConfigurationSection("Stations").getKeys(true)) {
 			if (string.contains(".displayname")) {
 				pathToStation = "Stations." + string;
 				pathToStation = pathToStation.replace(".displayname", "");
 
-				String worldname = DragonTravelMain.dbStationsConfig.getString(pathToStation + ".world");
+				String worldname = dbStationsConfig.getString(pathToStation + ".world");
 
 				if (worldname == null) {
-					DragonTravelMain.logger.log(Level.SEVERE, "[DragonTravel] [Error] The world of the station " + DragonTravelMain.dbStationsConfig.getString(pathToStation + ".displayname") + " could not be read from the database, please check it for errors!");
+					DragonTravelMain.logger.log(Level.SEVERE, "[DragonTravel] [Error] The world of the station " + dbStationsConfig.getString(pathToStation + ".displayname") + " could not be read from the database, please check it for errors!");
 					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.DatabaseCorrupted"));
 					return false;
 				}
@@ -182,7 +186,7 @@ public class StationsDB {
 				world = Bukkit.getWorld(worldname);
 
 				if (world == null) {
-					DragonTravelMain.logger.log(Level.SEVERE, "[DragonTravel] Skipping station '" + DragonTravelMain.dbStationsConfig.getString(pathToStation + ".displayname") + "' while checking for a station. There is no world '" + DragonTravelMain.dbStationsConfig.getString(pathToStation + ".world") + "' on the server!");
+					DragonTravelMain.logger.log(Level.SEVERE, "[DragonTravel] Skipping station '" + dbStationsConfig.getString(pathToStation + ".displayname") + "' while checking for a station. There is no world '" + dbStationsConfig.getString(pathToStation + ".world") + "' on the server!");
 					continue;
 				}
 
@@ -190,9 +194,9 @@ public class StationsDB {
 				if (!world.getName().equalsIgnoreCase(player.getWorld().getName()))
 					continue;
 
-				x = DragonTravelMain.dbStationsConfig.getInt(pathToStation + ".x");
-				y = DragonTravelMain.dbStationsConfig.getInt(pathToStation + ".y");
-				z = DragonTravelMain.dbStationsConfig.getInt(pathToStation + ".z");
+				x = dbStationsConfig.getInt(pathToStation + ".x");
+				y = dbStationsConfig.getInt(pathToStation + ".y");
+				z = dbStationsConfig.getInt(pathToStation + ".z");
 
 				tempLoc = new Location(world, x, y, z);
 
