@@ -10,13 +10,20 @@ import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.Flight;
 
 public class Waypoint {
-
-
 	public boolean finalwp = false;
 	public int x;
 	public int y;
 	public int z;
 	public Block marker;
+
+	public Waypoint() {
+	}
+
+	public Waypoint(int x, int y, int z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
 
 	public String toString() {
 		return "WP: (" + x + ", " + y + ", " + z + ", " + finalwp;
@@ -62,5 +69,26 @@ public class Waypoint {
 			flight.world.getBlockAt(wp.x, wp.y, wp.z).getChunk().load(true);
 			wp.marker.setType(Material.AIR);
 		}
+	}
+
+	public String saveToString() {
+		return x + "%" + y + "%" + z;
+	}
+
+	public static Waypoint loadFromString(String wpData) {
+		String[] wpDataParts = wpData.split("%");
+
+		try {
+			int x = Integer.parseInt(wpDataParts[0]);
+			int y = Integer.parseInt(wpDataParts[1]);
+			int z = Integer.parseInt(wpDataParts[2]);
+
+			return new Waypoint(x, y, z);
+		} catch (NumberFormatException ex) {
+			DragonTravelMain.plugin.getLogger().warning("Unable to read waypoint: " + wpData);
+		} catch (IndexOutOfBoundsException ex) {
+			DragonTravelMain.plugin.getLogger().warning("Unable to read waypoint: " + wpData);
+		}
+		return null;
 	}
 }

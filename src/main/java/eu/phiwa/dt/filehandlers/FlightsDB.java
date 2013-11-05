@@ -117,23 +117,9 @@ public class FlightsDB {
 		List<String> waypoints = (List<String>) section.getList("waypoints");
 
 		for (String wpData : waypoints) {
-
-			String[] wpDataParts = wpData.split("%");
-			Waypoint wp = new Waypoint();
-
-			try {
-				String xString = wpDataParts[0];
-				String yString = wpDataParts[1];
-				String zString = wpDataParts[2];
-
-				wp.x = Integer.parseInt(xString);
-				wp.y = Integer.parseInt(yString);
-				wp.z = Integer.parseInt(zString);
-			} catch (NumberFormatException ex) {
-				DragonTravelMain.logger.info("[DragonTravel][Error] Unable to read flight '" + flight.displayname + "' from database!");
-				return null;
-			} catch (IndexOutOfBoundsException ex) {
-				DragonTravelMain.logger.info("[DragonTravel][Error] Unable to read flight '" + flight.displayname + "' from database!");
+			Waypoint wp = Waypoint.loadFromString(wpData);
+			if (wp == null) {
+				DragonTravelMain.plugin.getLogger().severe("Loading of flight " + flightname + " failed due to malformed waypoint");
 				return null;
 			}
 			flight.addWaypoint(wp);
@@ -157,8 +143,7 @@ public class FlightsDB {
 		List<String> waypointsAsString = new ArrayList<String>();
 
 		for (Waypoint wp : flight.waypoints) {
-			String wpString = wp.x + "%" + wp.y + "%" + wp.z;
-			waypointsAsString.add(wpString);
+			waypointsAsString.add(wp.saveToString());
 		}
 
 		sec.set("waypoints", waypointsAsString);
