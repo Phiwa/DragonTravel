@@ -13,7 +13,6 @@ public class Flight {
 	public String displayname;
 	public String worldName;
 	public List<Waypoint> waypoints = new ArrayList<Waypoint>();
-	public int wpcount = 0;
 
 	public Flight() {
 
@@ -38,7 +37,6 @@ public class Flight {
 
 	public void addWaypoint(Waypoint wp) {
 		waypoints.add(wp);
-		wpcount++;
 	}
 
 	public void removelastWaypoint() {
@@ -47,7 +45,9 @@ public class Flight {
 		waypoints.get(waypoints.size() - 1).removeMarker();
 
 		waypoints.remove(waypoints.size() - 1);
-		wpcount--;
 	}
 
+	public int getWaypointCount() {
+		return waypoints.size();
+	}
 }
