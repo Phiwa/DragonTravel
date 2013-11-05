@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -107,11 +106,7 @@ public class FlightsDB {
 
 		flight.name = flightname.toLowerCase();
 		flight.displayname = section.getString("displayname");
-
-		String worldname = section.getString("world");
-		if (worldname == null)
-			return null;
-		flight.world = Bukkit.getWorld(worldname);
+		flight.worldName = section.getString("world");
 
 		@SuppressWarnings("unchecked")
 		List<String> waypoints = (List<String>) section.getList("waypoints");
@@ -138,7 +133,7 @@ public class FlightsDB {
 	public boolean createFlight(Flight flight) {
 		ConfigurationSection sec = flightSection.createSection(flight.name);
 		sec.set("displayname", flight.displayname);
-		sec.set("world", flight.world.getName());
+		sec.set("world", flight.worldName);
 
 		List<String> waypointsAsString = new ArrayList<String>();
 
