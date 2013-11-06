@@ -109,6 +109,7 @@ public class DragonTravelMain extends JavaPlugin {
 	public void onLoad() {
 		ConfigurationSerialization.registerClass(Home.class);
 		ConfigurationSerialization.registerClass(Station.class);
+		ConfigurationSerialization.registerClass(Flight.class);
 	}
 
 	@Override
