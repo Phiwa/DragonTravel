@@ -24,8 +24,8 @@ public class Flight implements ConfigurationSerializable {
 		name = displayname.toLowerCase();
 
 		@SuppressWarnings("unchecked")
-		List<Object> waypoints = (List<Object>) data.get("waypoints");
-		for (Object o : waypoints) {
+		List<Object> wps = (List<Object>) data.get("waypoints");
+		for (Object o : wps) {
 			if (!(o instanceof String))
 				continue;
 			String wpData = (String) o;
