@@ -2,13 +2,11 @@ package eu.phiwa.dt.flights;
 
 import java.util.Collection;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import eu.phiwa.dt.DragonTravelMain;
-import eu.phiwa.dt.Flight;
 
 public class Waypoint {
 	public int x;

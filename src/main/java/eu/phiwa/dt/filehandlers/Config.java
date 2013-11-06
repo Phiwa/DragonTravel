@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.logging.Level;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -37,7 +36,7 @@ public class Config {
 			DragonTravelMain.config = YamlConfiguration.loadConfiguration(configFile);
 		} catch (IOException e) {
 			e.printStackTrace();
-			DragonTravelMain.logger.log(Level.SEVERE, "Could not update config, disabling plugin!");
+			DragonTravelMain.logger.severe("Could not update config, disabling plugin!");
 		}
 	}
 

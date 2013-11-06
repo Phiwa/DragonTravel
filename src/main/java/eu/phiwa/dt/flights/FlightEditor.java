@@ -66,7 +66,6 @@ public class FlightEditor implements Listener {
 			flight.removelastWaypoint(player);
 
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.WaypointRemoved"));
-			// TODO: ---ADD MESSAGE Successfully removed the last waypoint
 			return;
 		}
 
@@ -84,7 +83,6 @@ public class FlightEditor implements Listener {
 			DragonTravelMain.globalwaypointmarkers.put(block, block);
 
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.WaypointAdded"));
-			// TODO: ---ADD MESSAGE Successfully added a waypoint
 		}
 	}
 }
