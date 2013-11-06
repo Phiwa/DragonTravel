@@ -4,13 +4,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import com.sk89q.minecraft.util.commands.ChatColor;
+
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.Flight;
+import eu.phiwa.dt.permissions.PermissionsHandler;
 
 public class FlightsDB {
 	@SuppressWarnings("unused")
@@ -150,29 +155,21 @@ public class FlightsDB {
 	}
 
 	/**
-	 * Prints all flights from the database to the console.
-	 */
-	public void showFlights() {
-		System.out.println("Available flights: ");
-		for (String string : dbFlightsConfig.getConfigurationSection("Flights").getKeys(true)) {
-			if (string.contains(".displayname")) {
-				System.out.println("- " + dbFlightsConfig.getString("Flights." + string));
-			}
-		}
-	}
-
-	/**
 	 * Prints all flights from the database to the specified player.
 	 *
 	 * @param player Player to print the flights to
 	 */
-	public void showFlights(Player player) {
-		player.sendMessage("Available flights: ");
-		for (String string : dbFlightsConfig.getConfigurationSection("Flights").getKeys(true)) {
-			// TODO: Permission-Check (Normal permission / flight-specific permission) string.split[0] == flight-name
-			if (string.contains(".displayname")) {
-				player.sendMessage("- " + dbFlightsConfig.getString("Flights." + string));
+	public void showFlights(CommandSender sender) {
+		sender.sendMessage("Available flights: ");
+		int i = 0;
+		for (String string : dbFlightsConfig.getConfigurationSection("Flights").getKeys(false)) {
+			Flight flight = getFlight(string);
+			if (flight != null) {
+				// Permission check added - green if available, red if unavailable, aqua if console
+				sender.sendMessage(" - " + (sender instanceof Player ? (PermissionsHandler.hasFlightPermission((Player) sender, flight.name) ? ChatColor.GREEN : ChatColor.RED) : ChatColor.AQUA) + flight.displayname);
+				i++;
 			}
 		}
+		sender.sendMessage(String.format("(total %d)", i));
 	}
 }

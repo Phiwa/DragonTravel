@@ -19,6 +19,7 @@ permissions:
             dt.admin.flights: true
             dt.admin.statdragon: true
             dt.admin.remdragons: true
+            dt.edit: true
             dt.travel.*: true
             dt.ctravel: true
             dt.ptravel: true
@@ -27,6 +28,7 @@ permissions:
             dt.flight.*: true
             dt.nocost.*: true
             dt.notrequireitem.*: true
+            dt.start.*: true
             dt.ptoggle: true
 
     dt.admin.signs:
@@ -65,6 +67,47 @@ permissions:
         default: op
         description: Player is allowed to turn of player-travels to himself
 
+    # Permissions for beginning a dragon flight
+    dt.start.*:
+        children:
+            dt.start.flight.*: true
+            dt.start.travel.*: true
+
+    dt.start.flight.*:
+        children:
+            dt.start.flight.sign: true
+            dt.start.flight.command: true
+            dt.start.flight.command.other: true
+    dt.start.travel.*:
+        children:
+            dt.start.travel.sign: true
+            dt.start.travel.command: true
+            dt.start.travel.command.other: true
+
+    dt.start.flight.sign:
+        description: Player may start a flight from a sign
+    dt.start.flight.command:
+        description: Player may start a flight with a command
+    dt.start.flight.command.other:
+        description: Can start another player on a flight with a command
+
+    dt.start.travel.sign:
+        description: Player may start a travel to a station from a sign
+    dt.start.travel.command:
+        description: Player may start a travel to a station with a command
+    dt.start.travel.command.other:
+        description: Can start another player on a travel to a station with a command
+
+    # Permissions to edit flights and stations
+    dt.edit:
+        description: Player is allowed to edit
+        children:
+            dt.edit.stations: true
+            dt.edit.flights: true
+    dt.edit.stations:
+        description: Player is allowed to edit stations
+    dt.edit.flights:
+        description: Player is allowed to edit flights
 
     # Permissions to remove economy costs
     dt.nocost.*:
