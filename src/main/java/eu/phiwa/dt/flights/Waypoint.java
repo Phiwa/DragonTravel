@@ -11,11 +11,9 @@ import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.Flight;
 
 public class Waypoint {
-	public boolean finalwp = false;
 	public int x;
 	public int y;
 	public int z;
-	public Block marker;
 
 	public Waypoint() {
 	}
@@ -27,18 +25,14 @@ public class Waypoint {
 	}
 
 	public String toString() {
-		return "WP: (" + x + ", " + y + ", " + z + ", " + finalwp;
+		return "WP: (" + x + ", " + y + ", " + z + ")";
 	}
 
-	public void setMarker(Location location) {
-		marker = location.getBlock();
-		marker.setType(Material.GLOWSTONE);
-		DragonTravelMain.globalwaypointmarkers.put(this.marker, this.marker);
-	}
-
-	public void removeMarker() {
-		DragonTravelMain.globalwaypointmarkers.remove(this.marker);
-		this.marker.setType(Material.AIR);
+	public Location toLocation(Location loc) {
+		loc.setX(x);
+		loc.setY(y);
+		loc.setZ(z);
+		return loc;
 	}
 
 	/**
@@ -52,23 +46,6 @@ public class Waypoint {
 		for (Block marker : globalmarkers) {
 			marker.getWorld().getBlockAt(marker.getX(), marker.getY(), marker.getZ()).getChunk().load(true);
 			marker.setType(Material.AIR);
-		}
-	}
-
-	/**
-	 * Removes all WaypointMarkers of the specified flight
-	 *
-	 * @param flight Flight whose waypoint-markers you want to remove
-	 */
-	public static void removeWaypointMarkersOfFlight(Flight flight) {
-		for (Waypoint wp : flight.waypoints) {
-			if (DragonTravelMain.globalwaypointmarkers.containsKey(wp.marker))
-				DragonTravelMain.globalwaypointmarkers.remove(wp.marker);
-
-			if (wp.marker == null)
-				continue;
-			Bukkit.getWorld(flight.worldName).getBlockAt(wp.x, wp.y, wp.z).getChunk().load(false);
-			wp.marker.setType(Material.AIR);
 		}
 	}
 

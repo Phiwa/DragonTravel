@@ -2,8 +2,10 @@ package eu.phiwa.dt.flights;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +20,6 @@ public class FlightEditor implements Listener {
 
 	public static HashMap<Player, Flight> editors = new HashMap<Player, Flight>();
 
-
 	public FlightEditor() {
 	}
 
@@ -32,7 +33,20 @@ public class FlightEditor implements Listener {
 	}
 
 	public static boolean removeEditor(Player player) {
-		return editors.remove(player) != null;
+		Flight flight = editors.remove(player);
+		if (flight == null) return false;
+
+		World world = Bukkit.getWorld(flight.worldName);
+		if (world == null) return true;
+
+		Location loc = new Location(Bukkit.getWorld(flight.worldName), 0, 0, 0);
+		Block block;
+		for (Waypoint wp : flight.waypoints) {
+			wp.toLocation(loc);
+			block = world.getBlockAt(loc);
+			player.sendBlockChange(loc, block.getType(), block.getData());
+		}
+		return true;
 	}
 
 	@EventHandler
@@ -49,7 +63,7 @@ public class FlightEditor implements Listener {
 
 		if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			Flight flight = editors.get(player);
-			flight.removelastWaypoint();
+			flight.removelastWaypoint(player);
 
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.WaypointRemoved"));
 			// TODO: ---ADD MESSAGE Successfully removed the last waypoint
@@ -65,7 +79,7 @@ public class FlightEditor implements Listener {
 			flight.addWaypoint(wp);
 
 			// Create a marker at the waypoint
-			wp.setMarker(player.getLocation());
+			player.sendBlockChange(player.getLocation(), Material.GLOWSTONE, (byte) 0);
 			Block block = player.getLocation().getBlock();
 			DragonTravelMain.globalwaypointmarkers.put(block, block);
 
