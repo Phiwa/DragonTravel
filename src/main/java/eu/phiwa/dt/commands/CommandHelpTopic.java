@@ -2,6 +2,7 @@ package eu.phiwa.dt.commands;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,10 +55,14 @@ public class CommandHelpTopic extends IndexHelpTopic {
 
 		Map<String, Method> subcommands = DragonTravelMain.plugin.commands.getSubcommandMethods("dt");
 
-		for (Map.Entry<String, Method> entry : subcommands.entrySet()) {
-			Command cmd = entry.getValue().getAnnotation(Command.class);
-			if (cmd.aliases()[0].equalsIgnoreCase(entry.getKey())) {
-				ret.add(new SubcommandHelpTopic(entry.getValue()));
+		List<String> keys = Lists.newArrayList(subcommands.keySet());
+		Collections.sort(keys);
+
+		for (String name : keys) {
+			Method method = subcommands.get(name);
+			Command cmd = method.getAnnotation(Command.class);
+			if (cmd.aliases()[0].equalsIgnoreCase(name)) {
+				ret.add(new SubcommandHelpTopic(method));
 			}
 		}
 		System.out.println(DragonTravelMain.plugin.commands.getHelpMessages());
