@@ -23,10 +23,7 @@ public class FlightEditor implements Listener {
 	}
 
 	public static boolean isEditor(Player player) {
-		if (editors.containsKey(player))
-			return true;
-		else
-			return false;
+		return editors.containsKey(player);
 	}
 
 	public static void addEditor(Player player, String flightname) {
@@ -34,9 +31,8 @@ public class FlightEditor implements Listener {
 			editors.put(player, new Flight(player.getWorld(), flightname));
 	}
 
-	public static void removeEditor(Player player) {
-		if (editors.containsKey(player))
-			editors.remove(player);
+	public static boolean removeEditor(Player player) {
+		return editors.remove(player) != null;
 	}
 
 	@EventHandler
@@ -69,7 +65,7 @@ public class FlightEditor implements Listener {
 			flight.addWaypoint(wp);
 
 			// Create a marker at the waypoint
-			wp.setMarker(player);
+			wp.setMarker(player.getLocation());
 			Block block = player.getLocation().getBlock();
 			DragonTravelMain.globalwaypointmarkers.put(block, block);
 

@@ -3,9 +3,9 @@ package eu.phiwa.dt.flights;
 import java.util.Collection;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.Flight;
@@ -30,8 +30,8 @@ public class Waypoint {
 		return "WP: (" + x + ", " + y + ", " + z + ", " + finalwp;
 	}
 
-	public void setMarker(Player player) {
-		marker = player.getLocation().getBlock();
+	public void setMarker(Location location) {
+		marker = location.getBlock();
 		marker.setType(Material.GLOWSTONE);
 		DragonTravelMain.globalwaypointmarkers.put(this.marker, this.marker);
 	}

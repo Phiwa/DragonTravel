@@ -219,14 +219,12 @@ public class Travels {
 
 		if (DragonTravelMain.pm.getPlugin("Factions") == null) {
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Factions.Error.FactionsNotInstalled"));
-			// TODO: ---ADD MESSAGE Factions isn't installed on this server
 			return;
 		}
 
 		if (DragonTravelMain.requireItemTravelFactionhome) {
 			if (!player.getInventory().contains(DragonTravelMain.requiredItem) && !player.hasPermission("dt.notrequireitem.travel")) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.RequiredItemMissing"));
-				// TODO: ---ADD MESSAGE Required item not in inventory
 				return;
 			}
 		}
@@ -236,7 +234,6 @@ public class Travels {
 
 		if (faction.isNone()) {
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Factions.Error.NoFactionMember"));
-			// TODO: ---ADD MESSAGE You do not have a faction
 			return;
 		}
 

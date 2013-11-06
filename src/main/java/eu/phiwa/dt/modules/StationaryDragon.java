@@ -18,6 +18,5 @@ public class StationaryDragon {
 		RyeDragon dragon = new RyeDragon(player.getLocation(), notchWorld);
 		notchWorld.addEntity(dragon);
 		player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Successful.AddedStatDragon"));
-		// TODO: ---ADD MESSAGE Dragon added successfully.
 	}
 }

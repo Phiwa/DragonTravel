@@ -37,8 +37,7 @@ public class PlayerListener implements Listener {
 		if (!DragonTravelMain.listofDragonriders.containsKey(player))
 			return;
 
-		if (DragonTravelMain.ptogglers.containsKey(player.getName()))
-			DragonTravelMain.ptogglers.remove(player.getName());
+		DragonTravelMain.ptogglers.remove(player.getName());
 
 		DragonManagement.removeRiderandDragon(DragonTravelMain.listofDragonriders.get((player)).getEntity(), false);
 	}
