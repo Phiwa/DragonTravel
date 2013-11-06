@@ -1,5 +1,6 @@
 package eu.phiwa.dt.permissions;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class PermissionsHandler {
@@ -14,7 +15,7 @@ public class PermissionsHandler {
 	 *             only checks the general permission)
 	 * @return "True" if the player has the permissions, "false" if he hasn't
 	 */
-	public static boolean hasTravelPermission(Player player, String traveltype, String destinationname) {
+	public static boolean hasTravelPermission(CommandSender player, String traveltype, String destinationname) {
 
 		// Stops any NPEs ("traveltype" is 'travel'/'travel'/'ptravel'),
 		// if a problem occurs, simply allow it.^^
@@ -46,15 +47,15 @@ public class PermissionsHandler {
 	 *             checks the general permission)
 	 * @return "True" if the player has the permissions, "false" if he hasn't
 	 */
-	public static boolean hasFlightPermission(Player player, String flightname) {
+	public static boolean hasFlightPermission(CommandSender sender, String flightname) {
 
-		if (player.hasPermission("dt.flight.*")) // wildcard
+		if (sender.hasPermission("dt.flight.*")) // wildcard
 			return true;
 		else {
 			if (flightname == null) // If no flightname is specified, we got a problem, but simply allow it...^^
 				return true;
 			else {
-				if (player.hasPermission("dt.flight." + flightname)) // flight-specific
+				if (sender.hasPermission("dt.flight." + flightname)) // flight-specific
 					return true;
 				else
 					return false; // No permission
