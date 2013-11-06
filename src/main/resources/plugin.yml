@@ -219,6 +219,6 @@ permissions:
         children:
             dt.start.fhome.command: true
 
-commands:
-    dt:
-        permission: dt.seecommand
+#commands:
+#    dt:
+#        permission: dt.seecommand

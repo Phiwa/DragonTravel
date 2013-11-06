@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,10 +23,16 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.sk89q.bukkit.util.BukkitCommandsManager;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
-import com.sk89q.minecraft.util.commands.CommandsManager;
+import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissionsException;
+import com.sk89q.minecraft.util.commands.CommandUsageException;
+import com.sk89q.minecraft.util.commands.MissingNestedCommandException;
+import com.sk89q.minecraft.util.commands.WrappedCommandException;
 
 import eu.phiwa.dt.anticheatplugins.CheatProtectionHandler;
+import eu.phiwa.dt.commands.CommandHelpTopic;
 import eu.phiwa.dt.commands.DragonTravelCommands;
 import eu.phiwa.dt.filehandlers.Config;
 import eu.phiwa.dt.filehandlers.FlightsDB;
@@ -47,7 +54,8 @@ public class DragonTravelMain extends JavaPlugin {
 	public static final Logger logger = Logger.getLogger("Minecraft");
 
 	// Commands
-	private CommandsManager<CommandSender> commands;
+	public CustomCommandsManager commands;
+	public CommandHelpTopic help;
 
 	// General
 	public static double speed = 0.5;
@@ -108,6 +116,18 @@ public class DragonTravelMain extends JavaPlugin {
 		ConfigurationSerialization.registerClass(Home.class);
 		ConfigurationSerialization.registerClass(Station.class);
 		ConfigurationSerialization.registerClass(Flight.class);
+
+		commands = new CustomCommandsManager();
+
+		final CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, commands);
+		cmdRegister.register(DragonTravelCommands.DragonTravelParentCommand.class);
+	}
+
+	public static class CustomCommandsManager extends BukkitCommandsManager {
+		public Map<String, Method> getSubcommandMethods(String rootCommand) {
+			Method m = this.commands.get(null).get(rootCommand);
+			return this.commands.get(m);
+		}
 	}
 
 	@Override
@@ -206,15 +226,8 @@ public class DragonTravelMain extends JavaPlugin {
 
 		getLogger().info(ChatColor.stripColor(String.format("Payment set up using '%s'.", paymentManager.handler.toString())));
 
-		commands = new CommandsManager<CommandSender>() {
-			@Override
-			public boolean hasPermission(CommandSender player, String perm) {
-				return player.hasPermission(perm);
-			}
-		};
-
-		final CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, commands);
-		cmdRegister.register(DragonTravelCommands.DragonTravelParentCommand.class);
+		getServer().getHelpMap().addTopic((help = new CommandHelpTopic("DragonTravel")));
+		getServer().getHelpMap().addTopic(new CommandHelpTopic("/dt"));
 
 		// MoutingScheduler
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new MountingScheduler(), 60L, 30L);
@@ -300,5 +313,33 @@ public class DragonTravelMain extends JavaPlugin {
 
 
 		logger.log(Level.INFO, "Successfully reloaded all files.");
+	}
+
+
+	// Some boilerplate
+	@Override
+	public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
+
+		try {
+			commands.execute(cmd.getName(), args, sender, sender);
+		} catch (CommandPermissionsException e) {
+			sender.sendMessage(cmd.getPermissionMessage());
+		} catch (MissingNestedCommandException e) {
+			sender.sendMessage(ChatColor.RED + e.getUsage());
+		} catch (CommandUsageException e) {
+			sender.sendMessage(ChatColor.RED + e.getMessage());
+			sender.sendMessage(ChatColor.RED + e.getUsage());
+		} catch (WrappedCommandException e) {
+			if (e.getCause() instanceof NumberFormatException) {
+				sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
+			} else {
+				sender.sendMessage(ChatColor.RED + "An error has occurred. See console.");
+				e.printStackTrace();
+			}
+		} catch (CommandException e) {
+			sender.sendMessage(ChatColor.RED + e.getMessage());
+		}
+
+		return true;
 	}
 }
