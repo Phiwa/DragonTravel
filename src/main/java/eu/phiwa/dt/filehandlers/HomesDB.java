@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.Home;
@@ -32,7 +31,7 @@ public class HomesDB {
 		try {
 			create();
 		} catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] Could not initialize the homes-database.");
+			DragonTravelMain.logger.warning("Could not initialize the homes-database.");
 			e.printStackTrace();
 		}
 
@@ -53,9 +52,9 @@ public class HomesDB {
 		try {
 			dbHomesFile.createNewFile();
 			copy(getClass().getResourceAsStream("homes.yml"), dbHomesFile);
-			DragonTravelMain.logger.info("[DragonTravel] Created homes-database.");
+			DragonTravelMain.logger.info("Created homes-database.");
 		} catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not create the homes-database!");
+			DragonTravelMain.logger.warning("Could not create the homes-database!");
 		}
 
 
@@ -80,9 +79,9 @@ public class HomesDB {
 	private void load() {
 		try {
 			dbHomesConfig.load(dbHomesFile);
-			DragonTravelMain.logger.info("[DragonTravel] Loaded homes-database.");
+			DragonTravelMain.logger.info("Loaded homes-database.");
 		} catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] No homes-database found");
+			DragonTravelMain.logger.warning("No homes-database found");
 			e.printStackTrace();
 		}
 	}
@@ -124,7 +123,7 @@ public class HomesDB {
 			dbHomesConfig.save(dbHomesFile);
 			return true;
 		} catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not write new home to config.");
+			DragonTravelMain.logger.info("Could not write new home to config.");
 			return false;
 		}
 	}
@@ -145,7 +144,7 @@ public class HomesDB {
 			dbHomesConfig.save(dbHomesFile);
 			return true;
 		} catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not delete home from config.");
+			DragonTravelMain.logger.warning("Could not delete home from config.");
 			return false;
 		}
 	}

@@ -35,7 +35,7 @@ public class FlightsDB {
 		try {
 			create();
 		} catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not initialize the flights-database.");
+			DragonTravelMain.logger.warning("Could not initialize the flights-database.");
 			e.printStackTrace();
 		}
 
@@ -56,9 +56,9 @@ public class FlightsDB {
 		try {
 			dbFlightsFile.createNewFile();
 			copy(getClass().getResourceAsStream("flights.yml"), dbFlightsFile);
-			DragonTravelMain.logger.info("[DragonTravel] Created flights-database.");
+			DragonTravelMain.logger.info("Created flights-database.");
 		} catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not create the flights-database!");
+			DragonTravelMain.logger.warning("Could not create the flights-database!");
 		}
 
 
@@ -83,10 +83,9 @@ public class FlightsDB {
 	private void load() {
 		try {
 			dbFlightsConfig.load(dbFlightsFile);
-			DragonTravelMain.logger.info("[DragonTravel] Loaded flights-database.");
+			DragonTravelMain.logger.info("Loaded flights-database.");
 		} catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] No flights-database found");
-			e.printStackTrace();
+			DragonTravelMain.logger.warning("No flights-database found");
 		}
 	}
 
@@ -149,7 +148,7 @@ public class FlightsDB {
 			dbFlightsConfig.save(dbFlightsFile);
 			return true;
 		} catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not delete flight from config.");
+			DragonTravelMain.logger.warning("Could not delete flight from config.");
 			return false;
 		}
 	}

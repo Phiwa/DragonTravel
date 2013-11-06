@@ -65,7 +65,6 @@ public class DragonManagement {
 
 		if (!DragonTravelMain.listofDragonriders.containsKey(player)) {
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NotMounted"));
-			// TODO: ---ADD MESSAGE Not mounted
 			return;
 		}
 
@@ -119,7 +118,7 @@ public class DragonManagement {
 			player.teleport(saveTeleportLoc);
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Successful.DismountedHere"));
 		}
-		// Zur�ck zum Start
+		// Zurck zum Start
 		else {
 			Location startLoc = DragonTravelMain.listofDragonsridersStartingpoints.get(player);
 			entity.eject();
@@ -168,9 +167,7 @@ public class DragonManagement {
 	 * @return
 	 */
 	public static String removeDragons(org.bukkit.World world) {
-
 		int passed = 0;
-
 
 		for (Entity entity : world.getEntities()) {
 
@@ -187,10 +184,9 @@ public class DragonManagement {
 			passed++;
 		}
 
-
-		// TODO: ---ADD MESSAGE x dragons removed
+		// TODO localize
 		String returnMessage = String.format("Removed %d dragons in world ' %s' successfully.", passed, world.getName());
-		return returnMessage;
+		return passed == 0 ? "" : returnMessage;
 	}
 
 	/**

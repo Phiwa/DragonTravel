@@ -84,7 +84,6 @@ public class PlayerListener implements Listener {
 							return;
 					} catch (NumberFormatException ex) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Error.SignCorrupted"));
-						// TODO: ---ADD MESSAGE Corrupted sign
 					}
 				} else {
 					if (!plugin.paymentManager.chargePlayer(ChargeType.TRAVEL_TORANDOM, player))
@@ -96,7 +95,6 @@ public class PlayerListener implements Listener {
 
 			else if (DragonTravelMain.dbStationsHandler.getStation(stationname) == null) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));
-				// TODO: ---ADD MESSAGE Station does not exist
 				return;
 			}
 
@@ -126,7 +124,6 @@ public class PlayerListener implements Listener {
 
 			if (DragonTravelMain.dbFlightsHandler.getFlight((flightname)) == null) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightDoesNotExist"));
-				// TODO: ---ADD MESSAGE Flight does not exist
 			}
 
 			else {
@@ -138,7 +135,6 @@ public class PlayerListener implements Listener {
 							return;
 					} catch (NumberFormatException ex) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Error.SignCorrupted"));
-						// TODO: ---ADD MESSAGE Corrupted sign
 					}
 				} else {
 					if (!plugin.paymentManager.chargePlayer(ChargeType.FLIGHT, player))

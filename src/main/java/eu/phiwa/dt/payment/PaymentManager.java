@@ -2,8 +2,10 @@ package eu.phiwa.dt.payment;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
+
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+
 import com.google.common.collect.Lists;
 
 import eu.phiwa.dt.DragonTravelMain;

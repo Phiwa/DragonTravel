@@ -80,7 +80,6 @@ public class Flights {
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.SendingPlayer").replace("{playername}", player.getName()).replace("{flightname}", flight.displayname));
 		} else
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.displayname));
-		// TODO: ---ADD MESSAGE Starting flight... (flight.displayname is the flight's name with normal cases)
 
 		RyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);
 		dragon.startFlight(flight);

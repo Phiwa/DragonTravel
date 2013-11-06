@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,7 +34,8 @@ public class Messages {
 		language = this.plugin.getConfig().getString("Language");
 
 		if (language == null) {
-			DragonTravelMain.logger.log(Level.SEVERE, "Could not load messages-file because the language could not be read from the config! Disabling plugin!");
+			DragonTravelMain.logger.severe("Could not load messages-file because the language could not be read from the config! Disabling plugin!");
+			new RuntimeException("No language set").printStackTrace();
 
 			DragonTravelMain.pm.disablePlugin(DragonTravelMain.plugin);
 			return false;
@@ -101,7 +101,7 @@ public class Messages {
 			source.close();
 			DragonTravelMain.logger.info("Deployed " + name);
 		} catch (Exception e) {
-			DragonTravelMain.logger.log(Level.SEVERE, "Could not save default file");
+			DragonTravelMain.logger.severe("Could not save default file");
 		}
 	}
 
@@ -113,7 +113,7 @@ public class Messages {
 		message = replaceColors(messages.getString(path));
 
 		if (message == null) {
-			DragonTravelMain.logger.log(Level.SEVERE, "[DragonTravel] Could not find the message looking for at path '" + path + "' which leads to a serious problem! Be try to generate a new language file if you previously updated DragonTravel!");
+			DragonTravelMain.logger.severe("Missing translation: '" + path + "' -- need to regenerate?");
 			return replaceColors("&cAn error occured, please contact the admin!");
 		}
 
@@ -130,7 +130,7 @@ public class Messages {
 		try {
 			formattedMessage = string.replaceAll("(?i)&([a-f0-9])", "\u00A7$1");
 		} catch (Exception ex) {
-			DragonTravelMain.logger.warning("[DragonTravel] [Error] Could not read a message from the messages-xx.yml!");
+			DragonTravelMain.logger.warning("Could not read a message from the messages-xx.yml!");
 		}
 
 		return formattedMessage;

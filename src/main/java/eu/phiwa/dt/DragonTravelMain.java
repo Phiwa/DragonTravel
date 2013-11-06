@@ -19,7 +19,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -51,7 +50,7 @@ public class DragonTravelMain extends JavaPlugin {
 
 	public static PluginManager pm;
 	public static DragonTravelMain plugin;
-	public static final Logger logger = Logger.getLogger("Minecraft");
+	public static Logger logger;
 
 	// Commands
 	public CustomCommandsManager commands;
@@ -132,9 +131,8 @@ public class DragonTravelMain extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-
 		pm = getServer().getPluginManager();
-		PluginDescriptionFile description = getDescription();
+		logger = getLogger();
 		plugin = this;
 
 		// Add the new entity to Minecraft's (Craftbukkit's) entities
@@ -235,6 +233,7 @@ public class DragonTravelMain extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		// TODO colored output
 		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
 		logger.log(Level.SEVERE, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
 		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
@@ -272,7 +271,7 @@ public class DragonTravelMain extends JavaPlugin {
 				e.addSuppressed(ex);
 			}
 
-			logger.info("[DragonTravel] [Error] Could not register the RyeDragon-entity!");
+			logger.severe("Could not register the RyeDragon-entity!");
 			e.printStackTrace();
 			pm.disablePlugin(this);
 		}
@@ -282,14 +281,14 @@ public class DragonTravelMain extends JavaPlugin {
 
 	public void reload() {
 
-		logger.log(Level.INFO, "Reloading all files.");
-		logger.log(Level.INFO, "WE RECOMMEND NOT TO DO THIS BECAUSE IT MIGHT CAUSE SERIUOS PROBLEMS!");
-		logger.log(Level.INFO, "SIMPLY RESTART YOUR SERVER INSTEAD; THAT'S MUCH SAFER!");
+		logger.info("Reloading all files.");
+		logger.info("WE RECOMMEND NOT TO DO THIS BECAUSE IT MIGHT CAUSE SERIUOS PROBLEMS!");
+		logger.info("SIMPLY RESTART YOUR SERVER INSTEAD; THAT'S MUCH SAFER!");
 
 		// Config
 		configHandler.loadConfig();
 		if (config.getString("File.Version") == null) {
-			logger.log(Level.SEVERE, "Could not initialize config! Disabling the plugin!");
+			logger.severe("Could not initialize config! Disabling the plugin!");
 			this.getPluginLoader().disablePlugin(this);
 			return;
 		} else
@@ -312,7 +311,7 @@ public class DragonTravelMain extends JavaPlugin {
 		dbFlightsHandler.init();
 
 
-		logger.log(Level.INFO, "Successfully reloaded all files.");
+		logger.info("Successfully reloaded all files.");
 	}
 
 

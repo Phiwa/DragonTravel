@@ -31,20 +31,17 @@ public class Travels {
 
 		if (destination == null) {
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));
-			// TODO: ---ADD MESSAGE Station does not exist
 			return;
 		}
 
 		if (DragonTravelMain.requireItemTravelStation) {
 			if (!player.getInventory().contains(DragonTravelMain.requiredItem) && !player.hasPermission("dt.notrequireitem.travel")) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.RequiredItemMissing"));
-				// TODO: ---ADD MESSAGE Required item not in inventory
 				return;
 			}
 		}
 
 		player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.displayName));
-		// TODO: ---ADD MESSAGE Travelling to... (destination.displayname is the destination's name with normal cases)
 
 		travel(player, destination.toLocation(), checkForStation);
 	}
@@ -61,7 +58,6 @@ public class Travels {
 		if (DragonTravelMain.requireItemTravelRandom) {
 			if (!player.getInventory().contains(DragonTravelMain.requiredItem) && !player.hasPermission("dt.notrequireitem.travel")) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.RequiredItemMissing"));
-				// TODO: ---ADD MESSAGE Required item not in inventory
 				return;
 			}
 		}
@@ -76,7 +72,6 @@ public class Travels {
 		randomLoc.setY(randomLoc.getWorld().getHighestBlockAt(randomLoc).getY());
 
 		player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToRandomLocation"));
-		// TODO: ---ADD MESSAGE Travelling to a random location
 
 		travel(player, randomLoc, checkForStation);
 	}
@@ -107,7 +102,6 @@ public class Travels {
 			// If the world cannot be found, send an error-message to the player
 			if (world == null) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.WorldNotFound"));
-				// TODO: ---ADD MESSAGE World not found
 				return;
 			}
 		}
@@ -115,7 +109,6 @@ public class Travels {
 		if (DragonTravelMain.requireItemTravelCoordinates) {
 			if (!player.getInventory().contains(DragonTravelMain.requiredItem) && !player.hasPermission("dt.notrequireitem.travel")) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.RequiredItemMissing"));
-				// TODO: ---ADD MESSAGE Required item not in inventory
 				return;
 			}
 		}
@@ -144,10 +137,8 @@ public class Travels {
 			message = String.format(message, world.getName());
 			player.sendMessage(message);
 		}
-		// TODO: ---ADD MESSAGE Travelling to coordinates..
 
 		travel(player, loc, checkForStation);
-
 	}
 
 	/**
@@ -164,14 +155,12 @@ public class Travels {
 		if (DragonTravelMain.requireItemTravelPlayer) {
 			if (!player.getInventory().contains(DragonTravelMain.requiredItem) && !player.hasPermission("dt.notrequireitem.travel")) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.RequiredItemMissing"));
-				// TODO: ---ADD MESSAGE Required item not in inventory
 				return;
 			}
 		}
 
 		Location targetLoc = targetplayer.getLocation();
 		travel(player, targetLoc, checkForStation);
-
 	}
 
 	/**
@@ -188,14 +177,12 @@ public class Travels {
 
 		if (home == null) {
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.NoHomeSet"));
-			// TODO: ---ADD MESSAGE You didn't set a home yet
 			return;
 		}
 
 		if (DragonTravelMain.requireItemTravelHome) {
 			if (!player.getInventory().contains(DragonTravelMain.requiredItem) && !player.hasPermission("dt.notrequireitem.travel")) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.RequiredItemMissing"));
-				// TODO: ---ADD MESSAGE Required item not in inventory
 				return;
 			}
 		}
@@ -204,7 +191,6 @@ public class Travels {
 		travel(player, home.toLocation(), checkForStation);
 
 		player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToHome"));
-		// TODO: ---ADD MESSAGE Travelling to your home
 	}
 
 	/**
@@ -239,7 +225,6 @@ public class Travels {
 
 		if (!faction.hasHome()) {
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Factions.Error.FactionHasNoHome"));
-			// TODO: ---ADD MESSAGE Your faction does not have a home-point set
 			return;
 		} else
 			travel(player, faction.getHome().asBukkitLocation(), checkForStation);
@@ -291,13 +276,11 @@ public class Travels {
 	}
 
 	private static float getCorrectYawForPlayer(Player player, Location destination) {
-
 		if (player.getLocation().getBlockZ() > destination.getBlockZ())
 			return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX()) / (player.getLocation().getBlockZ() - destination.getBlockZ())))) + 180.0F;
 		else if (player.getLocation().getBlockZ() < destination.getBlockZ())
 			return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX()) / (player.getLocation().getBlockZ() - destination.getBlockZ()))));
 		else {
-			System.out.println("DEBUG: CurrentLoc");
 			return player.getLocation().getYaw();
 		}
 	}
