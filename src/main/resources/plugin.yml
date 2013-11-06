@@ -18,6 +18,7 @@ permissions:
             dt.admin.statdragon: true
             dt.admin.remdragons: true
             dt.ptoggle: true
+            dt.ptoggle.other: true
             dt.sethome: true
 
             dt.edit.*: true
@@ -32,6 +33,7 @@ permissions:
         description: Defaults available to all players
         children:
             dt.seecommand: true
+            dt.dismount: true
 
     # Misc command permissions
     dt.seecommand:
@@ -43,6 +45,10 @@ permissions:
     dt.ptoggle.other:
         description: Forcibly change the player travel toggle for another player.
 
+    dt.dismount:
+        default: true
+        description: Allow a player to get off a dragon
+
     dt.sethome:
         description: Allow the player to set their home.
 
@@ -51,6 +57,9 @@ permissions:
 
     dt.admin.remdragons:
         description: Allows you to clear a world or the entire server of all dragons.
+
+    dt.admin.statdragon:
+        description: Allow the creation of stationary dragons.
 
 
     # Station and Flight permissions
