@@ -1,342 +1,55 @@
 package eu.phiwa.dt.payment;
 
-import java.util.IllegalFormatException;
-import java.util.logging.Level;
-
-import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.RegisteredServiceProvider;
 
-import eu.phiwa.dt.DragonTravelMain;
+/**
+ * A method for DragonTravel to exact payment from players.
+ * <p>
+ * A PaymentHandler must define a constructor that takes no arguments.
+ */
+public interface PaymentHandler {
 
-public class PaymentHandler {
-
-	Server server;
-	
-	public PaymentHandler(Server server) {
-		this.server = server;
-	}
-	
-	//TODO: ADD PermissionCheck dt.nost
-	
 	/**
-	 * Is run if the config-option (payment via economy) is set to true
-	 * If no economy-provider is available, it disables useEconomy
-	 * 
+	 * Do any setup required to determine if this payment method is
+	 * available.
+	 * <p>
+	 * If the payment method is permanently unavailable on this server (e.g.
+	 * a missing required plugin), the method should return false.
+	 *
+	 * @return if setup was successful
 	 */
-	public void setupEconomy() {
-		RegisteredServiceProvider<Economy> economyProviderTemp = server.getServicesManager()
-																	.getRegistration(net.milkbowl.vault.economy.Economy.class);
-		if (economyProviderTemp != null) {
-			DragonTravelMain.economyProvider = economyProviderTemp.getProvider();
-			DragonTravelMain.byEconomy = true;
-		}
-		else {
-			DragonTravelMain.logger.log(Level.SEVERE, "[DragonTravel] You enabled economy in the config, "
-									+ "but DragonTravel could not find an economy-provider.\n"
-									+ "DragonTravel will now go and cry a bit. :(");
-			DragonTravelMain.byEconomy = false;
-		}
-	}
-		
-	
-	
-	/** 
-	 * NORMAL (using default costs from config)
-	 * 
-	 * @param paymenttype
-	 * 			A constant defined in DragonTravelMain
-	 * 			which is used to get the default cost
-	 * 			for this paymenttype from the config.
-	 * @param player
-	 * @return
-	 * 			Payment successful? If usePayment is set to false in the config, this returns "true"
+	public boolean setup();
+
+	/**
+	 * A descriptive name for the PaymentHandler.
+	 * <p>
+	 *
+	 * Grammatically, it should fit in:
+	 *
+	 * <pre>
+	 * Payment set up using {toString()}.
+	 * </pre>
+	 *
+	 * @return a descriptive name
 	 */
-	public static boolean chargePlayerNORMAL(int paymenttype, Player player) {
-			
-		if(!DragonTravelMain.usePayment)
-			return true;
-		
-		if(DragonTravelMain.byResources) {
-			return chargePlayerResourcesNORMAL(paymenttype, player);
-		}	
-		else if(DragonTravelMain.byEconomy) {
-			return chargePlayerEconomyNORMAL(paymenttype, player);
-		}
-		else {
-			return false;
-		}
-	}
-	
-	@SuppressWarnings("deprecation")
-	private static boolean chargePlayerResourcesNORMAL(int paymenttype, Player player) {
-		int amount;
-		
-		switch(paymenttype) {
-			case DragonTravelMain.TRAVEL_TOSTATION:
-				if(player.hasPermission("dt.nocost.travel.command") || player.hasPermission("dt.nocost.travel.*"))
-					return true;
-				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.toStation");
-				break;
-			case DragonTravelMain.TRAVEL_TORANDOM:
-				if(player.hasPermission("dt.nocost.randomtravel.command") || player.hasPermission("dt.nocost.randomtravel.*"))
-					return true;
-				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.toRandom");
-				break;
-			case DragonTravelMain.TRAVEL_TOPLAYER:
-				if(player.hasPermission("dt.nocost.ptravel"))
-					return true;
-				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.toPlayer");
-				break;
-			case DragonTravelMain.TRAVEL_TOCOORDINATES:
-				if(player.hasPermission("dt.nocost.ctravel"))
-					return true;
-				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.toCoordinates");
-				break;
-			case DragonTravelMain.TRAVEL_TOHOME:
-				if(player.hasPermission("dt.nocost.home.travel") || player.hasPermission("dt.nocost.home.*"))
-					return true;
-				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.toHome");
-				break;
-			case DragonTravelMain.TRAVEL_TOFACTIONHOME:
-				if(player.hasPermission("dt.nocost.fhome"))
-					return true;
-				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.toFactionhome");
-				break;
-			case DragonTravelMain.SETHOME:
-				if(player.hasPermission("dt.nocost.home.set") || player.hasPermission("dt.nocost.home.*"))
-					return true;
-				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.setHome");
-				break;
-			case DragonTravelMain.FLIGHT:
-				if(player.hasPermission("dt.nocost.flight.command") || player.hasPermission("dt.nocost.flight.*"))
-					return true;
-				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.Flight");
-				break;
-			default:
-				DragonTravelMain.logger.log(Level.SEVERE, "[DragonTravel] Internal Error <Code: 001> " 
-										+ "occured, please contact the author of the plugin!");
-				player.sendMessage("[DragonTravel] An error occured, please contact the admin.");
-				return false;
-			
-		}				
-		Inventory inv = player.getInventory();
-	    if (inv.contains(DragonTravelMain.paymentItem, amount)) {
-	      inv.removeItem(new ItemStack(DragonTravelMain.paymentItem, amount));
-	      player.updateInventory();
-	      
-	      
-	      String message = DragonTravelMain.messagesHandler.getMessage("Messages.Payment.Resources.Successful.WithdrawMessage");
-	      message = message.replace("{amount}", "%d");
-	      message = String.format(message, amount);
-	      player.sendMessage(message);
-	      // TODO: ---ADD MESSAGE Say bye to ...
-	      
-	      return true;
-	    }
-	    else {
-		    player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Payment.Resources.Error.NotEnoughResources"));
-		    // TODO: ---ADD MESSAGE You don't have enough resources to pay for the travel.");
-		    return false;
-	    }
-	}
-	
-	private static boolean chargePlayerEconomyNORMAL(int paymenttype, Player player) {
-		double amount;
-		
-		switch(paymenttype) {
-			case DragonTravelMain.TRAVEL_TOSTATION:
-				if(player.hasPermission("dt.nocost.travel.command") || player.hasPermission("dt.nocost.travel.*"))
-					return true;
-				amount = DragonTravelMain.config.getDouble("Payment.Economy.Prices.toStation");
-				break;
-			case DragonTravelMain.TRAVEL_TORANDOM:
-				if(player.hasPermission("dt.nocost.randomtravel.command") || player.hasPermission("dt.nocost.randomtravel.*"))
-					return true;
-				amount = DragonTravelMain.config.getDouble("Payment.Economy.Prices.toRandom");
-				break;
-			case DragonTravelMain.TRAVEL_TOPLAYER:
-				if(player.hasPermission("dt.nocost.ptravel"))
-					return true;
-				amount = DragonTravelMain.config.getDouble("Payment.Economy.Prices.toPlayer");
-				break;
-			case DragonTravelMain.TRAVEL_TOCOORDINATES:
-				if(player.hasPermission("dt.nocost.ctravel"))
-					return true;
-				amount = DragonTravelMain.config.getDouble("Payment.Economy.Prices.toCoordinates");
-				break;
-			case DragonTravelMain.TRAVEL_TOHOME:
-				if(player.hasPermission("dt.nocost.home.travel") || player.hasPermission("dt.nocost.home.*"))
-					return true;
-				amount = DragonTravelMain.config.getDouble("Payment.Economy.Prices.toHome");
-				break;
-			case DragonTravelMain.TRAVEL_TOFACTIONHOME:
-				if(player.hasPermission("dt.nocost.fhome"))
-					return true;
-				amount = DragonTravelMain.config.getInt("Payment.Economy.Prices.toFactionhome");
-				break;
-			case DragonTravelMain.SETHOME:
-				if(player.hasPermission("dt.nocost.home.set") || player.hasPermission("dt.nocost.home.*"))
-					return true;
-				amount = DragonTravelMain.config.getInt("Payment.Economy.Prices.setHome");
-				break;
-			case DragonTravelMain.FLIGHT:
-				if(player.hasPermission("dt.nocost.flight.command") || player.hasPermission("dt.nocost.flight.*"))
-					return true;
-				amount = DragonTravelMain.config.getDouble("Payment.Economy.Prices.Flight");
-				break;
-			default:
-				DragonTravelMain.logger.log(Level.SEVERE, "[DragonTravel] Internal Error <Code: 001> " 
-										+ "occured, please contact the author of the plugin!");
-				player.sendMessage("[DragonTravel] An error occured, please contact the admin.");
-				return false;			
-		}
+	public String toString();
 
-		String playername = player.getName();
-		double balance = DragonTravelMain.economyProvider.getBalance(playername);
-
-		if (amount == 0.0)
-			return true;
-
-		if (balance < amount) {
-			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Economy.Error.NotEnoughMoney"));
-			// TODO: ---ADD MESSAGE Not enough money
-			return false;
-		}
-
-		DragonTravelMain.economyProvider.withdrawPlayer(playername, amount);
-		
-		String message = DragonTravelMain.messagesHandler.getMessage("Messages.Payment.Economy.Successful.WithdrawMessage");
-		
-		message = message.replace("{amount}", "%f");
-		try {
-			message = String.format(message, amount);
-		}
-		catch(IllegalFormatException ex) {
-			message = "&cFailed to parse price into message! Cost: " + amount;
-		}
-		player.sendMessage(message);
-		// TODO: ---ADD MESSAGE Say bye to ...
-		return true;
-	}
-
-	
-	/** CUSTOMCOST (using specified cost)
-	 * 
-	 * @param customcost
-	 * 			A custom cost which can be specified.
-	 * 			When using a payment via resources,
-	 * 			the double is converted to an integer
-	 * 			and loses its part behind the point
-	 * @param player
-	 * @return
-	 * 			Payment successful? If usePayment is set to false in the config, this returns "true"
+	/**
+	 * Charge the player the correct amount for the given ChargeType.
+	 *
+	 * @param type Type of charge this is for
+	 * @param player player to charge
+	 * @return if the player had enough to pay for the charge
 	 */
-	public static boolean chargePlayerCUSTOMCOST(double customcost, int paymenttype, Player player) {
-		
-		boolean successful = false;
-		
-		if(!DragonTravelMain.usePayment)
-			return true;
-		
-		switch(paymenttype) {
-			case DragonTravelMain.TRAVEL_TOSTATION:
-				if(player.hasPermission("dt.nocost.travel.sign") || player.hasPermission("dt.nocost.travel.*"))
-					return true;
-				break;
-			case DragonTravelMain.TRAVEL_TORANDOM:
-				if(player.hasPermission("dt.nocost.randomtravel.sign") || player.hasPermission("dt.nocost.randomtravel.*"))
-					return true;
-				break;
-			case DragonTravelMain.FLIGHT:
-				if(player.hasPermission("dt.nocost.flight.sign") || player.hasPermission("dt.nocost.flight.*"))
-					return true;
-				break;
-			default:
-		}
-		
-		if(DragonTravelMain.byResources) {
-			successful = chargePlayerResourcesCUSTOMCOST(customcost, paymenttype, player);
-		}
-		else if(DragonTravelMain.byEconomy) {
-			successful = chargePlayerEconomyCUSTOMCOST(customcost, paymenttype, player);
-		}
-		
-		return successful;
-	}
-	
-	@SuppressWarnings("deprecation")
-	private static boolean chargePlayerResourcesCUSTOMCOST(double customcost, int paymenttype, Player player) {
-	
-		
-		
-		int amount = (int)customcost;
-		Inventory inv = player.getInventory();
-		
-	    if (inv.contains(DragonTravelMain.paymentItem, amount)) {
-	    	inv.removeItem(new ItemStack(DragonTravelMain.paymentItem, amount));
-	    	player.updateInventory();
-	    	
-	    	
-	    	String message = DragonTravelMain.messagesHandler.getMessage("Messages.Payment.Resources.Successful.WithdrawMessage");
-		    message = message.replace("{amount}", "%d");
-		    message = String.format(message, amount);
-		    player.sendMessage(message);	    	
-	    	// TODO: ---ADD MESSAGE Say bye to ...
-		    
-	      	return true;
-	    }
-	    else {
-	    	player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Payment.Resources.Error.NotEnoughResources"));
-		    // TODO: ---ADD MESSAGE You don't have enough resources to pay for the travel.");
-		    return false;
-	    }
-	}
-	
-	private static boolean chargePlayerEconomyCUSTOMCOST(double customcost, int paymenttype, Player player) {
-		
-		switch(paymenttype) {
-			case DragonTravelMain.TRAVEL_TOSTATION:
-				if(player.hasPermission("dt.nocost.travel.sign"))
-					return true;
-				break;
-			case DragonTravelMain.TRAVEL_TORANDOM:
-				if(player.hasPermission("dt.nocost.randomtravel.sign"))
-					return true;
-				break;
-			case DragonTravelMain.FLIGHT:
-				if(player.hasPermission("dt.nocost.flight.sign"))
-					return true;
-				break;
-			default:
-		}
-		
-		String playername = player.getName();
-		double amount = customcost;
-		double balance = DragonTravelMain.economyProvider.getBalance(playername);
+	public boolean chargePlayer(ChargeType type, Player player);
 
-		if (amount == 0.0)
-			return true;
-
-		if (balance < amount) {
-			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Economy.Error.NotEnoughMoney"));
-			// TODO: ---ADD MESSAGE Not enough money
-			return false;
-		}
-
-		DragonTravelMain.economyProvider.withdrawPlayer(playername, amount);
-		
-		String message = DragonTravelMain.messagesHandler.getMessage("Messages.Payment.Economy.Successful.WithdrawMessage");
-		message = message.replace("{amount}", "%d");
-		message = String.format(message, amount);
-		player.sendMessage(message);
-		// TODO: ---ADD MESSAGE Say bye to ...
-		return true;
-	}
-
-
+	/**
+	 * Charge the player the given amount for the given ChargeType.
+	 *
+	 * @param type Type of charge this is for
+	 * @param player Player to charge
+	 * @param customCost Amount to charge
+	 * @return if the player had enough to pay for the charge
+	 */
+	public boolean chargePlayerExact(ChargeType type, Player player, double customCost);
 }

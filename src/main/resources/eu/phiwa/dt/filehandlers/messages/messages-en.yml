@@ -47,13 +47,16 @@ Messages:
             DismountedToStart: '&aYou cancelled your journey and were brought back to your starting-point.'
             ToggledPTravelOn: '&aYou now allow player-travels to you.'
             ToggledPTravelOff: '&aYou now don''t allow player-travels to you.'
-        Error:        
+        Error:
+            NoConsole: '&cThe console may not use this command in that way.'
+            PlayerNotOnline: '&cThe player &f{playername}&a isn''t online.'
             NoPermission: '&cYou do not have the permission to use this.'
             NotMounted: '&cYou are not mounted.'
             RequiredItemMissing: '&cYou do not have the required item in your inventory to use the plugin.'        
             DatabaseCorrupted: '&cThe database is corrupted, could not load the entry. Please inform the admin.'
             ReachedDragonLimit: '&cThe server already reached its limit, you cannot spawn another dragon, please wait for another player to dismount.'
     Payment:
+        Free: '&aNo charge for you, hop on!'
         Resources:
             Successful:
                 WithdrawMessage: '&aSay bye to &f{amount}&a gold nugget(s).'

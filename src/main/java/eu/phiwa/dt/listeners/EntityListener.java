@@ -40,7 +40,7 @@ public class EntityListener implements Listener {
 
 		Player player = (Player) event.getEntity();
 		if (DragonTravelMain.listofDragonriders.containsKey(player))
-			if(!DragonTravelMain.config.getBoolean("VulnerableRiders"))
+			if (!DragonTravelMain.config.getBoolean("VulnerableRiders"))
 				event.setCancelled(true);
 	}
 
@@ -62,9 +62,9 @@ public class EntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		if(event.getSpawnReason()!=SpawnReason.CUSTOM)
+		if (event.getSpawnReason() != SpawnReason.CUSTOM)
 			return;
-		
+
 		if (!event.getEntity().getType().toString().equals("ENDER_DRAGON"))
 			return;
 
