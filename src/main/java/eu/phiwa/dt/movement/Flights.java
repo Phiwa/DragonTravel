@@ -1,6 +1,7 @@
 package eu.phiwa.dt.movement;
 
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import eu.phiwa.dt.DragonTravelMain;
@@ -23,34 +24,24 @@ public class Flights {
 	 * @param sendingPlayer Player who sent the player on a flight. Gets all
 	 *             messages about problems until the flight is started
 	 */
-	public static void startFlight(Player player, String flightname, Boolean checkForStation, boolean sentbyadmin, Player sendingPlayer) {
+	public static void startFlight(Player player, String flightname, Boolean checkForStation, boolean sentbyadmin, CommandSender sendingPlayer) {
 
-		Player playerToSendMessagesTo;
+		CommandSender sender;
 
 		if (sentbyadmin)
-			playerToSendMessagesTo = sendingPlayer;
+			sender = sendingPlayer;
 		else
-			playerToSendMessagesTo = player;
+			sender = player;
 
 		Flight flight = DragonTravelMain.dbFlightsHandler.getFlight(flightname);
 
 		if (flight == null) {
-			// Sent by console
-			if (sentbyadmin && playerToSendMessagesTo == null)
-				System.out.println("[DragonTravel] Flight does not exist!");
-			else
-				playerToSendMessagesTo.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightDoesNotExist"));
-			// TODO: ---ADD MESSAGE Flight does not exist
+			sender.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightDoesNotExist"));
 			return;
 		}
 
 		if (!flight.worldName.equals(player.getWorld().getName())) {
-			// Sent by console
-			if (sentbyadmin && playerToSendMessagesTo == null) {
-				System.out.println("[DragonTravel] The flight is in a different world than the player!");
-			} else {
-				playerToSendMessagesTo.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightIsInDifferentWorld"));
-			}
+			sender.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightIsInDifferentWorld"));
 			return;
 		}
 
@@ -59,15 +50,14 @@ public class Flights {
 		if (!sentbyadmin) {
 			if (checkForStation && DragonTravelMain.config.getBoolean("MountingLimit.EnableForFlights") && !player.hasPermission("dt.ignoreusestations.flights")) {
 				if (!DragonTravelMain.dbStationsHandler.checkForStation(player)) {
-					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.NotAtAStation"));
+					sender.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.NotAtAStation"));
 					return;
 				}
 			}
 
 			if (DragonTravelMain.requireItemFlight) {
 				if (!player.getInventory().contains(DragonTravelMain.requiredItem) && !player.hasPermission("dt.notrequireitem.flight")) {
-					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.RequiredItemMissing"));
-					// TODO: ---ADD MESSAGE Required item not in inventory
+					sender.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.RequiredItemMissing"));
 					return;
 				}
 			}

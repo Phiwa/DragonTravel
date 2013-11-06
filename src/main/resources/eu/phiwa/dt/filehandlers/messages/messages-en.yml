@@ -48,7 +48,8 @@ Messages:
             ToggledPTravelOn: '&aYou now allow player-travels to you.'
             ToggledPTravelOff: '&aYou now don''t allow player-travels to you.'
             EstimatedDuration: '&aEstimated flight duration &f{duration}&a.'
-        Error:        
+        Error:
+            NoConsole: '&cThe console may not use this command in that way.'
             NoPermission: '&cYou do not have the permission to use this.'
             NotMounted: '&cYou are not mounted.'
             RequiredItemMissing: '&cYou do not have the required item in your inventory to use the plugin.'        
