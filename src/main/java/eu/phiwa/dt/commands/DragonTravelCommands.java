@@ -57,6 +57,7 @@ public final class DragonTravelCommands {
 	public static void help(CommandContext args, CommandSender sender) throws CommandException {
 		if (args.argsLength() == 0) {
 			sendHelpTopic(sender, DragonTravelMain.plugin.help, args.getFlagInteger('p', 1));
+			sender.sendMessage(ChatColor.AQUA + "For additional help, use " + ChatColor.LIGHT_PURPLE + "/dt help <subcommand>" + ChatColor.AQUA + ".");
 			return;
 		}
 
