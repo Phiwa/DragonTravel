@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -150,22 +151,17 @@ public class StationsDB {
 		}
 	}
 
-	public void showStations() {
-		System.out.println("Available stations: ");
-		for (String string : dbStationsConfig.getConfigurationSection("Stations").getKeys(true)) {
-			if (string.contains(".displayname")) {
-				System.out.println("- " + dbStationsConfig.getString("Stations." + string));
+	public void showStations(CommandSender sender) {
+		sender.sendMessage("Available stations: ");
+		int i = 0;
+		for (String string : dbStationsConfig.getConfigurationSection("Stations").getKeys(false)) {
+			Station station = getStation(string);
+			if (station != null) {
+				sender.sendMessage(" - " + station.displayName);
+				i++;
 			}
 		}
-	}
-
-	public void showStations(Player player) {
-		player.sendMessage("Available stations: ");
-		for (String string : dbStationsConfig.getConfigurationSection("Stations").getKeys(true)) {
-			if (string.contains(".displayname")) {
-				player.sendMessage("- " + dbStationsConfig.getString("Stations." + string));
-			}
-		}
+		sender.sendMessage(String.format("(total %d)", i));
 	}
 
 	public boolean checkForStation(Player player) {

@@ -17,6 +17,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
@@ -24,8 +25,12 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.minecraft.util.commands.CommandsManager;
+
 import eu.phiwa.dt.anticheatplugins.CheatProtectionHandler;
 import eu.phiwa.dt.commands.CommandHandler;
+import eu.phiwa.dt.commands.DragonTravelCommands;
 import eu.phiwa.dt.filehandlers.Config;
 import eu.phiwa.dt.filehandlers.FlightsDB;
 import eu.phiwa.dt.filehandlers.HomesDB;
@@ -44,6 +49,9 @@ public class DragonTravelMain extends JavaPlugin {
 	public static PluginManager pm;
 	public static DragonTravelMain plugin;
 	public static final Logger logger = Logger.getLogger("Minecraft");
+
+	// Commands
+	private CommandsManager<CommandSender> commands;
 
 	// General
 	public static double speed = 0.5;
@@ -211,6 +219,16 @@ public class DragonTravelMain extends JavaPlugin {
 		paymentManager = new PaymentManager(getServer());
 
 		getLogger().info(ChatColor.stripColor(String.format("Payment set up using '%s'.", paymentManager.handler.toString())));
+
+		commands = new CommandsManager<CommandSender>() {
+			@Override
+			public boolean hasPermission(CommandSender player, String perm) {
+				return player.hasPermission(perm);
+			}
+		};
+
+		final CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, commands);
+		cmdRegister.register(DragonTravelCommands.DragonTravelParentCommand.class);
 
 		// MoutingScheduler
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new MountingScheduler(), 60L, 30L);
