@@ -5,10 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
+import org.bukkit.entity.Player;
 
+import eu.phiwa.dt.flights.FlightEditor;
 import eu.phiwa.dt.flights.Waypoint;
 
 @SerializableAs("DT-Flight")
@@ -54,9 +58,11 @@ public class Flight implements ConfigurationSerializable {
 		waypoints.add(wp);
 	}
 
-	public void removelastWaypoint() {
+	public void removelastWaypoint(Player player) {
 		// Remove marker from waypoint
-		waypoints.get(waypoints.size() - 1).removeMarker();
+		Waypoint tmp = waypoints.get(waypoints.size() - 1);
+		Block block = Bukkit.getWorld(worldName).getBlockAt(tmp.x, tmp.y, tmp.z);
+		player.sendBlockChange(block.getLocation(), block.getType(), block.getData());
 
 		waypoints.remove(waypoints.size() - 1);
 	}

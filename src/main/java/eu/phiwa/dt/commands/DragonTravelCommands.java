@@ -2,6 +2,7 @@ package eu.phiwa.dt.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -538,7 +539,6 @@ public final class DragonTravelCommands {
 		}
 
 		DragonTravelMain.dbFlightsHandler.saveFlight(wipFlight);
-		Waypoint.removeWaypointMarkersOfFlight(wipFlight);
 		FlightEditor.removeEditor(player);
 
 		player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.FlightSaved"));
@@ -577,8 +577,8 @@ public final class DragonTravelCommands {
 		}
 		Waypoint wp = new Waypoint(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 
-		wp.setMarker(loc);
 		Block block = loc.getBlock();
+		player.sendBlockChange(loc, Material.GLOWSTONE, (byte) 0);
 		DragonTravelMain.globalwaypointmarkers.put(block, block);
 
 		wipFlight.addWaypoint(wp);
@@ -604,7 +604,7 @@ public final class DragonTravelCommands {
 			return;
 		}
 
-		wipFlight.removelastWaypoint();
+		wipFlight.removelastWaypoint(player);
 		player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.WaypointRemoved"));
 	}
 
