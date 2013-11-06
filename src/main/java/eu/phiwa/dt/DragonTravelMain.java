@@ -26,7 +26,6 @@ import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.CommandsManager;
 
 import eu.phiwa.dt.anticheatplugins.CheatProtectionHandler;
-import eu.phiwa.dt.commands.CommandHandler;
 import eu.phiwa.dt.commands.DragonTravelCommands;
 import eu.phiwa.dt.filehandlers.Config;
 import eu.phiwa.dt.filehandlers.FlightsDB;
@@ -164,10 +163,6 @@ public class DragonTravelMain extends JavaPlugin {
 		// StationsDB
 		dbFlightsHandler = new FlightsDB(this);
 		dbFlightsHandler.init();
-
-
-		// Commands
-		getCommand("dt").setExecutor(new CommandHandler(this));
 
 		CheatProtectionHandler.setup();
 
