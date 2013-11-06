@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -149,19 +150,12 @@ public class HomesDB {
 		}
 	}
 
-	public void showHomes() {
-		System.out.println("Player's who registered a home: ");
-		for (String string : dbHomesConfig.getConfigurationSection("Homes").getKeys(true)) {
-			if (!string.contains("."))
-				System.out.println("- " + string);
-		}
-	}
-
-	public void showStations(Player player) {
-		player.sendMessage("Player's who registered a home: ");
-		for (String string : dbHomesConfig.getConfigurationSection("Homes").getKeys(true)) {
-			if (!string.contains("."))
-				player.sendMessage("- " + string);
+	public void showHomes(CommandSender sender) {
+		sender.sendMessage("Players who have registered a home: ");
+		for (String string : dbHomesConfig.getConfigurationSection("Homes").getKeys(false)) {
+			Home home = getHome(string);
+			if (home != null)
+				sender.sendMessage(" - " + string + " [" + home.worldName + "@" + home.x + "," + home.y + "," + home.z + "]");
 		}
 	}
 }
