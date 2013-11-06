@@ -33,7 +33,7 @@
 				<configuration>
 					<artifactSet>
 						<includes>
-							<include>com.sk89q:command-framework-core</include>
+							<include>com.sk89q:command-framework-bukkit</include>
 						</includes>
 					</artifactSet>
 					<relocations>
