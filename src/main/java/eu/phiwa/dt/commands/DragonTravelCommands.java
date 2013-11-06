@@ -5,13 +5,17 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.help.HelpTopic;
+import org.bukkit.util.ChatPaginator;
 
 import com.sk89q.minecraft.util.commands.ChatColor;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
+import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.Console;
 import com.sk89q.minecraft.util.commands.NestedCommand;
 
@@ -31,20 +35,80 @@ import eu.phiwa.dt.permissions.PermissionsHandler;
 public final class DragonTravelCommands {
 
 	public static class DragonTravelParentCommand {
-		@Command(aliases = {"dt"}, desc = "DragonTravel commands", flags = "d", min = 1, max = 3)
+		@Command(aliases = {"dt", "dragontravel"}, desc = "DragonTravel commands")
 		@CommandPermissions({"dt.seecommand"})
-		@NestedCommand({DragonTravelCommands.class })
+		@NestedCommand({DragonTravelCommands.class})
 		public static void dragonTravel() { }
 	}
-
 
 	/**********************************************
 	 *                  GENERAL                   *
 	 **********************************************/
 	public byte __SECTION_GENERAL__;
 
+
 	@Console
-	@Command(aliases = {"reload"}, desc = "Reload the config")
+	@Command(aliases = {"help", "?", "h"},
+			desc = "This help",
+			usage = "/dt help [-p page] [subcommand]",
+			min = 0, max = 1,
+			help = "Shows more extensive help for each subcommand")
+	@CommandPermissions({"dt.seecommand"})
+	public static void help(CommandContext args, CommandSender sender) throws CommandException {
+		if (args.argsLength() == 0) {
+			sendHelpTopic(sender, DragonTravelMain.plugin.help, args.getFlagInteger('p', 1));
+			return;
+		}
+
+		HelpTopic topic = DragonTravelMain.plugin.help.getSubcommandHelp(sender, args.getString(0));
+		if (topic == null) {
+			sender.sendMessage(ChatColor.RED + "No help for " + args.getString(0));
+			return;
+		}
+
+		sendHelpTopic(sender, topic, args.getFlagInteger('p', 1));
+	}
+
+	// Ripped from org.bukkit.command.defaults.HelpCommand
+	public static void sendHelpTopic(CommandSender sender, HelpTopic topic, int pageNumber) {
+		int pageHeight, pageWidth;
+		if (sender instanceof ConsoleCommandSender) {
+			pageHeight = ChatPaginator.UNBOUNDED_PAGE_HEIGHT;
+			pageWidth = ChatPaginator.UNBOUNDED_PAGE_WIDTH;
+		} else {
+			pageHeight = ChatPaginator.CLOSED_CHAT_PAGE_HEIGHT - 1;
+			pageWidth = ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH;
+		}
+		ChatPaginator.ChatPage page = ChatPaginator.paginate(topic.getFullText(sender), pageNumber, pageWidth, pageHeight);
+
+		StringBuilder header = new StringBuilder();
+		header.append(ChatColor.YELLOW);
+		header.append("--------- ");
+		header.append(ChatColor.WHITE);
+		header.append("Help: ");
+		header.append(topic.getName());
+		header.append(" ");
+		if (page.getTotalPages() > 1) {
+			header.append("(");
+			header.append(page.getPageNumber());
+			header.append("/");
+			header.append(page.getTotalPages());
+			header.append(") ");
+		}
+		header.append(ChatColor.YELLOW);
+		for (int i = header.length(); i < ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH; i++) {
+			header.append("-");
+		}
+		sender.sendMessage(header.toString());
+
+		sender.sendMessage(page.getLines());
+	}
+
+	@Console
+	@Command(aliases = {"reload"},
+			desc = "Reload the config",
+			usage = "/dt reload",
+			help = "Reloads all files (extremely buggy!)")
 	@CommandPermissions({"dt.admin.reload"})
 	public static void reload(CommandContext args, CommandSender sender) throws CommandException {
 		DragonTravelMain.plugin.reload();
@@ -52,14 +116,18 @@ public final class DragonTravelCommands {
 
 	@Console
 	@Command(aliases = {"showstations", "showstats"},
-			desc = "Show available stations")
+			desc = "Show available stations",
+			usage = "/dt showstations",
+			help = "Shows a list of all available stations.")
 	public static void showStations(CommandContext args, CommandSender sender) throws CommandException {
 		DragonTravelMain.dbStationsHandler.showStations(sender);
 	}
 
 	@Console
 	@Command(aliases = {"showflights"},
-			desc = "Show available flights")
+			desc = "Show available flights",
+			usage = "/dt showflights",
+			help = "Shows a list of all available flights.")
 	public static void showFlights(CommandContext args, CommandSender sender) throws CommandException {
 		DragonTravelMain.dbFlightsHandler.showFlights(sender);
 	}
@@ -67,18 +135,21 @@ public final class DragonTravelCommands {
 	@Console
 	@Command(aliases = {"removedragons", "remdragons"},
 			desc = "Remove all dragons",
-			usage = "/dt remdragons [-g] [worldname]",
-			min = 0, max = 1, flags="g")
+			usage = "/dt remdragons [-g | world]",
+			min = 0, max = 1, flags="g",
+			help = "Removes all dragons (except stationary dragons) without riders.\n"
+					+ "It only acts on the world you're currently in, unless you use the -g ('global') flag, or specify a world in the command.")
 	@CommandPermissions({"dt.admin.remdragons"})
 	public static void removeDragons(CommandContext args, CommandSender sender) throws CommandException {
+		if (args.hasFlag('g')) {
+			for (World world : Bukkit.getWorlds()) {
+				sender.sendMessage("[DragonTravel] " + DragonManagement.removeDragons(world));
+			}
+			return;
+		}
 		switch (args.argsLength()) {
 		case 0:
-			if (args.hasFlag('g')) {
-				for (World world : Bukkit.getWorlds()) {
-					sender.sendMessage("[DragonTravel] " + DragonManagement.removeDragons(world));
-				}
-				return;
-			} else if (sender instanceof Player) {
+			if (sender instanceof Player) {
 				sender.sendMessage("[DragonTravel] " + DragonManagement.removeDragons(((Player) sender).getWorld()));
 				return;
 			}
@@ -111,7 +182,11 @@ public final class DragonTravelCommands {
 
 	@Command(aliases = {"dismount"},
 			desc = "Get off of the dragon",
-			usage = "/dt dismount")
+			usage = "/dt dismount",
+			help = "Dismounts you from the dragons. "
+					+ "Depending on the server's settings, "
+					+ "you might be teleported back to the "
+					+ "point you started your journey from.")
 	@CommandPermissions({"dt.dismount"})
 	public static void dismount(CommandContext args, CommandSender sender) throws CommandException {
 		if (!(sender instanceof Player)) {
@@ -127,15 +202,15 @@ public final class DragonTravelCommands {
 			desc = "Toggle whether you can recieve player dragon travels",
 			usage = "/dt ptoggle [-y|-n]",
 			min = 0, max = 1,
-			flags = "yn")
+			flags = "yn",
+			help = "Toggles whether you allow/don't allow\n player-travels to you.")
 	@CommandPermissions({"dt.ptoggle", "dt.ptoggle.other"})
 	public static void ptoggle(CommandContext args, CommandSender sender) throws CommandException {
 		String playerName;
 
 		if (args.getString(0, null) != null) {
 			if (!sender.hasPermission("dt.ptoggle.other")) {
-				sender.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
-				return;
+				throw new CommandPermissionsException();
 			}
 			Player p = Bukkit.getPlayer(args.getString(0));
 			if (p == null) {
@@ -172,7 +247,8 @@ public final class DragonTravelCommands {
 
 	@Command(aliases = {"sethome"},
 			desc = "Set your DragonTravel home",
-			usage = "/dt sethome")
+			usage = "/dt sethome",
+			help = "Sets your DragonTravel home.")
 	@CommandPermissions({"dt.sethome"})
 	public static void setHome(CommandContext args, CommandSender sender) throws CommandException {
 		if (!(sender instanceof Player)) {
@@ -197,7 +273,8 @@ public final class DragonTravelCommands {
 	@Command(aliases = {"flight"},
 			desc = "Start a Flight",
 			usage = "/dt flight <flight name> [player=you]",
-			min = 1, max = 2)
+			min = 1, max = 2,
+			help = "Starts the specified flight.")
 	@CommandPermissions({"dt.start.flight.command", "dt.start.flight.command.other"})
 	public static void startFlight(CommandContext args, CommandSender sender) throws CommandException {
 		String flight = args.getString(0);
@@ -215,8 +292,7 @@ public final class DragonTravelCommands {
 				return;
 			}
 			if (!sender.hasPermission("dt.start.flight.command")) {
-				sender.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
-				return;
+				throw new CommandPermissionsException();
 			}
 
 			player = (Player) sender;
@@ -229,8 +305,7 @@ public final class DragonTravelCommands {
 
 		case 2:
 			if (!sender.hasPermission("dt.start.flight.command.other")) {
-				sender.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
-				return;
+				throw new CommandPermissionsException();
 			}
 
 			player = Bukkit.getPlayer(args.getString(1));
@@ -254,7 +329,8 @@ public final class DragonTravelCommands {
 	@Command(aliases = {"travel"},
 			desc = "Travel to another station",
 			usage = "/dt travel <station name>",
-			min = 1, max = 1)
+			min = 1, max = 1,
+			help = "Brings you to the specified station")
 	@CommandPermissions({"dt.start.travel.command"})
 	public static void startStationTravel(CommandContext args, CommandSender sender) throws CommandException {
 		String station = args.getString(0);
@@ -283,7 +359,8 @@ public final class DragonTravelCommands {
 	@Command(aliases = {"ptravel", "player"},
 			desc = "Travel to another player",
 			usage = "/dt ptravel <player>",
-			min = 1, max = 1)
+			min = 1, max = 1,
+			help = "Brings you to the specified player")
 	@CommandPermissions({"dt.start.player.command"})
 	public static void startPlayerTravel(CommandContext args, CommandSender sender) throws CommandException {
 		if (!(sender instanceof Player)) {
@@ -314,7 +391,8 @@ public final class DragonTravelCommands {
 	@Command(aliases = {"ctravel", "coord", "coords"},
 			desc = "Travel to some coordinates",
 			usage = "/dt ctravel x y z [world]",
-			min = 3, max = 4)
+			min = 3, max = 4,
+			help = "Brings you to the specified location")
 	@CommandPermissions({"dt.start.coord.command"})
 	public static void startCoordsTravel(CommandContext args, CommandSender sender) throws CommandException {
 		if (!(sender instanceof Player)) {
@@ -341,7 +419,8 @@ public final class DragonTravelCommands {
 
 	@Command(aliases = {"home"},
 			desc = "Travel to your home",
-			usage = "/dt home")
+			usage = "/dt home",
+			help = "Brings you to your home")
 	@CommandPermissions({"dt.start.home.command"})
 	public static void startHomeTravel(CommandContext args, CommandSender sender) throws CommandException {
 		if (!(sender instanceof Player)) {
@@ -357,7 +436,8 @@ public final class DragonTravelCommands {
 
 	@Command(aliases = {"fhome"},
 			desc = "Travel to your faction home",
-			usage = "/dt fhome")
+			usage = "/dt fhome",
+			help = "Brings you to your faction's home.")
 	@CommandPermissions({"dt.start.fhome.command"})
 	public static void startFHomeTravel(CommandContext args, CommandSender sender) throws CommandException {
 		if (!(sender instanceof Player)) {
@@ -382,7 +462,9 @@ public final class DragonTravelCommands {
 
 	@Command(aliases = {"createflight", "newflight"},
 			desc = "Create a new Flight",
-			usage = "/dt createflight")
+			usage = "/dt createflight",
+			help = "Creates a new flight and puts you into the flight-creation mode.\n\n"
+					+ "You MUST NOT be in Flight Editing mode when you use this command.")
 	@CommandPermissions({"dt.edit.flights", "dt.edit.*"})
 	public static void newFlight(CommandContext args, CommandSender sender) throws CommandException {
 		if (!(sender instanceof Player)) {
@@ -410,7 +492,8 @@ public final class DragonTravelCommands {
 	@Command(aliases = {"remflight", "delflight"},
 			desc = "Delete a Flight",
 			usage = "/dt remflight <flight name>",
-			min = 1, max = 1)
+			min = 1, max = 1,
+			help = "Removes the flight with the specified name.")
 	@CommandPermissions({"dt.edit.flights", "dt.edit.*"})
 	public static void removeFlight(CommandContext args, CommandSender sender) throws CommandException {
 		if (DragonTravelMain.dbFlightsHandler.getFlight(args.getString(0)) == null) {
@@ -425,7 +508,9 @@ public final class DragonTravelCommands {
 
 	@Command(aliases = {"saveflight"},
 			desc = "Save the flight you are editing",
-			usage = "/dt saveflight")
+			usage = "/dt saveflight",
+			help = "Saves the flight and ends flight-creation mode.\n\n"
+					+ "You MUST be in Flight Editing mode when you use this command.")
 	@CommandPermissions({"dt.edit.flights", "dt.edit.*"})
 	public static void saveFlight(CommandContext args, CommandSender sender) throws CommandException {
 		if (!(sender instanceof Player)) {
@@ -454,7 +539,9 @@ public final class DragonTravelCommands {
 	@Command(aliases = {"setwp"},
 			desc = "Set a waypoint for the flight",
 			usage = "/dt setwp [x y z]",
-			min = 0, max = 3)
+			min = 0, max = 3,
+			help = "Add a new waypoint to the flight where you're standing, or at the given coordinates.\n\n"
+					+ "You MUST be in Flight Editing mode when you use this command.")
 	@CommandPermissions({"dt.edit.flights", "dt.edit.*"})
 	public static void setWaypoint(CommandContext args, CommandSender sender) throws CommandException {
 		if (!(sender instanceof Player)) {
@@ -493,7 +580,9 @@ public final class DragonTravelCommands {
 
 	@Command(aliases = {"remlastwp", "remwp"},
 			desc = "Remove the most recent waypoint",
-			usage = "/dt remwp")
+			usage = "/dt remwp",
+			help = "Remove the most recently added waypoint from the flight.\n\n"
+					+ "You MUST be in Flight Editing mode when you use this command.")
 	@CommandPermissions({"dt.edit.flights", "dt.edit.*"})
 	public static void removeWaypoint(CommandContext args, CommandSender sender) throws CommandException {
 		if (!(sender instanceof Player)) {
@@ -513,8 +602,9 @@ public final class DragonTravelCommands {
 	}
 
 	@Command(aliases = {"setstation", "setstat"},
-			desc = "Set a station here",
-			usage = "/dt setstation <name>")
+			desc = "Creates a new station here.",
+			usage = "/dt setstation <name>",
+			help = "Creates a new station with the given name at your current location.")
 	@CommandPermissions({"dt.edit.stations", "dt.edit.*"})
 	public static void setStation(CommandContext args, CommandSender sender) throws CommandException {
 		if (!(sender instanceof Player)) {
@@ -543,7 +633,8 @@ public final class DragonTravelCommands {
 	@Command(aliases = {"deletestation", "removestat", "remstation", "removestation",
 					"delstat", "deletestat", "delstation", "remstat"},
 			desc = "Delete a station",
-			usage = "/dt delstation <name>")
+			usage = "/dt delstation <name>",
+			help = "Removes the station with the specified name.")
 	@CommandPermissions({"dt.edit.stations", "dt.edit.*"})
 	public static void removeStation(CommandContext args, CommandSender sender) throws CommandException {
 		if (!(sender instanceof Player)) {
