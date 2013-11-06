@@ -13,13 +13,13 @@ import net.milkbowl.vault.economy.Economy;
 import net.minecraft.server.v1_7_R1.EntityTypes;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,7 +36,7 @@ import eu.phiwa.dt.listeners.BlockListener;
 import eu.phiwa.dt.listeners.EntityListener;
 import eu.phiwa.dt.listeners.PlayerListener;
 import eu.phiwa.dt.modules.MountingScheduler;
-import eu.phiwa.dt.payment.PaymentHandler;
+import eu.phiwa.dt.payment.PaymentManager;
 
 
 public class DragonTravelMain extends JavaPlugin {
@@ -85,16 +85,6 @@ public class DragonTravelMain extends JavaPlugin {
 	public static boolean requireItemFlight = false;
 	public static Material requiredItem = Material.DRAGON_EGG;
 
-	// Payment-Types
-	public static final int TRAVEL_TOSTATION = 1;
-	public static final int TRAVEL_TORANDOM = 2;
-	public static final int TRAVEL_TOPLAYER = 3;
-	public static final int TRAVEL_TOCOORDINATES = 4;
-	public static final int TRAVEL_TOHOME = 5;
-	public static final int TRAVEL_TOFACTIONHOME = 6;
-	public static final int FLIGHT = 7;
-	public static final int SETHOME = 8;
-
 	// Dragon Antigrief-Options
 	public static boolean onlydragontraveldragons;
 	public static boolean alldragons;
@@ -103,11 +93,11 @@ public class DragonTravelMain extends JavaPlugin {
 	public static int dragonLimit = 99999;
 
 	// Payment (Costs are directly read from the config/sign on-the-fly)
+	public PaymentManager paymentManager;
 	public static boolean usePayment = false;
 	public static boolean byEconomy = false;
 	public static boolean byResources = false;
-	public static Economy economyProvider;
-	public static int paymentItem = 371;
+	public static Material paymentItem = Material.GOLD_NUGGET;
 
 	private final Class<?> dragonClass;
 
@@ -186,7 +176,7 @@ public class DragonTravelMain extends JavaPlugin {
 		alldragons = config.getBoolean("AntiGriefDragons.all");
 		ignoreAntiMobspawnAreas = config.getBoolean("AntiGriefDragons.bypassWorldGuardAntiSpawn");
 
-		Material tmp = Material.matchMaterial(config.getString("RequiredItem.Item", "122"));
+		Material tmp = Material.matchMaterial(config.getString("RequiredItem.Item", "DRAGON_EGG"));
 		if (tmp != null) {
 			requiredItem = tmp;
 		}
@@ -201,49 +191,28 @@ public class DragonTravelMain extends JavaPlugin {
 
 		speed = config.getDouble("DragonSpeed");
 
-		usePayment = config.getBoolean("Payment.usePayment");
-		byEconomy = config.getBoolean("Payment.byEconomy");
-		byResources = config.getBoolean("Payment.byResources");
+		paymentItem = Material.matchMaterial(config.getString("Payment.Resources.Item", "GOLD_NUGGET"));
 
-		paymentItem = config.getInt("Payment.Resources.Item");
-
-		dragonLimit = config.getInt("DragonLimit");
+		dragonLimit = config.getInt("DragonLimit", 5000);
 
 		onlysigns = config.getBoolean("OnlySigns");
 
 		ptoggleDefault = config.getBoolean("PToggleDefault");
 
-		if (usePayment) {
+		usePayment = config.getBoolean("Payment.usePayment");
+		byEconomy = config.getBoolean("Payment.byEconomy");
+		byResources = config.getBoolean("Payment.byResources");
 
-			if (!byEconomy && !byResources) {
-				logger.log(Level.SEVERE, "[DragonTravel] Payment has been enabled, but both payment-types are disabled, how should a player be able to pay?! Disabling payment...");
-				usePayment = false;
-			}
-
-			if (byEconomy && byResources) {
-				logger.log(Level.SEVERE, "[DragonTravel] Payment has been set to Economy AND Resources, but you can only use one type of payment! Disabling payment...");
-				usePayment = false;
-			}
-
-			// Set up Economy (if config-option is set to true)
-			if (byEconomy) {
-				Plugin x = pm.getPlugin("Vault");
-				if (x != null & x instanceof Vault) {
-					logger.info(String.format("[DragonTravel] Hooked into Vault, using it for economy-support"));
-					logger.info(String.format("[DragonTravel] Enabled %s", description.getVersion()));
-					new PaymentHandler(this.getServer()).setupEconomy();
-				} else {
-					logger.log(Level.SEVERE, "[DragonTravel] \"Vault\" was not found,");
-					logger.log(Level.SEVERE, "[DragonTravel] disabling economy-support!");
-					logger.log(Level.SEVERE, "[DragonTravel] Turn off \"Payment.byEconomy\"");
-					logger.log(Level.SEVERE, "[DragonTravel] in the config.yml or install Vault!");
-				}
-			}
+		if (byEconomy && byResources) {
+			getLogger().severe("Both Payment.byEconomy and Payment.byResources are set to true. Attempting Economy first..");
 		}
 
-		//MoutingScheduler
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new MountingScheduler(), 60L, 30L);
+		paymentManager = new PaymentManager(getServer());
 
+		getLogger().info(ChatColor.stripColor(String.format("Payment set up using '%s'.", paymentManager.handler.toString())));
+
+		// MoutingScheduler
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new MountingScheduler(), 60L, 30L);
 	}
 
 	@Override

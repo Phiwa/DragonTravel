@@ -17,7 +17,7 @@ import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.modules.DragonManagement;
 import eu.phiwa.dt.movement.Flights;
 import eu.phiwa.dt.movement.Travels;
-import eu.phiwa.dt.payment.PaymentHandler;
+import eu.phiwa.dt.payment.ChargeType;
 import eu.phiwa.dt.permissions.PermissionsHandler;
 
 
@@ -81,14 +81,14 @@ public class PlayerListener implements Listener {
 				if (lines[3].length() != 0) {
 					try {
 						double costOnSign = Double.parseDouble(lines[3]);
-						if (!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.TRAVEL_TORANDOM, player))
+						if (!plugin.paymentManager.chargePlayerCustom(ChargeType.TRAVEL_TORANDOM, player, costOnSign))
 							return;
 					} catch (NumberFormatException ex) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Error.SignCorrupted"));
 						// TODO: ---ADD MESSAGE Corrupted sign
 					}
 				} else {
-					if (!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TORANDOM, player))
+					if (!plugin.paymentManager.chargePlayer(ChargeType.TRAVEL_TORANDOM, player))
 						return;
 				}
 
@@ -107,10 +107,10 @@ public class PlayerListener implements Listener {
 				try {
 					double costOnSign = Double.parseDouble(lines[3]);
 
-					if (!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.TRAVEL_TOSTATION, player))
+					if (!plugin.paymentManager.chargePlayerCustom(ChargeType.TRAVEL_TOSTATION, player, costOnSign))
 						return;
 				} catch (NumberFormatException ex) {
-					if (!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOSTATION, player))
+					if (!plugin.paymentManager.chargePlayer(ChargeType.TRAVEL_TOSTATION, player))
 						return;
 				}
 				Travels.toStation(player, stationname, !DragonTravelMain.config.getBoolean("MountingLimit.ExcludeSigns"));
@@ -135,14 +135,14 @@ public class PlayerListener implements Listener {
 
 					try {
 						double costOnSign = Double.parseDouble(lines[3]);
-						if (!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.FLIGHT, player))
+						if (!plugin.paymentManager.chargePlayerCustom(ChargeType.FLIGHT, player, costOnSign))
 							return;
 					} catch (NumberFormatException ex) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Error.SignCorrupted"));
 						// TODO: ---ADD MESSAGE Corrupted sign
 					}
 				} else {
-					if (!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.FLIGHT, player))
+					if (!plugin.paymentManager.chargePlayer(ChargeType.FLIGHT, player))
 						return;
 				}
 				Flights.startFlight(player, flightname, !DragonTravelMain.config.getBoolean("MountingLimit.ExcludeSigns"), false, null);

@@ -65,43 +65,41 @@ permissions:
         default: op
         description: Player is allowed to turn of player-travels to himself
 
+
+    # Permissions to remove economy costs
     dt.nocost.*:
-        default: op
         description: Player does not need to pay for anything
         children:
-            dt.nocost.travel.*: true
-            dt.nocost.flight.*: true
-            dt.nocost.randomtravel.*: true
+            dt.nocost.travel: true
+            dt.nocost.flight: true
+            dt.nocost.randomtravel: true
             dt.nocost.ptravel: true
             dt.nocost.ctravel: true
+            dt.nocost.home: true
+            dt.nocost.home.set: true
             dt.nocost.fhome: true
 
-    dt.nocost.travel.command:
-        description: Player does not need to pay for anything related to travels
-    dt.nocost.travel.*:
-        description: Player does not need to pay for anything related to travels
-    dt.nocost.flight.*:
-        description: Player does not need to pay for anything related to flights
-    dt.nocost.randomtravel.*:
-        description: Player does not need to pay for anything related to travels to random destinations
-        children:
-            dt.nocost.randomtravel.command: true
-            dt.nocost.randomtravel.sign: true
-    dt.nocost.randomtravel.command:
-        default: op
-        description: Player does not need to pay for command-travels to random destinations
-    dt.nocost.randomtravel.sign:
-        default: op
-        description: Player does not need to pay for sign-travels to random destinations
+    dt.nocost.travel:
+        description: Player does not need to pay to travel to a station
+    dt.nocost.flight:
+        description: Player does not need to pay to embark on a flight
+    dt.nocost.randomtravel:
+        description: Player does not need to pay to embark on a random flight
     dt.nocost.ptravel:
-        default: op
-        description: Player does not need to pay for travels to other players
+        description: Player does not need to pay to travel to another player
     dt.nocost.ctravel:
-        default: op
-        description: Player does not need to pay for travels to coordinations
+        description: Player does not need to pay to travel to coordinates
+    dt.nocost.home:
+        description: Player does not need to pay to travel to their set home
+    dt.nocost.home.set:
+        description: Player does not need to pay to set their home
     dt.nocost.fhome:
-        default: op
-        description: Player does not need to pay for travels to the faction-home
+        description: Player does not need to pay to travel to their faction home (Requires Factions)
+
+    dt.nocost.home.*:
+        children:
+            dt.nocost.home: true
+            dt.nocost.home.set: true
 
     dt.notrequireitem.*:
         default: op

@@ -60,6 +60,7 @@ Messages:
             Seconds: ' seconds'
 
     Payment:
+        Free: '&aNo charge for you, hop on!'
         Resources:
             Successful:
                 WithdrawMessage: '&aSay bye to &f{amount}&a gold nugget(s).'
