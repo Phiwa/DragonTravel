@@ -4,9 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.Flight;
-import eu.phiwa.dt.flights.Waypoint;
 
 public class FlightsDB {
 	@SuppressWarnings("unused")
@@ -99,7 +95,7 @@ public class FlightsDB {
 	public Flight getFlight(String flightname) {
 		flightname = flightname.toLowerCase();
 		Object obj = flightSection.get(flightname, null);
-		if (obj != null) {
+		if (obj == null) {
 			return null;
 		}
 

@@ -54,6 +54,7 @@ Messages:
             DatabaseCorrupted: '&cThe database is corrupted, could not load the entry. Please inform the admin.'
             ReachedDragonLimit: '&cThe server already reached its limit, you cannot spawn another dragon, please wait for another player to dismount.'
     Payment:
+        Free: '&aNo charge for you, hop on!'
         Resources:
             Successful:
                 WithdrawMessage: '&aSay bye to &f{amount}&a gold nugget(s).'
