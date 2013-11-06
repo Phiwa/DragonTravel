@@ -65,7 +65,6 @@ public class CommandHelpTopic extends IndexHelpTopic {
 				ret.add(new SubcommandHelpTopic(method));
 			}
 		}
-		System.out.println(DragonTravelMain.plugin.commands.getHelpMessages());
 
 		return ret;
 	}
