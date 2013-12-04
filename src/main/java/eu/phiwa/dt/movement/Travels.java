@@ -324,9 +324,6 @@ public class Travels {
 		else if (player.getLocation().getBlockZ() < destination.getBlockZ())
 			return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX())	/ (player.getLocation().getBlockZ() - destination.getBlockZ()))));
 		else
-		{
-System.out.println("DEBUG: CurrentLoc");
 			return player.getLocation().getYaw();
-		}
 	}
 }
