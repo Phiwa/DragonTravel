@@ -1,6 +1,7 @@
 package eu.phiwa.dt;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
-import net.minecraft.server.v1_6_R3.EntityTypes;
+import net.minecraft.server.v1_7_R1.EntityTypes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -126,7 +127,13 @@ public class DragonTravelMain extends JavaPlugin {
 	public static Economy economyProvider;	
 	public static int paymentItem = 371;
 	
-	
+    private final Class<?> dragonClass;
+    
+    
+    public DragonTravelMain() {
+        this.dragonClass = RyeDragon.class;
+    }
+    
 	@Override
 	public void onEnable() {
 
@@ -264,22 +271,52 @@ public class DragonTravelMain extends JavaPlugin {
 	}
 
 	private boolean registerEntity() {
-		Class<?>[] paramTypes = new Class[] { Class.class, String.class, int.class };
-		try {
-			Method method = EntityTypes.class.getDeclaredMethod("a", paramTypes);
-			method.setAccessible(true);
-			method.invoke(null, RyeDragon.class, "RyeDragon", 63);
-			return true;
-		}
+    
+        try {        
+            Class entityTypeClass = EntityTypes.class;
+            
+            Field c = entityTypeClass.getDeclaredField("c");
+            c.setAccessible(true);
+            HashMap c_map = (HashMap)c.get(null);
+            c_map.put("RyeDragon", this.dragonClass);
+
+            Field d = entityTypeClass.getDeclaredField("d");
+            d.setAccessible(true);
+            HashMap d_map = (HashMap)d.get(null);
+            d_map.put(this.dragonClass, "RyeDragon");
+
+            Field e = entityTypeClass.getDeclaredField("e");
+            e.setAccessible(true);
+            HashMap e_map = (HashMap)e.get(null);
+            e_map.put(Integer.valueOf(63), this.dragonClass);
+
+            Field f = entityTypeClass.getDeclaredField("f");
+            f.setAccessible(true);
+            HashMap f_map = (HashMap)f.get(null);
+            f_map.put(this.dragonClass, Integer.valueOf(63));
+
+            Field g = entityTypeClass.getDeclaredField("g");
+            g.setAccessible(true);
+            HashMap g_map = (HashMap)g.get(null);
+            g_map.put("RyeDragon", Integer.valueOf(63));
+            
+            return true;
+        }    
 		catch (Exception e) {
+
+            Class<?>[] paramTypes = new Class[] { Class.class, String.class, int.class };
+            
 			// MCPC+ compatibility
 			// Forge Dev environment; names are not translated into func_foo
-			try {
+			try { 
 				Method method = EntityTypes.class.getDeclaredMethod("addMapping", paramTypes);
 				method.setAccessible(true);
 				method.invoke(null, RyeDragon.class, "RyeDragon", 63);
 				return true;
-			} catch (Exception ex) { e.addSuppressed(ex); }
+			}
+            catch (Exception ex) {
+                e.addSuppressed(ex);
+            }
 			// Production environment: search for the method
 			// This is required because the seargenames could change
 			// LAST CHECKED FOR VERSION 1.6.4
@@ -290,11 +327,15 @@ public class DragonTravelMain extends JavaPlugin {
 						return true;
 					}
 				}
-			} catch (Exception ex) { e.addSuppressed(ex); }
+			}
+            catch (Exception ex) {
+                e.addSuppressed(ex);
+            }
 
 			logger.info("[DragonTravel] [Error] Could not register the RyeDragon-entity!");
 			e.printStackTrace();
 			pm.disablePlugin(this);
+
 		}
 		return false;
 	}

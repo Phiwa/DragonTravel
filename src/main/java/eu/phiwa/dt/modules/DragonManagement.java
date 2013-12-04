@@ -2,11 +2,11 @@ package eu.phiwa.dt.modules;
 
 import java.util.Map.Entry;
 
-import net.minecraft.server.v1_6_R3.World;
+import net.minecraft.server.v1_7_R1.World;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEnderDragon;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

@@ -1,8 +1,8 @@
 package eu.phiwa.dt.modules;
 
-import net.minecraft.server.v1_6_R3.World;
+import net.minecraft.server.v1_7_R1.World;
 
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.entity.Player;
 
 import eu.phiwa.dt.DragonTravelMain;

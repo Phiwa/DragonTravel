@@ -3,8 +3,8 @@ package eu.phiwa.dt;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.server.v1_6_R3.EntityEnderDragon;
-import net.minecraft.server.v1_6_R3.World;
+import net.minecraft.server.v1_7_R1.EntityEnderDragon;
+import net.minecraft.server.v1_7_R1.World;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -135,7 +135,7 @@ public class RyeDragon extends EntityEnderDragon {
 		
 		isTravel = true;
 		move = true;	
-		
+
 		setMoveTravel();
 	}
 
@@ -419,24 +419,24 @@ public class RyeDragon extends EntityEnderDragon {
 	 * 
 	 */
 	@Override
-	public void c() {
+	public void e() {   
+    
+        if(entity != null && rider != null)
+            if(entity.getPassenger() != null)
+                entity.setPassenger(rider);
+        
+        // Travel
+        if (isTravel) {
+            travel();
+            return;		
+        }
 
-			if(entity != null && rider != null)
-				if(entity.getPassenger() != null)
-					entity.setPassenger(rider);
-			
-			// Travel
-			if (isTravel) {
-				travel();
-				return;		
-			}
-
-			// Flight
-			if (isFlight) {
-				flight();
-				return;
-			}
-		}
+        // Flight
+        if (isFlight) {
+            flight();
+            return;
+        }
+    }
 	
 	/*
 	public double x_() {
