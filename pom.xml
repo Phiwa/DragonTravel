@@ -4,6 +4,13 @@
 	<groupId>eu.phiwa</groupId>
 	<artifactId>DragonTravel</artifactId>
 	<version>0.0.0.10-SNAPSHOT</version>
+
+	<!-- CI Management -->
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://ci.xemsdoom.com</url>
+	</ciManagement>
+	
 	<build>
 		<resources>
 			<resource>
@@ -47,6 +54,10 @@
 			<id>anticheat-repo</id>
 			<url>http://repo.gravitydevelopment.net/</url>
 		</repository>
+		<repository>
+			<id>xem-repo</id>
+			<url>http://repo.xemsdoom.com</url>
+		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
@@ -67,12 +78,12 @@
 		<dependency>
 			<groupId>com.massivecraft</groupId>
 			<artifactId>factions</artifactId>
-			<version>2.2.2</version>
+			<version>2.2.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
 			<artifactId>mcore</artifactId>
-			<version>6.9.1</version>
+			<version>6.9.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.neatmonster</groupId>
