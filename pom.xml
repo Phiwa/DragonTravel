@@ -56,7 +56,7 @@
 		</repository>
 		<repository>
 			<id>xem-repo</id>
-			<url>http://nexus.xemsdoom.com/content/repositories/xem-repo/</url>
+			<url>http://repo.xemsdoom.com</url>
 		</repository>
 	</repositories>
 	<dependencies>
