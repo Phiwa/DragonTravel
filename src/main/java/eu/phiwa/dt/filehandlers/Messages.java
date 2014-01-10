@@ -72,6 +72,14 @@ public class Messages {
         	DragonTravelMain.config.set("Messages.Flights.Error.OnlySigns", "&cThis command has been disabled by the admin, you can only use flights using signs.");      
         if (DragonTravelMain.config.get("Messages.Stations.Error.NotCreateStationWithRandomstatName") == null)
         	DragonTravelMain.config.set("Messages.Stations.Error.NotCreateStationWithRandomstatName", "&cYou cannot create a staion with the name of the RandomDest.");
+        if (DragonTravelMain.config.get("Messages.General.Successful.EstimatedDuration") == null)
+            DragonTravelMain.config.set("Messages.General.Successful.EstimatedDuration", "&aEstimated flight duration &f{duration}&a.");
+        if (DragonTravelMain.config.get("Messages.General.Time.Hours") == null)
+            DragonTravelMain.config.set("Messages.General.Time.Hours", " hours, ");
+        if (DragonTravelMain.config.get("Messages.General.Time.Minutes") == null)
+            DragonTravelMain.config.set("Messages.General.Time.Minutes", " minutes and ");
+        if (DragonTravelMain.config.get("Messages.General.Time.Seconds") == null)
+            DragonTravelMain.config.set("Messages.General.Time.Seconds", " seconds");
 	}
 	private void noLongerRequiredMessages() {
 		// DragonTravelMain.config.set("example key", null);

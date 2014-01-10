@@ -36,7 +36,7 @@
 #       and please report all bugs you find, otherwise I can't fix them. ;)
 
 File:
-    Version: 0.2
+    Version: 0.3
     Language: 'English'
 
 Messages:
@@ -47,12 +47,18 @@ Messages:
             DismountedToStart: '&aYou cancelled your journey and were brought back to your starting-point.'
             ToggledPTravelOn: '&aYou now allow player-travels to you.'
             ToggledPTravelOff: '&aYou now don''t allow player-travels to you.'
+            EstimatedDuration: '&aEstimated flight duration &f{duration}&a.'
         Error:        
             NoPermission: '&cYou do not have the permission to use this.'
             NotMounted: '&cYou are not mounted.'
             RequiredItemMissing: '&cYou do not have the required item in your inventory to use the plugin.'        
             DatabaseCorrupted: '&cThe database is corrupted, could not load the entry. Please inform the admin.'
             ReachedDragonLimit: '&cThe server already reached its limit, you cannot spawn another dragon, please wait for another player to dismount.'
+        Time:
+            Hours: ' hours, '
+            Minutes: ' minutes and '
+            Seconds: ' seconds'
+
     Payment:
         Resources:
             Successful:
