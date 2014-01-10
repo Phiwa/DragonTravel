@@ -310,9 +310,12 @@ public class Travels {
 	
 		RyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);		
 		
-		if(destination.getWorld().getName() == player.getWorld().getName())
+		if(destination.getWorld().getName() == player.getWorld().getName()) {
 			dragon.startTravel(destination, false);
-		else
+            if (DragonTravelMain.config.getBoolean("ShowEstimatedTravelDuration"))
+                player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Successful.EstimatedDuration").replace("{duration}", getTravelTimeString(player.getLocation(), destination)));
+        }
+        else
 			dragon.startTravel(destination, true);
 		
 	}
@@ -326,4 +329,23 @@ public class Travels {
 		else
 			return player.getLocation().getYaw();
 	}
+
+    private static String getTravelTimeString(Location start, Location destination) {
+        double travelDuration = (start.distance(destination)) / (DragonTravelMain.speed * 20);
+
+        int hours = (int) travelDuration / 3600;
+        int minutes = (int) (travelDuration % 3600) / 60;
+        int seconds = (int) travelDuration % 60;
+
+        StringBuilder string = new StringBuilder();
+        if (hours > 0)
+            string.append(hours + DragonTravelMain.messagesHandler.getMessage("Messages.General.Time.Hours"));
+
+        if (minutes > 0)
+            string.append(minutes + DragonTravelMain.messagesHandler.getMessage("Messages.General.Time.Minutes"));
+
+        string.append(seconds + DragonTravelMain.messagesHandler.getMessage("Messages.General.Time.Seconds"));
+
+        return string.toString();
+    }
 }

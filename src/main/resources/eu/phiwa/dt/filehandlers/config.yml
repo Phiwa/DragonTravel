@@ -1,5 +1,5 @@
 File:
-    Version: 0.2
+    Version: 0.3
 
     
 ################################
@@ -150,3 +150,8 @@ OnlySigns: false
 # Choose whether travels to a player are allowed (true) or denied (false) by default
 # Default: true
 PToggleDefault: true
+
+# <<< Show a message how long the travel will take? >>>
+# Choose whether this message will be send or not.
+# Default: true
+ShowEstimatedTravelDuration: true

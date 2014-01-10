@@ -44,6 +44,10 @@ public class Config {
 	  // New options in version 0.2			
 		if(!DragonTravelMain.config.isSet("PToggleDefault"))
 			DragonTravelMain.config.set("PToggleDefault", true);
+
+        // New options in version 0.3
+        if(!DragonTravelMain.config.isSet("ShowEstimatedTravelDuration"))
+            DragonTravelMain.config.set("ShowEstimatedTravelDuration", true);
 		
 		
 	  // Update the file version
