@@ -5,59 +5,63 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.Home;
 
 public class HomesDB {
+	@SuppressWarnings("unused")
+	private DragonTravelMain plugin;
+	private File dbHomesFile;
+	private FileConfiguration dbHomesConfig;
+	private ConfigurationSection homeSection;
 
-	DragonTravelMain plugin;
-	
-	public HomesDB (DragonTravelMain plugin) {
+	public HomesDB(DragonTravelMain plugin) {
 		this.plugin = plugin;
 	}
-		
+
 	public void init() {
-	
-		DragonTravelMain.dbHomesFile = new File("plugins/DragonTravel/databases", "homes.yml");
-	
+
+		dbHomesFile = new File(DragonTravelMain.databaseFolder, "homes.yml");
+
 		try {
 			create();
-		}
-		catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] Could not initialize the homes-database.");
+		} catch (Exception e) {
+			DragonTravelMain.logger.warning("Could not initialize the homes-database.");
 			e.printStackTrace();
 		}
-	
-		DragonTravelMain.dbHomesConfig = new YamlConfiguration();
+
+		dbHomesConfig = new YamlConfiguration();
 		load();
-	
+
+		homeSection = dbHomesConfig.getConfigurationSection("Homes");
+		if (homeSection == null) {
+			homeSection = dbHomesConfig.createSection("Homes");
+		}
 	}
-	
+
 	private void create() {
-		
-		if (DragonTravelMain.dbHomesFile.exists())
+
+		if (dbHomesFile.exists())
 			return;
 
 		try {
-			DragonTravelMain.dbHomesFile.createNewFile();
-			copy(getClass().getResourceAsStream("homes.yml"), DragonTravelMain.dbHomesFile);
-			DragonTravelMain.logger.info("[DragonTravel] Created homes-database.");
+			dbHomesFile.createNewFile();
+			copy(getClass().getResourceAsStream("homes.yml"), dbHomesFile);
+			DragonTravelMain.logger.info("Created homes-database.");
+		} catch (Exception e) {
+			DragonTravelMain.logger.warning("Could not create the homes-database!");
 		}
-		catch(Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not create the homes-database!");
-		}
-		
-		
+
+
 	}
-	
+
 	private void copy(InputStream in, File file) {
-		
+
 		try {
 			OutputStream out = new FileOutputStream(file);
 			byte[] buf = new byte[1024];
@@ -67,122 +71,90 @@ public class HomesDB {
 			}
 			out.close();
 			in.close();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void load() {
 		try {
-			DragonTravelMain.dbHomesConfig.load(DragonTravelMain.dbHomesFile);
-			DragonTravelMain.logger.info("[DragonTravel] Loaded homes-database.");
-		}
-		catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] No homes-database found");
+			dbHomesConfig.load(dbHomesFile);
+			DragonTravelMain.logger.info("Loaded homes-database.");
+		} catch (Exception e) {
+			DragonTravelMain.logger.warning("No homes-database found");
 			e.printStackTrace();
 		}
 	}
 
-	
+
 	/**
 	 * Returns the details of the home with the given name.
-	 * 
-	 * @param homename
-	 * 			Name of the home which should be returned.
-	 * @return
-	 * 			The home as a home-object.
+	 *
+	 * @param homename Name of the home which should be returned.
+	 * @return The home as a home-object, or null if no home is set.
 	 */
-	public Home getHome(String playername) {
-		
-		playername = "Homes." + playername.toLowerCase();
-		
-		if(DragonTravelMain.dbHomesConfig.getString(playername+".world") == null)
+	public Home getHome(String playerName) {
+		Object obj = homeSection.get(playerName, null);
+		if (obj == null) {
 			return null;
-
-		Location homeLoc = new Location(
-									Bukkit.getWorld(DragonTravelMain.dbHomesConfig.getString(playername+".world")),
-											(double)DragonTravelMain.dbHomesConfig.getInt(playername+".x"),
-											(double)DragonTravelMain.dbHomesConfig.getInt(playername+".y"),
-											(double)DragonTravelMain.dbHomesConfig.getInt(playername+".z")						
-									);
-		
-		Home home = new Home(playername, homeLoc);
-		return home;
-
-	}
-	
-	/**
-	 * Creates a new home.
-	 * 
-	 * @param home
-	 * 			Home to create.
-	 * @return
-	 * 			Returns true if the home was created successfully, false if not.		
-	 */
-	@SuppressWarnings("static-access")
-	public boolean createHome(Home home)  {
-		
-		String path = "Homes." + home.playername;
-		
-		ConfigurationSection sec = DragonTravelMain.dbHomesConfig.createSection(path);
-		DragonTravelMain.dbHomesConfig.createPath(sec, "x");
-		DragonTravelMain.dbHomesConfig.createPath(sec, "y");
-		DragonTravelMain.dbHomesConfig.createPath(sec, "z");
-		DragonTravelMain.dbHomesConfig.createPath(sec, "world");
-		DragonTravelMain.dbHomesConfig.set(path+".x", home.x);
-		DragonTravelMain.dbHomesConfig.set(path+".y", home.y);
-		DragonTravelMain.dbHomesConfig.set(path+".z", home.z);
-		DragonTravelMain.dbHomesConfig.set(path+".world", home.world.getName());
-		
-		try{
-			DragonTravelMain.dbHomesConfig.save(DragonTravelMain.dbHomesFile);
-			return true;
 		}
-		catch(Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not write new home to config.");
+
+		// Transition support
+		if (obj instanceof ConfigurationSection) {
+			Home h = new Home(((ConfigurationSection) obj).getValues(true));
+			saveHome(playerName, h);
+			return h;
+		} else {
+			return (Home) obj;
+		}
+	}
+
+	/**
+	 * Saves a new home.
+	 *
+	 * @param home Home to create.
+	 * @return Returns true if the home was created successfully, false if
+	 *         not.
+	 */
+	public boolean saveHome(String playerName, Home home) {
+		homeSection.set(playerName, home);
+
+		try {
+			dbHomesConfig.save(dbHomesFile);
+			return true;
+		} catch (Exception e) {
+			DragonTravelMain.logger.info("Could not write new home to config.");
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Deletes the given home.
-	 * 
-	 * @param homename
-	 * 			Name of the home to delete
-	 * @return
-	 * 			True if successful, false if not.
+	 *
+	 * @param homename Name of the home to delete
+	 * @return True if successful, false if not.
 	 */
-	public boolean deleteHome(String playername) {	
-		
+	public boolean deleteHome(String playername) {
+
 		playername = "Homes." + playername.toLowerCase();
-		
-		DragonTravelMain.dbHomesConfig.set(playername, null);
-		
-		try{
-			DragonTravelMain.dbHomesConfig.save(DragonTravelMain.dbHomesFile);
+
+		dbHomesConfig.set(playername, null);
+
+		try {
+			dbHomesConfig.save(dbHomesFile);
 			return true;
-		}
-		catch(Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not delete home from config.");
+		} catch (Exception e) {
+			DragonTravelMain.logger.warning("Could not delete home from config.");
 			return false;
 		}
 	}
-	
-	public void showHomes() {
-		System.out.println("Player's who registered a home: ");
-		for(String string: DragonTravelMain.dbHomesConfig.getConfigurationSection("Homes").getKeys(true)) {
-			if(!string.contains("."))
-				System.out.println("- " + string);
+
+	public void showHomes(CommandSender sender) {
+		sender.sendMessage("Players who have registered a home: ");
+		for (String string : dbHomesConfig.getConfigurationSection("Homes").getKeys(false)) {
+			Home home = getHome(string);
+			if (home != null)
+				sender.sendMessage(" - " + string + " [" + home.worldName + "@" + home.x + "," + home.y + "," + home.z + "]");
 		}
 	}
-	
-	public void showStations(Player player) {
-		player.sendMessage("Player's who registered a home: ");
-		for(String string: DragonTravelMain.dbHomesConfig.getConfigurationSection("Homes").getKeys(true)) {
-			if(!string.contains("."))
-				player.sendMessage("- " + string);
-		}			
-	}
-	
 }

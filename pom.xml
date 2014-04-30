@@ -15,15 +15,6 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-			<resource>
-				<directory>src/main/java</directory>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
 			</resource>
 		</resources>
 		<plugins>
@@ -34,6 +25,36 @@
 					<source>1.6</source>
 					<target>1.6</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.0</version>
+				<configuration>
+					<artifactSet>
+						<includes>
+							<include>com.sk89q:command-framework-bukkit</include>
+						</includes>
+					</artifactSet>
+					<relocations>
+						<relocation>
+							<pattern>com.sk89q.bukkit.util</pattern>
+							<shadedPattern>eu.phiwa.dt.lib.sk89q.bukkit</shadedPattern>
+						</relocation>
+						<relocation>
+							<pattern>com.sk89q.minecraft.util</pattern>
+							<shadedPattern>eu.phiwa.dt.lib.sk89q.minecraft</shadedPattern>
+						</relocation>
+					</relocations>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -58,43 +79,58 @@
 			<id>xem-repo</id>
 			<url>http://repo.xemsdoom.com</url>
 		</repository>
+		<repository>
+			<id>overcast releases</id>
+			<url>http://repo.oc.tc/content/repositories/releases/</url>
+		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
 			<version>1.7.2-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
 			<version>1.7.2-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>Vault</artifactId>
 			<version>1.2.27</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
 			<artifactId>factions</artifactId>
 			<version>2.2.2-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
 			<artifactId>mcore</artifactId>
 			<version>6.9.1-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>fr.neatmonster</groupId>
 			<artifactId>ncpplugin</artifactId>
 			<version>static</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.h31ix.anticheat</groupId>
 			<artifactId>AntiCheat</artifactId>
 			<version>1.5.4</version>
-			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sk89q</groupId>
+			<artifactId>command-framework-bukkit</artifactId>
+			<version>0.4</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

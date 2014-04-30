@@ -5,64 +5,66 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.logging.Level;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import eu.phiwa.dt.DragonTravelMain;
 
 public class Config {
+	private DragonTravelMain plugin;
+	private File configFile;
 
-	DragonTravelMain plugin;
-	
-	public Config (DragonTravelMain plugin) {
+	public Config(DragonTravelMain plugin) {
 		this.plugin = plugin;
 	}
-	
-	public void loadConfig(){
-		DragonTravelMain.configFile = new File(plugin.getDataFolder(), "config.yml");
-		if(!DragonTravelMain.configFile.exists())
+
+	public void loadConfig() {
+		configFile = new File(plugin.getDataFolder(), "config.yml");
+		if (!configFile.exists())
 			deployDefaultFile("config.yml");
-		DragonTravelMain.config = YamlConfiguration.loadConfiguration(DragonTravelMain.configFile);
+		DragonTravelMain.config = YamlConfiguration.loadConfiguration(configFile);
 		updateConfig();
 	}
-	private void updateConfig(){
-		if(DragonTravelMain.config.getDouble("File.Version") != DragonTravelMain.configVersion) 
+
+	private void updateConfig() {
+		if (DragonTravelMain.config.getDouble("File.Version") != DragonTravelMain.configVersion)
 			newlyRequiredConfig();
 		noLongerRequiredConfig();
 		// Refresh file and config variables for persistence.
 		try {
-			DragonTravelMain.config.save(DragonTravelMain.configFile);
-			DragonTravelMain.config = YamlConfiguration.loadConfiguration(DragonTravelMain.configFile);
+			DragonTravelMain.config.save(configFile);
+			DragonTravelMain.config = YamlConfiguration.loadConfiguration(configFile);
 		} catch (IOException e) {
 			e.printStackTrace();
-			DragonTravelMain.logger.log(Level.SEVERE , "Could not update config, disabling plugin!");
+			DragonTravelMain.logger.severe("Could not update config, disabling plugin!");
 		}
 	}
-	private void newlyRequiredConfig(){
-		
-	  // New options in version 0.2			
-		if(!DragonTravelMain.config.isSet("PToggleDefault"))
+
+	private void newlyRequiredConfig() {
+
+		// New options in version 0.2
+		if (!DragonTravelMain.config.isSet("PToggleDefault"))
 			DragonTravelMain.config.set("PToggleDefault", true);
 
-        // New options in version 0.3
-        if(!DragonTravelMain.config.isSet("ShowEstimatedTravelDuration"))
-            DragonTravelMain.config.set("ShowEstimatedTravelDuration", true);
-		
-		
-	  // Update the file version
+		// New options in version 0.3
+		if (!DragonTravelMain.config.isSet("ShowEstimatedTravelDuration"))
+			DragonTravelMain.config.set("ShowEstimatedTravelDuration", true);
+
+
+		// Update the file version
 		DragonTravelMain.config.set("File.Version", DragonTravelMain.configVersion);
-		
+
 	}
+
 	private void noLongerRequiredConfig() {
 		// DragonTravelMain.config.set("example key", null);
 	}
-	
-	
+
+
 	private void deployDefaultFile(String name) {
 		try {
 			File target = new File(this.plugin.getDataFolder(), name);
-			InputStream source = this.plugin.getResource("eu/phiwa/dt/filehandlers/"+name);
+			InputStream source = this.plugin.getResource("eu/phiwa/dt/filehandlers/" + name);
 
 			if (!target.exists()) {
 				OutputStream output = new FileOutputStream(target);
@@ -78,5 +80,4 @@ public class Config {
 			DragonTravelMain.logger.info("Could not save default file");
 		}
 	}
-	
 }
