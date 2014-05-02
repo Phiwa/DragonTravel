@@ -1,4 +1,4 @@
-package eu.phiwa.dt.filehandlers;
+package main.java.eu.phiwa.dt.filehandlers;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,14 +7,14 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.eu.phiwa.dt.DragonTravelMain;
+import main.java.eu.phiwa.dt.flights.Waypoint;
+import main.java.eu.phiwa.dt.objects.Flight;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-
-import eu.phiwa.dt.DragonTravelMain;
-import eu.phiwa.dt.Flight;
-import eu.phiwa.dt.flights.Waypoint;
 
 public class FlightsDB {
 
@@ -24,40 +24,6 @@ public class FlightsDB {
 		this.plugin = plugin;
 	}
 		
-	public void init() {
-	
-		DragonTravelMain.dbFlightsFile = new File("plugins/DragonTravel/databases", "flights.yml");
-	
-		try {
-			create();
-		}
-		catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not initialize the flights-database.");
-			e.printStackTrace();
-		}
-	
-		DragonTravelMain.dbFlightsConfig = new YamlConfiguration();
-		load();
-	
-	}
-	
-	private void create() {
-		
-		if (DragonTravelMain.dbFlightsFile.exists())
-			return;
-
-		try {
-			DragonTravelMain.dbFlightsFile.createNewFile();
-			copy(getClass().getResourceAsStream("flights.yml"), DragonTravelMain.dbFlightsFile);
-			DragonTravelMain.logger.info("[DragonTravel] Created flights-database.");
-		}
-		catch(Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not create the flights-database!");
-		}
-		
-		
-	}
-	
 	private void copy(InputStream in, File file) {
 		
 		try {
@@ -74,77 +40,24 @@ public class FlightsDB {
 			e.printStackTrace();
 		}
 	}
-
-	private void load() {
-		try {
-			DragonTravelMain.dbFlightsConfig.load(DragonTravelMain.dbFlightsFile);
-			DragonTravelMain.logger.info("[DragonTravel] Loaded flights-database.");
-		}
-		catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] No flights-database found");
-			e.printStackTrace();
-		}
-	}
-
 	
-	/**
-	 * Returns the details of the flight with the given name.
-	 * 
-	 * @param flightname
-	 * 			Name of the flight which should be returned.
-	 * @return
-	 * 			The flight as a flight-object.
-	 */
-	public Flight getFlight(String flightname) {
+	private void create() {
 		
-		String flightpath = "Flights." + flightname.toLowerCase();
-		
-		if(DragonTravelMain.dbFlightsConfig.getString(flightpath + ".world") == null)
-			return null;
-		
-		Flight flight = new Flight();
-		
-		flight.name = flightname.toLowerCase();
-		
-		@SuppressWarnings("unchecked")
-		List<String> waypoints = (List<String>) DragonTravelMain.dbFlightsConfig.getList(flightpath + ".waypoints");	
-		String worldname = DragonTravelMain.dbFlightsConfig.getString(flightpath + ".world");	
-		
-		flight.displayname = DragonTravelMain.dbFlightsConfig.getString(flightpath + ".displayname");
-		
-		if(worldname == null)
-			return null;
-			
-		flight.world = Bukkit.getWorld(worldname);
-		
-		for(String wpData: waypoints) {
-			
-			String[] wpDataParts = wpData.split("%");
-			Waypoint wp = new Waypoint();
-			 		
-			try{
-				String xString = wpDataParts[0];
-				String yString = wpDataParts[1];
-				String zString = wpDataParts[2];
-				
-				wp.x = Integer.parseInt(xString);
-				wp.y = Integer.parseInt(yString);
-				wp.z = Integer.parseInt(zString);
-			}
-			catch(NumberFormatException ex) {
-				DragonTravelMain.logger.info("[DragonTravel][Error] Unable to read flight '" + flight.displayname + "' from database!");
-				return null;
-			}
-			catch(IndexOutOfBoundsException ex) {
-				DragonTravelMain.logger.info("[DragonTravel][Error] Unable to read flight '" + flight.displayname + "' from database!");
-				return null;
-			}
-			flight.addWaypoint(wp);
+		if (DragonTravelMain.dbFlightsFile.exists())
+			return;
+
+		try {
+			DragonTravelMain.dbFlightsFile.createNewFile();
+			copy(this.plugin.getResource("databases/flights.yml"), DragonTravelMain.dbFlightsFile);
+			DragonTravelMain.logger.info("[DragonTravel] Created flights-database.");
+		}
+		catch(Exception e) {
+			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not create the flights-database!");
 		}
 		
-		return flight;
-	}
 		
+	}
+	
 	/**
 	 * Creates a new flight.
 	 * 
@@ -160,15 +73,13 @@ public class FlightsDB {
 		
 		ConfigurationSection sec = DragonTravelMain.dbFlightsConfig.createSection(path);
 		DragonTravelMain.dbStationsConfig.createPath(sec, "displayname");
-		DragonTravelMain.dbStationsConfig.createPath(sec, "world");
 		DragonTravelMain.dbStationsConfig.createPath(sec, "waypoints");
 		DragonTravelMain.dbFlightsConfig.set(path + ".displayname", flight.displayname);
-		DragonTravelMain.dbFlightsConfig.set(path + ".world", flight.world.getName());
 		
 		List<String> waypointsAsString = new ArrayList<String>();
 		
 		for(Waypoint wp: flight.waypoints) {
-			String wpString = wp.x + "%" + wp.y + "%" + wp.z;
+			String wpString = wp.x + "%" + wp.y + "%" + wp.z + "%" + wp.world.getName();
 			waypointsAsString.add(wpString);
 		}
 		
@@ -183,7 +94,7 @@ public class FlightsDB {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Deletes the given flight.
 	 * 
@@ -205,6 +116,90 @@ public class FlightsDB {
 		catch(Exception e) {
 			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not delete flight from config.");
 			return false;
+		}
+	}
+
+	
+	/**
+	 * Returns the details of the flight with the given name.
+	 * 
+	 * @param flightname
+	 * 			Name of the flight which should be returned.
+	 * @return
+	 * 			The flight as a flight-object.
+	 */
+	public Flight getFlight(String flightname) {
+		
+		String flightpath = "Flights." + flightname.toLowerCase();
+		
+		Flight flight = new Flight();
+		
+		flight.name = flightname.toLowerCase();
+		
+		@SuppressWarnings("unchecked")
+		List<String> waypoints = (List<String>) DragonTravelMain.dbFlightsConfig.getList(flightpath + ".waypoints");			
+		flight.displayname = DragonTravelMain.dbFlightsConfig.getString(flightpath + ".displayname");
+					
+		for(String wpData: waypoints) {
+			
+			String[] wpDataParts = wpData.split("%");
+			Waypoint wp = new Waypoint();
+			 		
+			try{
+				String xString = wpDataParts[0];
+				String yString = wpDataParts[1];
+				String zString = wpDataParts[2];
+				String wString = "";
+				if(wpDataParts[3]==null){
+					wString = DragonTravelMain.dbFlightsConfig.getString(flightpath + ".world");
+				} else {
+					wString = wpDataParts[3];
+				}
+				
+				wp.x = Integer.parseInt(xString);
+				wp.y = Integer.parseInt(yString);
+				wp.z = Integer.parseInt(zString);
+				wp.world = Bukkit.getWorld(wString);
+			}
+			catch(NumberFormatException ex) {
+				DragonTravelMain.logger.info("[DragonTravel][Error] Unable to read flight '" + flight.displayname + "' from database!");
+				return null;
+			}
+			catch(IndexOutOfBoundsException ex) {
+				DragonTravelMain.logger.info("[DragonTravel][Error] Unable to read flight '" + flight.displayname + "' from database!");
+				return null;
+			}
+			flight.addWaypoint(wp);
+		}
+		
+		return flight;
+	}
+		
+	public void init() {
+	
+		DragonTravelMain.dbFlightsFile = new File("plugins/DragonTravel/databases", "flights.yml");
+	
+		try {
+			create();
+		}
+		catch (Exception e) {
+			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not initialize the flights-database.");
+			e.printStackTrace();
+		}
+	
+		DragonTravelMain.dbFlightsConfig = new YamlConfiguration();
+		load();
+	
+	}
+	
+	private void load() {
+		try {
+			DragonTravelMain.dbFlightsConfig.load(DragonTravelMain.dbFlightsFile);
+			DragonTravelMain.logger.info("[DragonTravel] Loaded flights-database.");
+		}
+		catch (Exception e) {
+			DragonTravelMain.logger.info("[DragonTravel] [Error] No flights-database found");
+			e.printStackTrace();
 		}
 	}
 	

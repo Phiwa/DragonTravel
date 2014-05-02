@@ -1,17 +1,16 @@
-package eu.phiwa.dt;
+package main.java.eu.phiwa.dt.objects;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.World;
 
-import eu.phiwa.dt.flights.Waypoint;
+import main.java.eu.phiwa.dt.flights.Waypoint;
 
 public class Flight {
 
-	public String name;
 	public String displayname;
-	public World world;
+	public String name;
 	public List<Waypoint> waypoints = new ArrayList<Waypoint>();
 	public int wpcount = 0;
 	
@@ -22,20 +21,8 @@ public class Flight {
 	public Flight(World world, String flightname) {		
 		this.displayname = flightname;
 		this.name = flightname.toLowerCase();
-		this.world = world;
 	}
 
-	public String toString() {
-
-		String flightString = displayname + ":\n";
-		
-		for(Waypoint wp: waypoints) {
-			flightString += "- " + wp.x + ", " + wp.y + ", " + wp.z + "\n";
-		}
-		
-		return flightString;		
-	}
-	
 	public void addWaypoint(Waypoint wp) {
 		waypoints.add(wp);
 		wpcount++;
@@ -48,6 +35,17 @@ public class Flight {
 		
 		waypoints.remove(waypoints.size()-1);
 		wpcount--;
+	}
+	
+	public String toString() {
+
+		String flightString = displayname + ":\n";
+		
+		for(Waypoint wp: waypoints) {
+			flightString += "- " + wp.x + ", " + wp.y + ", " + wp.z + ", " + wp.world.getName() + "\n";
+		}
+		
+		return flightString;		
 	}
 
 }

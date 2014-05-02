@@ -1,14 +1,24 @@
-package eu.phiwa.dt.movement;
+package main.java.eu.phiwa.dt.movement;
+
+import main.java.eu.phiwa.dt.DragonTravelMain;
+import main.java.eu.phiwa.dt.RyeDragon;
+import main.java.eu.phiwa.dt.modules.DragonManagement;
+import main.java.eu.phiwa.dt.objects.Flight;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import eu.phiwa.dt.DragonTravelMain;
-import eu.phiwa.dt.Flight;
-import eu.phiwa.dt.RyeDragon;
-import eu.phiwa.dt.modules.DragonManagement;
-
 public class Flights {
+
+	private static float getCorrectYawForPlayer(Player player, Location destination) {
+	
+		if (player.getLocation().getBlockZ() > destination.getBlockZ())
+		    return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX())    / (player.getLocation().getBlockZ() - destination.getBlockZ())))) + 180.0F;
+		else if (player.getLocation().getBlockZ() < destination.getBlockZ())
+		    return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX())    / (player.getLocation().getBlockZ() - destination.getBlockZ()))));
+		else
+		    return player.getLocation().getYaw();
+	}
 
 	/**
 	 * 
@@ -44,17 +54,15 @@ public class Flights {
 				System.out.println("[DragonTravel] Flight does not exist!");
 			else	
 				playerToSendMessagesTo.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightDoesNotExist"));
-			// TODO: ---ADD MESSAGE Flight does not exist
 			return;
 		}
 		
-		if(flight.world.getName() != player.getWorld().getName()) {
+		if(flight.waypoints.get(0).world.getName() != player.getWorld().getName()) {
 			// Sent by console
 			if(sentbyadmin && playerToSendMessagesTo == null)
 				System.out.println("[DragonTravel] The flight is in a different world than the player!");
 			else	
 				playerToSendMessagesTo.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightIsInDifferentWorld"));
-			// TODO: ---ADD MESSAGE Flight is in a different world
 			return;
 		}
 		
@@ -71,7 +79,6 @@ public class Flights {
 			if(DragonTravelMain.requireItemFlight) {
 				if(!player.getInventory().contains(DragonTravelMain.requiredItem) && !player.hasPermission("dt.notrequireitem.flight")) {
 					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.RequiredItemMissing"));
-					// TODO: ---ADD MESSAGE Required item not in inventory
 					return;
 				}
 			}
@@ -79,7 +86,7 @@ public class Flights {
 		
 				
 		Location temploc = player.getLocation();
-		Location firstwp = new Location(player.getWorld(),
+		Location firstwp = new Location(flight.waypoints.get(0).world,
 										flight.waypoints.get(0).x,
 										flight.waypoints.get(0).y,
 										flight.waypoints.get(0).z);
@@ -97,20 +104,8 @@ public class Flights {
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.SendingPlayer").replace("{playername}", player.getName()).replace("{flightname}", flight.displayname));
 		}
 		else
-			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.displayname));
-		// TODO: ---ADD MESSAGE Starting flight... (flight.displayname is the flight's name with normal cases)
-		
+			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.displayname));		
 		RyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);		
 		dragon.startFlight(flight);	
-	}
-
-	private static float getCorrectYawForPlayer(Player player, Location destination) {
-	
-		if (player.getLocation().getBlockZ() > destination.getBlockZ())
-		    return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX())    / (player.getLocation().getBlockZ() - destination.getBlockZ())))) + 180.0F;
-		else if (player.getLocation().getBlockZ() < destination.getBlockZ())
-		    return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX())    / (player.getLocation().getBlockZ() - destination.getBlockZ()))));
-		else
-		    return player.getLocation().getYaw();
 	}
 }

@@ -1,26 +1,26 @@
-package eu.phiwa.dt.commands;
+package main.java.eu.phiwa.dt.commands;
+
+import main.java.eu.phiwa.dt.DragonTravelMain;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import eu.phiwa.dt.DragonTravelMain;
-
 public class CommandHelp {
 
+	public static ChatColor blue = ChatColor.BLUE;
+	public static ChatColor darkgrey = ChatColor.DARK_GRAY;
+	public static ChatColor gold = ChatColor.GOLD;
+	public static ChatColor grey = ChatColor.GRAY;
 	public static final int HELP_Page1 = 1;
+	
 	public static final int HELP_Page2 = 2;
 	public static final int HELP_Page3 = 3;
 	public static final int HELP_Page4 = 4;
 	public static final int HELP_Page5 = 5;
-	
-	public static ChatColor white = ChatColor.WHITE;
-	public static ChatColor red = ChatColor.RED;
-	public static ChatColor blue = ChatColor.BLUE;
-	public static ChatColor gold = ChatColor.GOLD;
-	public static ChatColor yellow = ChatColor.YELLOW;
-	public static ChatColor grey = ChatColor.GRAY;
-	public static ChatColor darkgrey = ChatColor.DARK_GRAY;
 	public static ChatColor purple = ChatColor.LIGHT_PURPLE;
+	public static ChatColor red = ChatColor.RED;
+	public static ChatColor white = ChatColor.WHITE;
+	public static ChatColor yellow = ChatColor.YELLOW;
 	
 	
 	public static void page1_TableOfContents(Player player) {		

@@ -1,12 +1,12 @@
-package eu.phiwa.dt.modules;
+package main.java.eu.phiwa.dt.modules;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.bukkit.entity.Player;
+import main.java.eu.phiwa.dt.DragonTravelMain;
+import main.java.eu.phiwa.dt.RyeDragon;
 
-import eu.phiwa.dt.DragonTravelMain;
-import eu.phiwa.dt.RyeDragon;
+import org.bukkit.entity.Player;
 
 public class MountingScheduler implements Runnable {
 

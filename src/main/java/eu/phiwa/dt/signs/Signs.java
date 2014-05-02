@@ -1,7 +1,8 @@
-package eu.phiwa.dt.signs;
+package main.java.eu.phiwa.dt.signs;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.block.SignChangeEvent;
+
 
 public class Signs {
 	

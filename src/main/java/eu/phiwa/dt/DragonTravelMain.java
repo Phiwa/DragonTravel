@@ -1,4 +1,4 @@
-package eu.phiwa.dt;
+package main.java.eu.phiwa.dt;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -8,12 +8,27 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import main.java.eu.phiwa.dt.anticheatplugins.AntiCheatHandler;
+import main.java.eu.phiwa.dt.anticheatplugins.NoCheatPlusHandler;
+import main.java.eu.phiwa.dt.commands.CommandHandler;
+import main.java.eu.phiwa.dt.filehandlers.Config;
+import main.java.eu.phiwa.dt.filehandlers.FlightsDB;
+import main.java.eu.phiwa.dt.filehandlers.HomesDB;
+import main.java.eu.phiwa.dt.filehandlers.Messages;
+import main.java.eu.phiwa.dt.filehandlers.StationsDB;
+import main.java.eu.phiwa.dt.flights.FlightEditor;
+import main.java.eu.phiwa.dt.listeners.BlockListener;
+import main.java.eu.phiwa.dt.listeners.EntityListener;
+import main.java.eu.phiwa.dt.listeners.PlayerListener;
+import main.java.eu.phiwa.dt.modules.MountingScheduler;
+import main.java.eu.phiwa.dt.payment.PaymentHandler;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
-import net.minecraft.server.v1_7_R1.EntityTypes;
+import net.minecraft.server.v1_7_R3.EntityTypes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -22,110 +37,88 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import eu.phiwa.dt.anticheatplugins.AntiCheatHandler;
-import eu.phiwa.dt.anticheatplugins.NoCheatPlusHandler;
-import eu.phiwa.dt.commands.CommandHandler;
-import eu.phiwa.dt.filehandlers.Config;
-import eu.phiwa.dt.filehandlers.FlightsDB;
-import eu.phiwa.dt.filehandlers.HomesDB;
-import eu.phiwa.dt.filehandlers.Messages;
-import eu.phiwa.dt.filehandlers.StationsDB;
-import eu.phiwa.dt.flights.FlightEditor;
-import eu.phiwa.dt.listeners.BlockListener;
-import eu.phiwa.dt.listeners.EntityListener;
-import eu.phiwa.dt.listeners.PlayerListener;
-import eu.phiwa.dt.modules.MountingScheduler;
-import eu.phiwa.dt.payment.PaymentHandler;
-
-
 public class DragonTravelMain extends JavaPlugin {
 
-	public static PluginManager pm;
-	public static DragonTravelMain plugin;
-	public static final Logger logger = Logger.getLogger("Minecraft");
-		
-	// General
-	public static double speed = 0.5;
-	public static boolean ignoreAntiMobspawnAreas;
-	public static boolean onlysigns = false;
-	public static boolean ptoggleDefault = false;
-	
-	// Listeners
-	private static EntityListener entityListener;
-	private static PlayerListener playerListener;
-	private static BlockListener blocklistener;
-	private static FlightEditor flighteditor;
-	
-	// Config
-	public static double configVersion = 0.2;
-	public static File configFile;
-	public static FileConfiguration config;
-	public static Config configHandler;
-	
-	// Messages
-	public static double messagesVersion = 0.2;
-	public static File messagesFile;
-	public static FileConfiguration messages;
-	public static Messages messagesHandler;
-	
-	// StationsDB
-	public static File dbStationsFile;
-	public static FileConfiguration dbStationsConfig;
-	public static StationsDB dbStationsHandler;
-	
-	// HomesDB
-	public static File dbHomesFile;
-	public static FileConfiguration dbHomesConfig;
-	public static HomesDB dbHomesHandler;
-	
-	// FlightsDB
-	public static File dbFlightsFile;
-	public static FileConfiguration dbFlightsConfig;
-	public static FlightsDB dbFlightsHandler;
-
-	// Hashmaps
-	public static HashMap<Player, RyeDragon> listofDragonriders = new HashMap<Player, RyeDragon>();
-	public static HashMap<Player, Location> listofDragonsridersStartingpoints = new HashMap<Player, Location>();
-	public static HashMap<Block, Block> globalwaypointmarkers = new HashMap<Block, Block>();
-	public static HashMap<String, Boolean> ptogglers = new HashMap<String, Boolean>();
-	
+	public static boolean alldragons;
 	// CheatProtection-Pluginstatus
 	public static boolean anticheat;
-	public static boolean nocheatplus;
+	public static boolean byEconomy = false;
+	public static boolean byResources = false;
+	public static FileConfiguration config;
+	public static File configFile;
 	
-	// Required Item
-	public static boolean requireItemTravelStation = false;
-	public static boolean requireItemTravelRandom = false;
-	public static boolean requireItemTravelCoordinates = false;
-	public static boolean requireItemTravelPlayer = false;
-	public static boolean requireItemTravelHome = false;	
-	public static boolean requireItemTravelFactionhome = false;	
-	public static boolean requireItemFlight = false;
-	public static int requiredItem = 122;
+	public static Config configHandler;
+	// Config
+	public static double configVersion = 0.2;
+	public static FileConfiguration dbFlightsConfig;
+	// FlightsDB
+	public static File dbFlightsFile;
 	
-	// Payment-Types
-	public static final int TRAVEL_TOSTATION = 1;
-	public static final int TRAVEL_TORANDOM = 2;
-	public static final int TRAVEL_TOPLAYER = 3;
-	public static final int TRAVEL_TOCOORDINATES = 4;
-	public static final int TRAVEL_TOHOME = 5;
-	public static final int TRAVEL_TOFACTIONHOME = 6;
-	public static final int FLIGHT = 7;
-	public static final int SETHOME = 8;
+	public static FlightsDB dbFlightsHandler;
+	public static FileConfiguration dbHomesConfig;
+	// HomesDB
+	public static File dbHomesFile;
+	public static HomesDB dbHomesHandler;
 	
-	// Dragon Antigrief-Options
-	public static boolean onlydragontraveldragons;
-	public static boolean alldragons;
-	
+	public static FileConfiguration dbStationsConfig;
+	// StationsDB
+	public static File dbStationsFile;
+	public static StationsDB dbStationsHandler;
 	// DragonLimit
 	public static int dragonLimit = 99999;
 	
+	public static Economy economyProvider;
+	public static final int FLIGHT = 7;
+	
+	public static HashMap<Block, Block> globalwaypointmarkers = new HashMap<Block, Block>();
+	public static boolean ignoreAntiMobspawnAreas;
+	
+	// Hashmaps
+	public static HashMap<Player, RyeDragon> listofDragonriders = new HashMap<Player, RyeDragon>();
+	public static HashMap<Player, Location> listofDragonsridersStartingpoints = new HashMap<Player, Location>();
+	public static final Logger logger = Logger.getLogger("Minecraft");
+
+	public static FileConfiguration messages;
+	public static File messagesFile;
+	public static Messages messagesHandler;
+	// Messages
+	public static double messagesVersion = 0.2;
+	
+	public static boolean nocheatplus;
+	// Dragon Antigrief-Options
+	public static boolean onlydragontraveldragons;
+	
+	public static boolean onlysigns = false;
+	public static int paymentItem = 371;
+	public static DragonTravelMain plugin;
+	public static PluginManager pm;	
+	public static boolean ptoggleDefault = false;	
+	public static HashMap<String, Boolean> ptogglers = new HashMap<String, Boolean>();
+	public static Material requiredItem = Material.DRAGON_EGG;
+	
+	public static boolean requireItemFlight = false;
+	public static boolean requireItemTravelCoordinates = false;
+	public static boolean requireItemTravelFactionhome = false;
+	public static boolean requireItemTravelHome = false;
+	public static boolean requireItemTravelPlayer = false;
+	public static boolean requireItemTravelRandom = false;
+	// Required Item
+	public static boolean requireItemTravelStation = false;
+	public static final int SETHOME = 8;
+	
+	// General
+	public static double speed = 0.5;
+	public static final int TRAVEL_TOCOORDINATES = 4;
+	
+	public static final int TRAVEL_TOFACTIONHOME = 6;
+	
+	public static final int TRAVEL_TOHOME = 5;
+	public static final int TRAVEL_TOPLAYER = 3;
+	public static final int TRAVEL_TORANDOM = 2;
+	// Payment-Types
+	public static final int TRAVEL_TOSTATION = 1;	
 	// Payment (Costs are directly read from the config/sign on-the-fly)
 	public static boolean usePayment = false;
-	public static boolean byEconomy = false;
-	public static boolean byResources = false;
-	public static Economy economyProvider;	
-	public static int paymentItem = 371;
 	
     private final Class<?> dragonClass;
     
@@ -135,8 +128,15 @@ public class DragonTravelMain extends JavaPlugin {
     }
     
 	@Override
+	public void onDisable() {
+		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
+		logger.log(Level.SEVERE, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
+		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
+	}
+	
+	@Override
 	public void onEnable() {
-
+		
 		pm = getServer().getPluginManager();
 		PluginDescriptionFile description = getDescription();
 		plugin = this;
@@ -144,17 +144,11 @@ public class DragonTravelMain extends JavaPlugin {
 		// Add the new entity to Minecraft's (Craftbukkit's) entities
 		// Returns false if plugin disabled
 		if (!registerEntity()) return;
-
-		// Register EventListener
-		entityListener = new EntityListener(this);
-		playerListener = new PlayerListener(this);
-		flighteditor = new FlightEditor();
-		blocklistener = new BlockListener(this);
 		
-		pm.registerEvents(playerListener, this);
-		pm.registerEvents(entityListener, this);
-		pm.registerEvents(flighteditor, this);
-		pm.registerEvents(blocklistener, this);
+		pm.registerEvents(new EntityListener(this), this);
+		pm.registerEvents(new PlayerListener(this), this);
+		pm.registerEvents(new FlightEditor(), this);
+		pm.registerEvents(new BlockListener(this), this);
 		
 		if(!(new File(plugin.getDataFolder(), "databases").exists()))
 			new File(plugin.getDataFolder(), "databases").mkdirs();
@@ -206,7 +200,7 @@ public class DragonTravelMain extends JavaPlugin {
 		alldragons = config.getBoolean("AntiGriefDragons.all");
 		ignoreAntiMobspawnAreas = config.getBoolean("AntiGriefDragons.bypassWorldGuardAntiSpawn");
 		
-		requiredItem = config.getInt("RequiredItem.Item");;
+		requiredItem = Material.getMaterial(config.getString("RequiredItem.Item"));
 		requireItemTravelStation = config.getBoolean("RequiredItem.For.toStation");
 		requireItemTravelRandom = config.getBoolean("RequiredItem.For.toRandom");
 		requireItemTravelCoordinates = config.getBoolean("RequiredItem.For.toCoordinates");
@@ -262,42 +256,36 @@ public class DragonTravelMain extends JavaPlugin {
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new MountingScheduler(), 60L, 30L);
 			
 	}
-	
-	@Override
-	public void onDisable() {
-		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
-		logger.log(Level.SEVERE, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
-		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
-	}
 
+    @SuppressWarnings("unchecked")
 	private boolean registerEntity() {
     
         try {        
-            Class entityTypeClass = EntityTypes.class;
+            Class<EntityTypes> entityTypeClass = EntityTypes.class;
             
             Field c = entityTypeClass.getDeclaredField("c");
             c.setAccessible(true);
-            HashMap c_map = (HashMap)c.get(null);
+			HashMap<String, Class<?>> c_map = (HashMap<String, Class<?>>)c.get(null);
             c_map.put("RyeDragon", this.dragonClass);
 
             Field d = entityTypeClass.getDeclaredField("d");
             d.setAccessible(true);
-            HashMap d_map = (HashMap)d.get(null);
+            HashMap<Class<?>, String> d_map = (HashMap<Class<?>, String>)d.get(null);
             d_map.put(this.dragonClass, "RyeDragon");
 
             Field e = entityTypeClass.getDeclaredField("e");
             e.setAccessible(true);
-            HashMap e_map = (HashMap)e.get(null);
+            HashMap<Integer, Class<?>> e_map = (HashMap<Integer, Class<?>>)e.get(null);
             e_map.put(Integer.valueOf(63), this.dragonClass);
 
             Field f = entityTypeClass.getDeclaredField("f");
             f.setAccessible(true);
-            HashMap f_map = (HashMap)f.get(null);
+            HashMap<Class<?>, Integer> f_map = (HashMap<Class<?>, Integer>)f.get(null);
             f_map.put(this.dragonClass, Integer.valueOf(63));
 
             Field g = entityTypeClass.getDeclaredField("g");
             g.setAccessible(true);
-            HashMap g_map = (HashMap)g.get(null);
+            HashMap<String, Integer> g_map = (HashMap<String, Integer>)g.get(null);
             g_map.put("RyeDragon", Integer.valueOf(63));
             
             return true;

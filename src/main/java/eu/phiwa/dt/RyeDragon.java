@@ -1,64 +1,74 @@
-package eu.phiwa.dt;
+package main.java.eu.phiwa.dt;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.server.v1_7_R1.EntityEnderDragon;
-import net.minecraft.server.v1_7_R1.World;
+import main.java.eu.phiwa.dt.flights.Waypoint;
+import main.java.eu.phiwa.dt.modules.DragonManagement;
+import main.java.eu.phiwa.dt.objects.Flight;
+import main.java.eu.phiwa.dt.objects.Station;
+import net.minecraft.server.v1_7_R3.EntityEnderDragon;
+import net.minecraft.server.v1_7_R3.World;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import eu.phiwa.dt.flights.Waypoint;
-import eu.phiwa.dt.modules.DragonManagement;
-
 public class RyeDragon extends EntityEnderDragon {
 
-	// Travel
-	boolean isTravel = false;
-
-	private double toX;
-	private double toY;
-	private double toZ;	
-	private org.bukkit.World toWorld;
-	private int travelY;
+	private int currentindexWaypoint = 0;
 
 	private Location destlocOtherworld;
+	// Distance to the right coords
+	private double distanceX;
+	private double distanceY;	
+	private double distanceZ;
+	Entity entity;
+
+	private boolean finalmove = false;
 
 
 	// Flight
 	boolean isFlight = false;
+	String flightName;
+
+	// Travel
+	boolean isTravel = false;
+	private boolean move = false;
+	private Waypoint nextWaypoint;
+	private int numberOfWaypoints;
+	private String statFromName;
+	private String statToName;
+
+	Player rider;
+	Location spawnOtherWorld;
+
+
+	Location start;
+	// Start points for tick calculation
+	private double startX;
+	private double startY;
+
+	private double startZ;
+	private org.bukkit.World toWorld;
+	private double toX;
+
+	private double toY;
+	private double toZ;
+	private int travelY;
 
 	private List<Waypoint> waypoints= new ArrayList<Waypoint>();
-	private Waypoint nextWaypoint;
-	private int currentindexWaypoint = 0;
-	private int numberOfWaypoints;
-
-	private boolean finalmove = false;
-	private boolean move = false;
-
-
+	
+	private double interworldDistribution = 80;
+	private double coveredDist;
+	private double totalDist;
+	private long estduration;
+	
 	// Amount to fly up/down during a flight/travel
 	private double XperTick;
 	private double YperTick;
 	private double ZperTick;
-
-	// Distance to the right coords
-	private double distanceX;
-	private double distanceY;
-	private double distanceZ;
-
-	// Start points for tick calculation
-	private double startX;
-	private double startY;
-	private double startZ;
-
-	Location start;
-	Location spawnOtherWorld;
-	Entity entity;
-	Player rider;
 
 
 	public RyeDragon(Location loc, World notchWorld) {
@@ -86,6 +96,142 @@ public class RyeDragon extends EntityEnderDragon {
 		super(world);
 	}
 
+	/**
+	 * This method is a natural method of the Enderdragon extended by the RyeDragon.
+	 * It's fired when the dragon moves and fires the travel-method again to keep the dragon flying.
+	 * 
+	 */
+	@Override
+	public void e() {   
+
+		if(entity != null && rider != null)
+			if(entity.getPassenger() != null)
+				entity.setPassenger(rider);
+
+		// Travel
+		if (isTravel) {
+			travel();
+			return;		
+		}
+
+		// Flight
+		if (isFlight) {
+			flight();
+			return;
+		}
+	}
+
+
+	/**
+	 * Controls the dragon
+	 */
+	public void flight() {
+
+		// Returns, the dragon won't move
+		if (!move)
+			return;
+
+		// Initialize variables for current coordinates
+		// locX/loY/locZ are variables extended by EntityEnderDragons > LivingEntity > Entity
+		double currentX = locX;
+		double currentY = locY;
+		double currentZ = locZ;
+
+		if ((int) currentX != nextWaypoint.x) {
+			if (currentX < nextWaypoint.x)
+				currentX += XperTick;
+			else 
+				currentX -= XperTick;
+		}
+
+		if ((int) currentY != nextWaypoint.y) {
+			if ((int)currentY < nextWaypoint.y)
+			{
+				currentY += YperTick;
+			}
+			else {
+				currentY -= YperTick;
+			}
+		}
+
+		if ((int) currentZ != nextWaypoint.z) {
+			if (currentZ < nextWaypoint.z)
+				currentZ += ZperTick;
+			else
+				currentZ -= ZperTick;
+		}
+
+
+		/*
+		   >> Reached the last waypoint? <<
+		   Is the next waypoint the last one?
+		   If yes, did the dragon already reach it?
+		   Removing the entity and dismounting the player
+		 */
+
+
+		/*
+		   >> Reached the next (and not last) waypoint? <<
+		   The next waypoint is loaded and the dragon moves towards it
+		 */
+		if ((Math.abs( (int)currentX - nextWaypoint.x) == 0 &&	Math.abs( (int)currentZ - nextWaypoint.z) <= 3) || (Math.abs( (int)currentZ - nextWaypoint.z) == 0 && Math.abs( (int)currentX - nextWaypoint.x) <= 3) && (Math.abs( (int)currentY - nextWaypoint.y) <= 5)){
+
+
+			if(currentindexWaypoint == numberOfWaypoints) {
+				try {
+					DragonManagement.removeRiderandDragon(	entity,
+							new Location(entity.getWorld(), 
+									nextWaypoint.x,
+									nextWaypoint.y,
+									nextWaypoint.z,
+									((Player)entity.getPassenger()).getLocation().getYaw(), 
+									((Player)entity.getPassenger()).getLocation().getPitch())
+							);
+					return;
+
+				}
+				catch(NullPointerException ex) {
+					DragonManagement.removeRiderandDragon(	entity,
+							new Location(entity.getWorld(), 
+									nextWaypoint.x,
+									nextWaypoint.y,
+									nextWaypoint.z)
+							);
+					return;
+				}
+			}
+
+
+			this.nextWaypoint = waypoints.get(currentindexWaypoint);			
+			this.currentindexWaypoint++;	
+
+			// Get the dragons position and set it as start-location for the flight to the next waypoint.
+			this.startX = locX;
+			this.startY = locY;
+			this.startZ = locZ;
+
+			this.yaw = getCorrectYaw(nextWaypoint.x, nextWaypoint.z);
+			setMoveFlight();
+			return;
+		}
+
+		setPosition(currentX, currentY, currentZ);
+	}
+
+	/**
+	 * Gets the correct yaw for this specific path
+	 */
+
+	private float getCorrectYaw(double targetx, double targetz) {
+
+		if (this.locZ > targetz)
+			return (float) (-Math.toDegrees(Math.atan((this.locX - targetx)	/ (this.locZ - targetz))));
+		else if (this.locZ < targetz)
+			return (float) (-Math.toDegrees(Math.atan((this.locX - targetx)	/ (this.locZ - targetz)))) + 180.0F;
+		else
+			return this.yaw;
+	}
+
 	public Entity getEntity() {
 		if (bukkitEntity != null)
 			return bukkitEntity;
@@ -95,48 +241,20 @@ public class RyeDragon extends EntityEnderDragon {
 
 
 	/**
-	 * Starts a travel to the specified location
-	 * 
-	 * @param destinationLoc
-	 * 				Location to start a travel to
+	 * Sets the x,y,z move for each tick
 	 */
-	public void startTravel(Location destinationLoc, Boolean interworld) {
+	public void setMoveFlight() {
 
-		if(interworld) {
-			toX = locX+20; 
-			toY = locY+10;
-			toZ = locZ+20;
-			toWorld = destinationLoc.getWorld();
-			destlocOtherworld = destinationLoc.clone();
+		this.distanceX = this.startX - nextWaypoint.x;
+		this.distanceY = this.startY - nextWaypoint.y;
+		this.distanceZ = this.startZ - nextWaypoint.z;
 
-			this.startX = start.getX();
-			this.startY = start.getY();
-			this.startZ = start.getZ();
+		double tick = Math.sqrt((distanceX * distanceX)	+ (distanceY * distanceY)
+				+ (distanceZ * distanceZ)) / DragonTravelMain.speed;
 
-			travelY = (int) toY;
-			
-			this.yaw = getCorrectYaw(toX, toZ);
-		}
-		else {
-			toX = destinationLoc.getBlockX();
-			toY = destinationLoc.getBlockY();
-			toZ = destinationLoc.getBlockZ();
-			toWorld = destinationLoc.getWorld();
-
-			this.startX = start.getX();
-			this.startY = start.getY();
-			this.startZ = start.getZ();
-
-			travelY = DragonTravelMain.config.getInt("TravelHeight");
-		}
-		
-		this.entity = getEntity();
-		this.rider = (Player) entity.getPassenger();
-		
-		isTravel = true;
-		move = true;	
-
-		setMoveTravel();
+		this.XperTick = Math.abs(distanceX) / tick;
+		this.YperTick = Math.abs(distanceY) / tick;
+		this.ZperTick = Math.abs(distanceZ) / tick;
 	}
 
 	/**
@@ -154,6 +272,67 @@ public class RyeDragon extends EntityEnderDragon {
 				) / DragonTravelMain.speed;
 		XperTick = Math.abs(distanceX) / tick;
 		ZperTick = Math.abs(distanceZ) / tick;
+	}
+
+	/**
+	 * Starts the specified flight
+	 * 
+	 * @param flight
+	 * 			Flight to start
+	 */
+	public void startFlight(Flight flight) {
+		this.entity = getEntity();
+		this.flightName = flight.name;
+		this.waypoints = flight.waypoints;
+		this.numberOfWaypoints = waypoints.size();
+		this.nextWaypoint = waypoints.get(currentindexWaypoint);
+		this.currentindexWaypoint++;
+
+		this.startX = start.getX();
+		this.startY = start.getY();
+		this.startZ = start.getZ();		
+
+		this.move = true;
+		this.isFlight = true;
+
+		setMoveFlight();					
+	}
+
+
+	/**
+	 * Starts a travel to the specified location
+	 * 
+	 * @param destinationLoc
+	 * 				Location to start a travel to
+	 */
+	public void startTravel(Location destinationLoc, Boolean interworld) {
+
+		if(interworld) {
+			toX = locX+5+Math.random()*200; 
+			toY = locY+5+Math.random()*200;
+			toZ = locZ+5+Math.random()*200;
+			destlocOtherworld = destinationLoc.clone();
+			travelY = (int) toY;
+		} else {
+			toX = destinationLoc.getBlockX();
+			toY = destinationLoc.getBlockY();
+			toZ = destinationLoc.getBlockZ();
+			travelY = DragonTravelMain.config.getInt("TravelHeight");
+		}
+		
+		this.yaw = getCorrectYaw(toX, toZ);
+		this.startX = start.getX();
+		this.startY = start.getY();
+		this.startZ = start.getZ();
+		toWorld = destinationLoc.getWorld();
+
+		this.entity = getEntity();
+		this.rider = (Player) entity.getPassenger();
+
+		isTravel = true;
+		move = true;	
+
+		setMoveTravel();
 	}
 
 	/**
@@ -188,9 +367,9 @@ public class RyeDragon extends EntityEnderDragon {
 					this.rider = (Player)entity.getPassenger();
 
 					spawnOtherWorld = destlocOtherworld.clone();
-					spawnOtherWorld.setX(destlocOtherworld.getX()+80);
-					spawnOtherWorld.setY(destlocOtherworld.getY()+80);
-					spawnOtherWorld.setZ(destlocOtherworld.getZ()+80);
+					spawnOtherWorld.setX(destlocOtherworld.getX()+interworldDistribution);
+					spawnOtherWorld.setY(destlocOtherworld.getY()+interworldDistribution);
+					spawnOtherWorld.setZ(destlocOtherworld.getZ()+interworldDistribution);
 					spawnOtherWorld.getChunk().load();
 
 					Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("DragonTravel"), new Runnable(){
@@ -228,219 +407,28 @@ public class RyeDragon extends EntityEnderDragon {
 		// Getting the correct height
 		if ((int) locY < travelY)
 			myY += DragonTravelMain.speed;
-	
+
 		if (myX < toX)
 			myX += XperTick;
 		else
 			myX -= XperTick;
-	
+
 		if (myZ < toZ)
 			myZ += ZperTick;
 		else
 			myZ -= ZperTick;
-	
+
 		if ((int) myZ == (int)toZ	&& ((int)myX == (int)toX
-			|| (int)myX == (int)toX+1 || (int)myX == (int)toX-1)) {
+				|| (int)myX == (int)toX+1 || (int)myX == (int)toX-1)) {
 			finalmove = true;
 		}
-	
+
 		setPosition(myX, myY, myZ);
 	}
 
-
-		/**
-	 * Starts the specified flight
-	 * 
-	 * @param flight
-	 * 			Flight to start
-	 */
-	public void startFlight(Flight flight) {
-
-		this.entity = getEntity();
-		this.waypoints = flight.waypoints;
-		this.numberOfWaypoints = waypoints.size();
-		this.nextWaypoint = waypoints.get(currentindexWaypoint);
-		this.currentindexWaypoint++;
-
-		this.startX = start.getX();
-		this.startY = start.getY();
-		this.startZ = start.getZ();		
-		
-		this.move = true;
-		this.isFlight = true;
-
-		setMoveFlight();					
-	}
-
-	/**
-	 * Sets the x,y,z move for each tick
-	 */
-	public void setMoveFlight() {
-
-		this.distanceX = this.startX - nextWaypoint.x;
-		this.distanceY = this.startY - nextWaypoint.y;
-		this.distanceZ = this.startZ - nextWaypoint.z;
-
-		double tick = Math.sqrt((distanceX * distanceX)	+ (distanceY * distanceY)
-				+ (distanceZ * distanceZ)) / DragonTravelMain.speed;
-
-		this.XperTick = Math.abs(distanceX) / tick;
-		this.YperTick = Math.abs(distanceY) / tick;
-		this.ZperTick = Math.abs(distanceZ) / tick;
-	}
-
-	/**
-	 * Controls the dragon
-	 */
-	public void flight() {
-
-		// Returns, the dragon won't move
-		if (!move)
-			return;
-
-		// Initialize variables for current coordinates
-		// locX/loY/locZ are variables extended by EntityEnderDragons > LivingEntity > Entity
-		double currentX = locX;
-		double currentY = locY;
-		double currentZ = locZ;
-
-
-		if ((int) currentX != nextWaypoint.x) {
-			if (currentX < nextWaypoint.x)
-				currentX += XperTick;
-			else 
-				currentX -= XperTick;
-		}
-
-		if ((int) currentY != nextWaypoint.y) {
-			if ((int)currentY < nextWaypoint.y)
-			{
-				currentY += YperTick;
-			}
-			else {
-				currentY -= YperTick;
-			}
-		}
-
-		if ((int) currentZ != nextWaypoint.z) {
-			if (currentZ < nextWaypoint.z)
-				currentZ += ZperTick;
-			else
-				currentZ -= ZperTick;
-		}
-
-		
-		/*
-		   >> Reached the last waypoint? <<
-		   Is the next waypoint the last one?
-		   If yes, did the dragon already reach it?
-		   Removing the entity and dismounting the player
-		*/
-		
-		
-		/*
-		   >> Reached the next (and not last) waypoint? <<
-		   The next waypoint is loaded and the dragon moves towards it
-		*/
-		if (	
-				(
-				Math.abs( (int)currentX - nextWaypoint.x) == 0
-			&&	Math.abs( (int)currentZ - nextWaypoint.z) <= 3
-				) || (
-				Math.abs( (int)currentZ - nextWaypoint.z) == 0
-			&&	Math.abs( (int)currentX - nextWaypoint.x) <= 3
-				) && (
-				Math.abs( (int)currentY - nextWaypoint.y) <= 5
-				)
-			){
-
-
-			if(currentindexWaypoint == numberOfWaypoints) {
-				try {
-					DragonManagement.removeRiderandDragon(	entity,
-															new Location(entity.getWorld(), 
-																		 nextWaypoint.x,
-																		 nextWaypoint.y,
-																		 nextWaypoint.z,
-																		 ((Player)entity.getPassenger()).getLocation().getYaw(), 
-																		 ((Player)entity.getPassenger()).getLocation().getPitch())
-														);
-					return;
-
-				}
-				catch(NullPointerException ex) {
-					DragonManagement.removeRiderandDragon(	entity,
-															new Location(entity.getWorld(), 
-																		 nextWaypoint.x,
-																		 nextWaypoint.y,
-																		 nextWaypoint.z)
-														);
-					return;
-				}
-			}
-			
-
-			this.nextWaypoint = waypoints.get(currentindexWaypoint);			
-			this.currentindexWaypoint++;	
-
-			// Get the dragons position and set it as start-location for the flight to the next waypoint.
-			this.startX = locX;
-			this.startY = locY;
-			this.startZ = locZ;
-
-			this.yaw = getCorrectYaw(nextWaypoint.x, nextWaypoint.z);
-
-			setMoveFlight();
-
-			return;
-		}
-
-		setPosition(currentX, currentY, currentZ);
-	}
-
-
-	/**
-	 * Gets the correct yaw for this specific path
-	 */
-
-	private float getCorrectYaw(double targetx, double targetz) {
-
-		if (this.locZ > targetz)
-			return (float) (-Math.toDegrees(Math.atan((this.locX - targetx)	/ (this.locZ - targetz))));
-		else if (this.locZ < targetz)
-			return (float) (-Math.toDegrees(Math.atan((this.locX - targetx)	/ (this.locZ - targetz)))) + 180.0F;
-		else
-			return this.yaw;
-	}
-
-	/**
-	 * This method is a natural method of the Enderdragon extended by the RyeDragon.
-	 * It's fired when the dragon moves and fires the travel-method again to keep the dragon flying.
-	 * 
-	 */
-	@Override
-	public void e() {   
-    
-        if(entity != null && rider != null)
-            if(entity.getPassenger() != null)
-                entity.setPassenger(rider);
-        
-        // Travel
-        if (isTravel) {
-            travel();
-            return;		
-        }
-
-        // Flight
-        if (isFlight) {
-            flight();
-            return;
-        }
-    }
-	
 	/*
 	public double x_() {
 		return 3;
 	}
 	 */
-	}
+}

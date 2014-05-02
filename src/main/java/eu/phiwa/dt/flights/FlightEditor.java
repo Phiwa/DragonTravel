@@ -1,8 +1,12 @@
-package eu.phiwa.dt.flights;
+package main.java.eu.phiwa.dt.flights;
 
 import java.util.HashMap;
 
+import main.java.eu.phiwa.dt.DragonTravelMain;
+import main.java.eu.phiwa.dt.objects.Flight;
+
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,34 +14,31 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import eu.phiwa.dt.DragonTravelMain;
-import eu.phiwa.dt.Flight;
-
 public class FlightEditor implements Listener {
 
 	public static HashMap<Player, Flight> editors = new HashMap<Player, Flight>();
-	
-	
-	public FlightEditor() {
+
+
+	public static void addEditor(Player player, String flightname) {
+		if(!editors.containsKey(player))
+			editors.put(player, new Flight(player.getWorld(), flightname));	
 	}
-	
+
 	public static boolean isEditor(Player player) {
 		if(editors.containsKey(player))
 			return true;
 		else
 			return false;
 	}
-	
-	public static void addEditor(Player player, String flightname) {
-		if(!editors.containsKey(player))
-			editors.put(player, new Flight(player.getWorld(), flightname));	
-	}
-	
+
 	public static void removeEditor(Player player) {
 		if(editors.containsKey(player))
 			editors.remove(player);
 	}
-	
+
+	public FlightEditor() {
+	}
+
 	@EventHandler
 	public void onWP(PlayerInteractEvent event) {
 
@@ -47,15 +48,16 @@ public class FlightEditor implements Listener {
 		if (!editors.containsKey(player))
 			return;
 
-		if (player.getItemInHand().getTypeId() != 281)
+		if (player.getItemInHand().getType() != Material.BOWL)
 			return;
 
 		if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			Flight flight = editors.get(player);
-			flight.removelastWaypoint();
-			
+			if(!flight.waypoints.isEmpty()){
+				flight.removelastWaypoint();
+			}
+
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.WaypointRemoved"));
-			// TODO: ---ADD MESSAGE Successfully removed the last waypoint
 			return;
 		}
 
@@ -65,17 +67,17 @@ public class FlightEditor implements Listener {
 			wp.x = (int) loc.getX();
 			wp.y = (int) loc.getY();
 			wp.z = (int) loc.getZ();
+			wp.world = loc.getWorld();
 			flight.addWaypoint(wp);
-			
+
 			// Create a marker at the waypoint
 			wp.setMarker(player);
 			Block block = player.getLocation().getBlock();	
 			DragonTravelMain.globalwaypointmarkers.put(block, block);
-			
+
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.WaypointAdded"));
-			// TODO: ---ADD MESSAGE Successfully added a waypoint
 		}
 	}
-	
-	
+
+
 }

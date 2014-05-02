@@ -1,7 +1,7 @@
 name: DragonTravel
-main: eu.phiwa.dt.DragonTravelMain
+main: main.java.eu.phiwa.dt.DragonTravelMain
 author: Phiwa, x3nec
-version: Phoenix Alpha v0.0.0.10
+version: Phoenix Alpha v0.0.0.14
 load: STARTUP
 softdepend: [Vault, AntiCheat, NoCheatPlus, Factions]
 permissions:

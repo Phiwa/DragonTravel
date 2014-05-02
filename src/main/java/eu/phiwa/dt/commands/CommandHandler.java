@@ -1,4 +1,17 @@
-package eu.phiwa.dt.commands;
+package main.java.eu.phiwa.dt.commands;
+
+import main.java.eu.phiwa.dt.DragonTravelMain;
+import main.java.eu.phiwa.dt.flights.FlightEditor;
+import main.java.eu.phiwa.dt.flights.Waypoint;
+import main.java.eu.phiwa.dt.modules.DragonManagement;
+import main.java.eu.phiwa.dt.modules.StationaryDragon;
+import main.java.eu.phiwa.dt.movement.Flights;
+import main.java.eu.phiwa.dt.movement.Travels;
+import main.java.eu.phiwa.dt.objects.Flight;
+import main.java.eu.phiwa.dt.objects.Home;
+import main.java.eu.phiwa.dt.objects.Station;
+import main.java.eu.phiwa.dt.payment.PaymentHandler;
+import main.java.eu.phiwa.dt.permissions.PermissionsHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,19 +23,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-
-import eu.phiwa.dt.DragonTravelMain;
-import eu.phiwa.dt.Flight;
-import eu.phiwa.dt.Home;
-import eu.phiwa.dt.Station;
-import eu.phiwa.dt.flights.FlightEditor;
-import eu.phiwa.dt.flights.Waypoint;
-import eu.phiwa.dt.modules.DragonManagement;
-import eu.phiwa.dt.modules.StationaryDragon;
-import eu.phiwa.dt.movement.Flights;
-import eu.phiwa.dt.movement.Travels;
-import eu.phiwa.dt.payment.PaymentHandler;
-import eu.phiwa.dt.permissions.PermissionsHandler;
 
 public class CommandHandler implements CommandExecutor {
 	
@@ -156,7 +156,8 @@ public class CommandHandler implements CommandExecutor {
 					return false;
 					
 				default:
-					// TODO: ADD MESSAGE Commandhelp for Console				
+					sendUsage(sender);
+					// TODO: ---ADD MESSAGE Commandhelp for Console				
 					return false;
 			}
 		}
@@ -225,7 +226,7 @@ public class CommandHandler implements CommandExecutor {
 						
 						if(DragonTravelMain.dbHomesHandler.getHome(player.getName()) != null)
 							DragonTravelMain.dbHomesHandler.deleteHome(player.getName());					
-						Home home = new Home(player.getName(), player.getLocation());
+						Home home = new Home(player.getUniqueId().toString(), player.getLocation());
 						DragonTravelMain.dbHomesHandler.createHome(home);
 						return true;
 					}
@@ -588,6 +589,7 @@ public class CommandHandler implements CommandExecutor {
 					return true;
 				}
 				
+				sendUsage(player, 1);
 				return false;
 				
 			case 3:

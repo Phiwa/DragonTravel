@@ -1,8 +1,8 @@
-package eu.phiwa.dt.anticheatplugins;
+package main.java.eu.phiwa.dt.anticheatplugins;
 
 import org.bukkit.plugin.Plugin;
 
-import eu.phiwa.dt.DragonTravelMain;
+import main.java.eu.phiwa.dt.DragonTravelMain;
 
 /**
  * Copyright (C) 2011-2013 Philipp Wagner

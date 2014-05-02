@@ -4,8 +4,7 @@
 Flights:
     exampleflight:
         displayname: 'ExampleFlight'
-        world: 'world'
         waypoints:
-            - 456%75%123
-            - 470%90%125
-            - 500%75%1350
+            - 456%75%123%world
+            - 470%90%125%world
+            - 500%75%1350%world

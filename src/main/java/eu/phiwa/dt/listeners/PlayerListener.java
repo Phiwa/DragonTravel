@@ -1,4 +1,11 @@
-package eu.phiwa.dt.listeners;
+package main.java.eu.phiwa.dt.listeners;
+
+import main.java.eu.phiwa.dt.DragonTravelMain;
+import main.java.eu.phiwa.dt.modules.DragonManagement;
+import main.java.eu.phiwa.dt.movement.Flights;
+import main.java.eu.phiwa.dt.movement.Travels;
+import main.java.eu.phiwa.dt.payment.PaymentHandler;
+import main.java.eu.phiwa.dt.permissions.PermissionsHandler;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,14 +18,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
-import eu.phiwa.dt.DragonTravelMain;
-import eu.phiwa.dt.modules.DragonManagement;
-import eu.phiwa.dt.movement.Flights;
-import eu.phiwa.dt.movement.Travels;
-import eu.phiwa.dt.payment.PaymentHandler;
-import eu.phiwa.dt.permissions.PermissionsHandler;
 
 
 public class PlayerListener implements Listener {
@@ -29,6 +30,26 @@ public class PlayerListener implements Listener {
 		this.plugin = plugin;
 	}
 
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		DragonTravelMain.ptogglers.put(event.getPlayer().getName(), DragonTravelMain.ptoggleDefault);		
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerKick(PlayerKickEvent event) {
+
+		Player player = event.getPlayer();
+		
+		if(!DragonTravelMain.listofDragonriders.containsKey(player))
+			return;
+		
+		if(DragonTravelMain.ptogglers.containsKey(player.getName()))
+			DragonTravelMain.ptogglers.remove(player.getName());
+		
+		DragonManagement.removeRiderandDragon(DragonTravelMain.listofDragonriders.get((player)).getEntity(), false);
+
+	}
+	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 
@@ -42,13 +63,6 @@ public class PlayerListener implements Listener {
 		
 		DragonManagement.removeRiderandDragon(DragonTravelMain.listofDragonriders.get((player)).getEntity(), false);
 	}
-	
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		DragonTravelMain.ptogglers.put(event.getPlayer().getName(), DragonTravelMain.ptoggleDefault);		
-	}
-	
-	
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignInteract(PlayerInteractEvent event) {

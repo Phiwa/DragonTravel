@@ -1,4 +1,7 @@
-package eu.phiwa.dt.listeners;
+package main.java.eu.phiwa.dt.listeners;
+
+import main.java.eu.phiwa.dt.DragonTravelMain;
+import main.java.eu.phiwa.dt.RyeDragon;
 
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;
@@ -11,16 +14,27 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-import eu.phiwa.dt.DragonTravelMain;
-import eu.phiwa.dt.RyeDragon;
-
-
 public class EntityListener implements Listener {
 
 	DragonTravelMain plugin;
 
 	public EntityListener(DragonTravelMain plugin) {
 		this.plugin = plugin;
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onCreatureSpawn(CreatureSpawnEvent event) {
+		if(event.getSpawnReason()!=SpawnReason.CUSTOM)
+			return;
+		
+		if (!event.getEntity().getType().toString().equals("ENDER_DRAGON"))
+			return;
+
+		if (!event.isCancelled())
+			return;
+
+		if (DragonTravelMain.ignoreAntiMobspawnAreas == true)
+			event.setCancelled(false);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -30,6 +44,14 @@ public class EntityListener implements Listener {
 			event.setCancelled(true);
 		else if (DragonTravelMain.alldragons && event.getEntity() instanceof EnderDragon)
 			event.setCancelled(true);
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onEntityDeath(EntityDeathEvent event) {
+		
+		if(event.getEntity()instanceof RyeDragon)
+			return;
+			
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -58,20 +80,5 @@ public class EntityListener implements Listener {
 		RyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);
 		dragon.getEntity().remove();
 		DragonTravelMain.listofDragonriders.remove(player);
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		if(event.getSpawnReason()!=SpawnReason.CUSTOM)
-			return;
-		
-		if (!event.getEntity().getType().toString().equals("ENDER_DRAGON"))
-			return;
-
-		if (!event.isCancelled())
-			return;
-
-		if (DragonTravelMain.ignoreAntiMobspawnAreas == true)
-			event.setCancelled(false);
 	}
 }

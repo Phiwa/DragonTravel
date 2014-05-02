@@ -1,8 +1,8 @@
-package eu.phiwa.dt.anticheatplugins;
+package main.java.eu.phiwa.dt.anticheatplugins;
 
 import org.bukkit.entity.Player;
 
-import eu.phiwa.dt.DragonTravelMain;
+import main.java.eu.phiwa.dt.DragonTravelMain;
 
 public class CheatProtectionHandler {
 	
@@ -15,9 +15,10 @@ public class CheatProtectionHandler {
 	public static void exemptPlayerFromCheatChecks(Player player) {
 		
 		// AntiCheat
-		if (DragonTravelMain.anticheat	&& !net.h31ix.anticheat.api.AnticheatAPI
-							.isExempt(player, net.h31ix.anticheat.manage.CheckType.FLY)) {
-			net.h31ix.anticheat.api.AnticheatAPI.exemptPlayer(player,net.h31ix.anticheat.manage.CheckType.FLY);
+		if (DragonTravelMain.anticheat) {
+			if(!net.gravitydevelopment.anticheat.api.AntiCheatAPI.isExempt(player, net.gravitydevelopment.anticheat.check.CheckType.FLY)) {
+				net.gravitydevelopment.anticheat.api.AntiCheatAPI.exemptPlayer(player, net.gravitydevelopment.anticheat.check.CheckType.FLY);
+			}
 		}
 				
 		// NoCheatPlus
@@ -42,10 +43,11 @@ public class CheatProtectionHandler {
 	 */
 	public static void unexemptPlayerFromCheatChecks(Player player) {
 		// AntiCheat
-		if (DragonTravelMain.anticheat && net.h31ix.anticheat.api.AnticheatAPI
-							.isExempt(player,net.h31ix.anticheat.manage.CheckType.FLY)) {
-			net.h31ix.anticheat.api.AnticheatAPI
-							.unexemptPlayer(player,net.h31ix.anticheat.manage.CheckType.FLY);
+		if (DragonTravelMain.anticheat) {
+			
+			if(net.gravitydevelopment.anticheat.api.AntiCheatAPI.isExempt(player, net.gravitydevelopment.anticheat.check.CheckType.FLY)) {
+				net.gravitydevelopment.anticheat.api.AntiCheatAPI.unexemptPlayer(player,net.gravitydevelopment.anticheat.check.CheckType.FLY);
+			}
 		}
 		
 		// NoCheatPlus

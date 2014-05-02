@@ -1,18 +1,18 @@
-package eu.phiwa.dt.filehandlers;
+package main.java.eu.phiwa.dt.filehandlers;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import main.java.eu.phiwa.dt.DragonTravelMain;
+import main.java.eu.phiwa.dt.objects.Home;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-
-import eu.phiwa.dt.DragonTravelMain;
-import eu.phiwa.dt.Home;
 
 public class HomesDB {
 
@@ -22,40 +22,6 @@ public class HomesDB {
 		this.plugin = plugin;
 	}
 		
-	public void init() {
-	
-		DragonTravelMain.dbHomesFile = new File("plugins/DragonTravel/databases", "homes.yml");
-	
-		try {
-			create();
-		}
-		catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] Could not initialize the homes-database.");
-			e.printStackTrace();
-		}
-	
-		DragonTravelMain.dbHomesConfig = new YamlConfiguration();
-		load();
-	
-	}
-	
-	private void create() {
-		
-		if (DragonTravelMain.dbHomesFile.exists())
-			return;
-
-		try {
-			DragonTravelMain.dbHomesFile.createNewFile();
-			copy(getClass().getResourceAsStream("homes.yml"), DragonTravelMain.dbHomesFile);
-			DragonTravelMain.logger.info("[DragonTravel] Created homes-database.");
-		}
-		catch(Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not create the homes-database!");
-		}
-		
-		
-	}
-	
 	private void copy(InputStream in, File file) {
 		
 		try {
@@ -72,44 +38,22 @@ public class HomesDB {
 			e.printStackTrace();
 		}
 	}
-
-	private void load() {
-		try {
-			DragonTravelMain.dbHomesConfig.load(DragonTravelMain.dbHomesFile);
-			DragonTravelMain.logger.info("[DragonTravel] Loaded homes-database.");
-		}
-		catch (Exception e) {
-			DragonTravelMain.logger.info("[DragonTravel] [Error] No homes-database found");
-			e.printStackTrace();
-		}
-	}
-
 	
-	/**
-	 * Returns the details of the home with the given name.
-	 * 
-	 * @param homename
-	 * 			Name of the home which should be returned.
-	 * @return
-	 * 			The home as a home-object.
-	 */
-	public Home getHome(String playername) {
+	private void create() {
 		
-		playername = "Homes." + playername.toLowerCase();
-		
-		if(DragonTravelMain.dbHomesConfig.getString(playername+".world") == null)
-			return null;
+		if (DragonTravelMain.dbHomesFile.exists())
+			return;
 
-		Location homeLoc = new Location(
-									Bukkit.getWorld(DragonTravelMain.dbHomesConfig.getString(playername+".world")),
-											(double)DragonTravelMain.dbHomesConfig.getInt(playername+".x"),
-											(double)DragonTravelMain.dbHomesConfig.getInt(playername+".y"),
-											(double)DragonTravelMain.dbHomesConfig.getInt(playername+".z")						
-									);
+		try {
+			DragonTravelMain.dbHomesFile.createNewFile();
+			copy(this.plugin.getResource("databases/homes.yml"), DragonTravelMain.dbHomesFile);
+			DragonTravelMain.logger.info("[DragonTravel] Created homes-database.");
+		}
+		catch(Exception e) {
+			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not create the homes-database!");
+		}
 		
-		Home home = new Home(playername, homeLoc);
-		return home;
-
+		
 	}
 	
 	/**
@@ -144,7 +88,7 @@ public class HomesDB {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Deletes the given home.
 	 * 
@@ -155,7 +99,7 @@ public class HomesDB {
 	 */
 	public boolean deleteHome(String playername) {	
 		
-		playername = "Homes." + playername.toLowerCase();
+		playername = "Homes." + playername;
 		
 		DragonTravelMain.dbHomesConfig.set(playername, null);
 		
@@ -166,6 +110,62 @@ public class HomesDB {
 		catch(Exception e) {
 			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not delete home from config.");
 			return false;
+		}
+	}
+
+	
+	/**
+	 * Returns the details of the home with the given name.
+	 * 
+	 * @param homename
+	 * 			Name of the home which should be returned.
+	 * @return
+	 * 			The home as a home-object.
+	 */
+	public Home getHome(String playername) {
+		
+		playername = "Homes." + playername.toLowerCase();
+		
+		if(DragonTravelMain.dbHomesConfig.getString(playername+".world") == null)
+			return null;
+
+		Location homeLoc = new Location(
+									Bukkit.getWorld(DragonTravelMain.dbHomesConfig.getString(playername+".world")),
+											(double)DragonTravelMain.dbHomesConfig.getInt(playername+".x"),
+											(double)DragonTravelMain.dbHomesConfig.getInt(playername+".y"),
+											(double)DragonTravelMain.dbHomesConfig.getInt(playername+".z")						
+									);
+		
+		Home home = new Home(playername, homeLoc);
+		return home;
+
+	}
+	
+	public void init() {
+	
+		DragonTravelMain.dbHomesFile = new File("plugins/DragonTravel/databases", "homes.yml");
+	
+		try {
+			create();
+		}
+		catch (Exception e) {
+			DragonTravelMain.logger.info("[DragonTravel] Could not initialize the homes-database.");
+			e.printStackTrace();
+		}
+	
+		DragonTravelMain.dbHomesConfig = new YamlConfiguration();
+		load();
+	
+	}
+	
+	private void load() {
+		try {
+			DragonTravelMain.dbHomesConfig.load(DragonTravelMain.dbHomesFile);
+			DragonTravelMain.logger.info("[DragonTravel] Loaded homes-database.");
+		}
+		catch (Exception e) {
+			DragonTravelMain.logger.info("[DragonTravel] [Error] No homes-database found");
+			e.printStackTrace();
 		}
 	}
 	

@@ -1,9 +1,36 @@
-package eu.phiwa.dt.permissions;
+package main.java.eu.phiwa.dt.permissions;
 
 import org.bukkit.entity.Player;
 
+
 public class PermissionsHandler {
 
+	/**
+	 * Checks if the specified player has the permission to use the specified flight
+	 * 
+	 * @param player
+	 * 			Player to check the permission for
+	 * @param flightname
+	 * 			Flight to check the permission for (if null, only checks the general permission)
+	 * @return
+	 * 			"True" if the player has the permissions, "false" if he hasn't
+	 */
+	public static boolean hasFlightPermission(Player player, String flightname){
+				
+		if (player.hasPermission("dt.flight.*")) // wildcard
+			return true;
+		else {
+			if(flightname == null) // If no flightname is specified, we got a problem, but simply allow it...^^
+				return true;
+			else {
+				if (player.hasPermission("dt.flight." + flightname)) // flight-specific
+					return true;
+				else
+					return false;	// No permission			
+			}
+		}		
+	}
+	
 	/**
 	 * Checks if the specified player has the permission to use
 	 * the specified travel-type to travel to the specified destination.
@@ -39,31 +66,5 @@ public class PermissionsHandler {
 			else
 				return false;	// No permission
 		}
-	}
-	
-	/**
-	 * Checks if the specified player has the permission to use the specified flight
-	 * 
-	 * @param player
-	 * 			Player to check the permission for
-	 * @param flightname
-	 * 			Flight to check the permission for (if null, only checks the general permission)
-	 * @return
-	 * 			"True" if the player has the permissions, "false" if he hasn't
-	 */
-	public static boolean hasFlightPermission(Player player, String flightname){
-				
-		if (player.hasPermission("dt.flight.*")) // wildcard
-			return true;
-		else {
-			if(flightname == null) // If no flightname is specified, we got a problem, but simply allow it...^^
-				return true;
-			else {
-				if (player.hasPermission("dt.flight." + flightname)) // flight-specific
-					return true;
-				else
-					return false;	// No permission			
-			}
-		}		
 	}	
 }

@@ -1,23 +1,24 @@
-package eu.phiwa.dt;
+package main.java.eu.phiwa.dt.objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+
 public class Station {
 
-	public String name;
 	public String displayname;
-	
-	// Single values
-	public int x;
-	public int y;
-	public int z;	
-	public World world;
-	
 	// Complete Location
 	public Location loc;
+	
+	public String name;
+	public World world;
+	// Single values
+	public int x;	
+	public int y;
+	
+	public int z;
 	
 	
 /*	
@@ -54,6 +55,19 @@ public class Station {
 	}
 	
 	/**
+	 * Prints the station's details to the console.
+	 */
+	public void print() {
+		System.out.println("--- Station ---");
+		System.out.println("Name: " + displayname);
+		System.out.println("X: " + x);
+		System.out.println("Y: " + y);
+		System.out.println("Z: " + z);
+		System.out.println("World: " + world.getName());
+		System.out.println("---------------");
+	}
+
+	/**
 	 * Prints the station's details to the player's chat.
 	 * 
 	 * @param player
@@ -67,18 +81,5 @@ public class Station {
 		player.sendMessage("Z: " + z);
 		player.sendMessage("World: " + world.getName());
 		player.sendMessage("---------------");
-	}
-
-	/**
-	 * Prints the station's details to the console.
-	 */
-	public void print() {
-		System.out.println("--- Station ---");
-		System.out.println("Name: " + displayname);
-		System.out.println("X: " + x);
-		System.out.println("Y: " + y);
-		System.out.println("Z: " + z);
-		System.out.println("World: " + world.getName());
-		System.out.println("---------------");
 	}
 }

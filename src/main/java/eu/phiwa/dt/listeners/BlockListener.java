@@ -1,4 +1,7 @@
-package eu.phiwa.dt.listeners;
+package main.java.eu.phiwa.dt.listeners;
+
+import main.java.eu.phiwa.dt.DragonTravelMain;
+import main.java.eu.phiwa.dt.signs.Signs;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -9,10 +12,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
-
-import eu.phiwa.dt.DragonTravelMain;
-import eu.phiwa.dt.signs.Signs;
-
 
 public class BlockListener implements Listener {
 
