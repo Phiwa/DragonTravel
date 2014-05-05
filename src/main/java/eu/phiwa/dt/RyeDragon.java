@@ -1,12 +1,12 @@
-package main.java.eu.phiwa.dt;
+package eu.phiwa.dt;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.eu.phiwa.dt.flights.Waypoint;
-import main.java.eu.phiwa.dt.modules.DragonManagement;
-import main.java.eu.phiwa.dt.objects.Flight;
-import main.java.eu.phiwa.dt.objects.Station;
+import eu.phiwa.dt.flights.Waypoint;
+import eu.phiwa.dt.modules.DragonManagement;
+import eu.phiwa.dt.objects.Flight;
+import eu.phiwa.dt.objects.Station;
 import net.minecraft.server.v1_7_R3.EntityEnderDragon;
 import net.minecraft.server.v1_7_R3.World;
 
@@ -22,12 +22,11 @@ public class RyeDragon extends EntityEnderDragon {
 	private Location destlocOtherworld;
 	// Distance to the right coords
 	private double distanceX;
-	private double distanceY;	
+	private double distanceY;
 	private double distanceZ;
 	Entity entity;
 
 	private boolean finalmove = false;
-
 
 	// Flight
 	boolean isFlight = false;
@@ -44,7 +43,6 @@ public class RyeDragon extends EntityEnderDragon {
 	Player rider;
 	Location spawnOtherWorld;
 
-
 	Location start;
 	// Start points for tick calculation
 	private double startX;
@@ -58,21 +56,19 @@ public class RyeDragon extends EntityEnderDragon {
 	private double toZ;
 	private int travelY;
 
-	private List<Waypoint> waypoints= new ArrayList<Waypoint>();
-	
+	private List<Waypoint> waypoints = new ArrayList<Waypoint>();
+
 	private double interworldDistribution = 80;
 	private double coveredDist;
 	private double totalDist;
 	private long estduration;
-	
+
 	// Amount to fly up/down during a flight/travel
 	private double XperTick;
 	private double YperTick;
 	private double ZperTick;
 
-
 	public RyeDragon(Location loc, World notchWorld) {
-
 		super(notchWorld);
 
 		this.start = loc;
@@ -97,21 +93,22 @@ public class RyeDragon extends EntityEnderDragon {
 	}
 
 	/**
-	 * This method is a natural method of the Enderdragon extended by the RyeDragon.
-	 * It's fired when the dragon moves and fires the travel-method again to keep the dragon flying.
-	 * 
+	 * This method is a natural method of the Enderdragon extended by the
+	 * RyeDragon. It's fired when the dragon moves and fires the
+	 * travel-method again to keep the dragon flying.
+	 *
 	 */
 	@Override
-	public void e() {   
+	public void e() {
 
-		if(entity != null && rider != null)
-			if(entity.getPassenger() != null)
+		if (entity != null && rider != null)
+			if (entity.getPassenger() != null)
 				entity.setPassenger(rider);
 
 		// Travel
 		if (isTravel) {
 			travel();
-			return;		
+			return;
 		}
 
 		// Flight
@@ -120,7 +117,6 @@ public class RyeDragon extends EntityEnderDragon {
 			return;
 		}
 	}
-
 
 	/**
 	 * Controls the dragon
@@ -140,16 +136,14 @@ public class RyeDragon extends EntityEnderDragon {
 		if ((int) currentX != nextWaypoint.x) {
 			if (currentX < nextWaypoint.x)
 				currentX += XperTick;
-			else 
+			else
 				currentX -= XperTick;
 		}
 
 		if ((int) currentY != nextWaypoint.y) {
-			if ((int)currentY < nextWaypoint.y)
-			{
+			if ((int) currentY < nextWaypoint.y) {
 				currentY += YperTick;
-			}
-			else {
+			} else {
 				currentY -= YperTick;
 			}
 		}
@@ -161,49 +155,31 @@ public class RyeDragon extends EntityEnderDragon {
 				currentZ -= ZperTick;
 		}
 
-
 		/*
-		   >> Reached the last waypoint? <<
-		   Is the next waypoint the last one?
-		   If yes, did the dragon already reach it?
-		   Removing the entity and dismounting the player
+		 * >> Reached the last waypoint? << Is the next waypoint the last
+		 * one? If yes, did the dragon already reach it? Removing the entity
+		 * and dismounting the player
 		 */
 
-
 		/*
-		   >> Reached the next (and not last) waypoint? <<
-		   The next waypoint is loaded and the dragon moves towards it
+		 * >> Reached the next (and not last) waypoint? << The next waypoint
+		 * is loaded and the dragon moves towards it
 		 */
-		if ((Math.abs( (int)currentX - nextWaypoint.x) == 0 &&	Math.abs( (int)currentZ - nextWaypoint.z) <= 3) || (Math.abs( (int)currentZ - nextWaypoint.z) == 0 && Math.abs( (int)currentX - nextWaypoint.x) <= 3) && (Math.abs( (int)currentY - nextWaypoint.y) <= 5)){
+		if ((Math.abs((int) currentX - nextWaypoint.x) == 0 && Math.abs((int) currentZ - nextWaypoint.z) <= 3) || (Math.abs((int) currentZ - nextWaypoint.z) == 0 && Math.abs((int) currentX - nextWaypoint.x) <= 3) && (Math.abs((int) currentY - nextWaypoint.y) <= 5)) {
 
-
-			if(currentindexWaypoint == numberOfWaypoints) {
+			if (currentindexWaypoint == numberOfWaypoints) {
 				try {
-					DragonManagement.removeRiderandDragon(	entity,
-							new Location(entity.getWorld(), 
-									nextWaypoint.x,
-									nextWaypoint.y,
-									nextWaypoint.z,
-									((Player)entity.getPassenger()).getLocation().getYaw(), 
-									((Player)entity.getPassenger()).getLocation().getPitch())
-							);
+					DragonManagement.removeRiderandDragon(entity, new Location(entity.getWorld(), nextWaypoint.x, nextWaypoint.y, nextWaypoint.z, ((Player) entity.getPassenger()).getLocation().getYaw(), ((Player) entity.getPassenger()).getLocation().getPitch()));
 					return;
 
-				}
-				catch(NullPointerException ex) {
-					DragonManagement.removeRiderandDragon(	entity,
-							new Location(entity.getWorld(), 
-									nextWaypoint.x,
-									nextWaypoint.y,
-									nextWaypoint.z)
-							);
+				} catch (NullPointerException ex) {
+					DragonManagement.removeRiderandDragon(entity, new Location(entity.getWorld(), nextWaypoint.x, nextWaypoint.y, nextWaypoint.z));
 					return;
 				}
 			}
 
-
-			this.nextWaypoint = waypoints.get(currentindexWaypoint);			
-			this.currentindexWaypoint++;	
+			this.nextWaypoint = waypoints.get(currentindexWaypoint);
+			this.currentindexWaypoint++;
 
 			// Get the dragons position and set it as start-location for the flight to the next waypoint.
 			this.startX = locX;
@@ -225,9 +201,9 @@ public class RyeDragon extends EntityEnderDragon {
 	private float getCorrectYaw(double targetx, double targetz) {
 
 		if (this.locZ > targetz)
-			return (float) (-Math.toDegrees(Math.atan((this.locX - targetx)	/ (this.locZ - targetz))));
+			return (float) (-Math.toDegrees(Math.atan((this.locX - targetx) / (this.locZ - targetz))));
 		else if (this.locZ < targetz)
-			return (float) (-Math.toDegrees(Math.atan((this.locX - targetx)	/ (this.locZ - targetz)))) + 180.0F;
+			return (float) (-Math.toDegrees(Math.atan((this.locX - targetx) / (this.locZ - targetz)))) + 180.0F;
 		else
 			return this.yaw;
 	}
@@ -239,7 +215,6 @@ public class RyeDragon extends EntityEnderDragon {
 			return entity;
 	}
 
-
 	/**
 	 * Sets the x,y,z move for each tick
 	 */
@@ -249,8 +224,7 @@ public class RyeDragon extends EntityEnderDragon {
 		this.distanceY = this.startY - nextWaypoint.y;
 		this.distanceZ = this.startZ - nextWaypoint.z;
 
-		double tick = Math.sqrt((distanceX * distanceX)	+ (distanceY * distanceY)
-				+ (distanceZ * distanceZ)) / DragonTravelMain.speed;
+		double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / DragonTravelMain.speed;
 
 		this.XperTick = Math.abs(distanceX) / tick;
 		this.YperTick = Math.abs(distanceY) / tick;
@@ -266,19 +240,15 @@ public class RyeDragon extends EntityEnderDragon {
 		this.distanceY = this.startY - toY;
 		this.distanceZ = this.startZ - toZ;
 
-		double tick = Math.sqrt( (distanceX * distanceX)
-				+ (distanceY * distanceY)
-				+ (distanceZ * distanceZ)
-				) / DragonTravelMain.speed;
+		double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY) + (distanceZ * distanceZ)) / DragonTravelMain.speed;
 		XperTick = Math.abs(distanceX) / tick;
 		ZperTick = Math.abs(distanceZ) / tick;
 	}
 
 	/**
 	 * Starts the specified flight
-	 * 
-	 * @param flight
-	 * 			Flight to start
+	 *
+	 * @param flight Flight to start
 	 */
 	public void startFlight(Flight flight) {
 		this.entity = getEntity();
@@ -290,27 +260,25 @@ public class RyeDragon extends EntityEnderDragon {
 
 		this.startX = start.getX();
 		this.startY = start.getY();
-		this.startZ = start.getZ();		
+		this.startZ = start.getZ();
 
 		this.move = true;
 		this.isFlight = true;
 
-		setMoveFlight();					
+		setMoveFlight();
 	}
-
 
 	/**
 	 * Starts a travel to the specified location
-	 * 
-	 * @param destinationLoc
-	 * 				Location to start a travel to
+	 *
+	 * @param destinationLoc Location to start a travel to
 	 */
 	public void startTravel(Location destinationLoc, Boolean interworld) {
 
-		if(interworld) {
-			toX = locX+5+Math.random()*200; 
-			toY = locY+5+Math.random()*200;
-			toZ = locZ+5+Math.random()*200;
+		if (interworld) {
+			toX = locX + 5 + Math.random() * 200;
+			toY = locY + 5 + Math.random() * 200;
+			toZ = locZ + 5 + Math.random() * 200;
 			destlocOtherworld = destinationLoc.clone();
 			travelY = (int) toY;
 		} else {
@@ -319,7 +287,7 @@ public class RyeDragon extends EntityEnderDragon {
 			toZ = destinationLoc.getBlockZ();
 			travelY = DragonTravelMain.config.getInt("TravelHeight");
 		}
-		
+
 		this.yaw = getCorrectYaw(toX, toZ);
 		this.startX = start.getX();
 		this.startY = start.getY();
@@ -330,7 +298,7 @@ public class RyeDragon extends EntityEnderDragon {
 		this.rider = (Player) entity.getPassenger();
 
 		isTravel = true;
-		move = true;	
+		move = true;
 
 		setMoveTravel();
 	}
@@ -363,23 +331,23 @@ public class RyeDragon extends EntityEnderDragon {
 			else {
 
 				// Interworld-travel teleport
-				if(entity.getWorld().getName() != toWorld.getName()) {
-					this.rider = (Player)entity.getPassenger();
+				if (entity.getWorld().getName() != toWorld.getName()) {
+					this.rider = (Player) entity.getPassenger();
 
 					spawnOtherWorld = destlocOtherworld.clone();
-					spawnOtherWorld.setX(destlocOtherworld.getX()+interworldDistribution);
-					spawnOtherWorld.setY(destlocOtherworld.getY()+interworldDistribution);
-					spawnOtherWorld.setZ(destlocOtherworld.getZ()+interworldDistribution);
+					spawnOtherWorld.setX(destlocOtherworld.getX() + interworldDistribution);
+					spawnOtherWorld.setY(destlocOtherworld.getY() + interworldDistribution);
+					spawnOtherWorld.setZ(destlocOtherworld.getZ() + interworldDistribution);
 					spawnOtherWorld.getChunk().load();
 
-					Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("DragonTravel"), new Runnable(){
-						public void run(){
+					Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("DragonTravel"), new Runnable() {
+						public void run() {
 							DragonManagement.dismount(rider, true);
 							rider.setFlying(true);
 							if (spawnOtherWorld.getZ() < destlocOtherworld.getZ())
-								spawnOtherWorld.setYaw((float) (-Math.toDegrees(Math.atan((spawnOtherWorld.getX() - destlocOtherworld.getX())    / (spawnOtherWorld.getZ() - destlocOtherworld.getZ())))));
+								spawnOtherWorld.setYaw((float) (-Math.toDegrees(Math.atan((spawnOtherWorld.getX() - destlocOtherworld.getX()) / (spawnOtherWorld.getZ() - destlocOtherworld.getZ())))));
 							else if (spawnOtherWorld.getZ() > destlocOtherworld.getZ())
-								spawnOtherWorld.setYaw((float) (-Math.toDegrees(Math.atan((spawnOtherWorld.getX() - destlocOtherworld.getX())    / (spawnOtherWorld.getZ() - destlocOtherworld.getZ())))) + 180.0F);
+								spawnOtherWorld.setYaw((float) (-Math.toDegrees(Math.atan((spawnOtherWorld.getX() - destlocOtherworld.getX()) / (spawnOtherWorld.getZ() - destlocOtherworld.getZ())))) + 180.0F);
 							rider.teleport(spawnOtherWorld);
 							if (!DragonManagement.mount(rider))
 								return;
@@ -393,8 +361,7 @@ public class RyeDragon extends EntityEnderDragon {
 					}, 1L);
 
 					// Dismount
-				}
-				else {				
+				} else {
 					DragonManagement.removeRiderandDragon(entity, true);
 					return;
 				}
@@ -418,8 +385,7 @@ public class RyeDragon extends EntityEnderDragon {
 		else
 			myZ -= ZperTick;
 
-		if ((int) myZ == (int)toZ	&& ((int)myX == (int)toX
-				|| (int)myX == (int)toX+1 || (int)myX == (int)toX-1)) {
+		if ((int) myZ == (int) toZ && ((int) myX == (int) toX || (int) myX == (int) toX + 1 || (int) myX == (int) toX - 1)) {
 			finalmove = true;
 		}
 
@@ -427,8 +393,6 @@ public class RyeDragon extends EntityEnderDragon {
 	}
 
 	/*
-	public double x_() {
-		return 3;
-	}
+	 * public double x_() { return 3; }
 	 */
 }

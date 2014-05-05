@@ -1,31 +1,27 @@
-package main.java.eu.phiwa.dt.objects;
+package eu.phiwa.dt.objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-
 public class Station {
 
 	public String displayname;
 	// Complete Location
 	public Location loc;
-	
+
 	public String name;
 	public World world;
 	// Single values
-	public int x;	
+	public int x;
 	public int y;
-	
+
 	public int z;
-	
-	
-/*	
-	public Station(String name) {
-		this.name = name;
-	}
-*/	
+
+	/*
+	 * public Station(String name) { this.name = name; }
+	 */
 	public Station(String name, int x, int y, int z, String worldname) {
 		this.displayname = name;
 		this.name = name.toLowerCase();
@@ -34,7 +30,7 @@ public class Station {
 		this.z = z;
 		this.world = Bukkit.getWorld(worldname);
 	}
-	
+
 	public Station(String name, int x, int y, int z, World world) {
 		this.displayname = name;
 		this.name = name.toLowerCase();
@@ -43,7 +39,7 @@ public class Station {
 		this.z = z;
 		this.world = world;
 	}
-	
+
 	public Station(String name, Location loc) {
 		this.displayname = name;
 		this.name = name.toLowerCase();
@@ -53,7 +49,7 @@ public class Station {
 		this.z = (int) loc.getZ();
 		this.world = loc.getWorld();
 	}
-	
+
 	/**
 	 * Prints the station's details to the console.
 	 */
@@ -70,8 +66,7 @@ public class Station {
 	/**
 	 * Prints the station's details to the player's chat.
 	 * 
-	 * @param player
-	 * 			Player to send the details to.
+	 * @param player Player to send the details to.
 	 */
 	public void print(Player player) {
 		player.sendMessage("--- Station ---");

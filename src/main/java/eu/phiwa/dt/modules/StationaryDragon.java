@@ -1,7 +1,7 @@
-package main.java.eu.phiwa.dt.modules;
+package eu.phiwa.dt.modules;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.RyeDragon;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.RyeDragon;
 import net.minecraft.server.v1_7_R3.World;
 
 import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
