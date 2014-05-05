@@ -1,9 +1,9 @@
-package main.java.eu.phiwa.dt.flights;
+package eu.phiwa.dt.flights;
 
 import java.util.Collection;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.objects.Flight;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.objects.Flight;
 
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -18,37 +18,39 @@ public class Waypoint {
 	 */
 	public static void removeWaypointMarkersGlobally() {
 
-		Collection<Block> globalmarkers =  DragonTravelMain.globalwaypointmarkers.values();
+		Collection<Block> globalmarkers = DragonTravelMain.globalwaypointmarkers.values();
 
-		for (Block marker: globalmarkers) {
+		for (Block marker : globalmarkers) {
 			marker.getWorld().getBlockAt(marker.getX(), marker.getY(), marker.getZ()).getChunk().load(true);
 			marker.setType(Material.AIR);
 		}
 	}
-	/** Removes all WaypointMarkers of the specified flight
+
+	/**
+	 * Removes all WaypointMarkers of the specified flight
 	 * 
-	 * @param flight
-	 * 			Flight whose waypoint-markers you want to remove
+	 * @param flight Flight whose waypoint-markers you want to remove
 	 */
 	public static void removeWaypointMarkersOfFlight(Flight flight) {
-		for (Waypoint wp: flight.waypoints) {
-			if(DragonTravelMain.globalwaypointmarkers.containsKey(wp.marker))
+		for (Waypoint wp : flight.waypoints) {
+			if (DragonTravelMain.globalwaypointmarkers.containsKey(wp.marker))
 				DragonTravelMain.globalwaypointmarkers.remove(wp.marker);
 
-			if(wp.marker == null)
+			if (wp.marker == null)
 				continue;
-			wp.world.getBlockAt(wp.x, wp.y, wp.z).getChunk().load(true);	
+			wp.world.getBlockAt(wp.x, wp.y, wp.z).getChunk().load(true);
 			wp.marker.setType(Material.AIR);
 		}
 	}
+
 	public boolean finalwp = false;
 	public Block marker;
-	public int x;	
+	public int x;
 
-	public int y;	
+	public int y;
 
 	public int z;
-	
+
 	public World world;
 
 	public void removeMarker() {
@@ -63,6 +65,6 @@ public class Waypoint {
 	}
 
 	public String toString() {
-		return "WP: (" + x + ", " + y + ", " + z + ", " +world.getName() + ", " + finalwp;		
+		return "WP: (" + x + ", " + y + ", " + z + ", " + world.getName() + ", " + finalwp;
 	}
 }

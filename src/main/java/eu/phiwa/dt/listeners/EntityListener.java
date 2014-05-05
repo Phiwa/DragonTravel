@@ -1,7 +1,7 @@
-package main.java.eu.phiwa.dt.listeners;
+package eu.phiwa.dt.listeners;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.RyeDragon;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.RyeDragon;
 
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;
@@ -24,9 +24,9 @@ public class EntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		if(event.getSpawnReason()!=SpawnReason.CUSTOM)
+		if (event.getSpawnReason() != SpawnReason.CUSTOM)
 			return;
-		
+
 		if (!event.getEntity().getType().toString().equals("ENDER_DRAGON"))
 			return;
 
@@ -45,13 +45,13 @@ public class EntityListener implements Listener {
 		else if (DragonTravelMain.alldragons && event.getEntity() instanceof EnderDragon)
 			event.setCancelled(true);
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityDeath(EntityDeathEvent event) {
-		
-		if(event.getEntity()instanceof RyeDragon)
+
+		if (event.getEntity() instanceof RyeDragon)
 			return;
-			
+
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -62,7 +62,7 @@ public class EntityListener implements Listener {
 
 		Player player = (Player) event.getEntity();
 		if (DragonTravelMain.listofDragonriders.containsKey(player))
-			if(!DragonTravelMain.config.getBoolean("VulnerableRiders"))
+			if (!DragonTravelMain.config.getBoolean("VulnerableRiders"))
 				event.setCancelled(true);
 	}
 

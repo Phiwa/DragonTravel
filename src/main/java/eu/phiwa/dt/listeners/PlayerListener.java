@@ -1,11 +1,11 @@
-package main.java.eu.phiwa.dt.listeners;
+package eu.phiwa.dt.listeners;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.modules.DragonManagement;
-import main.java.eu.phiwa.dt.movement.Flights;
-import main.java.eu.phiwa.dt.movement.Travels;
-import main.java.eu.phiwa.dt.payment.PaymentHandler;
-import main.java.eu.phiwa.dt.permissions.PermissionsHandler;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.modules.DragonManagement;
+import eu.phiwa.dt.movement.Flights;
+import eu.phiwa.dt.movement.Travels;
+import eu.phiwa.dt.payment.PaymentHandler;
+import eu.phiwa.dt.permissions.PermissionsHandler;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,7 +21,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-
 public class PlayerListener implements Listener {
 
 	DragonTravelMain plugin;
@@ -32,24 +31,24 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		DragonTravelMain.ptogglers.put(event.getPlayer().getName(), DragonTravelMain.ptoggleDefault);		
+		DragonTravelMain.ptogglers.put(event.getPlayer().getName(), DragonTravelMain.ptoggleDefault);
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerKick(PlayerKickEvent event) {
 
 		Player player = event.getPlayer();
-		
-		if(!DragonTravelMain.listofDragonriders.containsKey(player))
+
+		if (!DragonTravelMain.listofDragonriders.containsKey(player))
 			return;
-		
-		if(DragonTravelMain.ptogglers.containsKey(player.getName()))
+
+		if (DragonTravelMain.ptogglers.containsKey(player.getName()))
 			DragonTravelMain.ptogglers.remove(player.getName());
-		
+
 		DragonManagement.removeRiderandDragon(DragonTravelMain.listofDragonriders.get((player)).getEntity(), false);
 
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 
@@ -57,13 +56,13 @@ public class PlayerListener implements Listener {
 
 		if (!DragonTravelMain.listofDragonriders.containsKey(player))
 			return;
-		
-		if(DragonTravelMain.ptogglers.containsKey(player.getName()))
+
+		if (DragonTravelMain.ptogglers.containsKey(player.getName()))
 			DragonTravelMain.ptogglers.remove(player.getName());
-		
+
 		DragonManagement.removeRiderandDragon(DragonTravelMain.listofDragonriders.get((player)).getEntity(), false);
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -75,94 +74,89 @@ public class PlayerListener implements Listener {
 		if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) || event.getAction().equals(Action.LEFT_CLICK_AIR))
 			return;
 
-		if(block.getType() != Material.SIGN_POST && block.getType() != Material.WALL_SIGN)
-			return;			
-
-		Sign sign = (Sign)block.getState();
-		String[] lines = sign.getLines();
-
-		if(!lines[0].equals(ChatColor.GOLD.toString() + "DragonTravel"))
+		if (block.getType() != Material.SIGN_POST && block.getType() != Material.WALL_SIGN)
 			return;
 
-		if(lines[1].equals("Travel")) {			
-			String stationname = lines[2].replaceAll(ChatColor.WHITE.toString(), "");	
-			
-			if(!PermissionsHandler.hasTravelPermission(player, "travel", stationname)) {
+		Sign sign = (Sign) block.getState();
+		String[] lines = sign.getLines();
+
+		if (!lines[0].equals(ChatColor.GOLD.toString() + "DragonTravel"))
+			return;
+
+		if (lines[1].equals("Travel")) {
+			String stationname = lines[2].replaceAll(ChatColor.WHITE.toString(), "");
+
+			if (!PermissionsHandler.hasTravelPermission(player, "travel", stationname)) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 				return;
 			}
-			
-			if(stationname.equalsIgnoreCase((DragonTravelMain.config.getString("RandomDest.Name")))){
-				if(lines[3].length() != 0) {	
+
+			if (stationname.equalsIgnoreCase((DragonTravelMain.config.getString("RandomDest.Name")))) {
+				if (lines[3].length() != 0) {
 					try {
-						double costOnSign = Double.parseDouble(lines[3]);					
-						if(!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.TRAVEL_TORANDOM, player))
+						double costOnSign = Double.parseDouble(lines[3]);
+						if (!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.TRAVEL_TORANDOM, player))
 							return;
-					}
-					catch(NumberFormatException ex) {
+					} catch (NumberFormatException ex) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Error.SignCorrupted"));
 						// TODO: ---ADD MESSAGE Corrupted sign
-					}				
+					}
+				} else {
+					if (!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TORANDOM, player))
+						return;
 				}
-				else {
-					if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TORANDOM, player))
-						return;					
-				}
-				
+
 				Travels.toRandomdest(player, !DragonTravelMain.config.getBoolean("MountingLimit.ExcludeSigns"));
-			}	
-			
-			else if(DragonTravelMain.dbStationsHandler.getStation(stationname) == null) {
-					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));					
-					// TODO: ---ADD MESSAGE Station does not exist
-					return;
 			}
-			
+
+			else if (DragonTravelMain.dbStationsHandler.getStation(stationname) == null) {
+				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));
+				// TODO: ---ADD MESSAGE Station does not exist
+				return;
+			}
+
 			else {
 				// If parseDouble throws an exception, the last line is either empty or a string, so the default cost is taken from the config.
 				// If parseDouble does not throw an exception, the last line is a double(a valid cost) and is taken for the payment.
 				try {
 					double costOnSign = Double.parseDouble(lines[3]);
-					
-					if(!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.TRAVEL_TOSTATION, player))
+
+					if (!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.TRAVEL_TOSTATION, player))
+						return;
+				} catch (NumberFormatException ex) {
+					if (!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOSTATION, player))
 						return;
 				}
-				catch(NumberFormatException ex) {
-					if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOSTATION, player))
-						return;
-				}	
 				Travels.toStation(player, stationname, !DragonTravelMain.config.getBoolean("MountingLimit.ExcludeSigns"));
 			}
 		}
-		
+
 		else if (lines[1].equals("Flight")) {
 			String flightname = lines[2].replaceAll(ChatColor.WHITE.toString(), "");
-			
-			if(!PermissionsHandler.hasFlightPermission(player, flightname)) {
+
+			if (!PermissionsHandler.hasFlightPermission(player, flightname)) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 				return;
 			}
-			
-			if(DragonTravelMain.dbFlightsHandler.getFlight((flightname)) == null) {
+
+			if (DragonTravelMain.dbFlightsHandler.getFlight((flightname)) == null) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightDoesNotExist"));
 				// TODO: ---ADD MESSAGE Flight does not exist
 			}
-			
+
 			else {
-				if(lines[3].length() != 0) {
-					
+				if (lines[3].length() != 0) {
+
 					try {
 						double costOnSign = Double.parseDouble(lines[3]);
-						if(!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.FLIGHT, player))
+						if (!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.FLIGHT, player))
 							return;
-					}
-					catch(NumberFormatException ex) {
+					} catch (NumberFormatException ex) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Error.SignCorrupted"));
 						// TODO: ---ADD MESSAGE Corrupted sign
 					}
-				}
-				else {					
-					if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.FLIGHT, player))
+				} else {
+					if (!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.FLIGHT, player))
 						return;
 				}
 				Flights.startFlight(player, flightname, !DragonTravelMain.config.getBoolean("MountingLimit.ExcludeSigns"), false, null);
