@@ -1,4 +1,4 @@
-package main.java.eu.phiwa.dt.signs;
+package eu.phiwa.dt.signs;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.block.SignChangeEvent;
@@ -15,6 +15,5 @@ public class Signs {
 		event.setLine(1, type);
 		event.setLine(2, white + event.getLine(2));
 		event.setLine(3, event.getLine(3));		
-	}
-	
+	}	
 }

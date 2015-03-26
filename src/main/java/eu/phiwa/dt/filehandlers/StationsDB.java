@@ -1,4 +1,4 @@
-package main.java.eu.phiwa.dt.filehandlers;
+package eu.phiwa.dt.filehandlers;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.objects.Station;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.objects.Station;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -234,8 +234,10 @@ public class StationsDB {
 	public void showStations(Player player) {
 		player.sendMessage("Available stations: ");
 		for(String string: DragonTravelMain.dbStationsConfig.getConfigurationSection("Stations").getKeys(true)) {
-			if(string.contains(".displayname")) {
-				player.sendMessage("- " + DragonTravelMain.dbStationsConfig.getString("Stations." + string));
+			if(string.contains(".displayname")) {			
+				String stationname = string.replace(".displayname", "");
+				if(player.hasPermission("dt.travel.*") || player.hasPermission("dt.travel."+stationname))				
+					player.sendMessage("- " + DragonTravelMain.dbStationsConfig.getString("Stations." + string));
 			}
 		}			
 	}

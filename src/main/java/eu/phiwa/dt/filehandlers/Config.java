@@ -1,4 +1,4 @@
-package main.java.eu.phiwa.dt.filehandlers;
+package eu.phiwa.dt.filehandlers;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.DragonTravelMain;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -60,15 +60,23 @@ public class Config {
 	}
 	private void newlyRequiredConfig(){
 		
-	  // New options in version 0.2			
+	  // New options in version 0.2					
 		if(!DragonTravelMain.config.isSet("PToggleDefault"))
 			DragonTravelMain.config.set("PToggleDefault", true);
 		
-		try{
-			Integer i = DragonTravelMain.config.getInt("RequiredItem.Item");
-			DragonTravelMain.config.set("RequiredItem.Item", "DRAGON_EGG");
-			DragonTravelMain.logger.log(Level.SEVERE , "Required item updated! Check the configuration. Previous ID: "+i);
-		} catch (Exception e1){}
+	  // New options in version 0.3
+		if(!DragonTravelMain.config.isSet("MaxTravelDistance"))
+			DragonTravelMain.config.set("MaxTravelDistance", -1);		
+		
+	  // New options in version 0.4				
+		if(!DragonTravelMain.config.isSet("DismountAtExactLocation"))
+			DragonTravelMain.config.set("DismountAtExactLocation", false);
+		
+	 // New options in version 0.5				
+		if(!DragonTravelMain.config.isSet("MinimumMountHeight"))
+			DragonTravelMain.config.set("MinimumMountHeight", -1);				
+		if(!DragonTravelMain.config.isSet("DamageCooldown"))
+			DragonTravelMain.config.set("DamageCooldown", -1);		
 		
 		
 	  // Update the file version

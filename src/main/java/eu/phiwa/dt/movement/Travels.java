@@ -1,10 +1,10 @@
-package main.java.eu.phiwa.dt.movement;
+package eu.phiwa.dt.movement;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.RyeDragon;
-import main.java.eu.phiwa.dt.modules.DragonManagement;
-import main.java.eu.phiwa.dt.objects.Home;
-import main.java.eu.phiwa.dt.objects.Station;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.RyeDragon;
+import eu.phiwa.dt.modules.DragonManagement;
+import eu.phiwa.dt.objects.Home;
+import eu.phiwa.dt.objects.Station;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -218,12 +218,14 @@ public class Travels {
 			}
 		}
 		
-		int minX = DragonTravelMain.config.getInt("X-Axis.MinX");
-		int maxX = DragonTravelMain.config.getInt("X-Axis.MaxX");
-		int minZ = DragonTravelMain.config.getInt("Z-Axis.MinZ");
-		int maxZ = DragonTravelMain.config.getInt("Z-Axis.MaxZ");
+		int minX = DragonTravelMain.config.getInt("RandomDest.Limits.X-Axis.Min");
+		int maxX = DragonTravelMain.config.getInt("RandomDest.Limits.X-Axis.Max");
+		int minZ = DragonTravelMain.config.getInt("RandomDest.Limits.Z-Axis.Min");
+		int maxZ = DragonTravelMain.config.getInt("RandomDest.Limits.Z-Axis.Max");
+
 		double x = minX + (Math.random() * (maxX - 1));
 		double z = minZ + (Math.random() * (maxZ - 1));
+
 		Location randomLoc = new Location(player.getWorld(), x, 10, z);
 		randomLoc.setY(randomLoc.getWorld().getHighestBlockAt(randomLoc).getY());
 		
@@ -276,8 +278,9 @@ public class Travels {
 	 * 			If the admin disabled the station-check globally,
 	 * 			this has no function.
 	 */
-	private static void travel(Player player, Location destination, Boolean checkForStation) {
+	public static void travel(Player player, Location destination, Boolean checkForStation) {
 
+		// Check for station
 		if(checkForStation && DragonTravelMain.config.getBoolean("MountingLimit.EnableForTravels") && !player.hasPermission("dt.ignoreusestations.travels")) {
 			if(!DragonTravelMain.dbStationsHandler.checkForStation(player)) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.NotAtAStation"));
@@ -286,6 +289,17 @@ public class Travels {
 		}
 		
 		Location temploc = player.getLocation();
+		
+		// Check if max distance to target is exceeded
+		int maxdist = DragonTravelMain.config.getInt("MaxTravelDistance");
+		
+		if(maxdist != -1) {
+			if(temploc.distance(destination) >= maxdist) {
+				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.MaxTravelDistanceExceeded"));
+				return;
+			}
+		}
+		
         if(destination.getWorld().getName() == player.getWorld().getName()){
             temploc.setYaw(getCorrectYawForPlayer(player, destination));
             player.teleport(temploc);

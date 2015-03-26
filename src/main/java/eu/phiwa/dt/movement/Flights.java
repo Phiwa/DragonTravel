@@ -1,9 +1,9 @@
-package main.java.eu.phiwa.dt.movement;
+package eu.phiwa.dt.movement;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.RyeDragon;
-import main.java.eu.phiwa.dt.modules.DragonManagement;
-import main.java.eu.phiwa.dt.objects.Flight;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.RyeDragon;
+import eu.phiwa.dt.modules.DragonManagement;
+import eu.phiwa.dt.objects.Flight;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -47,7 +47,7 @@ public class Flights {
 			playerToSendMessagesTo = player;
 		
 		Flight flight = DragonTravelMain.dbFlightsHandler.getFlight(flightname);
-		
+
 		if(flight == null)  {
 			// Sent by console
 			if(sentbyadmin && playerToSendMessagesTo == null)

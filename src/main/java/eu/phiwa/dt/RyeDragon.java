@@ -1,17 +1,16 @@
-package main.java.eu.phiwa.dt;
+package eu.phiwa.dt;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.eu.phiwa.dt.flights.Waypoint;
-import main.java.eu.phiwa.dt.modules.DragonManagement;
-import main.java.eu.phiwa.dt.objects.Flight;
-import main.java.eu.phiwa.dt.objects.Station;
-import net.minecraft.server.v1_7_R3.EntityEnderDragon;
-import net.minecraft.server.v1_7_R3.World;
+import eu.phiwa.dt.flights.Waypoint;
+import eu.phiwa.dt.modules.DragonManagement;
+import eu.phiwa.dt.objects.Flight;
+import net.minecraft.server.v1_8_R2.EntityEnderDragon;
+import net.minecraft.server.v1_8_R2.World;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.Location; 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -20,12 +19,15 @@ public class RyeDragon extends EntityEnderDragon {
 	private int currentindexWaypoint = 0;
 
 	private Location destlocOtherworld;
+	
 	// Distance to the right coords
 	private double distanceX;
 	private double distanceY;	
 	private double distanceZ;
-	Entity entity;
-
+	
+	Entity dragonEntity;
+	Player rider;
+	
 	private boolean finalmove = false;
 
 
@@ -41,7 +43,6 @@ public class RyeDragon extends EntityEnderDragon {
 	private String statFromName;
 	private String statToName;
 
-	Player rider;
 	Location spawnOtherWorld;
 
 
@@ -102,11 +103,11 @@ public class RyeDragon extends EntityEnderDragon {
 	 * 
 	 */
 	@Override
-	public void e() {   
+	public void m() {   
 
-		if(entity != null && rider != null)
-			if(entity.getPassenger() != null)
-				entity.setPassenger(rider);
+		if(dragonEntity != null && rider != null)
+			if(dragonEntity.getPassenger() != null)
+				dragonEntity.setPassenger(rider);
 
 		// Travel
 		if (isTravel) {
@@ -179,20 +180,20 @@ public class RyeDragon extends EntityEnderDragon {
 
 			if(currentindexWaypoint == numberOfWaypoints) {
 				try {
-					DragonManagement.removeRiderandDragon(	entity,
-							new Location(entity.getWorld(), 
+					DragonManagement.removeRiderandDragon(	dragonEntity,
+							new Location(dragonEntity.getWorld(), 
 									nextWaypoint.x,
 									nextWaypoint.y,
 									nextWaypoint.z,
-									((Player)entity.getPassenger()).getLocation().getYaw(), 
-									((Player)entity.getPassenger()).getLocation().getPitch())
+									((Player)dragonEntity.getPassenger()).getLocation().getYaw(), 
+									((Player)dragonEntity.getPassenger()).getLocation().getPitch())
 							);
 					return;
 
 				}
 				catch(NullPointerException ex) {
-					DragonManagement.removeRiderandDragon(	entity,
-							new Location(entity.getWorld(), 
+					DragonManagement.removeRiderandDragon(	dragonEntity,
+							new Location(dragonEntity.getWorld(), 
 									nextWaypoint.x,
 									nextWaypoint.y,
 									nextWaypoint.z)
@@ -236,7 +237,7 @@ public class RyeDragon extends EntityEnderDragon {
 		if (bukkitEntity != null)
 			return bukkitEntity;
 		else
-			return entity;
+			return dragonEntity;
 	}
 
 
@@ -281,7 +282,7 @@ public class RyeDragon extends EntityEnderDragon {
 	 * 			Flight to start
 	 */
 	public void startFlight(Flight flight) {
-		this.entity = getEntity();
+		this.dragonEntity = getEntity();
 		this.flightName = flight.name;
 		this.waypoints = flight.waypoints;
 		this.numberOfWaypoints = waypoints.size();
@@ -326,8 +327,8 @@ public class RyeDragon extends EntityEnderDragon {
 		this.startZ = start.getZ();
 		toWorld = destinationLoc.getWorld();
 
-		this.entity = getEntity();
-		this.rider = (Player) entity.getPassenger();
+		this.dragonEntity = getEntity();
+		this.rider = (Player) dragonEntity.getPassenger();
 
 		isTravel = true;
 		move = true;	
@@ -344,7 +345,7 @@ public class RyeDragon extends EntityEnderDragon {
 		if (!move)
 			return;
 
-		if (entity.getPassenger() == null)
+		if (dragonEntity.getPassenger() == null)
 			return;
 
 		double myX = locX;
@@ -363,8 +364,8 @@ public class RyeDragon extends EntityEnderDragon {
 			else {
 
 				// Interworld-travel teleport
-				if(entity.getWorld().getName() != toWorld.getName()) {
-					this.rider = (Player)entity.getPassenger();
+				if(dragonEntity.getWorld().getName() != toWorld.getName()) {
+					this.rider = (Player)dragonEntity.getPassenger();
 
 					spawnOtherWorld = destlocOtherworld.clone();
 					spawnOtherWorld.setX(destlocOtherworld.getX()+interworldDistribution);
@@ -375,27 +376,34 @@ public class RyeDragon extends EntityEnderDragon {
 					Bukkit.getScheduler().runTaskLater(Bukkit.getPluginManager().getPlugin("DragonTravel"), new Runnable(){
 						public void run(){
 							DragonManagement.dismount(rider, true);
-							rider.setFlying(true);
+							
+							if(rider.getAllowFlight())
+								rider.setFlying(true);
+							
 							if (spawnOtherWorld.getZ() < destlocOtherworld.getZ())
 								spawnOtherWorld.setYaw((float) (-Math.toDegrees(Math.atan((spawnOtherWorld.getX() - destlocOtherworld.getX())    / (spawnOtherWorld.getZ() - destlocOtherworld.getZ())))));
 							else if (spawnOtherWorld.getZ() > destlocOtherworld.getZ())
 								spawnOtherWorld.setYaw((float) (-Math.toDegrees(Math.atan((spawnOtherWorld.getX() - destlocOtherworld.getX())    / (spawnOtherWorld.getZ() - destlocOtherworld.getZ())))) + 180.0F);
+							
 							rider.teleport(spawnOtherWorld);
+							
 							if (!DragonManagement.mount(rider))
 								return;
+							
 							if (!DragonTravelMain.listofDragonriders.containsKey(rider))
 								return;
+							
 							rider.setFlying(false);
 							RyeDragon dragon = DragonTravelMain.listofDragonriders.get(rider);
 							dragon.startTravel(destlocOtherworld, false);
-							entity.remove();
+							dragonEntity.remove();
 						}
 					}, 1L);
 
 					// Dismount
 				}
 				else {				
-					DragonManagement.removeRiderandDragon(entity, true);
+					DragonManagement.removeRiderandDragon(dragonEntity, true);
 					return;
 				}
 			}

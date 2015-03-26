@@ -1,5 +1,5 @@
 File:
-    Version: 0.2
+    Version: 0.5
 
     
 ################################
@@ -33,8 +33,15 @@ DragonSpeed: 0.5
 # by too many dragons travelling at the same time.
 # This only limits DragonTravel-dragons and does not
 # handle stationary dragons spawned by DragonTravel!
-# Default: 99999 (somehow disabled^^)
-DragonLimit: 99999
+# Default: -1 (disabled)
+DragonLimit: -1
+
+# <<< Set the maximum distance a player is allowed to travel >>>
+# Use this if you encounter lags on your server which are caused
+# by too many chunks being loaded due to too many long-distance travels.
+# This distance is in blocks.
+# Default: -1 (no limit)
+MaxTravelDistance: -1
 
 # <<< Teleport a player who dismounts back to the point he started from >>>
 # Some players use flights or travels to a location to "jump off" during the
@@ -150,3 +157,23 @@ OnlySigns: false
 # Choose whether travels to a player are allowed (true) or denied (false) by default
 # Default: true
 PToggleDefault: true
+
+# <<< Toggles where riders are dismounted when reaching their target location. >>>
+# If set to 'true', riders are dismounted at their exact location.
+# If set to 'false', riders are dismounted to the next blocks below them.
+# Default: false
+DismountAtExactLocation: false
+
+# <<< Minimum height required to mount a dragon >>>
+# To prevent players from escaping mines by using dragons, you can use this option.
+# Set it to the Y value the players must have at least to mount a dragon.
+# Set it to -1 to disable the check
+# Default: -1
+MinimumMountHeight: -1
+
+# <<< Damage cooldown time >>>
+# To prevent players from escaping fights by using dragons, you can use this option.
+# Set it to the number of seconds a player must wait before mounting a dragon after he received damage.
+# Set it to -1 to disable the check
+# Default: -1
+DamageCooldown: -1

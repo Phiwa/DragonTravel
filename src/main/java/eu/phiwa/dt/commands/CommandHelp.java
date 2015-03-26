@@ -1,6 +1,6 @@
-package main.java.eu.phiwa.dt.commands;
+package eu.phiwa.dt.commands;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.DragonTravelMain;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -11,17 +11,16 @@ public class CommandHelp {
 	public static ChatColor darkgrey = ChatColor.DARK_GRAY;
 	public static ChatColor gold = ChatColor.GOLD;
 	public static ChatColor grey = ChatColor.GRAY;
-	public static final int HELP_Page1 = 1;
-	
-	public static final int HELP_Page2 = 2;
-	public static final int HELP_Page3 = 3;
-	public static final int HELP_Page4 = 4;
-	public static final int HELP_Page5 = 5;
 	public static ChatColor purple = ChatColor.LIGHT_PURPLE;
 	public static ChatColor red = ChatColor.RED;
 	public static ChatColor white = ChatColor.WHITE;
 	public static ChatColor yellow = ChatColor.YELLOW;
 	
+	public static final int HELP_Page1 = 1;	
+	public static final int HELP_Page2 = 2;
+	public static final int HELP_Page3 = 3;
+	public static final int HELP_Page4 = 4;
+	public static final int HELP_Page5 = 5;
 	
 	public static void page1_TableOfContents(Player player) {		
 		player.sendMessage("    1 - Table of Contents");
@@ -49,7 +48,7 @@ public class CommandHelp {
 							+ "                                             location.");
 		player.sendMessage(grey+"/dt ptravel <playername>" + darkgrey + " - " + white + "Brings you to the specified player.");
 		player.sendMessage(grey+"/dt home" + darkgrey + " - " + white + "Brings you to your home.");
-		if(player.hasPermission("dt.travel.factionhome") && DragonTravelMain.pm.getPlugin("Factions") != null) // TODO: ADD Permission-check (correct permission!)
+		if(player.hasPermission("dt.fhome") && DragonTravelMain.pm.getPlugin("Factions") != null)
 			player.sendMessage(grey+"/dt fhome" + darkgrey + " - " + white + "Brings you to your faction's home.");
 		player.sendMessage(grey+"/dt showstats" + darkgrey + " - " + white + "Shows a list of all available stations.");
 	}

@@ -1,4 +1,4 @@
-package main.java.eu.phiwa.dt.filehandlers;
+package eu.phiwa.dt.filehandlers;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,9 +7,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.flights.Waypoint;
-import main.java.eu.phiwa.dt.objects.Flight;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.flights.Waypoint;
+import eu.phiwa.dt.objects.Flight;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -78,7 +78,7 @@ public class FlightsDB {
 		
 		List<String> waypointsAsString = new ArrayList<String>();
 		
-		for(Waypoint wp: flight.waypoints) {
+		for(Waypoint wp: flight.waypoints) {	
 			String wpString = wp.x + "%" + wp.y + "%" + wp.z + "%" + wp.world.getName();
 			waypointsAsString.add(wpString);
 		}
@@ -134,41 +134,62 @@ public class FlightsDB {
 		
 		Flight flight = new Flight();
 		
-		flight.name = flightname.toLowerCase();
+		flight.name = flightname.toLowerCase();		
+
+		if(!DragonTravelMain.dbFlightsConfig.isConfigurationSection(flightpath))
+			return null;
+	
+		flight.displayname = DragonTravelMain.dbFlightsConfig.getString(flightpath + ".displayname");
 		
 		@SuppressWarnings("unchecked")
 		List<String> waypoints = (List<String>) DragonTravelMain.dbFlightsConfig.getList(flightpath + ".waypoints");			
-		flight.displayname = DragonTravelMain.dbFlightsConfig.getString(flightpath + ".displayname");
 					
 		for(String wpData: waypoints) {
 			
 			String[] wpDataParts = wpData.split("%");
+			
+			if(wpDataParts.length < 3) {
+				DragonTravelMain.logger.info("[DragonTravel][Error] Unable to read flight '" + flight.displayname + "' from database! Waypoint " + (waypoints.indexOf(wpData)+1) + " could not be read!");
+				return null;
+			}
+			
 			Waypoint wp = new Waypoint();
 			 		
 			try{
 				String xString = wpDataParts[0];
 				String yString = wpDataParts[1];
 				String zString = wpDataParts[2];
-				String wString = "";
-				if(wpDataParts[3]==null){
-					wString = DragonTravelMain.dbFlightsConfig.getString(flightpath + ".world");
-				} else {
+				String wString = "";		
+
+				// Waypoint contains worldname
+				if(wpDataParts.length == 4){
 					wString = wpDataParts[3];
 				}
-				
+				// Waypoint does no contain worldname, so we take it from the separate path
+				else {
+					wString = DragonTravelMain.dbFlightsConfig.getString(flightpath + ".world");
+					
+				}	
+			
 				wp.x = Integer.parseInt(xString);
 				wp.y = Integer.parseInt(yString);
-				wp.z = Integer.parseInt(zString);
+				wp.z = Integer.parseInt(zString);			
 				wp.world = Bukkit.getWorld(wString);
+				
+				if(wp.world == null) {
+					DragonTravelMain.logger.info("[DragonTravel][Error] Unable to read flight '" + flight.displayname + "' from database! World specified for waypoint " + (waypoints.indexOf(wpData)+1) + " could not be found!");
+					return null;
+				}
 			}
 			catch(NumberFormatException ex) {
-				DragonTravelMain.logger.info("[DragonTravel][Error] Unable to read flight '" + flight.displayname + "' from database!");
+				DragonTravelMain.logger.info("[DragonTravel][Error] Unable to read flight '" + flight.displayname + "' from database! Waypoint " + (waypoints.indexOf(wpData)+1) + " could not be read!");
 				return null;
 			}
 			catch(IndexOutOfBoundsException ex) {
-				DragonTravelMain.logger.info("[DragonTravel][Error] Unable to read flight '" + flight.displayname + "' from database!");
+				DragonTravelMain.logger.info("[DragonTravel][Error] Unable to read flight '" + flight.displayname + "' from database! Waypoint " + (waypoints.indexOf(wpData)+1) + " could not be read!");
 				return null;
 			}
+			
 			flight.addWaypoint(wp);
 		}
 		
@@ -226,7 +247,9 @@ public class FlightsDB {
 		for(String string: DragonTravelMain.dbFlightsConfig.getConfigurationSection("Flights").getKeys(true)) {
 				// TODO: Permission-Check (Normal permission / flight-specific permission) string.split[0] == flight-name
 				if(string.contains(".displayname")) {
-					player.sendMessage("- " + DragonTravelMain.dbFlightsConfig.getString("Flights." + string));
+					String flightname = string.replace(".displayname", "");
+					if(player.hasPermission("dt.flight.*") || player.hasPermission("dt.flight."+flightname))
+						player.sendMessage("- " + DragonTravelMain.dbFlightsConfig.getString("Flights." + string));
 				}
 		}			
 	}

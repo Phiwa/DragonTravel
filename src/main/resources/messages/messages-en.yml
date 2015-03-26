@@ -36,7 +36,7 @@
 #       and please report all bugs you find, otherwise I can't fix them. ;)
 
 File:
-    Version: 0.2
+    Version: 0.5
     Language: 'English'
 
 Messages:
@@ -53,6 +53,8 @@ Messages:
             RequiredItemMissing: '&cYou do not have the required item in your inventory to use the plugin.'        
             DatabaseCorrupted: '&cThe database is corrupted, could not load the entry. Please inform the admin.'
             ReachedDragonLimit: '&cThe server already reached its limit, you cannot spawn another dragon, please wait for another player to dismount.'
+            BelowMinMountHeight: '&cYou are below the minimum height required to mount a dragon. Minimum height is &f{minheight}&c.'
+            DamageCooldown: '&cYou must wait &f{seconds} &cmore seconds before you can mount a dragon.'
     Payment:
         Resources:
             Successful:
@@ -106,6 +108,7 @@ Messages:
             WorldNotFound: '&cCould not find the specified world.'
             TargetPlayerDoesnotAllowPTravel: '&cThe player &f{playername}&a does not allow player-travels to him.'
             CannotTravelToYourself: '&cIt doesn''t make sense to travel to yourself...'
+            MaxTravelDistanceExceeded: '&cThe distance to your destination is too big.'
     Stations:
         Successful:
             StationCreated: '&aSuccessfully created the station &f{stationname}&a.'
@@ -122,3 +125,4 @@ Messages:
             FactionsNotInstalled: '&cFactions is not installed on this server.'
             NoFactionMember: '&cYou are not a member of a faction.'
             FactionHasNoHome: '&cYour faction does no have a home-point.'
+            NotYourFaction: '&cThis is not your faction.'

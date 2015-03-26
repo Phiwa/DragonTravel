@@ -1,11 +1,11 @@
-package main.java.eu.phiwa.dt.listeners;
+package eu.phiwa.dt.listeners;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.modules.DragonManagement;
-import main.java.eu.phiwa.dt.movement.Flights;
-import main.java.eu.phiwa.dt.movement.Travels;
-import main.java.eu.phiwa.dt.payment.PaymentHandler;
-import main.java.eu.phiwa.dt.permissions.PermissionsHandler;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.modules.DragonManagement;
+import eu.phiwa.dt.movement.Flights;
+import eu.phiwa.dt.movement.Travels;
+import eu.phiwa.dt.payment.PaymentHandler;
+import eu.phiwa.dt.permissions.PermissionsHandler;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,10 +16,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import com.massivecraft.factions.entity.Faction;
+import com.massivecraft.factions.entity.UPlayer;
 
 
 public class PlayerListener implements Listener {
@@ -32,7 +36,7 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		DragonTravelMain.ptogglers.put(event.getPlayer().getName(), DragonTravelMain.ptoggleDefault);		
+		DragonTravelMain.ptogglers.put(event.getPlayer().getUniqueId(), DragonTravelMain.ptoggleDefault);		
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -43,8 +47,8 @@ public class PlayerListener implements Listener {
 		if(!DragonTravelMain.listofDragonriders.containsKey(player))
 			return;
 		
-		if(DragonTravelMain.ptogglers.containsKey(player.getName()))
-			DragonTravelMain.ptogglers.remove(player.getName());
+		if(DragonTravelMain.ptogglers.containsKey(player.getUniqueId()))
+			DragonTravelMain.ptogglers.remove(player.getUniqueId());
 		
 		DragonManagement.removeRiderandDragon(DragonTravelMain.listofDragonriders.get((player)).getEntity(), false);
 
@@ -58,8 +62,8 @@ public class PlayerListener implements Listener {
 		if (!DragonTravelMain.listofDragonriders.containsKey(player))
 			return;
 		
-		if(DragonTravelMain.ptogglers.containsKey(player.getName()))
-			DragonTravelMain.ptogglers.remove(player.getName());
+		if(DragonTravelMain.ptogglers.containsKey(player.getUniqueId()))
+			DragonTravelMain.ptogglers.remove(player.getUniqueId());
 		
 		DragonManagement.removeRiderandDragon(DragonTravelMain.listofDragonriders.get((player)).getEntity(), false);
 	}
@@ -101,7 +105,6 @@ public class PlayerListener implements Listener {
 					}
 					catch(NumberFormatException ex) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Error.SignCorrupted"));
-						// TODO: ---ADD MESSAGE Corrupted sign
 					}				
 				}
 				else {
@@ -114,7 +117,6 @@ public class PlayerListener implements Listener {
 			
 			else if(DragonTravelMain.dbStationsHandler.getStation(stationname) == null) {
 					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));					
-					// TODO: ---ADD MESSAGE Station does not exist
 					return;
 			}
 			
@@ -134,7 +136,65 @@ public class PlayerListener implements Listener {
 				Travels.toStation(player, stationname, !DragonTravelMain.config.getBoolean("MountingLimit.ExcludeSigns"));
 			}
 		}
-		
+		else if (lines[1].equals("Faction")) {
+			
+			if(DragonTravelMain.pm.getPlugin("Factions") == null) {
+				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Factions.Error.FactionsNotInstalled"));
+				return;
+			}
+			
+			String factiontag = lines[2].replaceAll(ChatColor.WHITE.toString(), "");
+			
+			if(factiontag.isEmpty()) {
+				
+				if(!player.hasPermission("dt.ftravel")) {
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
+					return;
+				}
+				
+				Faction faction = UPlayer.get(player).getFaction();
+				
+				if(faction.isNone()) {
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Factions.Error.NoFactionMember"));
+					return;
+				}
+			
+				if(!faction.hasHome()) {
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Factions.Error.FactionHasNoHome"));
+					return;
+				}
+				else
+					Travels.travel(player, faction.getHome().asBukkitLocation(), false);
+				
+			}
+			else {
+				
+				if(!player.hasPermission("dt.ftravel")) {
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
+					return;
+				}
+				
+				Faction faction = UPlayer.get(player).getFaction();
+							
+				if(faction.isNone()) {
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Factions.Error.NoFactionMember"));
+					return;
+				}
+				
+				if(!faction.getName().equals(factiontag)) {
+					// TODO: ADD MESSAGE to other messages-xy.yml
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Factions.Error.NotYourFaction"));
+					return;
+				}
+			
+				if(!faction.hasHome()) {
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Factions.Error.FactionHasNoHome"));
+					return;
+				}
+				else
+					Travels.travel(player, faction.getHome().asBukkitLocation(), false);
+			}
+		}
 		else if (lines[1].equals("Flight")) {
 			String flightname = lines[2].replaceAll(ChatColor.WHITE.toString(), "");
 			
@@ -145,7 +205,6 @@ public class PlayerListener implements Listener {
 			
 			if(DragonTravelMain.dbFlightsHandler.getFlight((flightname)) == null) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightDoesNotExist"));
-				// TODO: ---ADD MESSAGE Flight does not exist
 			}
 			
 			else {
@@ -158,7 +217,6 @@ public class PlayerListener implements Listener {
 					}
 					catch(NumberFormatException ex) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Error.SignCorrupted"));
-						// TODO: ---ADD MESSAGE Corrupted sign
 					}
 				}
 				else {					
@@ -169,4 +227,19 @@ public class PlayerListener implements Listener {
 			}
 		}
 	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerDamge(EntityDamageEvent event) {
+
+		if(!(event.getEntity() instanceof Player))
+			return;
+
+		Player player = (Player) event.getEntity();
+	
+		if(player.hasPermission("dt.ignoredamagerestriction"))
+			return;
+
+		DragonTravelMain.dmgReceivers.put(player.getUniqueId(), System.currentTimeMillis());
+	}
+
 }

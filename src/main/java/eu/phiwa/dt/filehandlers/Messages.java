@@ -1,4 +1,4 @@
-package main.java.eu.phiwa.dt.filehandlers;
+package eu.phiwa.dt.filehandlers;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.DragonTravelMain;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -64,7 +64,7 @@ public class Messages {
 		
 		if(message == null) {
 			DragonTravelMain.logger.log(Level.SEVERE, "[DragonTravel] Could not find the message looking for at path '"+path+"' which leads to a serious problem! Be try to generate a new language file if you previously updated DragonTravel!");
-			return replaceColors("&cAn error occured, please contact the admin!");
+			return replaceColors("&cAn error occured, please contact the admin! Missing message '"+path+"'");
 		}
 			
 		if(message.length() == 0)
@@ -98,10 +98,23 @@ public class Messages {
 		// Add new keys here!
 		
 	  // v0.0.0.9
-        if (DragonTravelMain.config.get("Messages.Flights.Error.OnlySigns") == null)
-        	DragonTravelMain.config.set("Messages.Flights.Error.OnlySigns", "&cThis command has been disabled by the admin, you can only use flights using signs.");      
-        if (DragonTravelMain.config.get("Messages.Stations.Error.NotCreateStationWithRandomstatName") == null)
-        	DragonTravelMain.config.set("Messages.Stations.Error.NotCreateStationWithRandomstatName", "&cYou cannot create a staion with the name of the RandomDest.");
+        if (DragonTravelMain.messages.get("Messages.Flights.Error.OnlySigns") == null)
+        	DragonTravelMain.messages.set("Messages.Flights.Error.OnlySigns", "&cThis command has been disabled by the admin, you can only use flights using signs.");      
+        if (DragonTravelMain.messages.get("Messages.Stations.Error.NotCreateStationWithRandomstatName") == null)
+        	DragonTravelMain.messages.set("Messages.Stations.Error.NotCreateStationWithRandomstatName", "&cYou cannot create a staion with the name of the RandomDest.");
+        
+      // v0.0.0.17
+        if (DragonTravelMain.messages.get("Messages.Factions.Error.NotYourFaction") == null)
+        	DragonTravelMain.messages.set("Messages.Factions.Error.NotYourFaction", ": &cThis is not your faction.");      
+	
+      // 0.5
+        if (DragonTravelMain.messages.get("Messages.General.Error.BelowMinMountHeight") == null)
+        	DragonTravelMain.messages.set("Messages.General.Error.BelowMinMountHeight", "&cYou are below the minimum height required to mount a dragon. Minimum height is &f{minheight}&c.");      
+        if (DragonTravelMain.messages.get("Messages.General.Error.DamageCooldown") == null)
+        	DragonTravelMain.messages.set("Messages.General.Error.DamageCooldown", "&cYou must wait &f{seconds} &cmore seconds before you can mount a dragon.");  
+	
+      // Update the file version
+		DragonTravelMain.messages.set("File.Version", DragonTravelMain.messagesVersion);
 	}
 	
 	

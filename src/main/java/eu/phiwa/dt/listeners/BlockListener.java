@@ -1,7 +1,7 @@
-package main.java.eu.phiwa.dt.listeners;
+package eu.phiwa.dt.listeners;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.signs.Signs;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.signs.Signs;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,7 +25,6 @@ public class BlockListener implements Listener {
 	public void onMarkerDestroy(BlockBreakEvent event) {
 		if (DragonTravelMain.globalwaypointmarkers.containsKey(event.getBlock())) {
 			event.getPlayer().sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.CannotDestroyMarkerByHand"));
-			// TODO: ---ADD MESSAGE You can't destory a marker by hand, use "/dt remlastwp" instead
 			event.setCancelled(true);
 		}
 	}
@@ -43,46 +42,51 @@ public class BlockListener implements Listener {
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 			event.setCancelled(true);
 			return;
-			// TODO: ---ADD MESSAGE No permission
 		}
 		
 		// FLIGHTSIGNS		
 		if(event.getLine(1).equals("Flight")) {		
 			if (event.getLine(2).isEmpty()) {	
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Error.NoTargetFlightSpecified"));
-				// TODO: ---ADD MESSAGE Please put a flight
+				return;
 			}
 			
 			if (DragonTravelMain.dbFlightsHandler.getFlight(event.getLine(2)) == null) {
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightDoesNotExist"));
-				// TODO: ---ADD MESSAGE Flight does not exist
 				return;
 			}
-			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Successful.SignCreated"));
-			// TODO: ---ADD MESSAGE Sign created successfully
-			Signs.createSign(event, "Flight");
-			return;
 			
+			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Successful.SignCreated"));
+			Signs.createSign(event, "Flight");
+			return;		
 		}
 		
 		else if(event.getLine(1).equals("Travel")) {		
 			if (event.getLine(2).isEmpty()) {	
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Error.NoTargetStationSpecified"));
-				// TODO: ---ADD MESSAGE Please put a travel
 				return;
 			}		
 			if (DragonTravelMain.dbStationsHandler.getStation(event.getLine(2)) == null
 					&& !event.getLine(2).equalsIgnoreCase( DragonTravelMain.config.getString("RandomDest.Name"))) {	
 				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", event.getLine(2)));
-				// TODO: ---ADD MESSAGE Station does not exist
 				return;
 			}
+			
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Successful.SignCreated"));
-			// TODO: ---ADD MESSAGE Sign created successfully
 			Signs.createSign(event, "Travel");
 			return;
 		}
-		
+		else if(event.getLine(1).equals("Faction")) {
+			
+			if(DragonTravelMain.pm.getPlugin("Factions") == null) {
+				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Factions.Error.FactionsNotInstalled"));
+				return;
+			}
+			
+			Signs.createSign(event, "Faction");			
+			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Signs.Successful.SignCreated"));			
+			return;
+		}		
 	}
 	
 	

@@ -1,12 +1,12 @@
-package main.java.eu.phiwa.dt.filehandlers;
+package eu.phiwa.dt.filehandlers;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.objects.Home;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.objects.Home;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

@@ -1,9 +1,9 @@
-package main.java.eu.phiwa.dt.flights;
+package eu.phiwa.dt.flights;
 
 import java.util.HashMap;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.objects.Flight;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.objects.Flight;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

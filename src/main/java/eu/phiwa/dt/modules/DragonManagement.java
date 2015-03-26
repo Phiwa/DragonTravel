@@ -1,15 +1,18 @@
-package main.java.eu.phiwa.dt.modules;
+package eu.phiwa.dt.modules;
 
 import java.util.Map.Entry;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.RyeDragon;
-import main.java.eu.phiwa.dt.anticheatplugins.CheatProtectionHandler;
-import net.minecraft.server.v1_7_R3.World;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.RyeDragon;
+import eu.phiwa.dt.anticheatplugins.CheatProtectionHandler;
+import eu.phiwa.dt.filehandlers.Messages;
+import net.minecraft.server.v1_8_R2.World;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftEnderDragon;
+import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEnderDragon;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -28,7 +31,6 @@ public class DragonManagement {
 
 		if (!DragonTravelMain.listofDragonriders.containsKey(player)) {
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NotMounted"));
-			// TODO: ---ADD MESSAGE Not mounted
 			return;
 		}
 
@@ -71,22 +73,38 @@ public class DragonManagement {
 	 */
 	private static Location getSaveTeleportLocation(Location loc) {
 		
+		if(DragonTravelMain.dismountAtExactLocation)
+			return loc;
+		
 		Location clone = loc;
 		
 		int offset = 1;
 
-		for (;;) {
-
-			while (clone.getBlock().isEmpty() && clone.getY() != 0) {
-				clone.setY(clone.getY() - offset);
+		boolean reachedFloor = false;
+		
+		while(true) {
+			
+			// If floor is reached
+			if(clone.getY() <= 0) {
+				
+				// If floor has been already reached before, just drop the player
+				if(reachedFloor)
+					return loc;
+				
+				// If floor hasn't been reached before, start from the top
+				clone.setY(256);
+				reachedFloor = true;
 			}
-
-			if (clone.getY() != 0)
+			
+			// If a non-empty block has been found you have a valid dismount location
+			if(!clone.getBlock().isEmpty())
 				break;
-
-			clone.setY(256);
+			
+			// Go down one block and restart loop
+			clone.setY(clone.getY() - offset);
 		}
 		
+		// Return location the player can be dismounted to
 		return clone;
 	}
 
@@ -105,11 +123,44 @@ public class DragonManagement {
 			removeRiderandDragon(dragon.getEntity(), true);
 		}
 		
-		if(DragonTravelMain.listofDragonriders.size() >= DragonTravelMain.dragonLimit) {
+		// Check if dragon limit is exceeded
+		if(DragonTravelMain.dragonLimit != -1) {
 			if(!player.hasPermission("dt.ignoredragonlimit")) {
-				player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.ReachedDragonLimit"));
-				return false;
+				if(DragonTravelMain.listofDragonriders.size() >= DragonTravelMain.dragonLimit) {			
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.ReachedDragonLimit"));
+					return false;
+				}
 			}
+		}
+
+		// Check if player is below minimum height required to mount a dragon
+		if(DragonTravelMain.minMountHeight != -1) {				
+			if(!player.hasPermission("dt.ignoreminheight")) {
+				if(player.getLocation().getY() < DragonTravelMain.minMountHeight) {
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.BelowMinMountHeight").replace("{minheight}", ""+DragonTravelMain.minMountHeight));
+					return false;
+				}
+			}					
+		}
+	
+		// Check if player received damage within last x seconds
+		if(DragonTravelMain.dmgCooldown != -1) {				
+			if(!player.hasPermission("dt.ignoredamagerestriction")) {				
+				if(DragonTravelMain.dmgReceivers.containsKey(player.getUniqueId())) {		
+					
+					long timeSinceDmgReceived = System.currentTimeMillis() - DragonTravelMain.dmgReceivers.get(player.getUniqueId());
+				
+					if(timeSinceDmgReceived  < DragonTravelMain.dmgCooldown ) {		
+						
+						int waittime = (int) ((DragonTravelMain.dmgCooldown - timeSinceDmgReceived) / 1000);
+						
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.DamageCooldown").replace("{seconds}", ""+waittime));
+						return false;
+					}
+					else
+						DragonTravelMain.dmgReceivers.remove(player.getUniqueId());
+				}			
+			}					
 		}
 
 		// Spawn RyeDragon
@@ -123,29 +174,47 @@ public class DragonManagement {
 		dragon.damage(2, dragon.getPassenger());
 		DragonTravelMain.listofDragonriders.put(player, ryeDragon);
 		DragonTravelMain.listofDragonsridersStartingpoints.put(player, player.getLocation());
-
+		
 		return true;
 	}
 
-	/**
-	 * Removes all enderdragons in the specified world
+	/**Removes all enderdragons from all worlds
+	 * which do not have players as passengers
+	 * 
+	 * @return
+	 * 		Success message
+	 */
+	public static String removeDragons() {
+		
+		String output = "Removing riderless dragons from all worlds:";
+		
+		for(org.bukkit.World world: Bukkit.getWorlds())
+			output += "\n  - " + removeDragons(world);
+		
+		return output;	
+	}
+	
+	/**Removes all enderdragons from the specified world
 	 * which do not have players as passengers
 	 * 
 	 * @param world
 	 * 			World to delete all dragons from
 	 * @return
+	 * 		Success message
 	 */
 	public static String removeDragons(org.bukkit.World world) {
 
 		int passed = 0;
 
-
-		for (Entity entity : world.getEntities()) {
+		for (Entity entity : world.getEntitiesByClass(EnderDragon.class)) {
 
 			// Check if EnderDragon
 			if (!(entity instanceof CraftEnderDragon))
 				continue;
 
+			if(entity instanceof RyeDragon)
+				System.out.println("-----");
+			
 			// Check if EnderDragon has a player as passenger
 			if (entity.getPassenger() instanceof Player)
 				continue;
@@ -155,9 +224,7 @@ public class DragonManagement {
 			passed++;
 		}
 
-
-		// TODO: ---ADD MESSAGE x dragons removed
-		String returnMessage = String.format("Removed %d dragons in world ' %s' successfully.", passed, world.getName());
+		String returnMessage = String.format("Removed %d dragons in world '%s'.", passed, world.getName());
 		return returnMessage;
 	}
 
@@ -190,7 +257,6 @@ public class DragonManagement {
 		}
 		// Normal absteigen
 		else if(dismountAtcurrentLocation || !DragonTravelMain.config.getBoolean("TeleportToStartOnDismount")) {
-			//TODO: Check if correct if-clause
 						
 			// Teleport player to a safe location
 			Location saveTeleportLoc = getSaveTeleportLocation(player.getLocation());

@@ -1,7 +1,7 @@
 name: DragonTravel
-main: main.java.eu.phiwa.dt.DragonTravelMain
-author: Phiwa, x3nec
-version: Phoenix Alpha v0.0.0.14
+main: eu.phiwa.dt.DragonTravelMain
+author: Phiwa
+version: Phoenix v0.0.1.5
 load: STARTUP
 softdepend: [Vault, AntiCheat, NoCheatPlus, Factions]
 permissions:
@@ -28,6 +28,9 @@ permissions:
             dt.nocost.*: true
             dt.notrequireitem.*: true
             dt.ptoggle: true
+            dt.ignoreminheight: true
+            dt.ignoredamagerestriction: true
+            
     
     dt.admin.signs:
         default: op
@@ -132,7 +135,13 @@ permissions:
     dt.ignoredragonlimit:
         default: op
         description: Allows player to mount a dragon, even if the server has already reached the limit of dragons set in the config
+    dt.ignoreminheight:
+        default: op
+        description: Allows player to mount a dragon, even if the he is below the minimum height required to mount a dragon
+    dt.ignoredamagerestriction:
+        default: op
+        description: Allows player to mount a dragon, even if the he received damage within the last X seconds (set via config)
 
 commands:
     dt:
-        usage:
+        usage: 

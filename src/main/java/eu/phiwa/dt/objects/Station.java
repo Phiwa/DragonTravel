@@ -1,4 +1,4 @@
-package main.java.eu.phiwa.dt.objects;
+package eu.phiwa.dt.objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

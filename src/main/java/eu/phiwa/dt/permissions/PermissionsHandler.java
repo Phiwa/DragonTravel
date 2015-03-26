@@ -1,4 +1,4 @@
-package main.java.eu.phiwa.dt.permissions;
+package eu.phiwa.dt.permissions;
 
 import org.bukkit.entity.Player;
 
@@ -46,25 +46,25 @@ public class PermissionsHandler {
 	 */
 	public static boolean hasTravelPermission(Player player, String traveltype, String destinationname){
 		
-		// Stops any NPEs ("traveltype" is 'travel'/'travel'/'ptravel'), 
-		// if a problem occurs, simply allow it.^^
+		// Stops any NPEs ("traveltype" is 'travel'/'ctravel'/'ptravel'), if a problem occurs, simply allow it.^^
 		if(traveltype == null)
 			return true;
-		else if(traveltype != "travel") {
-			// Check for all Traveltypes other than "travel"
-			if (player.hasPermission("dt." + traveltype))
-				return true;
-			else				
-				return false;
-		}
-		else {
+		
+		if(traveltype == "travel") {
 			// Check for "travel"-permissions
 			if (player.hasPermission("dt.travel.*"))	// wildcard
 				return true;
 			else if (player.hasPermission("dt.travel." + destinationname))	// station-specific
 				return true;
 			else
-				return false;	// No permission
+				return false;	// No permission	
+		}
+		else {	
+			// Check for all Traveltypes other than "travel" (dt.ctravel / dt.ptravel)
+			if (player.hasPermission("dt." + traveltype))
+				return true;
+			else				
+				return false;
 		}
 	}	
 }

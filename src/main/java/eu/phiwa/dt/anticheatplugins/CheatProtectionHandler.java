@@ -1,8 +1,8 @@
-package main.java.eu.phiwa.dt.anticheatplugins;
+package eu.phiwa.dt.anticheatplugins;
 
 import org.bukkit.entity.Player;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.DragonTravelMain;
 
 public class CheatProtectionHandler {
 	

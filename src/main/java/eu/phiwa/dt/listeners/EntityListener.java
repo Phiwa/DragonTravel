@@ -1,7 +1,7 @@
-package main.java.eu.phiwa.dt.listeners;
+package eu.phiwa.dt.listeners;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.RyeDragon;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.RyeDragon;
 
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;

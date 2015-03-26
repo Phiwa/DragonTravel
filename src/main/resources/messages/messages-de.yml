@@ -36,7 +36,7 @@
 #       und melde bitte alle Bugs, die du findest, sonst kann ich sie nicht beheben. ;)
 
 File:
-    Version: 0.2
+    Version: 0.3
     Language: 'German'
     
 Messages:
@@ -107,6 +107,7 @@ Messages:
             NotCreateStationWithRandomstatName: '&cDu kannst keine Station mit dem Namen des Zufallsortes erstellen.'
             TargetPlayerDoesnotAllowPTravel: '&cDer Spieler &f{playername}&c erlaubt keine Spieler-Reisen zu sich.'
             CannotTravelToYourself: '&cEs macht keinen Sinn zu dir selbst zu reisen...'
+            MaxTravelDistanceExceeded: '&cDie Strecke zum Zielort ist zu groß.'
     Stations:
         Successful:
             StationCreated: '&aDie Station &f{stationname}&a wurde erstellt.'
@@ -122,3 +123,4 @@ Messages:
             FactionsNotInstalled: '&cFactions ist auf dem Server nicht installiert.'
             NoFactionMember: '&cDu bist in keiner Fraktion.'
             FactionHasNoHome: '&cDeine Fraktion hat kein Zuhause gesetzt.'
+            NotYourFaction: '&cDas ist nicht deine Fraktion.'

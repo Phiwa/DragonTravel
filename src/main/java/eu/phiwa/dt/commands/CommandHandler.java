@@ -1,17 +1,17 @@
-package main.java.eu.phiwa.dt.commands;
+package eu.phiwa.dt.commands;
 
-import main.java.eu.phiwa.dt.DragonTravelMain;
-import main.java.eu.phiwa.dt.flights.FlightEditor;
-import main.java.eu.phiwa.dt.flights.Waypoint;
-import main.java.eu.phiwa.dt.modules.DragonManagement;
-import main.java.eu.phiwa.dt.modules.StationaryDragon;
-import main.java.eu.phiwa.dt.movement.Flights;
-import main.java.eu.phiwa.dt.movement.Travels;
-import main.java.eu.phiwa.dt.objects.Flight;
-import main.java.eu.phiwa.dt.objects.Home;
-import main.java.eu.phiwa.dt.objects.Station;
-import main.java.eu.phiwa.dt.payment.PaymentHandler;
-import main.java.eu.phiwa.dt.permissions.PermissionsHandler;
+import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.flights.FlightEditor;
+import eu.phiwa.dt.flights.Waypoint;
+import eu.phiwa.dt.modules.DragonManagement;
+import eu.phiwa.dt.modules.StationaryDragon;
+import eu.phiwa.dt.movement.Flights;
+import eu.phiwa.dt.movement.Travels;
+import eu.phiwa.dt.objects.Flight;
+import eu.phiwa.dt.objects.Home;
+import eu.phiwa.dt.objects.Station;
+import eu.phiwa.dt.payment.PaymentHandler;
+import eu.phiwa.dt.permissions.PermissionsHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -45,7 +45,6 @@ public class CommandHandler implements CommandExecutor {
 				sendUsage(sender);
 			else if(sender instanceof Player)
 				sendUsage( (Player)sender, 1);
-				// TODO: ---ADD MESSAGE Command-Help
 			return false;
 		}
 
@@ -60,11 +59,21 @@ public class CommandHandler implements CommandExecutor {
 		if (sender instanceof ConsoleCommandSender) {
 			
 			switch (length) {
-
+					
 				case 1:
 					
 					if(command.equalsIgnoreCase("reload")) {
 						plugin.reload();
+						return true;
+					}
+					
+					else if(command.equalsIgnoreCase("version")) {
+						System.out.println("[DragonTravel] Version running: " + plugin.getDescription().getVersion());
+						return true;
+					}
+					
+					else if(command.equalsIgnoreCase("author")) {
+						System.out.println("[DragonTravel] Created by: " + plugin.getDescription().getAuthors());
 						return true;
 					}
 					
@@ -78,48 +87,59 @@ public class CommandHandler implements CommandExecutor {
 						return true;
 					}
 					
+					sendUsage(sender);
 					return false;
 					
 				case 2:
 					argument1 = args[1];
 					
 					if(command.equalsIgnoreCase("remdragons")) {
+						
 						if(argument1 == "all") {
-							for(World world: Bukkit.getWorlds()) {
-								sender.sendMessage("[DragonTravel] " + DragonManagement.removeDragons(world));
-							}
+							sender.sendMessage("[DragonTravel] " + DragonManagement.removeDragons());
+
 							return true;
 						}
 						else {
 							World world = Bukkit.getWorld(argument1);
-							if(world != null) {
-								sender.sendMessage("[DragonTravel] " + DragonManagement.removeDragons(world));
-								return true;
-							}
-							else {
+							
+							if(world == null) {
 								sender.sendMessage("[DragonTravel][Error] World does not exist.");
 								return false;
 							}
+								
+							sender.sendMessage("[DragonTravel] " + DragonManagement.removeDragons(world));
+							return true;
 						}
+					}
+					
+					else if (command.equalsIgnoreCase("remstat")) {
+	
+						if (DragonTravelMain.dbStationsHandler.getStation(argument1) == null) {
+							sender.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationDoesNotExist"));
+							return false;
+						}
+	
+						DragonTravelMain.dbStationsHandler.deleteStation(argument1);
+						
+						sender.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Successful.StationRemoved"));
+						return true;
 					}
 					
 					else if (command.equalsIgnoreCase("remflight")) {
 	
-						// TODO: Permission-Check
-	
 						if (DragonTravelMain.dbFlightsHandler.getFlight(argument1) == null) {
 							sender.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightDoesNotExist"));
-							// TODO: ---ADD MESSAGE There is no flight with that name
 							return false;
 						}
 	
 						DragonTravelMain.dbFlightsHandler.deleteFlight(argument1);
 						
 						sender.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.RemovedFlight"));
-						// TODO: ---ADD MESSAGE Successfully removed the flight
 						return true;
 					}
 					
+					sendUsage(sender);
 					return false;
 					
 				case 3:
@@ -127,15 +147,19 @@ public class CommandHandler implements CommandExecutor {
 					argument2 =  args[2];
 					
 					if (command.equalsIgnoreCase("flight")) {	
+						
 						Player player = Bukkit.getPlayer(argument2);
+						
 						if(player == null) {
 							System.out.println("[DragonTravel] Couldn't find player '"+argument2+"'!");
 							return false;
 						}
+						
 						Flights.startFlight(player, argument1, false, true, null);					
 						return true;
 					}
-										
+						
+					sendUsage(sender);
 					return false;
 					
 				case 4:
@@ -143,7 +167,7 @@ public class CommandHandler implements CommandExecutor {
 					argument2 =  args[2];
 					argument3 =  args[3];
 					
-	
+					sendUsage(sender);
 					return false;
 					
 				case 5:
@@ -152,15 +176,15 @@ public class CommandHandler implements CommandExecutor {
 					argument3 = args[3];
 					argument4 = args[4];
 					
-					
+					sendUsage(sender);
 					return false;
 					
 				default:
-					sendUsage(sender);
-					// TODO: ---ADD MESSAGE Commandhelp for Console				
+					sendUsage(sender);			
 					return false;
 			}
 		}
+
 
 		Player player = (Player)sender;
 		
@@ -171,6 +195,7 @@ public class CommandHandler implements CommandExecutor {
 			case 1:
 				
 				if(command.equalsIgnoreCase("reload")) {
+					
 					if(player.hasPermission("dt.admin.*")) {
 						player.sendMessage(ChatColor.RED + "We recommend not to reload your files this way. It is safer to restart your server!");
 						plugin.reload();
@@ -180,88 +205,94 @@ public class CommandHandler implements CommandExecutor {
 					else {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 						return true;
-					}
-						
+					}						
 					
 				}
 				
+//				else if(command.equalsIgnoreCase("debug")) {
+//					System.out.println("========== DEBUG ==========");
+//				}
+				
 				else if(command.equalsIgnoreCase("help")) {
 					sendUsage(player, 1);
-					// TODO: ---ADD MESSAGE Help
 					return true;
 				}
 				
 				else if(command.equalsIgnoreCase("statdragon")) {
-					if(player.hasPermission("dt.admin.statdragon")) {
-						StationaryDragon.createStatDragon(player);
-						return true;
-					}
-					else {
+					
+					if(!player.hasPermission("dt.admin.statdragon")) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 						return false;
 					}
+					
+					StationaryDragon.createStatDragon(player);
+					return true;					
 				}
 				
 				else if(command.equalsIgnoreCase("dismount")) {
+					
 					DragonManagement.dismount(player, false);
 					return true;
 				}
 				
 				else if(command.equalsIgnoreCase("remdragons")) {
-					if(player.hasPermission("dt.admin.remdragon")) {
-						DragonManagement.removeDragons(player.getWorld());
-						return true;
-					}
-					else {
+					
+					if(!player.hasPermission("dt.admin.remdragon")) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 						return false;
-					}					
+					}
+					
+					DragonManagement.removeDragons(player.getWorld());
+					return true;					
 				}
 				
-				else if(command.equalsIgnoreCase("sethome")) {					
-					if(player.hasPermission("dt.home")) {
-						if(DragonTravelMain.usePayment)
-							if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.SETHOME, player))
-								return false;
+				else if(command.equalsIgnoreCase("sethome")) {	
+					
+					if(!player.hasPermission("dt.home")) {
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
+						return false;						
+					}
+					
+					if(DragonTravelMain.usePayment)
+						if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.SETHOME, player))
+							return false;
+					
+					if(DragonTravelMain.dbHomesHandler.getHome(player.getName()) != null)
+						DragonTravelMain.dbHomesHandler.deleteHome(player.getName());
+					
+					Home home = new Home(player.getUniqueId().toString(), player.getLocation());
+					DragonTravelMain.dbHomesHandler.createHome(home);
+					return true;
+				}
+				
+				else if(command.equalsIgnoreCase("home")) {			
+					
+					if(!player.hasPermission("dt.home")) {
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
+						return false;
+					}
 						
-						if(DragonTravelMain.dbHomesHandler.getHome(player.getName()) != null)
-							DragonTravelMain.dbHomesHandler.deleteHome(player.getName());					
-						Home home = new Home(player.getUniqueId().toString(), player.getLocation());
-						DragonTravelMain.dbHomesHandler.createHome(home);
-						return true;
-					}
-					else {
-						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
-						return false;
-					}
+					if(DragonTravelMain.usePayment)
+						if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOHOME, player))
+							return false;
+					
+					Travels.toHome(player, true);
+					return true;
 				}
 				
-				else if(command.equalsIgnoreCase("home")) {					
-					if(player.hasPermission("dt.home")) {
-						if(DragonTravelMain.usePayment)
-							if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOHOME, player))
-								return false;
-						Travels.toHome(player, true);
-						return true;
-					}
-					else {
+				else if(command.equalsIgnoreCase("fhome")) {	
+					
+					if(!player.hasPermission("dt.fhome")) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 						return false;
 					}
-				}
-				
-				else if(command.equalsIgnoreCase("fhome")) {				
-					if(player.hasPermission("dt.fhome")) {
-						if(DragonTravelMain.usePayment)
-							if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOFACTIONHOME, player))
-								return false;
-						Travels.toFactionhome(player, true);		
-						return true;
-					}
-					else {
-						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
-						return false;
-					}
+												
+					if(DragonTravelMain.usePayment)
+						if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOFACTIONHOME, player))
+							return false;
+					
+					Travels.toFactionhome(player, true);		
+					return true;
 				}
 				
 				else if(command.equalsIgnoreCase("showstats")) {
@@ -278,13 +309,11 @@ public class CommandHandler implements CommandExecutor {
 					if(player.hasPermission("dt.admin.flights")) {
 						if (!FlightEditor.editors.containsKey(player)) {
 							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.NotInFlightCreationMode"));
-							// TODO: ---ADD MESSAGE You are not in Flight-creation mode
 							return false;
 						}
 	
 						if (FlightEditor.editors.get(player).wpcount < 1) {
 							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.AtLeastOneWaypoint"));
-							// TODO: ---ADD MESSAGE You need to create at least one waypoint
 							return false;
 						}
 	
@@ -293,7 +322,6 @@ public class CommandHandler implements CommandExecutor {
 						FlightEditor.editors.remove(player);
 						
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.FlightSaved"));
-						// TODO: ---ADD MESSAGE Successfully saved the flight
 						return true;
 					}
 					else {
@@ -303,59 +331,52 @@ public class CommandHandler implements CommandExecutor {
 				}
 				
 				else if (command.equalsIgnoreCase("setwp")) {
-					if(player.hasPermission("dt.admin.flights")) {
-						// TODO: Permission-Check
-	
-						if (!FlightEditor.editors.containsKey(player)) {
-							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.NotInFlightCreationMode"));
-							// TODO: ---ADD MESSAGE You are not in Flight-creation mode
-							return false;
-						}
 					
-						Flight flight = FlightEditor.editors.get(player);
-						Waypoint wp = new Waypoint();
-						Location loc = player.getLocation();
-						wp.x = (int) loc.getX();
-						wp.y = (int) loc.getY();
-						wp.z = (int) loc.getZ();
-						
-						// Create a marker at the waypoint				
-						wp.setMarker(player);
-						Block block = player.getLocation().getBlock();
-						DragonTravelMain.globalwaypointmarkers.put(block, block);
-						
-						flight.addWaypoint(wp);
-						
-						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.WaypointAdded"));
-						// TODO: ---ADD MESSAGE Successfully added a waypoint
-						return true;
-					}
-					else {
+					if(!player.hasPermission("dt.admin.flights")) {	
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 						return false;
 					}
+
+					if (!FlightEditor.editors.containsKey(player)) {
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.NotInFlightCreationMode"));
+						return false;
+					}
+				
+					Flight flight = FlightEditor.editors.get(player);
+					Waypoint wp = new Waypoint();
+					Location loc = player.getLocation();
+					wp.x = (int) loc.getX();
+					wp.y = (int) loc.getY();
+					wp.z = (int) loc.getZ();
+					wp.world = loc.getWorld();
+					
+					// Create a marker at the waypoint				
+					wp.setMarker(player);
+					Block block = player.getLocation().getBlock();
+					DragonTravelMain.globalwaypointmarkers.put(block, block);
+					
+					flight.addWaypoint(wp);
+					
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.WaypointAdded"));
+					return true;
 				}
 				
 				else if (command.equalsIgnoreCase("remlastwp")) {
-					if(player.hasPermission("dt.admin.flights")) {
-						// TODO: Permission-Check
-	
-						if (!FlightEditor.editors.containsKey(player)) {
-							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.NotInFlightCreationMode"));
-							// TODO: ---ADD MESSAGE You are not in Flight-creation mode
-							return false;
-						}
-	
-						FlightEditor.editors.get(player).removelastWaypoint();
-						
-						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.WaypointRemoved"));
-						// TODO: ---ADD MESSAGE Successfully removed the last waypoint.
-						return true;
-					}
-					else {
+					
+					if(!player.hasPermission("dt.admin.flights")) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 						return false;
 					}
+
+					if (!FlightEditor.editors.containsKey(player)) {
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.NotInFlightCreationMode"));
+						return false;
+					}
+
+					FlightEditor.editors.get(player).removelastWaypoint();
+					
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.WaypointRemoved"));
+					return true;
 				}
 				
 				else if (command.equalsIgnoreCase("ptoggle")) {
@@ -365,13 +386,13 @@ public class CommandHandler implements CommandExecutor {
 						return false;
 					}
 						
-					if (DragonTravelMain.ptogglers.get(player.getName())) {					
-						DragonTravelMain.ptogglers.put(player.getName(), false);
+					if (DragonTravelMain.ptogglers.get(player.getUniqueId())) {					
+						DragonTravelMain.ptogglers.put(player.getUniqueId(), false);
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Successful.ToggledPTravelOff"));			
 						return true;
 					}
 					else {
-						DragonTravelMain.ptogglers.put(player.getName(), true);
+						DragonTravelMain.ptogglers.put(player.getUniqueId(), true);
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Successful.ToggledPTravelOn"));
 						return true;
 					}
@@ -382,11 +403,12 @@ public class CommandHandler implements CommandExecutor {
 				
 			case 2:
 				argument1 = args[1];
-				
+		
 				if(command.equalsIgnoreCase("help")) {
 					try {
 						int page = Integer.parseInt(argument1);
 						sendUsage(player, page);
+						return true;
 					}
 					catch(NumberFormatException ex) {
 						player.sendMessage(ChatColor.RED + "Use " + ChatColor.WHITE + "/dt help <page> " + ChatColor.RED + "to open the help-section.");
@@ -397,38 +419,37 @@ public class CommandHandler implements CommandExecutor {
 					
 					if(DragonTravelMain.onlysigns) {
 						if(!player.hasPermission("dt.*")) {
-							// TODO: ---ADD MESSAGE This command has been disabled by the admin, you can only travel using signs
 							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.OnlySigns"));
 							return false;
 						}				
 					}
 											
 					if(argument1.equalsIgnoreCase((DragonTravelMain.config.getString("RandomDest.Name")))) {
-						if(PermissionsHandler.hasTravelPermission(player, "travel", argument1)) {
-							if(DragonTravelMain.usePayment)
-								if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TORANDOM, player))
-									return false;
-							Travels.toRandomdest(player, true);
-							return true;						
-						}
-						else {
+						
+						if(!PermissionsHandler.hasTravelPermission(player, "travel", argument1)) {
 							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 							return false;
 						}
+							
+						if(DragonTravelMain.usePayment)
+							if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TORANDOM, player))
+								return false;
+						
+						Travels.toRandomdest(player, true);
+						return true;						
 					}
 					else {
-						if(PermissionsHandler.hasTravelPermission(player, "travel", argument1)) {
-							if(DragonTravelMain.usePayment)
-								if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOSTATION, player))
-									return false;
-							Travels.toStation(player, argument1, true);
-							return true;
-						}
-						else {
-							
+						if(!PermissionsHandler.hasTravelPermission(player, "travel", argument1)) {
 							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 							return false;
 						}
+						
+						if(DragonTravelMain.usePayment)
+							if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOSTATION, player))
+								return false;
+						
+						Travels.toStation(player, argument1, true);
+						return true;
 					}
 					
 				}	
@@ -442,34 +463,33 @@ public class CommandHandler implements CommandExecutor {
 					
 					Player targetplayer = Bukkit.getPlayer(argument1);
 					
-					if(targetplayer != null) {
-						if(targetplayer == player) {
-							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.CannotTravelToYourself"));
-							return false;
-						}
-						if(DragonTravelMain.usePayment)
-							if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOPLAYER, player))
-								return false;
-						if(!DragonTravelMain.ptogglers.get(targetplayer.getName())) {
-							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.TargetPlayerDoesnotAllowPTravel").replace("{playername}", argument1));
-							return false;
-						}
-						Travels.toPlayer(player, targetplayer, true);
-						return true;
-					}
-					else
-					{
+					if(targetplayer == null) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.PlayerNotOnline").replace("{playername}", argument1));
-						// TODO: ---ADD MESSAGE Player not online
 						return false;
 					}
+					
+					if(targetplayer == player) {
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.CannotTravelToYourself"));
+						return false;
+					}
+					
+					if(DragonTravelMain.usePayment)
+						if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOPLAYER, player))
+							return false;
+					
+					if(!DragonTravelMain.ptogglers.get(targetplayer.getUniqueId())) {
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.TargetPlayerDoesnotAllowPTravel").replace("{playername}", argument1));
+						return false;
+					}
+					
+					Travels.toPlayer(player, targetplayer, true);
+					return true;
 				}
 				
 				else if(command.equalsIgnoreCase("flight")) {					
 					
 					if(DragonTravelMain.onlysigns) {
 						if(!player.hasPermission("dt.*")) {
-							// TODO: ---ADD MESSAGE This command has been disabled by the admin, you can only travel using signs
 							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.OnlySigns"));
 							return false;
 						}				
@@ -483,6 +503,7 @@ public class CommandHandler implements CommandExecutor {
 					if(DragonTravelMain.usePayment)
 						if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.FLIGHT, player))
 							return false;
+				
 					Flights.startFlight(player, argument1, true, false, null);
 					return true;
 				}
@@ -498,25 +519,21 @@ public class CommandHandler implements CommandExecutor {
 					
 					if(argument1.equalsIgnoreCase(DragonTravelMain.config.getString("RandomDest.Name"))) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.NotCreateStationWithRandomstatName"));
-						// TODO: ---ADD MESSAGE You cannot create a station with the name of the RandomnDest
 						return false;
 					}
 					
 					if(DragonTravelMain.dbStationsHandler.getStation(argument1) != null) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationAlreadyExists").replace("{stationname}", argument1));
-						// TODO: ---ADD MESSAGE Station already exists
 						return false;
 					}
-					else {
-						if(DragonTravelMain.dbStationsHandler.createStation(new Station(argument1, loc))) {
-							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Successful.StationCreated").replace("{stationname}", argument1));
-							return true;
-						}
-						else {
-							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.CouldNotCreateStation"));
-							return false;
-						}
+
+					if(!DragonTravelMain.dbStationsHandler.createStation(new Station(argument1, loc))) {
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.CouldNotCreateStation"));
+						return false;					
 					}
+					
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Successful.StationCreated").replace("{stationname}", argument1));
+					return true;
 				}
 				
 				else if (command.equalsIgnoreCase("remstat")) {
@@ -528,19 +545,16 @@ public class CommandHandler implements CommandExecutor {
 
 					if (DragonTravelMain.dbStationsHandler.getStation(argument1) == null) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationDoesNotExist"));
-						// TODO: ---ADD MESSAGE There is no flight with that name
 						return false;
 					}
-					else {
-						if(DragonTravelMain.dbStationsHandler.deleteStation(argument1)) {
-							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Successful.StationRemoved").replace("{stationname}", argument1));
-							return true;
-						}
-						else {
-							player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.CouldNotRemoveStation"));
-							return false;
-						}
+
+					if(!DragonTravelMain.dbStationsHandler.deleteStation(argument1)) {
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.CouldNotRemoveStation"));
+						return false;
 					}
+						
+					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Successful.StationRemoved").replace("{stationname}", argument1));
+					return true;
 				}
 				
 				else if (command.equalsIgnoreCase("createflight")) {
@@ -552,20 +566,17 @@ public class CommandHandler implements CommandExecutor {
 
 					if (FlightEditor.editors.containsKey(player)) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.AlreadyInFlightCreationMode"));
-						// TODO: ---ADD MESSAGE You already are in Flight-creation mode
 						return false;
 					}
 
 					if (DragonTravelMain.dbFlightsHandler.getFlight(argument1) != null) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightAlreadyExists"));
-						// TODO: ---ADD MESSAGE There already is a flight with that name
 						return false;
 					}
 
 					FlightEditor.addEditor(player, argument1);
 					
 					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.NowInFlightCreationMode"));
-					// TODO: ---ADD MESSAGE Help-Message for Flight-creation mode
 					return true;
 				}
 				
@@ -578,17 +589,15 @@ public class CommandHandler implements CommandExecutor {
 
 					if (DragonTravelMain.dbFlightsHandler.getFlight(argument1) == null) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Error.FlightDoesNotExist"));
-						// TODO: ---ADD MESSAGE There is no flight with that name
 						return false;
 					}
 
 					DragonTravelMain.dbFlightsHandler.deleteFlight(argument1);
 					
 					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.RemovedFlight"));
-					// TODO: ---ADD MESSAGE Successfully removed the flight
 					return true;
 				}
-				
+			
 				sendUsage(player, 1);
 				return false;
 				
@@ -644,7 +653,6 @@ public class CommandHandler implements CommandExecutor {
 					}
 					catch(NumberFormatException ex) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.InvalidCoordinates"));
-						// TODO: ---ADD MESSAGE Invalid coordinates
 						return false;
 					}					
 				}
@@ -679,7 +687,6 @@ public class CommandHandler implements CommandExecutor {
 					}
 					catch(NumberFormatException ex) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Error.InvalidCoordinates"));
-						// TODO: ---ADD MESSAGE Invalid Coordinates
 						return false;
 					}				
 				}
@@ -688,15 +695,31 @@ public class CommandHandler implements CommandExecutor {
 				return false;
 				
 			default:
-				sendUsage(player, 1);
-				// TODO: ---ADD MESSAGE Commandhelp				
+				sendUsage(player, 1);			
 				return false;
 		}
 	}
 
-/////////////////////////////////	
+
 	public void sendUsage(CommandSender sender) {
 		
+		String helpText = "[DragonTravel] Command Help\n\n"
+						+ "   --------- Commands available from console --------- \n\n"
+					 	+ "dt reload                       - Reloads the config (buggy,\n"
+					 	+ "                                  restart instead if possible)\n"
+					 	+ "dt version                      - Shows the version of DragonTravel\n"
+				 		+ "                                  currently running on the server\n"
+						+ "dt author                       - Shows the currently active author(s)\n"
+						+ "                                  of DragonTravel\n"
+						+ "dt showstats                    - Shows a list of all stations available\n"
+						+ "dt showflights                  - Shows a list of all flights available\n"
+						+ "dt remdragons <worldname|all>   - Removes all dragons without riders\n"
+						+ "                                  from the selected world/all worlds\n"
+						+ "dt remstat <stationname>        - Removes the station from the database\n"
+						+ "dt remflight <flightname>       - Removes the flight from the database\n"
+						+ "dt flight <flightname> <player> - Sends the player on the selected flight\n";		
+		
+		System.out.println(helpText);
 	}
 	
 	public void sendUsage(Player player, int page) {
@@ -746,5 +769,5 @@ public class CommandHandler implements CommandExecutor {
 		}
 		player.sendMessage("\n--------------------------");
 	}	
-	
+
 }

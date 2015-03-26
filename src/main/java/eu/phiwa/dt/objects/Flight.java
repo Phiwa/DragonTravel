@@ -1,11 +1,11 @@
-package main.java.eu.phiwa.dt.objects;
+package eu.phiwa.dt.objects;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.World;
 
-import main.java.eu.phiwa.dt.flights.Waypoint;
+import eu.phiwa.dt.flights.Waypoint;
 
 public class Flight {
 

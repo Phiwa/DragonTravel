@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.phiwa</groupId>
 	<artifactId>DragonTravel</artifactId>
-	<version>0.0.0.14-SNAPSHOT</version>
+	<version>0.0.1.5</version>
 	<build>
 		<resources>
 			<resource>
@@ -32,10 +32,6 @@
 	</build>
 	<repositories>
 		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public</url>
-		</repository>
-		<repository>
 			<id>herocraft-repo</id>
 			<url>http://ci.herocraftonline.com//plugin/repository/everything/</url>
 		</repository>
@@ -47,23 +43,23 @@
 			<id>anticheat-repo</id>
 			<url>http://repo.gravitydevelopment.net/</url>
 		</repository>
+		<repository>
+            <id>vault-repo</id>
+            <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+        </repository>
 	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.7.8-R0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
-			<version>1.7.8-R0.1-SNAPSHOT</version>
+			<version>1.8.3-R0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.milkbowl.vault</groupId>
-			<artifactId>Vault</artifactId>
-			<version>1.2.27</version>
-		</dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.4</version>
+            <scope>provided</scope>
+        </dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
 			<artifactId>factions</artifactId>

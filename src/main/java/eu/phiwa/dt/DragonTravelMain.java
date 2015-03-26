@@ -1,30 +1,30 @@
-package main.java.eu.phiwa.dt;
+package eu.phiwa.dt;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import main.java.eu.phiwa.dt.anticheatplugins.AntiCheatHandler;
-import main.java.eu.phiwa.dt.anticheatplugins.NoCheatPlusHandler;
-import main.java.eu.phiwa.dt.commands.CommandHandler;
-import main.java.eu.phiwa.dt.filehandlers.Config;
-import main.java.eu.phiwa.dt.filehandlers.FlightsDB;
-import main.java.eu.phiwa.dt.filehandlers.HomesDB;
-import main.java.eu.phiwa.dt.filehandlers.Messages;
-import main.java.eu.phiwa.dt.filehandlers.StationsDB;
-import main.java.eu.phiwa.dt.flights.FlightEditor;
-import main.java.eu.phiwa.dt.listeners.BlockListener;
-import main.java.eu.phiwa.dt.listeners.EntityListener;
-import main.java.eu.phiwa.dt.listeners.PlayerListener;
-import main.java.eu.phiwa.dt.modules.MountingScheduler;
-import main.java.eu.phiwa.dt.payment.PaymentHandler;
-import net.milkbowl.vault.Vault;
+import eu.phiwa.dt.anticheatplugins.AntiCheatHandler;
+import eu.phiwa.dt.anticheatplugins.NoCheatPlusHandler;
+import eu.phiwa.dt.commands.CommandHandler;
+import eu.phiwa.dt.filehandlers.Config;
+import eu.phiwa.dt.filehandlers.FlightsDB;
+import eu.phiwa.dt.filehandlers.HomesDB;
+import eu.phiwa.dt.filehandlers.Messages;
+import eu.phiwa.dt.filehandlers.StationsDB;
+import eu.phiwa.dt.flights.FlightEditor;
+import eu.phiwa.dt.listeners.BlockListener;
+import eu.phiwa.dt.listeners.EntityListener;
+import eu.phiwa.dt.listeners.PlayerListener;
+import eu.phiwa.dt.modules.MountingScheduler;
+import eu.phiwa.dt.payment.PaymentHandler;
 import net.milkbowl.vault.economy.Economy;
-import net.minecraft.server.v1_7_R3.EntityTypes;
+import net.minecraft.server.v1_8_R2.EntityTypes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -48,8 +48,8 @@ public class DragonTravelMain extends JavaPlugin {
 	public static File configFile;
 	
 	public static Config configHandler;
-	// Config
-	public static double configVersion = 0.2;
+	// Config	public static double configVersion = 0.5;
+	
 	public static FileConfiguration dbFlightsConfig;
 	// FlightsDB
 	public static File dbFlightsFile;
@@ -82,18 +82,19 @@ public class DragonTravelMain extends JavaPlugin {
 	public static File messagesFile;
 	public static Messages messagesHandler;
 	// Messages
-	public static double messagesVersion = 0.2;
+	public static double messagesVersion = 0.5;
 	
 	public static boolean nocheatplus;
 	// Dragon Antigrief-Options
 	public static boolean onlydragontraveldragons;
 	
+	public static boolean dismountAtExactLocation = false;
 	public static boolean onlysigns = false;
 	public static int paymentItem = 371;
 	public static DragonTravelMain plugin;
 	public static PluginManager pm;	
 	public static boolean ptoggleDefault = false;	
-	public static HashMap<String, Boolean> ptogglers = new HashMap<String, Boolean>();
+	public static HashMap<UUID, Boolean> ptogglers = new HashMap<UUID, Boolean>();
 	public static Material requiredItem = Material.DRAGON_EGG;
 	
 	public static boolean requireItemFlight = false;
@@ -107,16 +108,19 @@ public class DragonTravelMain extends JavaPlugin {
 	public static final int SETHOME = 8;
 	
 	// General
-	public static double speed = 0.5;
-	public static final int TRAVEL_TOCOORDINATES = 4;
+	public static double speed = 0.5;	
+	public static int minMountHeight = -1;
+	public static int dmgCooldown = -1;
+	public static HashMap<UUID, Long> dmgReceivers = new HashMap<UUID, Long>();
 	
-	public static final int TRAVEL_TOFACTIONHOME = 6;
-	
-	public static final int TRAVEL_TOHOME = 5;
-	public static final int TRAVEL_TOPLAYER = 3;
-	public static final int TRAVEL_TORANDOM = 2;
 	// Payment-Types
 	public static final int TRAVEL_TOSTATION = 1;	
+	public static final int TRAVEL_TORANDOM = 2;
+	public static final int TRAVEL_TOPLAYER = 3;
+	public static final int TRAVEL_TOCOORDINATES = 4;	
+	public static final int TRAVEL_TOHOME = 5;
+	public static final int TRAVEL_TOFACTIONHOME = 6;	
+	
 	// Payment (Costs are directly read from the config/sign on-the-fly)
 	public static boolean usePayment = false;
 	
@@ -209,6 +213,8 @@ public class DragonTravelMain extends JavaPlugin {
 		requireItemTravelFactionhome = config.getBoolean("RequiredItem.For.toFactionhome");
 		requireItemFlight = config.getBoolean("RequiredItem.For.Flight");	
 	
+		dismountAtExactLocation = config.getBoolean("DismountAtExactLocation", false);
+		
 		speed = config.getDouble("DragonSpeed");
 		
 		usePayment = config.getBoolean("Payment.usePayment");
@@ -222,6 +228,10 @@ public class DragonTravelMain extends JavaPlugin {
 		onlysigns = config.getBoolean("OnlySigns");
 		
 		ptoggleDefault = config.getBoolean("PToggleDefault");
+		
+		minMountHeight = config.getInt("MinimumMountHeight", -1);
+		
+		dmgCooldown = config.getInt("DamageCooldown", -1) * 1000;
 		
 		if(usePayment) {
 			
@@ -237,8 +247,7 @@ public class DragonTravelMain extends JavaPlugin {
 					
 			// Set up Economy (if config-option is set to true)
 			if(byEconomy) {
-				Plugin x = pm.getPlugin("Vault");
-				if (x != null & x instanceof Vault) {
+				if (pm.getPlugin("Vault") != null) {
 					logger.info(String.format("[DragonTravel] Hooked into Vault, using it for economy-support"));
 					logger.info(String.format("[DragonTravel] Enabled %s", description.getVersion()));		
 					new PaymentHandler(this.getServer()).setupEconomy();
