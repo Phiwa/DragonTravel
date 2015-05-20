@@ -6,12 +6,12 @@ import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.RyeDragon;
 import eu.phiwa.dt.anticheatplugins.CheatProtectionHandler;
 import eu.phiwa.dt.filehandlers.Messages;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_8_R3.World;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEnderDragon;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEnderDragon;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;

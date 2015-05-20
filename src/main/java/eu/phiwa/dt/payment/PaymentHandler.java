@@ -171,7 +171,7 @@ public class PaymentHandler {
 			return true;
 	
 		if (balance < amount) {
-			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Economy.Error.NotEnoughMoney"));
+			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Payment.Economy.Error.NotEnoughMoney"));
 			return false;
 		}
 	
@@ -286,7 +286,7 @@ public class PaymentHandler {
 			return true;
 
 		if (balance < amount) {
-			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Economy.Error.NotEnoughMoney"));
+			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Payment.Economy.Error.NotEnoughMoney"));
 			return false;
 		}
 

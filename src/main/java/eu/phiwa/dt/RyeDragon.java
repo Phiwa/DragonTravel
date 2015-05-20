@@ -6,8 +6,8 @@ import java.util.List;
 import eu.phiwa.dt.flights.Waypoint;
 import eu.phiwa.dt.modules.DragonManagement;
 import eu.phiwa.dt.objects.Flight;
-import net.minecraft.server.v1_8_R2.EntityEnderDragon;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_8_R3.EntityEnderDragon;
+import net.minecraft.server.v1_8_R3.World;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location; 

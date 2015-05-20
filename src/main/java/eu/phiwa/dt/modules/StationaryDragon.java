@@ -2,9 +2,9 @@ package eu.phiwa.dt.modules;
 
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.RyeDragon;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_8_R3.World;
 
-import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.entity.Player;
 
 public class StationaryDragon {

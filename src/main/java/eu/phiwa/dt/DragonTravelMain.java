@@ -24,7 +24,7 @@ import eu.phiwa.dt.listeners.PlayerListener;
 import eu.phiwa.dt.modules.MountingScheduler;
 import eu.phiwa.dt.payment.PaymentHandler;
 import net.milkbowl.vault.economy.Economy;
-import net.minecraft.server.v1_8_R2.EntityTypes;
+import net.minecraft.server.v1_8_R3.EntityTypes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -32,7 +32,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
