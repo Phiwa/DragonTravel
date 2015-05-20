@@ -37,3 +37,5 @@
 
 factions-*.jar
 mcore-*.jar
+lib/craftbukkit-1.8.3-R0.1-SNAPSHOT.jar
+lib/craftbukkit-1.8.4-R0.1-SNAPSHOT.jar

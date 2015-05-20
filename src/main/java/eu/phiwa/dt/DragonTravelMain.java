@@ -37,80 +37,86 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DragonTravelMain extends JavaPlugin {
-
-	public static boolean alldragons;
+	
+	public static DragonTravelMain plugin;
+	public static PluginManager pm;	
+	
+    private final Class<?> dragonClass;
+    
+ 	// General
+ 	public static double speed = 0.5;	
+ 	public static int minMountHeight = -1;
+ 	public static int dmgCooldown = -1;
+ 	public static HashMap<UUID, Long> dmgReceivers = new HashMap<UUID, Long>();
+ 	public static boolean dismountAtExactLocation = false;
+ 	public static boolean onlysigns = false;
+ 	public static boolean ptoggleDefault = false;	
+ 	public static HashMap<UUID, Boolean> ptogglers = new HashMap<UUID, Boolean>();	
+ 	public static int dragonLimit = 99999;
+ 	public static boolean ignoreAntiMobspawnAreas;
+	public static HashMap<Block, Block> globalwaypointmarkers = new HashMap<Block, Block>();
+	
+ 	
 	// CheatProtection-Pluginstatus
 	public static boolean anticheat;
-	public static boolean byEconomy = false;
-	public static boolean byResources = false;
+	public static boolean nocheatplus;
+		
+	
+	// Config
 	public static FileConfiguration config;
 	public static File configFile;
+	public static Config configHandler;		public static double configVersion = 0.5;
 	
-	public static Config configHandler;
-	// Config	public static double configVersion = 0.5;
-	
+	// FlightsDB	
 	public static FileConfiguration dbFlightsConfig;
-	// FlightsDB
 	public static File dbFlightsFile;
-	
 	public static FlightsDB dbFlightsHandler;
-	public static FileConfiguration dbHomesConfig;
+	
 	// HomesDB
+	public static FileConfiguration dbHomesConfig;
 	public static File dbHomesFile;
 	public static HomesDB dbHomesHandler;
 	
-	public static FileConfiguration dbStationsConfig;
 	// StationsDB
+	public static FileConfiguration dbStationsConfig;
 	public static File dbStationsFile;
-	public static StationsDB dbStationsHandler;
-	// DragonLimit
-	public static int dragonLimit = 99999;
+	public static StationsDB dbStationsHandler;	
 	
-	public static Economy economyProvider;
-	public static final int FLIGHT = 7;
-	
-	public static HashMap<Block, Block> globalwaypointmarkers = new HashMap<Block, Block>();
-	public static boolean ignoreAntiMobspawnAreas;
 	
 	// Hashmaps
 	public static HashMap<Player, RyeDragon> listofDragonriders = new HashMap<Player, RyeDragon>();
 	public static HashMap<Player, Location> listofDragonsridersStartingpoints = new HashMap<Player, Location>();
 	public static final Logger logger = Logger.getLogger("Minecraft");
-
+	
+	// Messages
 	public static FileConfiguration messages;
 	public static File messagesFile;
 	public static Messages messagesHandler;
-	// Messages
 	public static double messagesVersion = 0.5;
+
 	
-	public static boolean nocheatplus;
 	// Dragon Antigrief-Options
+	public static boolean alldragons;
 	public static boolean onlydragontraveldragons;
 	
-	public static boolean dismountAtExactLocation = false;
-	public static boolean onlysigns = false;
-	public static int paymentItem = 371;
-	public static DragonTravelMain plugin;
-	public static PluginManager pm;	
-	public static boolean ptoggleDefault = false;	
-	public static HashMap<UUID, Boolean> ptogglers = new HashMap<UUID, Boolean>();
+		
+	// Required Item
 	public static Material requiredItem = Material.DRAGON_EGG;
-	
 	public static boolean requireItemFlight = false;
 	public static boolean requireItemTravelCoordinates = false;
 	public static boolean requireItemTravelFactionhome = false;
 	public static boolean requireItemTravelHome = false;
 	public static boolean requireItemTravelPlayer = false;
 	public static boolean requireItemTravelRandom = false;
-	// Required Item
 	public static boolean requireItemTravelStation = false;
-	public static final int SETHOME = 8;
+
 	
-	// General
-	public static double speed = 0.5;	
-	public static int minMountHeight = -1;
-	public static int dmgCooldown = -1;
-	public static HashMap<UUID, Long> dmgReceivers = new HashMap<UUID, Long>();
+	// Payment (Costs are directly read from the config/sign on-the-fly)
+	public static Economy economyProvider;
+	public static boolean byEconomy = false;
+	public static boolean byResources = false;
+	public static boolean usePayment = false;
+	public static int paymentItem = 371;
 	
 	// Payment-Types
 	public static final int TRAVEL_TOSTATION = 1;	
@@ -118,13 +124,11 @@ public class DragonTravelMain extends JavaPlugin {
 	public static final int TRAVEL_TOPLAYER = 3;
 	public static final int TRAVEL_TOCOORDINATES = 4;	
 	public static final int TRAVEL_TOHOME = 5;
-	public static final int TRAVEL_TOFACTIONHOME = 6;	
+	public static final int TRAVEL_TOFACTIONHOME = 6;
+	public static final int FLIGHT = 7;
+	public static final int SETHOME = 8;
 	
-	// Payment (Costs are directly read from the config/sign on-the-fly)
-	public static boolean usePayment = false;
-	
-    private final Class<?> dragonClass;
-    
+
     
     public DragonTravelMain() {
         this.dragonClass = RyeDragon.class;
