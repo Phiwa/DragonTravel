@@ -128,7 +128,6 @@ public class DragonTravelMain extends JavaPlugin {
 	public static final int FLIGHT = 7;
 	public static final int SETHOME = 8;
 	
-
     
     public DragonTravelMain() {
         this.dragonClass = RyeDragon.class;

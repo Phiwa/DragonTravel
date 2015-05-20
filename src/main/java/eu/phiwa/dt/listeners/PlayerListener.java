@@ -1,5 +1,7 @@
 package eu.phiwa.dt.listeners;
 
+import java.util.List;
+
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.modules.DragonManagement;
 import eu.phiwa.dt.movement.Flights;
@@ -17,6 +19,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -241,5 +244,20 @@ public class PlayerListener implements Listener {
 
 		DragonTravelMain.dmgReceivers.put(player.getUniqueId(), System.currentTimeMillis());
 	}
-
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
+		
+		if(!DragonTravelMain.listofDragonriders.keySet().contains(event.getPlayer()))
+			return;
+		
+		List<String> commands = (List<String>) DragonTravelMain.config.getList("CommandPrevent");
+		
+		for(String command: commands) {
+			if(command.contains(event.getMessage()))
+					event.setCancelled(true);
+		}
+		
+	}
+	
 }
