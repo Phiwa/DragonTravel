@@ -115,7 +115,7 @@ public class DragonManagement {
 	 * @param player
 	 * 			The player to mount onto the dragon
 	 */
-	public static boolean mount(Player player) {
+	public static boolean mount(Player player, boolean setNewStartingPoint) {
 
 		// Remove current dragon if the player is already mounted
 		if (DragonTravelMain.listofDragonriders.containsKey(player)) {
@@ -173,7 +173,9 @@ public class DragonManagement {
 		dragon.setPassenger(player);
 		dragon.damage(2, dragon.getPassenger());
 		DragonTravelMain.listofDragonriders.put(player, ryeDragon);
-		DragonTravelMain.listofDragonsridersStartingpoints.put(player, player.getLocation());
+		
+		if(setNewStartingPoint)
+			DragonTravelMain.listofDragonsridersStartingpoints.put(player, player.getLocation());
 		
 		return true;
 	}
@@ -247,7 +249,7 @@ public class DragonManagement {
 		
 		DragonTravelMain.listofDragonriders.remove(player);
 
-		// Interworld
+		// Interworld (dismount before teleport)
 		if(dismountAtcurrentLocation == null){
 			Location startLoc = DragonTravelMain.listofDragonsridersStartingpoints.get(player);
 			entity.eject();
@@ -270,7 +272,7 @@ public class DragonManagement {
 			player.teleport(saveTeleportLoc);
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Successful.DismountedHere"));
 		}
-		// Zurück zum Start
+		// Back to start of travel
 		else {
 			Location startLoc = DragonTravelMain.listofDragonsridersStartingpoints.get(player);
 			entity.eject();

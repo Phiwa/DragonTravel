@@ -93,7 +93,7 @@ public class Flights {
 		temploc.setYaw(getCorrectYawForPlayer(player, firstwp));
 		player.teleport(temploc);
 		
-		if (!DragonManagement.mount(player))
+		if (!DragonManagement.mount(player, true))
 			return;
 		
 		if (!DragonTravelMain.listofDragonriders.containsKey(player))

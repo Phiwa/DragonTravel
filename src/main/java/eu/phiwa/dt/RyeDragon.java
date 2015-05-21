@@ -387,7 +387,7 @@ public class RyeDragon extends EntityEnderDragon {
 							
 							rider.teleport(spawnOtherWorld);
 							
-							if (!DragonManagement.mount(rider))
+							if (!DragonManagement.mount(rider, false))
 								return;
 							
 							if (!DragonTravelMain.listofDragonriders.containsKey(rider))
