@@ -1,31 +1,18 @@
 package eu.phiwa.dt;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import eu.phiwa.dt.anticheatplugins.AntiCheatHandler;
 import eu.phiwa.dt.anticheatplugins.NoCheatPlusHandler;
 import eu.phiwa.dt.commands.CommandHandler;
-import eu.phiwa.dt.filehandlers.Config;
-import eu.phiwa.dt.filehandlers.FlightsDB;
-import eu.phiwa.dt.filehandlers.HomesDB;
-import eu.phiwa.dt.filehandlers.Messages;
-import eu.phiwa.dt.filehandlers.StationsDB;
+import eu.phiwa.dt.filehandlers.*;
 import eu.phiwa.dt.flights.FlightEditor;
 import eu.phiwa.dt.listeners.BlockListener;
 import eu.phiwa.dt.listeners.EntityListener;
 import eu.phiwa.dt.listeners.PlayerListener;
 import eu.phiwa.dt.modules.MountingScheduler;
+import eu.phiwa.dt.modules.StationaryDragon;
 import eu.phiwa.dt.payment.PaymentHandler;
 import net.milkbowl.vault.economy.Economy;
-import net.minecraft.server.v1_8_R3.EntityTypes;
-
+import net.minecraft.server.v1_8_R3.EntityTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,6 +22,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DragonTravelMain extends JavaPlugin {
 	
@@ -65,7 +59,8 @@ public class DragonTravelMain extends JavaPlugin {
 	// Config
 	public static FileConfiguration config;
 	public static File configFile;
-	public static Config configHandler;		public static double configVersion = 0.5;
+	public static Config configHandler;	
+	public static double configVersion = 0.5;
 	
 	// FlightsDB	
 	public static FileConfiguration dbFlightsConfig;
@@ -80,19 +75,24 @@ public class DragonTravelMain extends JavaPlugin {
 	// StationsDB
 	public static FileConfiguration dbStationsConfig;
 	public static File dbStationsFile;
-	public static StationsDB dbStationsHandler;	
-	
-	
-	// Hashmaps
+	public static StationsDB dbStationsHandler;
+
+    // StatDragonsDB
+    public static FileConfiguration dbStatDragonsConfig;
+    public static File dbStatDragonsFile;
+    public static StatDragonsDB dbStatDragonsHandler;
+
+    // Hashmaps
 	public static HashMap<Player, RyeDragon> listofDragonriders = new HashMap<Player, RyeDragon>();
 	public static HashMap<Player, Location> listofDragonsridersStartingpoints = new HashMap<Player, Location>();
+	public static HashMap<String, RyeDragon> listofStatDragons = new HashMap<String, RyeDragon>();
 	public static final Logger logger = Logger.getLogger("Minecraft");
 	
 	// Messages
 	public static FileConfiguration messages;
 	public static File messagesFile;
 	public static Messages messagesHandler;
-	public static double messagesVersion = 0.5;
+	public static double messagesVersion = 0.6;
 
 	
 	// Dragon Antigrief-Options
@@ -135,6 +135,10 @@ public class DragonTravelMain extends JavaPlugin {
     
 	@Override
 	public void onDisable() {
+        for(String name : listofStatDragons.keySet()){
+            StationaryDragon.removeStatDragon(name, false);
+        }
+
 		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
 		logger.log(Level.SEVERE, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
 		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
@@ -189,6 +193,14 @@ public class DragonTravelMain extends JavaPlugin {
 		dbFlightsHandler = new FlightsDB(this);
 		dbFlightsHandler.init();
 
+        // StatDragonsDB
+        dbStatDragonsHandler = new StatDragonsDB(this);
+        dbStatDragonsHandler.init();
+        for(String key : dbStatDragonsConfig.getConfigurationSection("StatDragons").getKeys(false)){
+            String path = "StatDragons."+key+".";
+            Location loc = new Location(Bukkit.getWorld(dbStatDragonsConfig.getString(path + "world")), dbStatDragonsConfig.getDouble(path+"x"), dbStatDragonsConfig.getDouble(path+"y"), dbStatDragonsConfig.getDouble(path+"z"), (float)dbStatDragonsConfig.getDouble(path+"yaw"), (float)dbStatDragonsConfig.getDouble(path+"pitch"));
+            StationaryDragon.createStatDragon(loc, key, false);
+        }
 		
 		// Commands
 		getCommand("dt").setExecutor(new CommandHandler(this));
@@ -345,6 +357,11 @@ public class DragonTravelMain extends JavaPlugin {
 		logger.log(Level.INFO, "Reloading all files.");
 		logger.log(Level.INFO, "WE RECOMMEND NOT TO DO THIS BECAUSE IT MIGHT CAUSE SERIUOS PROBLEMS!");
 		logger.log(Level.INFO, "SIMPLY RESTART YOUR SERVER INSTEAD; THAT'S MUCH SAFER!");
+
+        for(String name : listofStatDragons.keySet()){
+            StationaryDragon.removeStatDragon(name, false);
+        }
+        listofStatDragons.clear();
 		
 		// Config
 		configHandler.loadConfig();
@@ -372,8 +389,17 @@ public class DragonTravelMain extends JavaPlugin {
 		dbHomesHandler.init();
 		
 		
-		// StationsDB
+		// FlightsDB
 		dbFlightsHandler.init();
+
+        // StatDragonsDB
+        dbStatDragonsHandler.init();
+
+        for(String key : dbStatDragonsConfig.getConfigurationSection("StatDragons").getKeys(false)){
+            String path = "StatDragons."+key+".";
+            Location loc = new Location(Bukkit.getWorld(dbStatDragonsConfig.getString(path + "world")), dbStatDragonsConfig.getDouble(path+"x"), dbStatDragonsConfig.getDouble(path+"y"), dbStatDragonsConfig.getDouble(path+"z"), (float)dbStatDragonsConfig.getDouble(path+"yaw"), (float)dbStatDragonsConfig.getDouble(path+"pitch"));
+            StationaryDragon.createStatDragon(loc, key, false);
+        }
 		
 		
 		logger.log(Level.INFO, "Successfully reloaded all files.");

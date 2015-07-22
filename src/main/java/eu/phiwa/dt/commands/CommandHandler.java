@@ -218,15 +218,14 @@ public class CommandHandler implements CommandExecutor {
 					return true;
 				}
 				
-				else if(command.equalsIgnoreCase("statdragon")) {
+				else if(command.equalsIgnoreCase("addstatdragon")) {
 					
 					if(!player.hasPermission("dt.admin.statdragon")) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 						return false;
 					}
-					
-					StationaryDragon.createStatDragon(player);
-					return true;					
+                    player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.StatDragonCmdRevised"));
+                    return true;
 				}
 				
 				else if(command.equalsIgnoreCase("dismount")) {
@@ -597,6 +596,38 @@ public class CommandHandler implements CommandExecutor {
 					player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.RemovedFlight"));
 					return true;
 				}
+
+				else if(command.equalsIgnoreCase("addstatdragon")) {
+
+					if(!player.hasPermission("dt.admin.statdragon")) {
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
+						return false;
+					}
+
+					if(DragonTravelMain.listofStatDragons.keySet().contains(argument1.toLowerCase())){
+                        player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.StatDragonExists"));
+                        return false;
+                    }
+
+					StationaryDragon.createStatDragon(player, argument1, true);
+					return true;
+				}
+
+                else if(command.equalsIgnoreCase("remstatdragon")) {
+
+                    if(!player.hasPermission("dt.admin.statdragon")) {
+                        player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
+                        return false;
+                    }
+
+                    if(!DragonTravelMain.listofStatDragons.keySet().contains(argument1.toLowerCase())){
+                        player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.StatDragonNotExists"));
+                        return false;
+                    }
+
+                    StationaryDragon.removeStatDragon(argument1, true);
+                    return true;
+                }
 			
 				sendUsage(player, 1);
 				return false;

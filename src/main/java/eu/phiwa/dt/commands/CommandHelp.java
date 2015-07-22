@@ -79,7 +79,8 @@ public class CommandHelp {
 							+ "                Sets the next waypoint..");
 		player.sendMessage(grey+"/dt remlastwp" + darkgrey + " - " + white + "Only works in flight-creation mode:\n"
 							+ "                     Removes the most recently set waypoint.");
-			
+		player.sendMessage(grey+"/dt addstatdragon <name>" + darkgrey + " - " + white + "Create a new stationary dragon");
+		player.sendMessage(grey+"/dt remstatdragon <name>" + darkgrey + " - " + white + "Remove a stationary dragon");
 		player.sendMessage(grey+"/dt reload" + darkgrey + " - " + white + "Reloads all files (extremely buggy!)");
 		//player.sendMessage(grey+"/dt flight <flightname>" + darkgrey + " - " + white + "Starts the specified flight.");
 		//player.sendMessage(grey+"/dt flight <flightname>" + darkgrey + " - " + white + "Starts the specified flight.");

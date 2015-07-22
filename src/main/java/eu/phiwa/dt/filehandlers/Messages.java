@@ -1,16 +1,11 @@
 package eu.phiwa.dt.filehandlers;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.logging.Level;
-
 import eu.phiwa.dt.DragonTravelMain;
-
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.*;
+import java.util.logging.Level;
 
 public class Messages {
 
@@ -111,9 +106,17 @@ public class Messages {
         if (DragonTravelMain.messages.get("Messages.General.Error.BelowMinMountHeight") == null)
         	DragonTravelMain.messages.set("Messages.General.Error.BelowMinMountHeight", "&cYou are below the minimum height required to mount a dragon. Minimum height is &f{minheight}&c.");      
         if (DragonTravelMain.messages.get("Messages.General.Error.DamageCooldown") == null)
-        	DragonTravelMain.messages.set("Messages.General.Error.DamageCooldown", "&cYou must wait &f{seconds} &cmore seconds before you can mount a dragon.");  
-	
-      // Update the file version
+        	DragonTravelMain.messages.set("Messages.General.Error.DamageCooldown", "&cYou must wait &f{seconds} &cmore seconds before you can mount a dragon.");
+
+		//0.6
+		if (DragonTravelMain.messages.get("Messages.General.Error.StatDragonExists") == null)
+			DragonTravelMain.messages.set("Messages.General.Error.StatDragonExists", ": &cThis name is already taken.");
+		if (DragonTravelMain.messages.get("Messages.General.Error.StatDragonNotExists") == null)
+			DragonTravelMain.messages.set("Messages.General.Error.StatDragonNotExists", ": &cThis name is not recognised.");
+        if (DragonTravelMain.messages.get("Messages.General.Error.StatDragonCmdRevised") == null)
+            DragonTravelMain.messages.set("Messages.General.Error.StatDragonCmdRevised", ": &cThis command now takes a parameter - you must include a name. Check help page 5 for more details.");
+
+		// Update the file version
 		DragonTravelMain.messages.set("File.Version", DragonTravelMain.messagesVersion);
 	}
 	
