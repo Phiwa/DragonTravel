@@ -1,18 +1,17 @@
 package eu.phiwa.dt;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import eu.phiwa.dt.flights.Waypoint;
 import eu.phiwa.dt.modules.DragonManagement;
 import eu.phiwa.dt.objects.Flight;
 import net.minecraft.server.v1_8_R3.EntityEnderDragon;
 import net.minecraft.server.v1_8_R3.World;
-
 import org.bukkit.Bukkit;
-import org.bukkit.Location; 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RyeDragon extends EntityEnderDragon {
 
@@ -75,7 +74,6 @@ public class RyeDragon extends EntityEnderDragon {
 	public RyeDragon(Location loc, World notchWorld) {
 
 		super(notchWorld);
-
 		this.start = loc;
 		setPosition(loc.getX(), loc.getY(), loc.getZ());
 		yaw = loc.getYaw() + 180;
@@ -212,6 +210,8 @@ public class RyeDragon extends EntityEnderDragon {
 			this.startZ = locZ;
 
 			this.yaw = getCorrectYaw(nextWaypoint.x, nextWaypoint.z);
+			this.pitch = getCorrectPitch(nextWaypoint.x, nextWaypoint.z, nextWaypoint.y);
+
 			setMoveFlight();
 			return;
 		}
@@ -231,6 +231,22 @@ public class RyeDragon extends EntityEnderDragon {
 			return (float) (-Math.toDegrees(Math.atan((this.locX - targetx)	/ (this.locZ - targetz)))) + 180.0F;
 		else
 			return this.yaw;
+	}
+
+	/**
+	 * Gets the correct pitch for this specific path
+	 */
+
+	private float getCorrectPitch(double targetX, double targetZ, double targetY) {
+		double distanceZ = this.locZ - targetZ;
+		double distanceX = this.locX - targetX;
+		double distanceY = this.locY - targetY;
+		float pitch = (float) -Math.toDegrees(Math.atan2(Math.sqrt(distanceZ * distanceZ + distanceX * distanceX), distanceY) + Math.PI);
+		if (pitch < -90)
+			pitch = -90;
+		else if (pitch > 90)
+			pitch = 90;
+		return pitch;
 	}
 
 	public Entity getEntity() {
@@ -322,6 +338,7 @@ public class RyeDragon extends EntityEnderDragon {
 		}
 		
 		this.yaw = getCorrectYaw(toX, toZ);
+		this.pitch = getCorrectPitch(toX, toZ, toY);
 		this.startX = start.getX();
 		this.startY = start.getY();
 		this.startZ = start.getZ();
