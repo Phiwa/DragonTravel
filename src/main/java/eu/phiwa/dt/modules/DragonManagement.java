@@ -1,13 +1,9 @@
 package eu.phiwa.dt.modules;
 
-import java.util.Map.Entry;
-
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.RyeDragon;
 import eu.phiwa.dt.anticheatplugins.CheatProtectionHandler;
-import eu.phiwa.dt.filehandlers.Messages;
 import net.minecraft.server.v1_8_R3.World;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
@@ -17,6 +13,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+import java.util.Map.Entry;
 
 public class DragonManagement {
 
@@ -167,7 +167,7 @@ public class DragonManagement {
 		World craftWorld = ((CraftWorld) player.getWorld()).getHandle();
 		RyeDragon ryeDragon = new RyeDragon(player.getLocation(), craftWorld);
 		craftWorld.addEntity(ryeDragon, SpawnReason.CUSTOM);
-		LivingEntity dragon = (LivingEntity) ryeDragon.getEntity();
+		final LivingEntity dragon = (LivingEntity) ryeDragon.getEntity();
 		
 		CheatProtectionHandler.exemptPlayerFromCheatChecks(player);	
 		dragon.setPassenger(player);
@@ -176,7 +176,15 @@ public class DragonManagement {
 		
 		if(setNewStartingPoint)
 			DragonTravelMain.listofDragonsridersStartingpoints.put(player, player.getLocation());
-		
+
+		Bukkit.getScheduler().runTaskLater(DragonTravelMain.plugin, new Runnable(){
+			@Override
+			public void run() {
+				dragon.damage(2, dragon.getPassenger());
+				dragon.setHealth(dragon.getMaxHealth());
+				dragon.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 1, false));
+			}
+		}, 2L);
 		return true;
 	}
 
