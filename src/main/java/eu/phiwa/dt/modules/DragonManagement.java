@@ -222,8 +222,13 @@ public class DragonManagement {
 			if (!(entity instanceof CraftEnderDragon))
 				continue;
 
-			if(entity instanceof RyeDragon)
-				System.out.println("-----");
+			if(entity instanceof RyeDragon){
+				if(DragonTravelMain.listofStatDragons.values().contains((RyeDragon)entity))
+					continue;
+				else
+					System.out.println("-----");
+			}
+
 			
 			// Check if EnderDragon has a player as passenger
 			if (entity.getPassenger() instanceof Player)

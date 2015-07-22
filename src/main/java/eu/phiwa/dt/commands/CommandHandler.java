@@ -748,7 +748,9 @@ public class CommandHandler implements CommandExecutor {
 						+ "                                  from the selected world/all worlds\n"
 						+ "dt remstat <stationname>        - Removes the station from the database\n"
 						+ "dt remflight <flightname>       - Removes the flight from the database\n"
-						+ "dt flight <flightname> <player> - Sends the player on the selected flight\n";		
+						+ "dt flight <flightname> <player> - Sends the player on the selected flight\n"
+                        + "dt addstatdragon <name>         - Add a new stationary dragon\n"
+                        + "dt remstatdragon <name>         - Remove a stationary dragon\n";
 		
 		System.out.println(helpText);
 	}
