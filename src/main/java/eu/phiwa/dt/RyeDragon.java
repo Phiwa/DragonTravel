@@ -209,8 +209,9 @@ public class RyeDragon extends EntityEnderDragon {
 			this.startY = locY;
 			this.startZ = locZ;
 
-			this.yaw = getCorrectYaw(nextWaypoint.x, nextWaypoint.z);
+            this.yaw = getCorrectYaw(nextWaypoint.x, nextWaypoint.z);
 			this.pitch = getCorrectPitch(nextWaypoint.x, nextWaypoint.z, nextWaypoint.y);
+            this.setYawPitch(this.yaw, this.pitch);
 
 			setMoveFlight();
 			return;
@@ -339,6 +340,7 @@ public class RyeDragon extends EntityEnderDragon {
 		
 		this.yaw = getCorrectYaw(toX, toZ);
 		this.pitch = getCorrectPitch(toX, toZ, toY);
+        this.setYawPitch(this.yaw, this.pitch);
 		this.startX = start.getX();
 		this.startY = start.getY();
 		this.startZ = start.getZ();
