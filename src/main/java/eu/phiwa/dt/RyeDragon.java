@@ -211,7 +211,13 @@ public class RyeDragon extends EntityEnderDragon {
 
             this.yaw = getCorrectYaw(nextWaypoint.x, nextWaypoint.z);
 			this.pitch = getCorrectPitch(nextWaypoint.x, nextWaypoint.z, nextWaypoint.y);
-            this.setYawPitch(this.yaw, this.pitch);
+            Bukkit.getScheduler().runTaskLater(DragonTravelMain.plugin, new Runnable() {
+                @Override
+                public void run() {
+                    if (isAlive())
+                        setYawPitch(yaw, pitch);
+                }
+            }, 1L);
 
 			setMoveFlight();
 			return;
@@ -340,7 +346,13 @@ public class RyeDragon extends EntityEnderDragon {
 		
 		this.yaw = getCorrectYaw(toX, toZ);
 		this.pitch = getCorrectPitch(toX, toZ, toY);
-        this.setYawPitch(this.yaw, this.pitch);
+        Bukkit.getScheduler().runTaskLater(DragonTravelMain.plugin, new Runnable() {
+            @Override
+            public void run() {
+                if(isAlive())
+                setYawPitch(yaw, pitch);
+            }
+        }, 1L);
 		this.startX = start.getX();
 		this.startY = start.getY();
 		this.startZ = start.getZ();
