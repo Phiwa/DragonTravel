@@ -1,14 +1,14 @@
 package eu.phiwa.dt.flights;
 
-import java.util.Collection;
-
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.objects.Flight;
-
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+
+import java.util.Collection;
 
 public class Waypoint {
 
@@ -20,9 +20,14 @@ public class Waypoint {
 
 		Collection<Block> globalmarkers =  DragonTravelMain.globalwaypointmarkers.values();
 
-		for (Block marker: globalmarkers) {
+		for (final Block marker : globalmarkers) {
 			marker.getWorld().getBlockAt(marker.getX(), marker.getY(), marker.getZ()).getChunk().load(true);
-			marker.setType(Material.AIR);
+			Bukkit.getScheduler().runTaskLater(DragonTravelMain.plugin, new Runnable() {
+				@Override
+				public void run() {
+					marker.setType(Material.AIR);
+				}
+			}, 1L);
 		}
 	}
 	/** Removes all WaypointMarkers of the specified flight
