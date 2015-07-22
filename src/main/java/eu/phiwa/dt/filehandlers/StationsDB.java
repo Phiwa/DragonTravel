@@ -1,20 +1,19 @@
 package eu.phiwa.dt.filehandlers;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.logging.Level;
-
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.objects.Station;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.logging.Level;
 
 public class StationsDB {
 
@@ -122,11 +121,13 @@ public class StationsDB {
 		
 		ConfigurationSection sec = DragonTravelMain.dbStationsConfig.createSection(path);
 		DragonTravelMain.dbStationsConfig.createPath(sec, "displayname");
+		DragonTravelMain.dbStationsConfig.createPath(sec, "owner");
 		DragonTravelMain.dbStationsConfig.createPath(sec, "x");
 		DragonTravelMain.dbStationsConfig.createPath(sec, "y");
 		DragonTravelMain.dbStationsConfig.createPath(sec, "z");
 		DragonTravelMain.dbStationsConfig.createPath(sec, "world");
-		DragonTravelMain.dbStationsConfig.set(path+".displayname", station.displayname);
+		DragonTravelMain.dbStationsConfig.set(path + ".displayname", station.displayname);
+		DragonTravelMain.dbStationsConfig.set(path+".owner", station.owner);
 		DragonTravelMain.dbStationsConfig.set(path+".x", station.x);
 		DragonTravelMain.dbStationsConfig.set(path+".y", station.y);
 		DragonTravelMain.dbStationsConfig.set(path+".z", station.z);
@@ -189,8 +190,8 @@ public class StationsDB {
 									);
 
 		String displayname = DragonTravelMain.dbStationsConfig.getString(stationpath + ".displayname");
-		
-		Station station = new Station(displayname, stationLoc);
+		String owner = DragonTravelMain.dbStationsConfig.getString(stationpath + ".owner", "admin");
+		Station station = new Station(displayname, stationLoc, owner);
 		return station;
 	}
 	

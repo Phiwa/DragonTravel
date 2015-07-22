@@ -5,13 +5,15 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 
 public class Station {
 
 	public String displayname;
 	// Complete Location
 	public Location loc;
-	
+	public String owner;
 	public String name;
 	public World world;
 	// Single values
@@ -26,16 +28,18 @@ public class Station {
 		this.name = name;
 	}
 */	
-	public Station(String name, int x, int y, int z, String worldname) {
+	public Station(String name, int x, int y, int z, String worldname, String owner) {
 		this.displayname = name;
 		this.name = name.toLowerCase();
+		this.owner = owner;
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.world = Bukkit.getWorld(worldname);
 	}
 	
-	public Station(String name, int x, int y, int z, World world) {
+	public Station(String name, int x, int y, int z, World world, String owner) {
+		this.owner = owner;
 		this.displayname = name;
 		this.name = name.toLowerCase();
 		this.x = x;
@@ -44,7 +48,8 @@ public class Station {
 		this.world = world;
 	}
 	
-	public Station(String name, Location loc) {
+	public Station(String name, Location loc, String owner) {
+		this.owner = owner;
 		this.displayname = name;
 		this.name = name.toLowerCase();
 		this.loc = loc;
@@ -60,6 +65,8 @@ public class Station {
 	public void print() {
 		System.out.println("--- Station ---");
 		System.out.println("Name: " + displayname);
+		if(Bukkit.getOfflinePlayer(UUID.fromString(owner)).hasPlayedBefore() && !owner.equals("admin"))
+			System.out.println("Owner: " + Bukkit.getOfflinePlayer(UUID.fromString(owner)).getName());
 		System.out.println("X: " + x);
 		System.out.println("Y: " + y);
 		System.out.println("Z: " + z);
@@ -76,6 +83,8 @@ public class Station {
 	public void print(Player player) {
 		player.sendMessage("--- Station ---");
 		player.sendMessage("Name: " + displayname);
+		if(Bukkit.getOfflinePlayer(UUID.fromString(owner)).hasPlayedBefore() && !owner.equals("admin"))
+			player.sendMessage("Owner: " + Bukkit.getOfflinePlayer(UUID.fromString(owner)).getName());
 		player.sendMessage("X: " + x);
 		player.sendMessage("Y: " + y);
 		player.sendMessage("Z: " + z);

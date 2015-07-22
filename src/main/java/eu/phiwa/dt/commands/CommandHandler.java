@@ -526,7 +526,7 @@ public class CommandHandler implements CommandExecutor {
 						return false;
 					}
 
-					if(!DragonTravelMain.dbStationsHandler.createStation(new Station(argument1, loc))) {
+					if(!DragonTravelMain.dbStationsHandler.createStation(new Station(argument1, loc, player.getUniqueId().toString()))) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.CouldNotCreateStation"));
 						return false;					
 					}
@@ -536,14 +536,13 @@ public class CommandHandler implements CommandExecutor {
 				}
 				
 				else if (command.equalsIgnoreCase("remstat")) {
-					
-					if(!player.hasPermission("dt.admin.stations")) {
-						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
-						return false;
-					}
+                    if (DragonTravelMain.dbStationsHandler.getStation(argument1) == null) {
+                        player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationDoesNotExist"));
+                        return false;
+                    }
 
-					if (DragonTravelMain.dbStationsHandler.getStation(argument1) == null) {
-						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationDoesNotExist"));
+					if(!player.hasPermission("dt.admin.stations") && !DragonTravelMain.dbStationsHandler.getStation(argument1).owner.equals(player.getUniqueId().toString())) {
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
 						return false;
 					}
 
