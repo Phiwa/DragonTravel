@@ -77,6 +77,8 @@ public class Config {
 		// New options in version 0.6
 		if(!DragonTravelMain.config.isSet("Payment.Resources.ItemType"))
 			DragonTravelMain.config.set("Payment.Resources.ItemType", Material.GOLD_INGOT.name());
+		if(!DragonTravelMain.config.isSet("Payment.Resources.ItemName"))
+			DragonTravelMain.config.set("Payment.Resources.ItemName", "Gold Ingot");
 		
 		
 	  // Update the file version

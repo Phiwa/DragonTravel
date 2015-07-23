@@ -117,7 +117,8 @@ public class DragonTravelMain extends JavaPlugin {
 	public static boolean byEconomy = false;
 	public static boolean byResources = false;
 	public static boolean usePayment = false;
-	public static Material paymentItem = Material.GOLD_INGOT;
+	public static Material paymentItemType = Material.GOLD_INGOT;
+    public static String paymentItemName = "Gold Ingot";
 	
 	// Payment-Types
 	public static final int TRAVEL_TOSTATION = 1;	
@@ -239,7 +240,8 @@ public class DragonTravelMain extends JavaPlugin {
 		byEconomy = config.getBoolean("Payment.byEconomy");
 		byResources = config.getBoolean("Payment.byResources");
 		
-		paymentItem = Material.getMaterial(config.getString("Payment.Resources.ItemType"));
+		paymentItemType = Material.getMaterial(config.getString("Payment.Resources.ItemType"));
+        paymentItemName = ChatColor.translateAlternateColorCodes('&', config.getString("Payment.Resources.ItemName"));
 		
 		dragonLimit = config.getInt("DragonLimit");
 		

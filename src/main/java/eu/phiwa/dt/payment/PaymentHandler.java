@@ -1,16 +1,16 @@
 package eu.phiwa.dt.payment;
 
-import java.util.IllegalFormatException;
-import java.util.logging.Level;
-
 import eu.phiwa.dt.DragonTravelMain;
 import net.milkbowl.vault.economy.Economy;
-
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
+
+import java.util.IllegalFormatException;
+import java.util.logging.Level;
 
 public class PaymentHandler {
 	
@@ -95,9 +95,12 @@ public class PaymentHandler {
 		}				
 		
 		Inventory inv = player.getInventory();
-		// TODO: Ticket #198 - renamed items
-	    if (inv..contains(DragonTravelMain.paymentItem, amount)) {
-	      inv.removeItem(new ItemStack(DragonTravelMain.paymentItem, amount));
+		ItemStack is = new ItemStack(DragonTravelMain.paymentItemType, amount);
+		ItemMeta im = is.getItemMeta();
+		im.setDisplayName(DragonTravelMain.paymentItemName);
+		is.setItemMeta(im);
+	    if (inv.contains(is)) {
+	      inv.removeItem(is);
 	      player.updateInventory();
 	      
 	      
@@ -243,8 +246,8 @@ public class PaymentHandler {
 		int amount = (int)customcost;
 		Inventory inv = player.getInventory();
 		
-	    if (inv.contains(DragonTravelMain.paymentItem, amount)) {
-	    	inv.removeItem(new ItemStack(DragonTravelMain.paymentItem, amount));
+	    if (inv.contains(DragonTravelMain.paymentItemType, amount)) {
+	    	inv.removeItem(new ItemStack(DragonTravelMain.paymentItemType, amount));
 	    	player.updateInventory();
 	    	
 	    	

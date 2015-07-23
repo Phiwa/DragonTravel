@@ -113,6 +113,7 @@ Payment:
             Flight: 5.0
     Resources:
         ItemType: GOLD_INGOT
+        ItemName: 'Gold Ingot'
         Prices:
             toStation: 5
             toRandom: 5
