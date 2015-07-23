@@ -181,4 +181,5 @@ DamageCooldown: -1
 
 # <<< Sky Light Limits >>>
 #If this is true, the player must mount and dismount in places with direct access to skylight.
+#This only applies to travels. Flights are exempt of this rule.
 RequireSkyLight: false
