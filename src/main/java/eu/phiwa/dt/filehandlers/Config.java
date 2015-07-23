@@ -1,15 +1,11 @@
 package eu.phiwa.dt.filehandlers;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.logging.Level;
-
 import eu.phiwa.dt.DragonTravelMain;
-
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.*;
+import java.util.logging.Level;
 
 public class Config {
 
@@ -71,12 +67,16 @@ public class Config {
 	  // New options in version 0.4				
 		if(!DragonTravelMain.config.isSet("DismountAtExactLocation"))
 			DragonTravelMain.config.set("DismountAtExactLocation", false);
-		
-	 // New options in version 0.5				
+
+	 // New options in version 0.5
 		if(!DragonTravelMain.config.isSet("MinimumMountHeight"))
-			DragonTravelMain.config.set("MinimumMountHeight", -1);				
+			DragonTravelMain.config.set("MinimumMountHeight", -1);
 		if(!DragonTravelMain.config.isSet("DamageCooldown"))
-			DragonTravelMain.config.set("DamageCooldown", -1);		
+			DragonTravelMain.config.set("DamageCooldown", -1);
+
+		// New options in version 0.6
+		if(!DragonTravelMain.config.isSet("Payment.Resources.ItemType"))
+			DragonTravelMain.config.set("Payment.Resources.ItemType", Material.GOLD_INGOT.name());
 		
 		
 	  // Update the file version
@@ -84,7 +84,7 @@ public class Config {
 		
 	}
 	private void noLongerRequiredConfig() {
-		// DragonTravelMain.config.set("example key", null);
+		DragonTravelMain.config.set("Payment.Resources.Item", null);
 	}
 	
 	

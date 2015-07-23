@@ -112,7 +112,7 @@ Payment:
             setHome: 5.0
             Flight: 5.0
     Resources:
-        Item: 371
+        ItemType: GOLD_INGOT
         Prices:
             toStation: 5
             toRandom: 5

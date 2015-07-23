@@ -61,7 +61,7 @@ public class DragonTravelMain extends JavaPlugin {
 	public static FileConfiguration config;
 	public static File configFile;
 	public static Config configHandler;	
-	public static double configVersion = 0.5;
+	public static double configVersion = 0.6;
 	
 	// FlightsDB	
 	public static FileConfiguration dbFlightsConfig;
@@ -117,7 +117,7 @@ public class DragonTravelMain extends JavaPlugin {
 	public static boolean byEconomy = false;
 	public static boolean byResources = false;
 	public static boolean usePayment = false;
-	public static int paymentItem = 371;
+	public static Material paymentItem = Material.GOLD_INGOT;
 	
 	// Payment-Types
 	public static final int TRAVEL_TOSTATION = 1;	
@@ -239,7 +239,7 @@ public class DragonTravelMain extends JavaPlugin {
 		byEconomy = config.getBoolean("Payment.byEconomy");
 		byResources = config.getBoolean("Payment.byResources");
 		
-		paymentItem = config.getInt("Payment.Resources.Item");
+		paymentItem = Material.getMaterial(config.getString("Payment.Resources.ItemType"));
 		
 		dragonLimit = config.getInt("DragonLimit");
 		

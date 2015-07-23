@@ -96,7 +96,7 @@ public class PaymentHandler {
 		
 		Inventory inv = player.getInventory();
 		// TODO: Ticket #198 - renamed items
-	    if (inv.contains(DragonTravelMain.paymentItem, amount)) {
+	    if (inv..contains(DragonTravelMain.paymentItem, amount)) {
 	      inv.removeItem(new ItemStack(DragonTravelMain.paymentItem, amount));
 	      player.updateInventory();
 	      
