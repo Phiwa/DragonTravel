@@ -319,7 +319,9 @@ public class Travels {
 	
 		RyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);		
 		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));
-		((LivingEntity)dragon.getEntity()).setMaxHealth(1+Math.hypot(temploc.getBlockX()-destination.getBlockX(), temploc.getBlockZ()-destination.getBlockZ()));
+        dragon.setTotalDist(Math.hypot(temploc.getBlockX() - destination.getBlockX(), temploc.getBlockZ() - destination.getBlockZ()));
+		dragon.setCoveredDist(0);
+        ((LivingEntity)dragon.getEntity()).setMaxHealth(1 + dragon.getTotalDist());
 		if(destination.getWorld().getName() == player.getWorld().getName())
 			dragon.startTravel(destination, false);
 		else

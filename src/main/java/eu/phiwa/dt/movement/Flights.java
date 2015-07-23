@@ -5,7 +5,9 @@ import eu.phiwa.dt.RyeDragon;
 import eu.phiwa.dt.modules.DragonManagement;
 import eu.phiwa.dt.objects.Flight;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class Flights {
@@ -86,10 +88,7 @@ public class Flights {
 		
 				
 		Location temploc = player.getLocation();
-		Location firstwp = new Location(flight.waypoints.get(0).world,
-										flight.waypoints.get(0).x,
-										flight.waypoints.get(0).y,
-										flight.waypoints.get(0).z);
+		Location firstwp = flight.waypoints.get(0).getAsLocation();
 		temploc.setYaw(getCorrectYawForPlayer(player, firstwp));
 		player.teleport(temploc);
 		
@@ -105,7 +104,11 @@ public class Flights {
 		}
 		else
 			player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.displayname));		
-		RyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);		
+		RyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);
+		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', DragonTravelMain.messagesHandler.getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.displayname)));
+		dragon.setTotalDist(Math.round(flight.getDistance() + Math.hypot(firstwp.getBlockX() - temploc.getBlockX(), firstwp.getBlockZ()-temploc.getBlockZ())));
+        dragon.setCoveredDist(0);
+        ((LivingEntity) dragon.getEntity()).setMaxHealth(1 + dragon.getTotalDist());
 		dragon.startFlight(flight);	
 	}
 }

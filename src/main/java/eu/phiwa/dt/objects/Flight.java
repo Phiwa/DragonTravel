@@ -1,11 +1,10 @@
 package eu.phiwa.dt.objects;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import eu.phiwa.dt.flights.Waypoint;
 import org.bukkit.World;
 
-import eu.phiwa.dt.flights.Waypoint;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Flight {
 
@@ -33,8 +32,21 @@ public class Flight {
 		// Remove marker from waypoint
 		waypoints.get(waypoints.size()-1).removeMarker();
 		
-		waypoints.remove(waypoints.size()-1);
+		waypoints.remove(waypoints.size() - 1);
 		wpcount--;
+	}
+
+	public long getDistance(){
+		long dist = 0;
+		Waypoint lwp = null;
+		for(Waypoint wp : waypoints){
+			if(wp==null){
+				lwp = wp;
+				continue;
+			}
+			dist += Math.hypot(wp.getAsLocation().getBlockX() - lwp.getAsLocation().getBlockX(),wp.getAsLocation().getBlockZ()-lwp.getAsLocation().getBlockZ());
+		}
+		return dist;
 	}
 	
 	public String toString() {

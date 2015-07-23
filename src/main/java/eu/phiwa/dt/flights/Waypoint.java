@@ -3,6 +3,7 @@ package eu.phiwa.dt.flights;
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.objects.Flight;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -48,13 +49,15 @@ public class Waypoint {
 	}
 	public boolean finalwp = false;
 	public Block marker;
-	public int x;	
-
-	public int y;	
-
+	public int x;
+	public int y;
 	public int z;
 	
 	public World world;
+
+	public Location getAsLocation(){
+		return new Location(world, x, y, z);
+	}
 
 	public void removeMarker() {
 		DragonTravelMain.globalwaypointmarkers.remove(this.marker);
@@ -63,7 +66,7 @@ public class Waypoint {
 
 	public void setMarker(Player player) {
 		marker = player.getLocation().getBlock();
-		marker.setType(Material.GLOWSTONE);
+		marker.setType(Material.SEA_LANTERN);
 		DragonTravelMain.globalwaypointmarkers.put(this.marker, this.marker);
 	}
 

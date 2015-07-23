@@ -18,7 +18,7 @@ import java.util.List;
 
 public class RyeDragon extends EntityEnderDragon {
 
-	int wingcooldown = 5;
+	int wingcooldown = 10;
 	private int currentindexWaypoint = 0;
 
 	private Location destlocOtherworld;
@@ -65,10 +65,9 @@ public class RyeDragon extends EntityEnderDragon {
 	private List<Waypoint> waypoints= new ArrayList<Waypoint>();
 	
 	private double interworldDistribution = 80;
-	private double coveredDist;
+    private double coveredDist;
 	private double totalDist;
-	private long estduration;
-	
+
 	// Amount to fly up/down during a flight/travel
 	private double XperTick;
 	private double YperTick;
@@ -82,7 +81,7 @@ public class RyeDragon extends EntityEnderDragon {
 		setPosition(loc.getX(), loc.getY(), loc.getZ());
 		yaw = loc.getYaw() + 180;
 		while (yaw > 360)
-			yaw -= 360;
+        yaw -= 360;
 		while (yaw < 0)
 			yaw += 360;
 		//if (yaw < 45 || yaw > 315)
@@ -164,6 +163,8 @@ public class RyeDragon extends EntityEnderDragon {
 				currentZ -= ZperTick;
 		}
 
+        setCoveredDist(getCoveredDist()+Math.hypot(currentX, currentZ));
+        ((LivingEntity)getEntity()).setHealth(totalDist-coveredDist);
 
 		/*
 		   >> Reached the last waypoint? <<
@@ -465,7 +466,6 @@ public class RyeDragon extends EntityEnderDragon {
 			finalmove = true;
 		}
 		setPosition(myX, myY, myZ);
-        totalDist = ((LivingEntity)getEntity()).getMaxHealth();
         coveredDist = Math.hypot(getEntity().getLocation().getBlockX()-start.getBlockX(), getEntity().getLocation().getBlockZ()-start.getBlockZ());
         ((LivingEntity)getEntity()).setHealth(totalDist-coveredDist);
 	}
@@ -473,6 +473,22 @@ public class RyeDragon extends EntityEnderDragon {
     public void fixWings(){
         WingFixerTask wfTask = new WingFixerTask();
         wfTask.setId(Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonTravelMain.plugin, wfTask, 1L, 21L));
+    }
+
+    public double getCoveredDist() {
+        return coveredDist;
+    }
+
+    public void setCoveredDist(double coveredDist) {
+        this.coveredDist = coveredDist;
+    }
+
+    public double getTotalDist() {
+        return totalDist;
+    }
+
+    public void setTotalDist(double totalDist) {
+        this.totalDist = totalDist;
     }
 
 	/*
