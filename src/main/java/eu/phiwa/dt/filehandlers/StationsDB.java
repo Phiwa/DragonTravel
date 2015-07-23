@@ -246,10 +246,9 @@ public class StationsDB {
 											(double)DragonTravelMain.dbStationsConfig.getInt(stationpath+".y"),
 											(double)DragonTravelMain.dbStationsConfig.getInt(stationpath+".z")						
 									);
-        String name = DragonTravelMain.dbStationsConfig.getString(stationpath + ".name");
-		String displayname = DragonTravelMain.dbStationsConfig.getString(stationpath + ".displayname", "admin");
+		String displayname = DragonTravelMain.dbStationsConfig.getString(stationpath + ".displayname", "Dragon Station");
 		String owner = DragonTravelMain.dbStationsConfig.getString(stationpath + ".owner", "admin");
-		Station station = new Station(name, displayname, stationLoc, owner);
+		Station station = new Station(stationname, displayname, stationLoc, owner);
 		return station;
 	}
 	

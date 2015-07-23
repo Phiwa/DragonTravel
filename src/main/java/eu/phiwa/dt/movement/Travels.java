@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.massivecraft.factions.entity.Faction;
@@ -318,6 +319,7 @@ public class Travels {
 	
 		RyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);		
 		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));
+		((LivingEntity)dragon.getEntity()).setMaxHealth(1+Math.hypot(temploc.getBlockX()-destination.getBlockX(), temploc.getBlockZ()-destination.getBlockZ()));
 		if(destination.getWorld().getName() == player.getWorld().getName())
 			dragon.startTravel(destination, false);
 		else

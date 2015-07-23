@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
 
@@ -84,14 +85,14 @@ public class RyeDragon extends EntityEnderDragon {
 			yaw -= 360;
 		while (yaw < 0)
 			yaw += 360;
-		if (yaw < 45 || yaw > 315)
-			yaw = 0F;
-		else if (yaw < 135)
-			yaw = 90F;
-		else if (yaw < 225)
-			yaw = 180F;
-		else
-			yaw = 270F;
+		//if (yaw < 45 || yaw > 315)
+		//	yaw = 0F;
+		//else if (yaw < 135)
+		//	yaw = 90F;
+		//else if (yaw < 225)
+		//	yaw = 180F;
+		//else
+		//	yaw = 270F;
 	}
 
 	public RyeDragon(World world) {
@@ -463,8 +464,10 @@ public class RyeDragon extends EntityEnderDragon {
 				|| (int)myX == (int)toX+1 || (int)myX == (int)toX-1)) {
 			finalmove = true;
 		}
-
 		setPosition(myX, myY, myZ);
+        totalDist = ((LivingEntity)getEntity()).getMaxHealth();
+        coveredDist = Math.hypot(getEntity().getLocation().getBlockX()-start.getBlockX(), getEntity().getLocation().getBlockZ()-start.getBlockZ());
+        ((LivingEntity)getEntity()).setHealth(totalDist-coveredDist);
 	}
 
     public void fixWings(){
