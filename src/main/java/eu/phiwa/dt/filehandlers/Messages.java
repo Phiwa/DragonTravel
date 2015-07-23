@@ -115,6 +115,10 @@ public class Messages {
 			DragonTravelMain.messages.set("Messages.General.Error.StatDragonNotExists", ": &cThis name is not recognised.");
         if (DragonTravelMain.messages.get("Messages.General.Error.StatDragonCmdRevised") == null)
             DragonTravelMain.messages.set("Messages.General.Error.StatDragonCmdRevised", ": &cThis command now takes a parameter - you must include a name. Check help page 5 for more details.");
+		if (DragonTravelMain.messages.get("Messages.Travels.Successful.TravellingToPlayer") == null)
+			DragonTravelMain.messages.set("Messages.Travels.Successful.TravellingToPlayer", "&aTravelling to &f{playername}&a.");
+		if (DragonTravelMain.messages.get("Messages.Travels.Successful.TravellingToFactionHome") == null)
+			DragonTravelMain.messages.set("Messages.Travels.Successful.TravellingToFactionHome", "&aTravelling to the faction home.");
 
 		// Update the file version
 		DragonTravelMain.messages.set("File.Version", DragonTravelMain.messagesVersion);

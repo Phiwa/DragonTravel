@@ -28,8 +28,8 @@ public class Station {
 		this.name = name;
 	}
 */	
-	public Station(String name, int x, int y, int z, String worldname, String owner) {
-		this.displayname = name;
+	public Station(String name, String displayname, int x, int y, int z, String worldname, String owner) {
+		this.displayname = displayname;
 		this.name = name.toLowerCase();
 		this.owner = owner;
 		this.x = x;
@@ -38,9 +38,9 @@ public class Station {
 		this.world = Bukkit.getWorld(worldname);
 	}
 	
-	public Station(String name, int x, int y, int z, World world, String owner) {
+	public Station(String name, String displayname, int x, int y, int z, World world, String owner) {
 		this.owner = owner;
-		this.displayname = name;
+		this.displayname = displayname;
 		this.name = name.toLowerCase();
 		this.x = x;
 		this.y = y;
@@ -48,9 +48,9 @@ public class Station {
 		this.world = world;
 	}
 	
-	public Station(String name, Location loc, String owner) {
+	public Station(String name, String displayname, Location loc, String owner) {
 		this.owner = owner;
-		this.displayname = name;
+		this.displayname = displayname;
 		this.name = name.toLowerCase();
 		this.loc = loc;
 		this.x = (int) loc.getX();

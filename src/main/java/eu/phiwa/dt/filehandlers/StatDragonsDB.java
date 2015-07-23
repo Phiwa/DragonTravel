@@ -66,7 +66,7 @@ public class StatDragonsDB {
 	 * 			Returns true if the stat dragon was created successfully, false if not.
 	 */
 	@SuppressWarnings("static-access")
-	public boolean createStatDragon(String name, Location loc)  {
+	public boolean createStatDragon(String name, String displayName, Location loc)  {
 		
 		String path = "StatDragons." + name;
 		
@@ -77,13 +77,15 @@ public class StatDragonsDB {
 		DragonTravelMain.dbStatDragonsConfig.createPath(sec, "yaw");
 		DragonTravelMain.dbStatDragonsConfig.createPath(sec, "pitch");
 		DragonTravelMain.dbStatDragonsConfig.createPath(sec, "world");
+		DragonTravelMain.dbStatDragonsConfig.createPath(sec, "displayname");
 		DragonTravelMain.dbStatDragonsConfig.set(path + ".x", loc.getX());
 		DragonTravelMain.dbStatDragonsConfig.set(path+".y", loc.getY());
 		DragonTravelMain.dbStatDragonsConfig.set(path+".z", loc.getZ());
 		DragonTravelMain.dbStatDragonsConfig.set(path+".yaw", loc.getYaw());
 		DragonTravelMain.dbStatDragonsConfig.set(path+".pitch", loc.getPitch());
 		DragonTravelMain.dbStatDragonsConfig.set(path + ".world", loc.getWorld().getName());
-		
+		DragonTravelMain.dbStatDragonsConfig.set(path + ".displayname", displayName);
+
 		try{
 			DragonTravelMain.dbStatDragonsConfig.save(DragonTravelMain.dbStatDragonsFile);
 			return true;
@@ -129,7 +131,7 @@ public class StatDragonsDB {
 	 */
 	public RyeDragon getStatDragon(String name) {
 
-		name = "StatDragons." + name.toLowerCase();
+		name = "StatDragons." + name;
 		
 		if(!DragonTravelMain.listofStatDragons.containsKey(name))
 			return null;

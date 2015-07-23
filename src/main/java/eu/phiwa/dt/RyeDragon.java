@@ -7,14 +7,17 @@ import net.minecraft.server.v1_8_R3.EntityEnderDragon;
 import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RyeDragon extends EntityEnderDragon {
 
+	int wingcooldown = 5;
 	private int currentindexWaypoint = 0;
 
 	private Location destlocOtherworld;
@@ -322,7 +325,6 @@ public class RyeDragon extends EntityEnderDragon {
 		setMoveFlight();					
 	}
 
-
 	/**
 	 * Starts a travel to the specified location
 	 * 
@@ -465,9 +467,79 @@ public class RyeDragon extends EntityEnderDragon {
 		setPosition(myX, myY, myZ);
 	}
 
+    public void fixWings(){
+        WingFixerTask wfTask = new WingFixerTask();
+        wfTask.setId(Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonTravelMain.plugin, wfTask, 1L, 21L));
+    }
+
 	/*
 	public double x_() {
 		return 3;
 	}
 	 */
+
+    private class WingFixerTask implements Runnable {
+
+        private int id;
+        public int getId() {
+            return id;
+        }
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        @Override
+        public void run() {
+            wingcooldown -= 1;
+            if(wingcooldown <= 0)
+                Bukkit.getScheduler().cancelTask(id);
+            final Location loc = getEntity().getLocation().add(0,2,0);
+
+            final Material m[] = new Material[15];
+            final MaterialData md[] = new MaterialData[15];
+
+            int counter = 0;
+            for(int y = 0; y <=2; y++) {
+                for (int x = -1; x <= 1; x++) {
+                    m[counter] = loc.clone().add(x, -y, 0).getBlock().getType();
+                    md[counter] = loc.clone().add(x, -y, 0).getBlock().getState().getData();
+                    loc.clone().add(x, -y, 0).getBlock().setType(Material.BARRIER);
+                    counter++;
+                }
+                for (int z = -1; z <= 1; z++) {
+                    if(z == 0) continue;
+                    m[counter] = loc.clone().add(0, -y, z).getBlock().getType();
+                    md[counter] = loc.clone().add(0, -y, z).getBlock().getState().getData();
+                    loc.clone().add(0, -y, z).getBlock().setType(Material.BARRIER);
+                    counter++;
+                }
+                if(y==0) {
+                    loc.getBlock().setType(Material.WATER);
+                }
+                if(y==1) {
+                    loc.clone().add(0, -1, 0).getBlock().setType(Material.AIR);
+                }
+            }
+
+            Bukkit.getScheduler().runTaskLater(DragonTravelMain.plugin, new Runnable() {
+                @Override
+                public void run() {
+                    int counter = 0;
+                    for(int y = 0; y <=2; y++) {
+                        for (int x = -1; x <= 1; x++) {
+                            loc.clone().add(x, -y, 0).getBlock().setType(m[counter]);
+                            loc.clone().add(x, -y, 0).getBlock().getState().setData(md[counter]);
+                            counter++;
+                        }
+                        for (int z = -1; z <= 1; z++) {
+                            if(z == 0) continue;
+                            loc.clone().add(0, -y, z).getBlock().setType(m[counter]);
+                            loc.clone().add(0, -y, z).getBlock().getState().setData(md[counter]);
+                            counter++;
+                        }
+                    }
+                }
+            }, 20L);
+        }
+    }
 }

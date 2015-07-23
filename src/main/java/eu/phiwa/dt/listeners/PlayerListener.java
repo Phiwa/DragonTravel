@@ -1,14 +1,13 @@
 package eu.phiwa.dt.listeners;
 
-import java.util.List;
-
+import com.massivecraft.factions.entity.Faction;
+import com.massivecraft.factions.entity.UPlayer;
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.modules.DragonManagement;
 import eu.phiwa.dt.movement.Flights;
 import eu.phiwa.dt.movement.Travels;
 import eu.phiwa.dt.payment.PaymentHandler;
 import eu.phiwa.dt.permissions.PermissionsHandler;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -19,14 +18,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
-import com.massivecraft.factions.entity.Faction;
-import com.massivecraft.factions.entity.UPlayer;
+import java.util.List;
 
 
 public class PlayerListener implements Listener {
@@ -167,7 +161,7 @@ public class PlayerListener implements Listener {
 					return;
 				}
 				else
-					Travels.travel(player, faction.getHome().asBukkitLocation(), false);
+					Travels.travel(player, faction.getHome().asBukkitLocation(), false, DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToFactionHome"));
 				
 			}
 			else {
@@ -195,7 +189,7 @@ public class PlayerListener implements Listener {
 					return;
 				}
 				else
-					Travels.travel(player, faction.getHome().asBukkitLocation(), false);
+					Travels.travel(player, faction.getHome().asBukkitLocation(), false, DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToFactionHome"));
 			}
 		}
 		else if (lines[1].equals("Flight")) {

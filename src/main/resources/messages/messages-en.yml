@@ -99,7 +99,9 @@ Messages:
             TravellingToCoordinatesSameWorld: '&aTravelling to coordinates &f{x}&a, &f{y}&a, &f{z}&a.'
             TravellingToCoordinatesOtherWorld: '&aTravelling to coordinates &f{x}&a, &f{y}&a, &f{z}&a in world &f{worldname}&a.'
             TravellingToHome: '&aTravelling to your home.'
+            TravellingToFactionHome: '&aTravelling to the faction home.'
             TravellingToStation: '&aTravelling to &f{stationname}&a.'
+            TravellingToPlayer: '&aTravelling to &f{playername}&a.'
         Error:
             InvalidCoordinates: '&cInvalid Coordinates.'
             PlayerNotOnline: '&cThe player &f{playername}&a isn''t online.'

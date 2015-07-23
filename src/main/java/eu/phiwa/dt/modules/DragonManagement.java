@@ -13,8 +13,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.Map.Entry;
 
@@ -171,20 +169,10 @@ public class DragonManagement {
 		
 		CheatProtectionHandler.exemptPlayerFromCheatChecks(player);	
 		dragon.setPassenger(player);
-		dragon.damage(2, dragon.getPassenger());
+		ryeDragon.fixWings();
 		DragonTravelMain.listofDragonriders.put(player, ryeDragon);
-		
 		if(setNewStartingPoint)
 			DragonTravelMain.listofDragonsridersStartingpoints.put(player, player.getLocation());
-
-		Bukkit.getScheduler().runTaskLater(DragonTravelMain.plugin, new Runnable(){
-			@Override
-			public void run() {
-				dragon.damage(2, dragon.getPassenger());
-				dragon.setHealth(dragon.getMaxHealth());
-				dragon.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 1, false));
-			}
-		}, 2L);
 		return true;
 	}
 
@@ -216,6 +204,7 @@ public class DragonManagement {
 
 		int passed = 0;
 
+		entity_check:
 		for (Entity entity : world.getEntitiesByClass(EnderDragon.class)) {
 
 			// Check if EnderDragon
@@ -223,10 +212,11 @@ public class DragonManagement {
 				continue;
 
 			if(entity instanceof RyeDragon){
-				if(DragonTravelMain.listofStatDragons.values().contains((RyeDragon)entity))
-					continue;
-				else
-					System.out.println("-----");
+				for(String dragonName : DragonTravelMain.listofStatDragons.keySet()){
+					if(!dragonName.equalsIgnoreCase(entity.getCustomName()))
+						continue entity_check;
+				}
+				System.out.println("-----");
 			}
 
 			

@@ -7,6 +7,7 @@ import eu.phiwa.dt.objects.Home;
 import eu.phiwa.dt.objects.Station;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -68,10 +69,9 @@ public class Travels {
 		}
 		
 		Location loc = new Location(world, x, y, z);
-		
+		String message = "";
 		if(world.getName() == player.getWorld().getName()) {
-
-			String message = DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToCoordinatesSameWorld");			
+			message = DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToCoordinatesSameWorld");
 			message = message.replace("{x}", "%d");
 			message = String.format(message, x);
 			message = message.replace("{y}", "%d");
@@ -81,7 +81,7 @@ public class Travels {
 			player.sendMessage(message);
 		}
 		else {
-			String message =  DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToCoordinatesOtherWorld");
+			message =  DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToCoordinatesOtherWorld");
 			message.replace("{x}", "%d");
 			message = String.format(message, x);
 			message.replace("{y}", "%d");
@@ -93,7 +93,7 @@ public class Travels {
 			player.sendMessage(message);
 		}		
 		
-		travel(player, loc, checkForStation);
+		travel(player, loc, checkForStation, message);
 		
 	}
 	
@@ -135,7 +135,7 @@ public class Travels {
 			return;
 		}
 		else
-			travel(player, faction.getHome().asBukkitLocation(), checkForStation);
+			travel(player, faction.getHome().asBukkitLocation(), checkForStation, DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToFactionHome"));
 		
 	}
 	
@@ -168,7 +168,7 @@ public class Travels {
 		
 
 		Location destinationLoc = new Location(home.world, home.x, home.y, home.z);
-		travel(player, destinationLoc, checkForStation);
+		travel(player, destinationLoc, checkForStation, DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToHome"));
 		
 		player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToHome"));
 	}
@@ -196,7 +196,7 @@ public class Travels {
 		}
 		
 		Location targetLoc = targetplayer.getLocation();
-		travel(player, targetLoc, checkForStation);
+		travel(player, targetLoc, checkForStation, DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToPlayer").replace("{playername}", targetplayer.getDisplayName()));
 		
 	}
 	
@@ -231,7 +231,7 @@ public class Travels {
 		
 		player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToRandomLocation"));
 		
-		travel(player, randomLoc, checkForStation);
+		travel(player, randomLoc, checkForStation, DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToRandomLocation"));
 	}
 	
 	/**
@@ -264,7 +264,7 @@ public class Travels {
 		player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.displayname));
 		
 		Location destinationLoc = new Location(destination.world, destination.x, destination.y, destination.z);
-		travel(player, destinationLoc, checkForStation);
+		travel(player, destinationLoc, checkForStation, DragonTravelMain.messagesHandler.getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.displayname));
 	}
 	
 	/**
@@ -278,7 +278,7 @@ public class Travels {
 	 * 			If the admin disabled the station-check globally,
 	 * 			this has no function.
 	 */
-	public static void travel(Player player, Location destination, Boolean checkForStation) {
+	public static void travel(Player player, Location destination, Boolean checkForStation, String destName) {
 
 		// Check for station
 		if(checkForStation && DragonTravelMain.config.getBoolean("MountingLimit.EnableForTravels") && !player.hasPermission("dt.ignoreusestations.travels")) {
@@ -317,7 +317,7 @@ public class Travels {
 			return;
 	
 		RyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);		
-		
+		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));
 		if(destination.getWorld().getName() == player.getWorld().getName())
 			dragon.startTravel(destination, false);
 		else

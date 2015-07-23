@@ -14,6 +14,7 @@ import eu.phiwa.dt.payment.PaymentHandler;
 import net.milkbowl.vault.economy.Economy;
 import net.minecraft.server.v1_8_R3.EntityTypes;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -139,9 +140,9 @@ public class DragonTravelMain extends JavaPlugin {
             StationaryDragon.removeStatDragon(name, false);
         }
 
-		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
-		logger.log(Level.SEVERE, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
-		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
+		logger.log(Level.INFO, String.format("[DragonTravel] -----------------------------------------------"));
+		logger.log(Level.INFO, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
+		logger.log(Level.INFO, String.format("[DragonTravel] -----------------------------------------------"));
 	}
 	
 	@Override
@@ -196,10 +197,13 @@ public class DragonTravelMain extends JavaPlugin {
         // StatDragonsDB
         dbStatDragonsHandler = new StatDragonsDB(this);
         dbStatDragonsHandler.init();
-        for(String key : dbStatDragonsConfig.getConfigurationSection("StatDragons").getKeys(false)){
-            String path = "StatDragons."+key+".";
-            Location loc = new Location(Bukkit.getWorld(dbStatDragonsConfig.getString(path + "world")), dbStatDragonsConfig.getDouble(path+"x"), dbStatDragonsConfig.getDouble(path+"y"), dbStatDragonsConfig.getDouble(path+"z"), (float)dbStatDragonsConfig.getDouble(path+"yaw"), (float)dbStatDragonsConfig.getDouble(path+"pitch"));
-            StationaryDragon.createStatDragon(loc, key, false);
+        if(dbStatDragonsConfig.getConfigurationSection("StatDragons") !=null) {
+            for (String key : dbStatDragonsConfig.getConfigurationSection("StatDragons").getKeys(false)) {
+                String path = "StatDragons." + key + ".";
+                String displayName = ChatColor.translateAlternateColorCodes('&', dbStatDragonsConfig.getString(path + "displayname"));
+                Location loc = new Location(Bukkit.getWorld(dbStatDragonsConfig.getString(path + "world")), dbStatDragonsConfig.getDouble(path + "x"), dbStatDragonsConfig.getDouble(path + "y"), dbStatDragonsConfig.getDouble(path + "z"), (float) dbStatDragonsConfig.getDouble(path + "yaw"), (float) dbStatDragonsConfig.getDouble(path + "pitch"));
+                StationaryDragon.createStatDragon(loc, key, displayName, false);
+            }
         }
 		
 		// Commands
@@ -395,10 +399,13 @@ public class DragonTravelMain extends JavaPlugin {
         // StatDragonsDB
         dbStatDragonsHandler.init();
 
-        for(String key : dbStatDragonsConfig.getConfigurationSection("StatDragons").getKeys(false)){
-            String path = "StatDragons."+key+".";
-            Location loc = new Location(Bukkit.getWorld(dbStatDragonsConfig.getString(path + "world")), dbStatDragonsConfig.getDouble(path+"x"), dbStatDragonsConfig.getDouble(path+"y"), dbStatDragonsConfig.getDouble(path+"z"), (float)dbStatDragonsConfig.getDouble(path+"yaw"), (float)dbStatDragonsConfig.getDouble(path+"pitch"));
-            StationaryDragon.createStatDragon(loc, key, false);
+        if(dbStatDragonsConfig.getConfigurationSection("StatDragons") !=null) {
+            for (String key : dbStatDragonsConfig.getConfigurationSection("StatDragons").getKeys(false)) {
+                String path = "StatDragons." + key + ".";
+                String displayName = ChatColor.translateAlternateColorCodes('&', dbStatDragonsConfig.getString(path + "displayname"));
+                Location loc = new Location(Bukkit.getWorld(dbStatDragonsConfig.getString(path + "world")), dbStatDragonsConfig.getDouble(path + "x"), dbStatDragonsConfig.getDouble(path + "y"), dbStatDragonsConfig.getDouble(path + "z"), (float) dbStatDragonsConfig.getDouble(path + "yaw"), (float) dbStatDragonsConfig.getDouble(path + "pitch"));
+                StationaryDragon.createStatDragon(loc, key, displayName, false);
+            }
         }
 		
 		

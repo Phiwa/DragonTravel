@@ -1,8 +1,1 @@
 StatDragons:
-    StatDragon1:
-        x: 456
-        y: 75
-        z: 123
-        yaw: 0
-        pitch: 0
-        world: 'world'

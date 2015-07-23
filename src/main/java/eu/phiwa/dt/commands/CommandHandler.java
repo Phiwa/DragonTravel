@@ -526,7 +526,7 @@ public class CommandHandler implements CommandExecutor {
 						return false;
 					}
 
-					if(!DragonTravelMain.dbStationsHandler.createStation(new Station(argument1, loc, player.getUniqueId().toString()))) {
+					if(!DragonTravelMain.dbStationsHandler.createStation(new Station(argument1, argument1, loc, player.getUniqueId().toString()))) {
 						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.CouldNotCreateStation"));
 						return false;					
 					}
@@ -603,12 +603,12 @@ public class CommandHandler implements CommandExecutor {
 						return false;
 					}
 
-					if(DragonTravelMain.listofStatDragons.keySet().contains(argument1.toLowerCase())){
+					if(DragonTravelMain.listofStatDragons.keySet().contains(argument1)){
                         player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.StatDragonExists"));
                         return false;
                     }
 
-					StationaryDragon.createStatDragon(player, argument1, true);
+					StationaryDragon.createStatDragon(player, argument1, argument1, true);
 					return true;
 				}
 
@@ -619,7 +619,7 @@ public class CommandHandler implements CommandExecutor {
                         return false;
                     }
 
-                    if(!DragonTravelMain.listofStatDragons.keySet().contains(argument1.toLowerCase())){
+                    if(!DragonTravelMain.listofStatDragons.keySet().contains(argument1)){
                         player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.StatDragonNotExists"));
                         return false;
                     }
@@ -653,6 +653,50 @@ public class CommandHandler implements CommandExecutor {
 					Flights.startFlight(playerToSendToFlight, argument1, true, true, player);
 					return true;
 				}
+
+				else if(command.equalsIgnoreCase("addstatdragon")) {
+
+					if(!player.hasPermission("dt.admin.statdragon")) {
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
+						return false;
+					}
+
+					if(DragonTravelMain.listofStatDragons.keySet().contains(argument1)){
+						player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.StatDragonExists"));
+						return false;
+					}
+
+					StationaryDragon.createStatDragon(player, argument1, argument2.replace("_", " "), true);
+					return true;
+				}
+
+                else if(command.equalsIgnoreCase("setstat")) {
+
+                    if(!player.hasPermission("dt.admin.stations")) {
+                        player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.NoPermission"));
+                        return false;
+                    }
+
+                    Location loc = player.getLocation();
+
+                    if(argument1.equalsIgnoreCase(DragonTravelMain.config.getString("RandomDest.Name"))) {
+                        player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.NotCreateStationWithRandomstatName"));
+                        return false;
+                    }
+
+                    if(DragonTravelMain.dbStationsHandler.getStation(argument1) != null) {
+                        player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.StationAlreadyExists").replace("{stationname}", argument1));
+                        return false;
+                    }
+
+                    if(!DragonTravelMain.dbStationsHandler.createStation(new Station(argument1, argument2.replace("_", " "), loc, player.getUniqueId().toString()))) {
+                        player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Error.CouldNotCreateStation"));
+                        return false;
+                    }
+
+                    player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.Stations.Successful.StationCreated").replace("{stationname}", argument1));
+                    return true;
+                }
 				
 				sendUsage(player, 1);
 				return false;
@@ -735,21 +779,21 @@ public class CommandHandler implements CommandExecutor {
 		
 		String helpText = "[DragonTravel] Command Help\n\n"
 						+ "   --------- Commands available from console --------- \n\n"
-					 	+ "dt reload                       - Reloads the config (buggy,\n"
-					 	+ "                                  restart instead if possible)\n"
-					 	+ "dt version                      - Shows the version of DragonTravel\n"
-				 		+ "                                  currently running on the server\n"
-						+ "dt author                       - Shows the currently active author(s)\n"
-						+ "                                  of DragonTravel\n"
-						+ "dt showstats                    - Shows a list of all stations available\n"
-						+ "dt showflights                  - Shows a list of all flights available\n"
-						+ "dt remdragons <worldname|all>   - Removes all dragons without riders\n"
-						+ "                                  from the selected world/all worlds\n"
-						+ "dt remstat <stationname>        - Removes the station from the database\n"
-						+ "dt remflight <flightname>       - Removes the flight from the database\n"
-						+ "dt flight <flightname> <player> - Sends the player on the selected flight\n"
-                        + "dt addstatdragon <name>         - Add a new stationary dragon\n"
-                        + "dt remstatdragon <name>         - Remove a stationary dragon\n";
+					 	+ "dt reload                        - Reloads the config (buggy,\n"
+					 	+ "                                   restart instead if possible)\n"
+					 	+ "dt version                       - Shows the version of DragonTravel\n"
+				 		+ "                                   currently running on the server\n"
+						+ "dt author                        - Shows the currently active author(s)\n"
+						+ "                                   of DragonTravel\n"
+						+ "dt showstats                     - Shows a list of all stations available\n"
+						+ "dt showflights                   - Shows a list of all flights available\n"
+						+ "dt remdragons <worldname|all>    - Removes all dragons without riders\n"
+						+ "                                   from the selected world/all worlds\n"
+						+ "dt remstat <stationname>         - Removes the station from the database\n"
+						+ "dt remflight <flightname>        - Removes the flight from the database\n"
+						+ "dt flight <flightname> <player>  - Sends the player on the selected flight\n"
+                        + "dt addstatdragon <name> [display]- Add a new stationary dragon\n"
+                        + "dt remstatdragon <name>          - Remove a stationary dragon\n";
 		
 		System.out.println(helpText);
 	}
