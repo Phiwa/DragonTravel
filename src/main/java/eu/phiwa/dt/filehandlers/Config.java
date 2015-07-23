@@ -79,6 +79,8 @@ public class Config {
 			DragonTravelMain.config.set("Payment.Resources.ItemType", Material.GOLD_INGOT.name());
 		if(!DragonTravelMain.config.isSet("Payment.Resources.ItemName"))
 			DragonTravelMain.config.set("Payment.Resources.ItemName", "Gold Ingot");
+        if(!DragonTravelMain.config.isSet("RequireSkyLight"))
+            DragonTravelMain.config.set("RequireSkyLight", false);
 		
 		
 	  // Update the file version

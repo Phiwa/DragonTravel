@@ -290,7 +290,12 @@ public class Travels {
 		}
 		
 		Location temploc = player.getLocation();
-		
+
+        if (!player.hasPermission("dt.bypassrequireskylight") && (temploc.getWorld().getHighestBlockYAt(temploc) < temploc.getY() || destination.getWorld().getHighestBlockYAt(destination) < destination.getY())) {
+            player.sendMessage(DragonTravelMain.messagesHandler.getMessage("Messages.General.Error.RequireSkyLight"));
+            return;
+        }
+
 		// Check if max distance to target is exceeded
 		int maxdist = DragonTravelMain.config.getInt("MaxTravelDistance");
 		
@@ -320,7 +325,7 @@ public class Travels {
 		RyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);		
 		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));
         dragon.setTotalDist(Math.hypot(temploc.getBlockX() - destination.getBlockX(), temploc.getBlockZ() - destination.getBlockZ()));
-		dragon.setCoveredDist(0);
+        dragon.setCoveredDist(0);
         ((LivingEntity)dragon.getEntity()).setMaxHealth(1 + dragon.getTotalDist());
 		if(destination.getWorld().getName() == player.getWorld().getName())
 			dragon.startTravel(destination, false);

@@ -30,6 +30,7 @@ permissions:
             dt.ptoggle: true
             dt.ignoreminheight: true
             dt.ignoredamagerestriction: true
+            dt.bypassrequireskylight: true
             
     
     dt.admin.signs:
@@ -141,7 +142,9 @@ permissions:
     dt.ignoredamagerestriction:
         default: op
         description: Allows player to mount a dragon, even if the he received damage within the last X seconds (set via config)
-
+    dt.bypassrequireskylight:
+        default: op
+        description: Allows player to mount a dragon when not in skylight
 commands:
     dt:
         usage: 

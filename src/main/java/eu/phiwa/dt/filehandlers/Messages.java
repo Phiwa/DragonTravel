@@ -119,6 +119,8 @@ public class Messages {
 			DragonTravelMain.messages.set("Messages.Travels.Successful.TravellingToPlayer", "&aTravelling to &f{playername}&a.");
 		if (DragonTravelMain.messages.get("Messages.Travels.Successful.TravellingToFactionHome") == null)
 			DragonTravelMain.messages.set("Messages.Travels.Successful.TravellingToFactionHome", "&aTravelling to the faction home.");
+        if (DragonTravelMain.messages.get("Messages.General.Error.RequireSkyLight") == null)
+            DragonTravelMain.messages.set("Messages.General.Error.RequireSkyLight", "&cYou must have access to sky light!");
 
 		// Update the file version
 		DragonTravelMain.messages.set("File.Version", DragonTravelMain.messagesVersion);

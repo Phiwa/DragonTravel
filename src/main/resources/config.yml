@@ -178,3 +178,7 @@ MinimumMountHeight: -1
 # Set it to -1 to disable the check
 # Default: -1
 DamageCooldown: -1
+
+# <<< Sky Light Limits >>>
+#If this is true, the player must mount and dismount in places with direct access to skylight.
+RequireSkyLight: false

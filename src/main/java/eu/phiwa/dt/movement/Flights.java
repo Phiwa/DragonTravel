@@ -85,8 +85,7 @@ public class Flights {
 				}
 			}
 		}
-		
-				
+
 		Location temploc = player.getLocation();
 		Location firstwp = flight.waypoints.get(0).getAsLocation();
 		temploc.setYaw(getCorrectYawForPlayer(player, firstwp));

@@ -39,6 +39,7 @@ public class DragonTravelMain extends JavaPlugin {
     private final Class<?> dragonClass;
     
  	// General
+    public static boolean requireSkyLight = false;
  	public static double speed = 0.5;	
  	public static int minMountHeight = -1;
  	public static int dmgCooldown = -1;
@@ -233,7 +234,8 @@ public class DragonTravelMain extends JavaPlugin {
 		requireItemFlight = config.getBoolean("RequiredItem.For.Flight");	
 	
 		dismountAtExactLocation = config.getBoolean("DismountAtExactLocation", false);
-		
+
+        requireSkyLight = config.getBoolean("RequireSkyLight");
 		speed = config.getDouble("DragonSpeed");
 		
 		usePayment = config.getBoolean("Payment.usePayment");
