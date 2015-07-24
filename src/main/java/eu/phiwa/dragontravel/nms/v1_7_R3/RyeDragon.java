@@ -1,16 +1,16 @@
-package eu.phiwa.dragontravel.nms.v1_7_R4;
+package eu.phiwa.dragontravel.nms.v1_7_R3;
 
 import eu.phiwa.dragontravel.core.DragonTravelMain;
 import eu.phiwa.dragontravel.core.flights.Waypoint;
 import eu.phiwa.dragontravel.core.modules.DragonManagement;
 import eu.phiwa.dragontravel.core.objects.Flight;
 import eu.phiwa.dragontravel.nms.IRyeDragon;
-import net.minecraft.server.v1_8_R3.EntityEnderDragon;
-import net.minecraft.server.v1_8_R3.World;
+import net.minecraft.server.v1_7_R3.EntityEnderDragon;
+import net.minecraft.server.v1_7_R3.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -97,7 +97,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 	 * 
 	 */
 	@Override
-	public void m() {
+	public void e() {
 		if(dragonEntity != null && rider != null)
 			if(dragonEntity.getPassenger() != null)
 				dragonEntity.setPassenger(rider);
@@ -228,10 +228,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 
             this.yaw = getCorrectYaw(nextWaypoint.x, nextWaypoint.z);
             this.pitch = getCorrectPitch(nextWaypoint.x, nextWaypoint.z, nextWaypoint.y);
-            Bukkit.getScheduler().runTaskLater(DragonTravelMain.getInstance(), () -> {
-                if (isAlive())
-                    setYawPitch(yaw, pitch);
-            }, 1L);
 
             setMoveFlight();
             return;
@@ -281,10 +277,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 		
 		this.yaw = getCorrectYaw(toX, toZ);
 		this.pitch = getCorrectPitch(toX, toZ, toY);
-        Bukkit.getScheduler().runTaskLater(DragonTravelMain.getInstance(), () -> {
-            if(isAlive())
-                setYawPitch(yaw, pitch);
-        }, 1L);
 		this.startX = start.getX();
 		this.startY = start.getY();
 		this.startZ = start.getZ();
@@ -505,14 +497,14 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                 for (int x = -1; x <= 1; x++) {
                     m[counter] = loc.clone().add(x, -y, 0).getBlock().getType();
                     md[counter] = loc.clone().add(x, -y, 0).getBlock().getState().getData();
-                    loc.clone().add(x, -y, 0).getBlock().setType(Material.BARRIER);
+                    loc.clone().add(x, -y, 0).getBlock().setType(Material.BEDROCK);
                     counter++;
                 }
                 for (int z = -1; z <= 1; z++) {
                     if(z == 0) continue;
                     m[counter] = loc.clone().add(0, -y, z).getBlock().getType();
                     md[counter] = loc.clone().add(0, -y, z).getBlock().getState().getData();
-                    loc.clone().add(0, -y, z).getBlock().setType(Material.BARRIER);
+                    loc.clone().add(0, -y, z).getBlock().setType(Material.BEDROCK);
                     counter++;
                 }
                 if(y==0) {

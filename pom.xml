@@ -51,10 +51,17 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.bukkit</groupId>
-			<artifactId>craftbukkit</artifactId>
+			<artifactId>craftbukkit-1.8.7</artifactId>
 			<version>1.8.7-R0.1-SNAPSHOT</version>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/craftbukkit-1.8.7-R0.1-SNAPSHOT.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>craftbukkit-1.7.10</artifactId>
+			<version>1.7.10-R0.4-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/craftbukkit-1.7.10-R0.4-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
             <groupId>net.milkbowl.vault</groupId>

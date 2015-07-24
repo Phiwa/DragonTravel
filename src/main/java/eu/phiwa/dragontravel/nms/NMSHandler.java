@@ -14,11 +14,13 @@ public class NMSHandler {
     private static final String packageName = "eu.phiwa.dragontravel.nms..";
 
     private static final Class<?>[] nmsDragonClasses = new Class<?>[]{
-            eu.phiwa.dragontravel.nms.v1_8_R3.RyeDragon.class
+            eu.phiwa.dragontravel.nms.v1_8_R3.RyeDragon.class,
+            eu.phiwa.dragontravel.nms.v1_7_R3.RyeDragon.class
     };
 
     private static final Class<?>[] nmsEntityRegisterClasses = new Class<?>[]{
-            eu.phiwa.dragontravel.nms.v1_8_R3.EntityRegister.class
+            eu.phiwa.dragontravel.nms.v1_8_R3.EntityRegister.class,
+            eu.phiwa.dragontravel.nms.v1_7_R3.EntityRegister.class
     };
 
     private String sourcePath, version;

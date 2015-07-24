@@ -1,13 +1,9 @@
-package eu.phiwa.dragontravel.nms.v1_7_R4;
+package eu.phiwa.dragontravel.nms.v1_7_R3;
 
-import eu.phiwa.dragontravel.core.DragonTravelMain;
 import eu.phiwa.dragontravel.nms.IEntityRegister;
-import net.minecraft.server.v1_7_R4.EntityTypes;
-import org.bukkit.Bukkit;
+import net.minecraft.server.v1_7_R3.EntityTypes;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class EntityRegister implements IEntityRegister {
@@ -43,38 +39,10 @@ public class EntityRegister implements IEntityRegister {
             g_map.put("RyeDragon", Integer.valueOf(63));
 
             return true;
-        } catch (Exception e) {
-
-            Class<?>[] paramTypes = new Class[]{Class.class, String.class, int.class};
-
-            // MCPC+ compatibility
-            // Forge Dev environment; names are not translated into func_foo
-            try {
-                Method method = EntityTypes.class.getDeclaredMethod("addMapping", paramTypes);
-                method.setAccessible(true);
-                method.invoke(null, RyeDragon.class, "RyeDragon", 63);
-                return true;
-            } catch (Exception ex) {
-                e.addSuppressed(ex);
-            }
-            // Production environment: search for the method
-            // This is required because the seargenames could change
-            // LAST CHECKED FOR VERSION 1.6.4
-            try {
-                for (Method method : EntityTypes.class.getDeclaredMethods()) {
-                    if (Arrays.equals(paramTypes, method.getParameterTypes())) {
-                        method.invoke(null, RyeDragon.class, "RyeDragon", 63);
-                        return true;
-                    }
-                }
-            } catch (Exception ex) {
-                e.addSuppressed(ex);
-            }
-
-            Bukkit.getLogger().info("[DragonTravel] [Error] Could not register the RyeDragon-entity!");
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(DragonTravelMain.getInstance());
-
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
         }
         return false;
     }
