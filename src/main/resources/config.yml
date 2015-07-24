@@ -112,7 +112,8 @@ Payment:
             setHome: 5.0
             Flight: 5.0
     Resources:
-        Item: 371
+        ItemType: GOLD_INGOT
+        ItemName: 'Gold Ingot'
         Prices:
             toStation: 5
             toRandom: 5
@@ -177,3 +178,8 @@ MinimumMountHeight: -1
 # Set it to -1 to disable the check
 # Default: -1
 DamageCooldown: -1
+
+# <<< Sky Light Limits >>>
+#If this is true, the player must mount and dismount in places with direct access to skylight.
+#This only applies to travels. Flights are exempt of this rule.
+RequireSkyLight: false
