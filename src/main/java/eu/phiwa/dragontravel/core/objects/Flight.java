@@ -40,11 +40,12 @@ public class Flight {
 		long dist = 0;
 		Waypoint lwp = null;
 		for (Waypoint wp : waypoints) {
-			if (wp == null) {
-				lwp = wp;
+            if (lwp == null) {
+                lwp = wp;
 				continue;
 			}
-			dist += Math.hypot(wp.getAsLocation().getBlockX() - lwp.getAsLocation().getBlockX(), wp.getAsLocation().getBlockZ() - lwp.getAsLocation().getBlockZ());
+
+            dist += Math.hypot(wp.getAsLocation().getBlockX() - lwp.getAsLocation().getBlockX(), wp.getAsLocation().getBlockZ() - lwp.getAsLocation().getBlockZ());
 		}
 		return dist;
 	}
