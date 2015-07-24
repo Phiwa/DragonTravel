@@ -10,16 +10,16 @@ public class Home {
 
 	// Complete Location
 	public Location loc;
-	
+
 	public String playername;
 	public World world;
 	// Single values
-	public int x;	
+	public int x;
 	public int y;
-	
+
 	public int z;
-	
-	
+
+
 	public Home(String playername, int x, int y, int z, String worldname) {
 		this.playername = playername;
 		this.x = x;
@@ -27,7 +27,7 @@ public class Home {
 		this.z = z;
 		this.world = Bukkit.getWorld(worldname);
 	}
-	
+
 	public Home(String playername, int x, int y, int z, World world) {
 		this.playername = playername.toLowerCase();
 		this.x = x;
@@ -35,7 +35,7 @@ public class Home {
 		this.z = z;
 		this.world = world;
 	}
-	
+
 	public Home(String playername, Location loc) {
 		this.playername = playername;
 		this.loc = loc;
@@ -44,7 +44,7 @@ public class Home {
 		this.z = (int) loc.getZ();
 		this.world = loc.getWorld();
 	}
-	
+
 	/**
 	 * Prints the station's details to the console.
 	 */
@@ -60,9 +60,8 @@ public class Home {
 
 	/**
 	 * Prints the station's details to the player's chat.
-	 * 
-	 * @param player
-	 * 			Player to send the details to.
+	 *
+	 * @param player Player to send the details to.
 	 */
 	public void print(Player player) {
 		player.sendMessage("--- Station ---");

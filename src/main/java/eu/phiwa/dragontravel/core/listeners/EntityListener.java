@@ -24,9 +24,9 @@ public class EntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		if(event.getSpawnReason()!=SpawnReason.CUSTOM)
+		if (event.getSpawnReason() != SpawnReason.CUSTOM)
 			return;
-		
+
 		if (!event.getEntity().getType().toString().equals("ENDER_DRAGON"))
 			return;
 
@@ -45,13 +45,13 @@ public class EntityListener implements Listener {
 		else if (DragonTravelMain.getInstance().getConfigHandler().isAlldragons() && event.getEntity() instanceof EnderDragon)
 			event.setCancelled(true);
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityDeath(EntityDeathEvent event) {
-		
-		if(event.getEntity()instanceof RyeDragon)
+
+		if (event.getEntity() instanceof RyeDragon)
 			return;
-			
+
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -62,7 +62,7 @@ public class EntityListener implements Listener {
 
 		Player player = (Player) event.getEntity();
 		if (DragonTravelMain.listofDragonriders.containsKey(player))
-			if(!DragonTravelMain.getInstance().getConfig().getBoolean("VulnerableRiders"))
+			if (!DragonTravelMain.getInstance().getConfig().getBoolean("VulnerableRiders"))
 				event.setCancelled(true);
 	}
 

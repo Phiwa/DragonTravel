@@ -2,7 +2,6 @@ package eu.phiwa.dragontravel.core.listeners;
 
 import eu.phiwa.dragontravel.core.DragonTravelMain;
 import eu.phiwa.dragontravel.core.signs.Signs;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,8 +28,8 @@ public class BlockListener implements Listener {
 			event.setCancelled(true);
 		}
 	}
-	
-	
+
+
 	@EventHandler(priority = EventPriority.LOW)
 	public void onSignChange(SignChangeEvent event) {
 
@@ -38,16 +37,16 @@ public class BlockListener implements Listener {
 
 		if (!event.getLine(0).equalsIgnoreCase("[DragonTravel]"))
 			return;
-		
+
 		if (!player.hasPermission("dt.admin.signs")) {
 			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
 			event.setCancelled(true);
 			return;
 		}
-		
-		// FLIGHTSIGNS		
-		if(event.getLine(1).equals("Flight")) {		
-			if (event.getLine(2).isEmpty()) {	
+
+		// FLIGHTSIGNS
+		if (event.getLine(1).equals("Flight")) {
+			if (event.getLine(2).isEmpty()) {
 				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Signs.Error.NoTargetFlightSpecified"));
 				return;
 			}
@@ -56,54 +55,51 @@ public class BlockListener implements Listener {
 				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightDoesNotExist"));
 				return;
 			}
-			
+
 			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Signs.Successful.SignCreated"));
 			Signs.createSign(event, "Flight");
-			return;		
-		}
-		
-		else if(event.getLine(1).equals("Travel")) {		
-			if (event.getLine(2).isEmpty()) {	
+			return;
+		} else if (event.getLine(1).equals("Travel")) {
+			if (event.getLine(2).isEmpty()) {
 				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Signs.Error.NoTargetStationSpecified"));
 				return;
-			}		
+			}
 			if (DragonTravelMain.getInstance().getDbStationsHandler().getStation(event.getLine(2)) == null
-					&& !event.getLine(2).equalsIgnoreCase( DragonTravelMain.getInstance().getConfig().getString("RandomDest.Name"))) {
+					&& !event.getLine(2).equalsIgnoreCase(DragonTravelMain.getInstance().getConfig().getString("RandomDest.Name"))) {
 				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", event.getLine(2)));
 				return;
 			}
-			
+
 			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Signs.Successful.SignCreated"));
 			Signs.createSign(event, "Travel");
 			return;
-		}
-		else if(event.getLine(1).equals("Faction")) {
-			
-			if(Bukkit.getPluginManager().getPlugin("Factions") == null) {
+		} else if (event.getLine(1).equals("Faction")) {
+
+			if (Bukkit.getPluginManager().getPlugin("Factions") == null) {
 				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionsNotInstalled"));
 				return;
 			}
-			
-			Signs.createSign(event, "Faction");			
+
+			Signs.createSign(event, "Faction");
 			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Signs.Successful.SignCreated"));
 			return;
-		}		
+		}
 	}
-	
-	
+
+
 	@EventHandler(priority = EventPriority.LOW)
 	public void onSignDestroyed(BlockBreakEvent event) {
 
 		if (event.getBlock().getType() != Material.SIGN_POST && event.getBlock().getType() != Material.WALL_SIGN)
 			return;
 
-		Sign sign = (Sign) event.getBlock().getState(); 
+		Sign sign = (Sign) event.getBlock().getState();
 		String[] lines = sign.getLines();
-	
+
 		if (!lines[0].equalsIgnoreCase(ChatColor.GOLD + "DragonTravel"))
 			return;
-		
-		if(!event.getPlayer().hasPermission("dt.admin.signs")) {
+
+		if (!event.getPlayer().hasPermission("dt.admin.signs")) {
 
 			event.getPlayer().sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
 			event.setCancelled(true);

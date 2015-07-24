@@ -28,37 +28,6 @@ import java.util.logging.Level;
 
 public class DragonTravelMain extends JavaPlugin {
 
-    private static DragonTravelMain instance;
-    public static DragonTravelMain getInstance() {
-        return instance;
-    }
-
-    public static HashMap<UUID, Long> dmgReceivers = new HashMap<>();
-    public static HashMap<UUID, Boolean> ptogglers = new HashMap<>();
-    public static HashMap<Block, Block> globalwaypointmarkers = new HashMap<>();
-
-
-    // CheatProtection-Pluginstatus
-    public static boolean anticheat;
-    public static boolean nocheatplus;
-
-    //Handlers
-    private Config configHandler;
-    private NMSHandler nmsHandler;
-    private Messages messagesHandler;
-    private FlightsDB dbFlightsHandler;
-    private HomesDB dbHomesHandler;
-    private StationsDB dbStationsHandler;
-    private StatDragonsDB dbStatDragonsHandler;
-
-    // Hashmaps
-    public static HashMap<Player, IRyeDragon> listofDragonriders = new HashMap<>();
-    public static HashMap<Player, Location> listofDragonsridersStartingpoints = new HashMap<>();
-    public static HashMap<String, IRyeDragon> listofStatDragons = new HashMap<>();
-
-    // Payment (Costs are directly read from the config/sign on-the-fly)
-    public static Economy economyProvider;
-
     // Payment-Types
     public static final int TRAVEL_TOSTATION = 1;
     public static final int TRAVEL_TORANDOM = 2;
@@ -68,10 +37,33 @@ public class DragonTravelMain extends JavaPlugin {
     public static final int TRAVEL_TOFACTIONHOME = 6;
     public static final int FLIGHT = 7;
     public static final int SETHOME = 8;
-
-
+    public static HashMap<UUID, Long> dmgReceivers = new HashMap<>();
+    public static HashMap<UUID, Boolean> ptogglers = new HashMap<>();
+    public static HashMap<Block, Block> globalwaypointmarkers = new HashMap<>();
+    // CheatProtection-Pluginstatus
+    public static boolean anticheat;
+    public static boolean nocheatplus;
+    // Hashmaps
+    public static HashMap<Player, IRyeDragon> listofDragonriders = new HashMap<>();
+    public static HashMap<Player, Location> listofDragonsridersStartingpoints = new HashMap<>();
+    public static HashMap<String, IRyeDragon> listofStatDragons = new HashMap<>();
+    // Payment (Costs are directly read from the config/sign on-the-fly)
+    public static Economy economyProvider;
+    private static DragonTravelMain instance;
+    //Handlers
+    private Config configHandler;
+    private NMSHandler nmsHandler;
+    private Messages messagesHandler;
+    private FlightsDB dbFlightsHandler;
+    private HomesDB dbHomesHandler;
+    private StationsDB dbStationsHandler;
+    private StatDragonsDB dbStatDragonsHandler;
     public DragonTravelMain() {
         instance = this;
+    }
+
+    public static DragonTravelMain getInstance() {
+        return instance;
     }
 
     @Override

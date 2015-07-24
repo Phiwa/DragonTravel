@@ -25,19 +25,19 @@ public class NMSHandler {
 
     private String sourcePath, version;
 
-    public NMSHandler(){
+    public NMSHandler() {
         go();
     }
 
-    public void go(){
+    public void go() {
         sourcePath = Bukkit.getServer().getClass().getPackage().getName();
         version = sourcePath.substring(sourcePath.lastIndexOf('.') + 1);
     }
 
-    public IRyeDragon getRyeDragon(Location loc, org.bukkit.World world){
+    public IRyeDragon getRyeDragon(Location loc, org.bukkit.World world) {
         try {
-            final Class<?> clazz = Class.forName(packageName.replace("..", "."+version+".RyeDragon"));
-            if(IRyeDragon.class.isAssignableFrom(clazz)){
+            final Class<?> clazz = Class.forName(packageName.replace("..", "." + version + ".RyeDragon"));
+            if (IRyeDragon.class.isAssignableFrom(clazz)) {
                 return (IRyeDragon) clazz.getConstructor(new Class[]{Location.class, org.bukkit.World.class}).newInstance(loc, world);
             }
         } catch (ClassNotFoundException e) {
@@ -54,10 +54,10 @@ public class NMSHandler {
         return null;
     }
 
-    public IEntityRegister getEntityRegister(){
+    public IEntityRegister getEntityRegister() {
         try {
-            final Class<?> clazz = Class.forName(packageName.replace("..", "."+version+".EntityRegister"));
-            if(IEntityRegister.class.isAssignableFrom(clazz)){
+            final Class<?> clazz = Class.forName(packageName.replace("..", "." + version + ".EntityRegister"));
+            if (IEntityRegister.class.isAssignableFrom(clazz)) {
                 return (IEntityRegister) clazz.getConstructor().newInstance();
             }
         } catch (ClassNotFoundException e) {

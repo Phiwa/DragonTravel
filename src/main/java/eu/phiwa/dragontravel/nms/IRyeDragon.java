@@ -10,23 +10,31 @@ public interface IRyeDragon {
     double totalDist = 0;
 
     void flight();
+
     void setMoveFlight();
+
     void startFlight(Flight flight);
 
     void travel();
+
     void setMoveTravel();
+
     void startTravel(Location destLoc, boolean interworld);
 
     Entity getEntity();
 
     float getCorrectYaw(double targetx, double targetz);
+
     float getCorrectPitch(double targetx, double targety, double targetz);
 
     void setCustomName(String name);
 
     double getCoveredDist();
-    double getTotalDist();
+
     void setCoveredDist(double dist);
+
+    double getTotalDist();
+
     void setTotalDist(double dist);
 
 }

@@ -11,13 +11,13 @@ import org.bukkit.entity.Player;
 
 public class StationaryDragon {
 
-	/**
-	 * Creates a stationary dragon
-	 */
-	public static void createStatDragon(Player player, String name, String displayName, boolean isNew) {
-		createStatDragon(player.getLocation(), name, displayName, isNew);
-		player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.AddedStatDragon"));
-	}
+    /**
+     * Creates a stationary dragon
+     */
+    public static void createStatDragon(Player player, String name, String displayName, boolean isNew) {
+        createStatDragon(player.getLocation(), name, displayName, isNew);
+        player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.AddedStatDragon"));
+    }
 
     /**
      * Creates a stationary dragon
@@ -29,15 +29,15 @@ public class StationaryDragon {
         dragon.fixWings();
         dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', displayName));
         dragon.setCustomNameVisible(true);
-        if(isNew)
+        if (isNew)
             DragonTravelMain.getInstance().getDbStatDragonsHandler().createStatDragon(name, displayName, loc);
         DragonTravelMain.listofStatDragons.put(name.toLowerCase(), dragon);
     }
 
-    public static void removeStatDragon(String name, boolean isPermanent){
+    public static void removeStatDragon(String name, boolean isPermanent) {
         IRyeDragon dragon = DragonTravelMain.listofStatDragons.get(name);
         dragon.getEntity().remove();
-        if(isPermanent)
+        if (isPermanent)
             DragonTravelMain.getInstance().getDbStatDragonsHandler().deleteStatDragon(name);
     }
 }

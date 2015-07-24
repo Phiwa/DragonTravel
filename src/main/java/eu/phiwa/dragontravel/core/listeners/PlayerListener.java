@@ -36,22 +36,22 @@ public class PlayerListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		DragonTravelMain.ptogglers.put(event.getPlayer().getUniqueId(), DragonTravelMain.getInstance().getConfigHandler().isPtoggleDefault());
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerKick(PlayerKickEvent event) {
 
 		Player player = event.getPlayer();
-		
-		if(!DragonTravelMain.listofDragonriders.containsKey(player))
+
+		if (!DragonTravelMain.listofDragonriders.containsKey(player))
 			return;
-		
-		if(DragonTravelMain.ptogglers.containsKey(player.getUniqueId()))
+
+		if (DragonTravelMain.ptogglers.containsKey(player.getUniqueId()))
 			DragonTravelMain.ptogglers.remove(player.getUniqueId());
-		
+
 		DragonManagement.removeRiderandDragon(DragonTravelMain.listofDragonriders.get((player)).getEntity(), false);
 
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 
@@ -59,13 +59,13 @@ public class PlayerListener implements Listener {
 
 		if (!DragonTravelMain.listofDragonriders.containsKey(player))
 			return;
-		
-		if(DragonTravelMain.ptogglers.containsKey(player.getUniqueId()))
+
+		if (DragonTravelMain.ptogglers.containsKey(player.getUniqueId()))
 			DragonTravelMain.ptogglers.remove(player.getUniqueId());
-		
+
 		DragonManagement.removeRiderandDragon(DragonTravelMain.listofDragonriders.get((player)).getEntity(), false);
 	}
-	
+
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onSignInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -77,182 +77,166 @@ public class PlayerListener implements Listener {
 		if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) || event.getAction().equals(Action.LEFT_CLICK_AIR))
 			return;
 
-		if(block.getType() != Material.SIGN_POST && block.getType() != Material.WALL_SIGN)
-			return;			
-
-		Sign sign = (Sign)block.getState();
-		String[] lines = sign.getLines();
-
-		if(!lines[0].equals(ChatColor.GOLD.toString() + "DragonTravel"))
+		if (block.getType() != Material.SIGN_POST && block.getType() != Material.WALL_SIGN)
 			return;
 
-		if(lines[1].equals("Travel")) {			
-			String stationname = lines[2].replaceAll(ChatColor.WHITE.toString(), "");	
-			
-			if(!PermissionsHandler.hasTravelPermission(player, "travel", stationname)) {
+		Sign sign = (Sign) block.getState();
+		String[] lines = sign.getLines();
+
+		if (!lines[0].equals(ChatColor.GOLD.toString() + "DragonTravel"))
+			return;
+
+		if (lines[1].equals("Travel")) {
+			String stationname = lines[2].replaceAll(ChatColor.WHITE.toString(), "");
+
+			if (!PermissionsHandler.hasTravelPermission(player, "travel", stationname)) {
 				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
 				return;
 			}
-			
-			if(stationname.equalsIgnoreCase((DragonTravelMain.getInstance().getConfig().getString("RandomDest.Name")))){
-				if(lines[3].length() != 0) {	
+
+			if (stationname.equalsIgnoreCase((DragonTravelMain.getInstance().getConfig().getString("RandomDest.Name")))) {
+				if (lines[3].length() != 0) {
 					try {
-						double costOnSign = Double.parseDouble(lines[3]);					
-						if(!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.TRAVEL_TORANDOM, player))
+						double costOnSign = Double.parseDouble(lines[3]);
+						if (!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.TRAVEL_TORANDOM, player))
 							return;
-					}
-					catch(NumberFormatException ex) {
+					} catch (NumberFormatException ex) {
 						player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Signs.Error.SignCorrupted"));
-					}				
+					}
+				} else {
+					if (!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TORANDOM, player))
+						return;
 				}
-				else {
-					if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TORANDOM, player))
-						return;					
-				}
-				
+
 				Travels.toRandomdest(player, !DragonTravelMain.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"));
-			}	
-			
-			else if(DragonTravelMain.getInstance().getDbStationsHandler().getStation(stationname) == null) {
-					player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));
-					return;
-			}
-			
-			else {
+			} else if (DragonTravelMain.getInstance().getDbStationsHandler().getStation(stationname) == null) {
+				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));
+				return;
+			} else {
 				// If parseDouble throws an exception, the last line is either empty or a string, so the default cost is taken from the config.
 				// If parseDouble does not throw an exception, the last line is a double(a valid cost) and is taken for the payment.
 				try {
 					double costOnSign = Double.parseDouble(lines[3]);
-					
-					if(!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.TRAVEL_TOSTATION, player))
+
+					if (!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.TRAVEL_TOSTATION, player))
+						return;
+				} catch (NumberFormatException ex) {
+					if (!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOSTATION, player))
 						return;
 				}
-				catch(NumberFormatException ex) {
-					if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOSTATION, player))
-						return;
-				}	
 				Travels.toStation(player, stationname, !DragonTravelMain.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"));
 			}
-		}
-		else if (lines[1].equals("Faction")) {
-			
-			if(Bukkit.getPluginManager().getPlugin("Factions") == null) {
+		} else if (lines[1].equals("Faction")) {
+
+			if (Bukkit.getPluginManager().getPlugin("Factions") == null) {
 				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionsNotInstalled"));
 				return;
 			}
-			
+
 			String factiontag = lines[2].replaceAll(ChatColor.WHITE.toString(), "");
-			
-			if(factiontag.isEmpty()) {
-				
-				if(!player.hasPermission("dt.ftravel")) {
+
+			if (factiontag.isEmpty()) {
+
+				if (!player.hasPermission("dt.ftravel")) {
 					player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
 					return;
 				}
-				
+
 				Faction faction = UPlayer.get(player).getFaction();
-				
-				if(faction.isNone()) {
+
+				if (faction.isNone()) {
 					player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NoFactionMember"));
 					return;
 				}
-			
-				if(!faction.hasHome()) {
+
+				if (!faction.hasHome()) {
 					player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
 					return;
-				}
-				else
+				} else
 					Travels.travel(player, faction.getHome().asBukkitLocation(), false, DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"));
-				
-			}
-			else {
-				
-				if(!player.hasPermission("dt.ftravel")) {
+
+			} else {
+
+				if (!player.hasPermission("dt.ftravel")) {
 					player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
 					return;
 				}
-				
+
 				Faction faction = UPlayer.get(player).getFaction();
-							
-				if(faction.isNone()) {
+
+				if (faction.isNone()) {
 					player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NoFactionMember"));
 					return;
 				}
-				
-				if(!faction.getName().equals(factiontag)) {
+
+				if (!faction.getName().equals(factiontag)) {
 					// TODO: ADD MESSAGE to other messages-xy.yml
 					player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NotYourFaction"));
 					return;
 				}
-			
-				if(!faction.hasHome()) {
+
+				if (!faction.hasHome()) {
 					player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
 					return;
-				}
-				else
+				} else
 					Travels.travel(player, faction.getHome().asBukkitLocation(), false, DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"));
 			}
-		}
-		else if (lines[1].equals("Flight")) {
+		} else if (lines[1].equals("Flight")) {
 			String flightname = lines[2].replaceAll(ChatColor.WHITE.toString(), "");
-			
-			if(!PermissionsHandler.hasFlightPermission(player, flightname)) {
+
+			if (!PermissionsHandler.hasFlightPermission(player, flightname)) {
 				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
 				return;
 			}
-			
-			if(DragonTravelMain.getInstance().getDbFlightsHandler().getFlight((flightname)) == null) {
+
+			if (DragonTravelMain.getInstance().getDbFlightsHandler().getFlight((flightname)) == null) {
 				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightDoesNotExist"));
-			}
-			
-			else {
-				if(lines[3].length() != 0) {
-					
+			} else {
+				if (lines[3].length() != 0) {
+
 					try {
 						double costOnSign = Double.parseDouble(lines[3]);
-						if(!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.FLIGHT, player))
+						if (!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.FLIGHT, player))
 							return;
-					}
-					catch(NumberFormatException ex) {
+					} catch (NumberFormatException ex) {
 						player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Signs.Error.SignCorrupted"));
 					}
-				}
-				else {					
-					if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.FLIGHT, player))
+				} else {
+					if (!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.FLIGHT, player))
 						return;
 				}
 				Flights.startFlight(player, flightname, !DragonTravelMain.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"), false, null);
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerDamge(EntityDamageEvent event) {
 
-		if(!(event.getEntity() instanceof Player))
+		if (!(event.getEntity() instanceof Player))
 			return;
 
 		Player player = (Player) event.getEntity();
-	
-		if(player.hasPermission("dt.ignoredamagerestriction"))
+
+		if (player.hasPermission("dt.ignoredamagerestriction"))
 			return;
 
 		DragonTravelMain.dmgReceivers.put(player.getUniqueId(), System.currentTimeMillis());
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-		
-		if(!DragonTravelMain.listofDragonriders.keySet().contains(event.getPlayer()))
+
+		if (!DragonTravelMain.listofDragonriders.keySet().contains(event.getPlayer()))
 			return;
-		
+
 		List<String> commands = (List<String>) DragonTravelMain.getInstance().getConfig().getList("CommandPrevent");
-		
-		for(String command: commands) {
-			if(command.contains(event.getMessage()))
-					event.setCancelled(true);
+
+		for (String command : commands) {
+			if (command.contains(event.getMessage()))
+				event.setCancelled(true);
 		}
-		
+
 	}
-	
+
 }

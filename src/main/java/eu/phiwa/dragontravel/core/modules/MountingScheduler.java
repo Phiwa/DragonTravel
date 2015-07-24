@@ -11,14 +11,14 @@ public class MountingScheduler implements Runnable {
 
 	@Override
 	public void run() {
-		
+
 		HashMap<Player, IRyeDragon> dragonRiders = DragonTravelMain.listofDragonriders;
-		
-		for(Entry<Player, IRyeDragon> entry : dragonRiders.entrySet()){
-			try{
+
+		for (Entry<Player, IRyeDragon> entry : dragonRiders.entrySet()) {
+			try {
 				entry.getValue().getEntity().setPassenger(entry.getKey());
-			} 
-			catch (Exception ex) {}
+			} catch (Exception ex) {
+			}
 		}
 	}
 

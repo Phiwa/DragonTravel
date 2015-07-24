@@ -21,121 +21,112 @@ import java.util.List;
 
 public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 
-	int wingcooldown = 10;
-	private int currentindexWaypoint = 0;
-
-	private Location destlocOtherworld;
-	
-	// Distance to the right coords
-	private double distanceX;
-	private double distanceY;	
-	private double distanceZ;
-	
-	Entity dragonEntity;
-	Player rider;
-
+    int wingcooldown = 10;
+    Entity dragonEntity;
+    Player rider;
+    // Flight
+    boolean isFlight = false;
+    String flightName;
+    // Travel
+    boolean isTravel = false;
+    Location spawnOtherWorld;
+    Location start;
+    private int currentindexWaypoint = 0;
+    private Location destlocOtherworld;
+    // Distance to the right coords
+    private double distanceX;
+    private double distanceY;
+    private double distanceZ;
     private boolean move = false;
-	private boolean finalmove = false;
-
-
-	// Flight
-	boolean isFlight = false;
-	String flightName;
+    private boolean finalmove = false;
     private Waypoint nextWaypoint;
     private int numberOfWaypoints;
+    // Start points for tick calculation
+    private double startX;
+    private double startY;
+    private double startZ;
+    private org.bukkit.World toWorld;
+    private double toX;
 
-	// Travel
-	boolean isTravel = false;
-	Location spawnOtherWorld;
-	Location start;
-	// Start points for tick calculation
-	private double startX;
-	private double startY;
-	private double startZ;
-	private org.bukkit.World toWorld;
-	private double toX;
+    private double toY;
+    private double toZ;
+    private int travelY;
 
-	private double toY;
-	private double toZ;
-	private int travelY;
-
-	private List<Waypoint> waypoints= new ArrayList<>();
+    private List<Waypoint> waypoints = new ArrayList<>();
     private double coveredDist;
-	private double totalDist;
+    private double totalDist;
 
-	// Amount to fly up/down during a flight/travel
-	private double XperTick;
-	private double YperTick;
-	private double ZperTick;
+    // Amount to fly up/down during a flight/travel
+    private double XperTick;
+    private double YperTick;
+    private double ZperTick;
 
-    public RyeDragon(Location loc, org.bukkit.World world){
+    public RyeDragon(Location loc, org.bukkit.World world) {
         this(loc, ((CraftWorld) world).getHandle());
     }
 
-	public RyeDragon(Location loc, World notchWorld) {
-		super(notchWorld);
-		this.start = loc;
-		setPosition(loc.getX(), loc.getY(), loc.getZ());
-		yaw = loc.getYaw() + 180;
-		while (yaw > 360)
-        yaw -= 360;
-		while (yaw < 0)
-			yaw += 360;
-		//if (yaw < 45 || yaw > 315)
-		//	yaw = 0F;
-		//else if (yaw < 135)
-		//	yaw = 90F;
-		//else if (yaw < 225)
-		//	yaw = 180F;
-		//else
-		//	yaw = 270F;
-	}
-
-	/**
-	 * This method is a natural method of the Enderdragon extended by the RyeDragon.
-	 * It's fired when the dragon moves and fires the travel-method again to keep the dragon flying.
-	 * 
-	 */
-	@Override
-	public void e() {
-		if(dragonEntity != null && rider != null)
-			if(dragonEntity.getPassenger() != null)
-				dragonEntity.setPassenger(rider);
-
-		// Travel
-		if (isTravel) {
-			travel();
-		}
-		// Flight
-        else if (isFlight) {
-			flight();
-		}
-	}
+    public RyeDragon(Location loc, World notchWorld) {
+        super(notchWorld);
+        this.start = loc;
+        setPosition(loc.getX(), loc.getY(), loc.getZ());
+        yaw = loc.getYaw() + 180;
+        while (yaw > 360)
+            yaw -= 360;
+        while (yaw < 0)
+            yaw += 360;
+        //if (yaw < 45 || yaw > 315)
+        //	yaw = 0F;
+        //else if (yaw < 135)
+        //	yaw = 90F;
+        //else if (yaw < 225)
+        //	yaw = 180F;
+        //else
+        //	yaw = 270F;
+    }
 
     /**
-	 * Starts the specified flight
-	 * 
-	 * @param flight
-	 * 			Flight to start
-	 */
+     * This method is a natural method of the Enderdragon extended by the RyeDragon.
+     * It's fired when the dragon moves and fires the travel-method again to keep the dragon flying.
+     */
     @Override
-	public void startFlight(Flight flight) {
-		this.dragonEntity = getEntity();
-		this.flightName = flight.name;
-		this.waypoints = flight.waypoints;
-		this.numberOfWaypoints = waypoints.size();
-		this.nextWaypoint = waypoints.get(currentindexWaypoint);
-		this.currentindexWaypoint++;
+    public void e() {
+        if (dragonEntity != null && rider != null)
+            if (dragonEntity.getPassenger() != null)
+                dragonEntity.setPassenger(rider);
 
-		this.startX = start.getX();
-		this.startY = start.getY();
-		this.startZ = start.getZ();		
+        // Travel
+        if (isTravel) {
+            travel();
+        }
+        // Flight
+        else if (isFlight) {
+            flight();
+        }
+    }
 
-		this.move = true;
-		this.isFlight = true;
+    /**
+     * Starts the specified flight
+     *
+     * @param flight Flight to start
+     */
+    @Override
+    public void startFlight(Flight flight) {
+        this.dragonEntity = getEntity();
+        this.flightName = flight.name;
+        this.waypoints = flight.waypoints;
+        this.numberOfWaypoints = waypoints.size();
+        this.nextWaypoint = waypoints.get(currentindexWaypoint);
+        this.currentindexWaypoint++;
 
-		setMoveFlight();					
-	}
+        this.startX = start.getX();
+        this.startY = start.getY();
+        this.startZ = start.getZ();
+
+        this.move = true;
+        this.isFlight = true;
+
+        setMoveFlight();
+    }
 
     /**
      * Controls the dragon
@@ -161,11 +152,9 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         }
 
         if ((int) currentY != nextWaypoint.y) {
-            if ((int)currentY < nextWaypoint.y)
-            {
+            if ((int) currentY < nextWaypoint.y) {
                 currentY += YperTick;
-            }
-            else {
+            } else {
                 currentY -= YperTick;
             }
         }
@@ -177,11 +166,11 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                 currentZ -= ZperTick;
         }
 
-        setCoveredDist(getCoveredDist()+Math.hypot(currentX, currentZ));
-        ((LivingEntity)getEntity()).setHealth(60 * (coveredDist/totalDist));
+        setCoveredDist(getCoveredDist() + Math.hypot(currentX, currentZ));
+        ((LivingEntity) getEntity()).setHealth(60 * (coveredDist / totalDist));
 
 		/*
-		   >> Reached the last waypoint? <<
+           >> Reached the last waypoint? <<
 		   Is the next waypoint the last one?
 		   If yes, did the dragon already reach it?
 		   Removing the entity and dismounting the player
@@ -192,10 +181,10 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 		   >> Reached the next (and not last) waypoint? <<
 		   The next waypoint is loaded and the dragon moves towards it
 		 */
-        if ((Math.abs( (int)currentX - nextWaypoint.x) == 0 &&	Math.abs( (int)currentZ - nextWaypoint.z) <= 3) || (Math.abs( (int)currentZ - nextWaypoint.z) == 0 && Math.abs( (int)currentX - nextWaypoint.x) <= 3) && (Math.abs( (int)currentY - nextWaypoint.y) <= 5)){
-            if(currentindexWaypoint == numberOfWaypoints) {
+        if ((Math.abs((int) currentX - nextWaypoint.x) == 0 && Math.abs((int) currentZ - nextWaypoint.z) <= 3) || (Math.abs((int) currentZ - nextWaypoint.z) == 0 && Math.abs((int) currentX - nextWaypoint.x) <= 3) && (Math.abs((int) currentY - nextWaypoint.y) <= 5)) {
+            if (currentindexWaypoint == numberOfWaypoints) {
                 try {
-                    DragonManagement.removeRiderandDragon(	dragonEntity,
+                    DragonManagement.removeRiderandDragon(dragonEntity,
                             new Location(dragonEntity.getWorld(),
                                     nextWaypoint.x,
                                     nextWaypoint.y,
@@ -205,9 +194,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                     );
                     return;
 
-                }
-                catch(NullPointerException ex) {
-                    DragonManagement.removeRiderandDragon(	dragonEntity,
+                } catch (NullPointerException ex) {
+                    DragonManagement.removeRiderandDragon(dragonEntity,
                             new Location(dragonEntity.getWorld(),
                                     nextWaypoint.x,
                                     nextWaypoint.y,
@@ -246,7 +234,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         this.distanceY = this.startY - nextWaypoint.y;
         this.distanceZ = this.startZ - nextWaypoint.z;
 
-        double tick = Math.sqrt((distanceX * distanceX)	+ (distanceY * distanceY)
+        double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY)
                 + (distanceZ * distanceZ)) / DragonTravelMain.getInstance().getConfigHandler().getSpeed();
 
         this.XperTick = Math.abs(distanceX) / tick;
@@ -254,82 +242,81 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         this.ZperTick = Math.abs(distanceZ) / tick;
     }
 
-	/**
-	 * Starts a travel to the specified location
-	 * 
-	 * @param destLoc
-	 * 				Location to start a travel to
-	 */
+    /**
+     * Starts a travel to the specified location
+     *
+     * @param destLoc Location to start a travel to
+     */
     @Override
-	public void startTravel(Location destLoc, boolean interworld) {
-		if(interworld) {
-			toX = locX+5+Math.random()*200; 
-			toY = locY+5+Math.random()*200;
-			toZ = locZ+5+Math.random()*200;
-			destlocOtherworld = destLoc.clone();
-			travelY = (int) toY;
-		} else {
-			toX = destLoc.getBlockX();
-			toY = destLoc.getBlockY();
-			toZ = destLoc.getBlockZ();
-			travelY = DragonTravelMain.getInstance().getConfigHandler().getTravelHeight();
-		}
-		
-		this.yaw = getCorrectYaw(toX, toZ);
-		this.pitch = getCorrectPitch(toX, toZ, toY);
-		this.startX = start.getX();
-		this.startY = start.getY();
-		this.startZ = start.getZ();
-		toWorld = destLoc.getWorld();
+    public void startTravel(Location destLoc, boolean interworld) {
+        if (interworld) {
+            toX = locX + 5 + Math.random() * 200;
+            toY = locY + 5 + Math.random() * 200;
+            toZ = locZ + 5 + Math.random() * 200;
+            destlocOtherworld = destLoc.clone();
+            travelY = (int) toY;
+        } else {
+            toX = destLoc.getBlockX();
+            toY = destLoc.getBlockY();
+            toZ = destLoc.getBlockZ();
+            travelY = DragonTravelMain.getInstance().getConfigHandler().getTravelHeight();
+        }
 
-		this.dragonEntity = getEntity();
-		this.rider = (Player) dragonEntity.getPassenger();
+        this.yaw = getCorrectYaw(toX, toZ);
+        this.pitch = getCorrectPitch(toX, toZ, toY);
+        this.startX = start.getX();
+        this.startY = start.getY();
+        this.startZ = start.getZ();
+        toWorld = destLoc.getWorld();
 
-		isTravel = true;
-		move = true;	
+        this.dragonEntity = getEntity();
+        this.rider = (Player) dragonEntity.getPassenger();
 
-		setMoveTravel();
-	}
+        isTravel = true;
+        move = true;
 
-	/**
-	 * Normal Travel
-	 */
+        setMoveTravel();
+    }
+
+    /**
+     * Normal Travel
+     */
     @Override
-	public void travel() {
+    public void travel() {
 
-		// Returns if the dragon won't move
-		if (!move)
-			return;
+        // Returns if the dragon won't move
+        if (!move)
+            return;
 
-		if (dragonEntity.getPassenger() == null)
-			return;
+        if (dragonEntity.getPassenger() == null)
+            return;
 
-		double myX = locX;
-		double myY = locY;
-		double myZ = locZ;
+        double myX = locX;
+        double myY = locY;
+        double myZ = locZ;
 
-		if (finalmove) {
+        if (finalmove) {
 
-			// Flying down/up at the end
-			if ((int) locY > (int) toY)
-				myY -= DragonTravelMain.getInstance().getConfigHandler().getSpeed();
-			else if ((int) locY < (int) toY)
-				myY += DragonTravelMain.getInstance().getConfigHandler().getSpeed();
+            // Flying down/up at the end
+            if ((int) locY > (int) toY)
+                myY -= DragonTravelMain.getInstance().getConfigHandler().getSpeed();
+            else if ((int) locY < (int) toY)
+                myY += DragonTravelMain.getInstance().getConfigHandler().getSpeed();
 
-			// Removing entity
-			else {
+                // Removing entity
+            else {
 
-				// Interworld-travel teleport
-				if(!dragonEntity.getWorld().getName().equals(toWorld.getName())) {
-					this.rider = (Player)dragonEntity.getPassenger();
+                // Interworld-travel teleport
+                if (!dragonEntity.getWorld().getName().equals(toWorld.getName())) {
+                    this.rider = (Player) dragonEntity.getPassenger();
                     double worldVariance = 80;
-					spawnOtherWorld = destlocOtherworld.clone();
-					spawnOtherWorld.setX(destlocOtherworld.getX()+worldVariance);
-					spawnOtherWorld.setY(destlocOtherworld.getY()+worldVariance);
-					spawnOtherWorld.setZ(destlocOtherworld.getZ()+worldVariance);
-					spawnOtherWorld.getChunk().load();
+                    spawnOtherWorld = destlocOtherworld.clone();
+                    spawnOtherWorld.setX(destlocOtherworld.getX() + worldVariance);
+                    spawnOtherWorld.setY(destlocOtherworld.getY() + worldVariance);
+                    spawnOtherWorld.setZ(destlocOtherworld.getZ() + worldVariance);
+                    spawnOtherWorld.getChunk().load();
 
-					Bukkit.getScheduler().runTaskLater(DragonTravelMain.getInstance(), () -> {
+                    Bukkit.getScheduler().runTaskLater(DragonTravelMain.getInstance(), () -> {
                         DragonManagement.dismount(rider, true);
 
                         if (rider.getAllowFlight())
@@ -354,43 +341,42 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                         dragonEntity.remove();
                     }, 1L);
 
-					// Dismount
-				}
-				else {				
-					DragonManagement.removeRiderandDragon(dragonEntity, true);
-					return;
-				}
-			}
-			this.yaw = getCorrectYaw(myX, myZ);
-			this.pitch = getCorrectPitch(myX, myY, myZ);
-			setPositionRotation(myX, myY, myZ, yaw, pitch);
-			return;
-		}
+                    // Dismount
+                } else {
+                    DragonManagement.removeRiderandDragon(dragonEntity, true);
+                    return;
+                }
+            }
+            this.yaw = getCorrectYaw(myX, myZ);
+            this.pitch = getCorrectPitch(myX, myY, myZ);
+            setPositionRotation(myX, myY, myZ, yaw, pitch);
+            return;
+        }
 
-		// Getting the correct height
-		if ((int) locY < travelY)
-			myY += DragonTravelMain.getInstance().getConfigHandler().getSpeed();
+        // Getting the correct height
+        if ((int) locY < travelY)
+            myY += DragonTravelMain.getInstance().getConfigHandler().getSpeed();
 
-		if (myX < toX)
-			myX += XperTick;
-		else
-			myX -= XperTick;
+        if (myX < toX)
+            myX += XperTick;
+        else
+            myX -= XperTick;
 
-		if (myZ < toZ)
-			myZ += ZperTick;
-		else
-			myZ -= ZperTick;
+        if (myZ < toZ)
+            myZ += ZperTick;
+        else
+            myZ -= ZperTick;
 
-		if ((int) myZ == (int) toZ && ((int) myX == (int)toX
-				|| (int)myX == (int)toX+1 || (int)myX == (int)toX-1)) {
-			finalmove = true;
-		}
-		this.yaw = getCorrectYaw(myX, myZ);
-		this.pitch = getCorrectPitch(myX, myY, myZ);
-		setPositionRotation(myX, myY, myZ, yaw, pitch);
-        coveredDist = Math.hypot(getEntity().getLocation().getBlockX()-start.getBlockX(), getEntity().getLocation().getBlockZ()-start.getBlockZ());
-        ((LivingEntity)getEntity()).setHealth(60 * (coveredDist/totalDist));
-	}
+        if ((int) myZ == (int) toZ && ((int) myX == (int) toX
+                || (int) myX == (int) toX + 1 || (int) myX == (int) toX - 1)) {
+            finalmove = true;
+        }
+        this.yaw = getCorrectYaw(myX, myZ);
+        this.pitch = getCorrectPitch(myX, myY, myZ);
+        setPositionRotation(myX, myY, myZ, yaw, pitch);
+        coveredDist = Math.hypot(getEntity().getLocation().getBlockX() - start.getBlockX(), getEntity().getLocation().getBlockZ() - start.getBlockZ());
+        ((LivingEntity) getEntity()).setHealth(60 * (coveredDist / totalDist));
+    }
 
     /**
      * Sets the x,z move for each tick
@@ -402,7 +388,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         this.distanceY = this.startY - toY;
         this.distanceZ = this.startZ - toZ;
 
-        double tick = Math.sqrt( (distanceX * distanceX)
+        double tick = Math.sqrt((distanceX * distanceX)
                         + (distanceY * distanceY)
                         + (distanceZ * distanceZ)
         ) / DragonTravelMain.getInstance().getConfigHandler().getSpeed();
@@ -410,7 +396,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         ZperTick = Math.abs(distanceZ) / tick;
     }
 
-    public void fixWings(){
+    public void fixWings() {
         WingFixerTask wfTask = new WingFixerTask();
         wfTask.setId(Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonTravelMain.getInstance(), wfTask, 1L, 21L));
     }
@@ -422,9 +408,9 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     public float getCorrectYaw(double targetx, double targetz) {
 
         if (this.locZ > targetz)
-            return (float) (-Math.toDegrees(Math.atan((this.locX - targetx)	/ (this.locZ - targetz))));
+            return (float) (-Math.toDegrees(Math.atan((this.locX - targetx) / (this.locZ - targetz))));
         else if (this.locZ < targetz)
-            return (float) (-Math.toDegrees(Math.atan((this.locX - targetx)	/ (this.locZ - targetz)))) + 180.0F;
+            return (float) (-Math.toDegrees(Math.atan((this.locX - targetx) / (this.locZ - targetz)))) + 180.0F;
         else
             return this.yaw;
     }
@@ -478,6 +464,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     private class WingFixerTask implements Runnable {
 
         private int id;
+
         public void setId(int id) {
             this.id = id;
         }
@@ -485,15 +472,15 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         @Override
         public void run() {
             wingcooldown -= 1;
-            if(wingcooldown <= 0)
+            if (wingcooldown <= 0)
                 Bukkit.getScheduler().cancelTask(id);
-            final Location loc = getEntity().getLocation().add(0,2,0);
+            final Location loc = getEntity().getLocation().add(0, 2, 0);
 
             final Material m[] = new Material[15];
             final MaterialData md[] = new MaterialData[15];
 
             int counter = 0;
-            for(int y = 0; y <=2; y++) {
+            for (int y = 0; y <= 2; y++) {
                 for (int x = -1; x <= 1; x++) {
                     m[counter] = loc.clone().add(x, -y, 0).getBlock().getType();
                     md[counter] = loc.clone().add(x, -y, 0).getBlock().getState().getData();
@@ -501,35 +488,35 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                     counter++;
                 }
                 for (int z = -1; z <= 1; z++) {
-                    if(z == 0) continue;
+                    if (z == 0) continue;
                     m[counter] = loc.clone().add(0, -y, z).getBlock().getType();
                     md[counter] = loc.clone().add(0, -y, z).getBlock().getState().getData();
                     loc.clone().add(0, -y, z).getBlock().setType(Material.BEDROCK);
                     counter++;
                 }
-                if(y==0) {
+                if (y == 0) {
                     loc.getBlock().setType(Material.WATER);
                 }
-                if(y==1) {
+                if (y == 1) {
                     loc.clone().add(0, -1, 0).getBlock().setType(Material.AIR);
                 }
             }
 
             Bukkit.getScheduler().runTaskLater(DragonTravelMain.getInstance(), () -> {
-                    int count = 0;
-                    for(int y = 0; y <=2; y++) {
-                        for (int x = -1; x <= 1; x++) {
-                            loc.clone().add(x, -y, 0).getBlock().setType(m[count]);
-                            loc.clone().add(x, -y, 0).getBlock().getState().setData(md[count]);
-                            count++;
-                        }
-                        for (int z = -1; z <= 1; z++) {
-                            if(z == 0) continue;
-                            loc.clone().add(0, -y, z).getBlock().setType(m[count]);
-                            loc.clone().add(0, -y, z).getBlock().getState().setData(md[count]);
-                            count++;
-                        }
+                int count = 0;
+                for (int y = 0; y <= 2; y++) {
+                    for (int x = -1; x <= 1; x++) {
+                        loc.clone().add(x, -y, 0).getBlock().setType(m[count]);
+                        loc.clone().add(x, -y, 0).getBlock().getState().setData(md[count]);
+                        count++;
                     }
+                    for (int z = -1; z <= 1; z++) {
+                        if (z == 0) continue;
+                        loc.clone().add(0, -y, z).getBlock().setType(m[count]);
+                        loc.clone().add(0, -y, z).getBlock().getState().setData(md[count]);
+                        count++;
+                    }
+                }
             }, 20L);
         }
     }

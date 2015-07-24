@@ -12,12 +12,12 @@ public class Flight {
 	public String name;
 	public List<Waypoint> waypoints = new ArrayList<Waypoint>();
 	public int wpcount = 0;
-	
+
 	public Flight() {
-		
+
 	}
-	
-	public Flight(World world, String flightname) {		
+
+	public Flight(World world, String flightname) {
 		this.displayname = flightname;
 		this.name = flightname.toLowerCase();
 	}
@@ -26,38 +26,38 @@ public class Flight {
 		waypoints.add(wp);
 		wpcount++;
 	}
-	
+
 	public void removelastWaypoint() {
-		
+
 		// Remove marker from waypoint
-		waypoints.get(waypoints.size()-1).removeMarker();
-		
+		waypoints.get(waypoints.size() - 1).removeMarker();
+
 		waypoints.remove(waypoints.size() - 1);
 		wpcount--;
 	}
 
-	public long getDistance(){
+	public long getDistance() {
 		long dist = 0;
 		Waypoint lwp = null;
-		for(Waypoint wp : waypoints){
-			if(wp==null){
+		for (Waypoint wp : waypoints) {
+			if (wp == null) {
 				lwp = wp;
 				continue;
 			}
-			dist += Math.hypot(wp.getAsLocation().getBlockX() - lwp.getAsLocation().getBlockX(),wp.getAsLocation().getBlockZ()-lwp.getAsLocation().getBlockZ());
+			dist += Math.hypot(wp.getAsLocation().getBlockX() - lwp.getAsLocation().getBlockX(), wp.getAsLocation().getBlockZ() - lwp.getAsLocation().getBlockZ());
 		}
 		return dist;
 	}
-	
+
 	public String toString() {
 
 		String flightString = displayname + ":\n";
-		
-		for(Waypoint wp: waypoints) {
+
+		for (Waypoint wp : waypoints) {
 			flightString += "- " + wp.x + ", " + wp.y + ", " + wp.z + ", " + wp.world.getName() + "\n";
 		}
-		
-		return flightString;		
+
+		return flightString;
 	}
 
 }
