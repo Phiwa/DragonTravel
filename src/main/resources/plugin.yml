@@ -1,7 +1,7 @@
 name: DragonTravel
-main: eu.phiwa.dt.DragonTravelMain
+main: eu.phiwa.dragontravel.core.DragonTravelMain
 author: Phiwa
-version: Phoenix v0.0.1.8
+version: ${project.version}
 load: POSTWORLD
 softdepend: [Vault, AntiCheat, NoCheatPlus, Factions]
 permissions:
