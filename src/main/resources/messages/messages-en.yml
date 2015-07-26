@@ -47,7 +47,9 @@ Messages:
             DismountedToStart: '&aYou cancelled your journey and were brought back to your starting-point.'
             ToggledPTravelOn: '&aYou now allow player-travels to you.'
             ToggledPTravelOff: '&aYou now don''t allow player-travels to you.'
-        Error:        
+        Error:
+            NoConsole: '&cThe console may not use this command in that way.'
+            NameTaken: '&cThat name is already taken.'
             NoPermission: '&cYou do not have the permission to use this.'
             NotMounted: '&cYou are not mounted.'
             RequireSkyLight: '&cYou must have access to sky light!'
@@ -57,6 +59,7 @@ Messages:
             BelowMinMountHeight: '&cYou are below the minimum height required to mount a dragon. Minimum height is &f{minheight}&c.'
             DamageCooldown: '&cYou must wait &f{seconds} &cmore seconds before you can mount a dragon.'
     Payment:
+        Free: '&aNo charge for you, hop on!'
         Resources:
             Successful:
                 WithdrawMessage: '&aSay bye to &f{amount}&a gold nugget(s).'

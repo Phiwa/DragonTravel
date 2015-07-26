@@ -1,9 +1,8 @@
 package eu.phiwa.dragontravel.core.filehandlers;
 
 import eu.phiwa.dragontravel.core.DragonTravelMain;
-import eu.phiwa.dragontravel.nms.IRyeDragon;
+import eu.phiwa.dragontravel.core.objects.StationaryDragon;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,14 +12,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Map;
 import java.util.logging.Level;
 
 public class StatDragonsDB {
 
-    // StatDragonsDB
-    private FileConfiguration dbStatDragonsConfig;
     private File dbStatDragonsFile;
+    private FileConfiguration dbStatDragonsConfig;
+    private ConfigurationSection statDragonsSection;
 
     public StatDragonsDB() {
         init();
@@ -62,35 +60,17 @@ public class StatDragonsDB {
      * Creates a new stat dragon.
      *
      * @param name Dragon name to create.
-     * @param loc  Dragon location.
+     * @param dragon  Dragon to save.
      * @return Returns true if the stat dragon was created successfully, false if not.
      */
-    @SuppressWarnings("static-access")
-    public boolean createStatDragon(String name, String displayName, Location loc) {
-
-        String path = "StatDragons." + name;
-
-        ConfigurationSection sec = dbStatDragonsConfig.createSection(path);
-        dbStatDragonsConfig.createPath(sec, "x");
-        dbStatDragonsConfig.createPath(sec, "y");
-        dbStatDragonsConfig.createPath(sec, "z");
-        dbStatDragonsConfig.createPath(sec, "yaw");
-        dbStatDragonsConfig.createPath(sec, "pitch");
-        dbStatDragonsConfig.createPath(sec, "world");
-        dbStatDragonsConfig.createPath(sec, "displayname");
-        dbStatDragonsConfig.set(path + ".x", loc.getX());
-        dbStatDragonsConfig.set(path + ".y", loc.getY());
-        dbStatDragonsConfig.set(path + ".z", loc.getZ());
-        dbStatDragonsConfig.set(path + ".yaw", loc.getYaw());
-        dbStatDragonsConfig.set(path + ".pitch", loc.getPitch());
-        dbStatDragonsConfig.set(path + ".world", loc.getWorld().getName());
-        dbStatDragonsConfig.set(path + ".displayname", displayName);
+    public boolean createStatDragon(String name, StationaryDragon dragon) {
+        statDragonsSection.set(name, dragon);
 
         try {
             dbStatDragonsConfig.save(dbStatDragonsFile);
             return true;
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not write new home to config.");
+            Bukkit.getLogger().log(Level.SEVERE, "Could not write new stat dragon to config.");
             return false;
         }
     }
@@ -102,10 +82,7 @@ public class StatDragonsDB {
      * @return True if successful, false if not.
      */
     public boolean deleteStatDragon(String name) {
-
-        name = "StatDragons." + name;
-
-        dbStatDragonsConfig.set(name, null);
+        statDragonsSection.set(name.toLowerCase(), null);
 
         try {
             dbStatDragonsConfig.save(dbStatDragonsFile);
@@ -123,12 +100,17 @@ public class StatDragonsDB {
      * @param name Name of the dragon which should be returned.
      * @return The dragon as a ryedragon-object.
      */
-    public IRyeDragon getStatDragon(String name) {
-
-        name = "StatDragons." + name;
-
-        if (!DragonTravelMain.listofStatDragons.containsKey(name))
-            return null;
+    public StationaryDragon getStatDragon(String name) {
+        if (!DragonTravelMain.listofStatDragons.containsKey(name)) {
+            Object obj = statDragonsSection.get(name.toLowerCase(), null);
+            if (obj != null) {
+                // Transition support
+                if (obj instanceof ConfigurationSection) {
+                    return new StationaryDragon(name.toLowerCase(), ((ConfigurationSection) obj).getValues(true));
+                }
+            }
+            return (StationaryDragon) obj;
+        }
         return DragonTravelMain.listofStatDragons.get(name);
 
     }
@@ -147,6 +129,10 @@ public class StatDragonsDB {
         dbStatDragonsConfig = new YamlConfiguration();
         load();
 
+        statDragonsSection = dbStatDragonsConfig.getConfigurationSection("StatDragons");
+        if (statDragonsSection == null) {
+            statDragonsSection = dbStatDragonsConfig.createSection("StatDragons");
+        }
     }
 
     private void load() {
@@ -159,12 +145,18 @@ public class StatDragonsDB {
         }
     }
 
+    public void showStatDragons() {
+        System.out.println("Stationary Dragons: ");
+        statDragonsSection.getKeys(false).forEach(string -> {
+            System.out.println("- " + string);
+        });
+    }
+
     public void showStatDragons(Player player) {
-        player.sendMessage("Stationary Dragons [Name (X, Y, Z, World)]: ");
-        for (Map.Entry<String, IRyeDragon> entry : DragonTravelMain.listofStatDragons.entrySet()) {
-            String loc = "(" + entry.getValue().getEntity().getLocation().getBlockX() + ", " + entry.getValue().getEntity().getLocation().getBlockY() + ", " + entry.getValue().getEntity().getLocation().getBlockZ() + ", " + entry.getValue().getEntity().getLocation().getWorld().getName() + ")";
-            player.sendMessage("- " + entry.getKey() + " " + loc);
-        }
+        player.sendMessage("Stationary Dragons: ");
+        statDragonsSection.getKeys(false).forEach(string -> {
+            player.sendMessage("- " + string);
+        });
     }
 
     public FileConfiguration getDbStatDragonsConfig() {

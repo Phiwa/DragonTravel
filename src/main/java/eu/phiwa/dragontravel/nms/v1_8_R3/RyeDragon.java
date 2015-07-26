@@ -61,8 +61,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     private double YperTick;
     private double ZperTick;
 
-    public RyeDragon(Location loc, org.bukkit.World world) {
-        this(loc, ((CraftWorld) world).getHandle());
+    public RyeDragon(Location loc) {
+        this(loc, ((CraftWorld) loc.getWorld()).getHandle());
     }
 
     public RyeDragon(Location loc, World notchWorld) {
@@ -82,6 +82,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         //	yaw = 180F;
         //else
         //	yaw = 270F;
+        notchWorld.addEntity(this);
     }
 
     /**
@@ -112,8 +113,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     @Override
     public void startFlight(Flight flight) {
         this.dragonEntity = getEntity();
-        this.flightName = flight.name;
-        this.waypoints = flight.waypoints;
+        this.flightName = flight.getName();
+        this.waypoints = flight.getWaypoints();
         this.numberOfWaypoints = waypoints.size();
         this.nextWaypoint = waypoints.get(currentindexWaypoint);
         this.currentindexWaypoint++;
@@ -144,23 +145,23 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         double currentY = locY;
         double currentZ = locZ;
 
-        if ((int) currentX != nextWaypoint.x) {
-            if (currentX < nextWaypoint.x)
+        if ((int) currentX != nextWaypoint.getX()) {
+            if (currentX < nextWaypoint.getY())
                 currentX += XperTick;
             else
                 currentX -= XperTick;
         }
 
-        if ((int) currentY != nextWaypoint.y) {
-            if ((int) currentY < nextWaypoint.y) {
+        if ((int) currentY != nextWaypoint.getY()) {
+            if ((int) currentY < nextWaypoint.getY()) {
                 currentY += YperTick;
             } else {
                 currentY -= YperTick;
             }
         }
 
-        if ((int) currentZ != nextWaypoint.z) {
-            if (currentZ < nextWaypoint.z)
+        if ((int) currentZ != nextWaypoint.getZ()) {
+            if (currentZ < nextWaypoint.getZ())
                 currentZ += ZperTick;
             else
                 currentZ -= ZperTick;
@@ -181,14 +182,14 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 		   >> Reached the next (and not last) waypoint? <<
 		   The next waypoint is loaded and the dragon moves towards it
 		 */
-        if ((Math.abs((int) currentX - nextWaypoint.x) == 0 && Math.abs((int) currentZ - nextWaypoint.z) <= 3) || (Math.abs((int) currentZ - nextWaypoint.z) == 0 && Math.abs((int) currentX - nextWaypoint.x) <= 3) && (Math.abs((int) currentY - nextWaypoint.y) <= 5)) {
+        if ((Math.abs((int) currentX - nextWaypoint.getX()) == 0 && Math.abs((int) currentZ - nextWaypoint.getZ()) <= 3) || (Math.abs((int) currentZ - nextWaypoint.getZ()) == 0 && Math.abs((int) currentX - nextWaypoint.getZ()) <= 3) && (Math.abs((int) currentY - nextWaypoint.getY()) <= 5)) {
             if (currentindexWaypoint == numberOfWaypoints) {
                 try {
                     DragonManagement.removeRiderandDragon(dragonEntity,
-                            new Location(dragonEntity.getWorld(),
-                                    nextWaypoint.x,
-                                    nextWaypoint.y,
-                                    nextWaypoint.z,
+                            new Location(Bukkit.getWorld(nextWaypoint.getWorldName()),
+                                    nextWaypoint.getX(),
+                                    nextWaypoint.getY(),
+                                    nextWaypoint.getZ(),
                                     dragonEntity.getPassenger().getLocation().getYaw(),
                                     dragonEntity.getPassenger().getLocation().getPitch())
                     );
@@ -196,10 +197,10 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 
                 } catch (NullPointerException ex) {
                     DragonManagement.removeRiderandDragon(dragonEntity,
-                            new Location(dragonEntity.getWorld(),
-                                    nextWaypoint.x,
-                                    nextWaypoint.y,
-                                    nextWaypoint.z)
+                            new Location(Bukkit.getWorld(nextWaypoint.getWorldName()),
+                                    nextWaypoint.getX(),
+                                    nextWaypoint.getY(),
+                                    nextWaypoint.getZ())
                     );
                     return;
                 }
@@ -214,8 +215,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             this.startY = locY;
             this.startZ = locZ;
 
-            this.yaw = getCorrectYaw(nextWaypoint.x, nextWaypoint.z);
-            this.pitch = getCorrectPitch(nextWaypoint.x, nextWaypoint.z, nextWaypoint.y);
+            this.yaw = getCorrectYaw(nextWaypoint.getX(), nextWaypoint.getZ());
+            this.pitch = getCorrectPitch(nextWaypoint.getX(), nextWaypoint.getZ(), nextWaypoint.getY());
             Bukkit.getScheduler().runTaskLater(DragonTravelMain.getInstance(), () -> {
                 if (isAlive())
                     setYawPitch(yaw, pitch);
@@ -234,9 +235,9 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     @Override
     public void setMoveFlight() {
 
-        this.distanceX = this.startX - nextWaypoint.x;
-        this.distanceY = this.startY - nextWaypoint.y;
-        this.distanceZ = this.startZ - nextWaypoint.z;
+        this.distanceX = this.startX - nextWaypoint.getX();
+        this.distanceY = this.startY - nextWaypoint.getY();
+        this.distanceZ = this.startZ - nextWaypoint.getZ();
 
         double tick = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY)
                 + (distanceZ * distanceZ)) / DragonTravelMain.getInstance().getConfigHandler().getSpeed();

@@ -1,7 +1,12 @@
 package eu.phiwa.dragontravel.nms.v1_7_R3;
 
 import eu.phiwa.dragontravel.nms.IEntityRegister;
+import eu.phiwa.dragontravel.nms.IRyeDragon;
 import net.minecraft.server.v1_7_R3.EntityTypes;
+import net.minecraft.server.v1_7_R3.World;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftEntity;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -45,5 +50,11 @@ public class EntityRegister implements IEntityRegister {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public void spawnEntity(Location loc, IRyeDragon dragon) {
+        World notchWorld = ((CraftWorld) loc.getWorld()).getHandle();
+        notchWorld.addEntity(((CraftEntity) dragon).getHandle());
     }
 }

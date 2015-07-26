@@ -3,20 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.phiwa</groupId>
     <artifactId>DragonTravel</artifactId>
-    <version>01.001.01</version>
+    <version>01.001.15</version>
     <build>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/java</directory>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
+                <filtering>true</filtering>
             </resource>
         </resources>
         <plugins>
@@ -27,6 +19,36 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <artifactSet>
+                        <includes>
+                            <include>com.sk89q:command-framework-bukkit</include>
+                        </includes>
+                    </artifactSet>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.sk89q.bukkit.util</pattern>
+                            <shadedPattern>eu.phiwa.dragontravel.lib.sk89q.bukkit</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.sk89q.minecraft.util</pattern>
+                            <shadedPattern>eu.phiwa.dragontravel.lib.sk89q.minecraft</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -46,6 +68,10 @@
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+        </repository>
+        <repository>
+            <id>maven.sk89q.com</id>
+            <url>http://maven.sk89q.com/repo/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -87,6 +113,8 @@
             <groupId>fr.neatmonster</groupId>
             <artifactId>ncpplugin</artifactId>
             <version>static</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/NoCheatPlus.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.gravitydevelopment.anticheat</groupId>
@@ -94,6 +122,11 @@
             <version>2.0.2</version>
             <type>jar</type>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q.intake</groupId>
+            <artifactId>intake</artifactId>
+            <version>4.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

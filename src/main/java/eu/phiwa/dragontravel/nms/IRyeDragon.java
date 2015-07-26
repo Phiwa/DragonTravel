@@ -27,6 +27,8 @@ public interface IRyeDragon {
 
     float getCorrectPitch(double targetx, double targety, double targetz);
 
+    String getCustomName();
+
     void setCustomName(String name);
 
     double getCoveredDist();
@@ -37,4 +39,7 @@ public interface IRyeDragon {
 
     void setTotalDist(double dist);
 
+    void fixWings();
+
+    void setCustomNameVisible(boolean b);
 }

@@ -21,21 +21,17 @@ public class FlightEditor implements Listener {
 	public FlightEditor() {
 	}
 
-	public static void addEditor(Player player, String flightname) {
+	public static void addEditor(Player player, String flightName, String displayName) {
 		if (!editors.containsKey(player))
-			editors.put(player, new Flight(player.getWorld(), flightname));
+			editors.put(player, new Flight(flightName, displayName));
 	}
 
 	public static boolean isEditor(Player player) {
-		if (editors.containsKey(player))
-			return true;
-		else
-			return false;
+		return editors.containsKey(player);
 	}
 
-	public static void removeEditor(Player player) {
-		if (editors.containsKey(player))
-			editors.remove(player);
+	public static boolean removeEditor(Player player) {
+		return editors.remove(player) != null;
 	}
 
 	@EventHandler
@@ -52,7 +48,7 @@ public class FlightEditor implements Listener {
 
 		if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			Flight flight = editors.get(player);
-			if (!flight.waypoints.isEmpty()) {
+			if (!flight.getWaypoints().isEmpty()) {
 				flight.removelastWaypoint();
 			}
 
@@ -63,10 +59,10 @@ public class FlightEditor implements Listener {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
 			Flight flight = editors.get(player);
 			Waypoint wp = new Waypoint();
-			wp.x = (int) loc.getX();
-			wp.y = (int) loc.getY();
-			wp.z = (int) loc.getZ();
-			wp.world = loc.getWorld();
+			wp.setX(loc.getBlockX());
+			wp.setY(loc.getBlockY());
+			wp.setZ(loc.getBlockZ());
+			wp.setWorldName(loc.getWorld().getName());
 			flight.addWaypoint(wp);
 
 			// Create a marker at the waypoint

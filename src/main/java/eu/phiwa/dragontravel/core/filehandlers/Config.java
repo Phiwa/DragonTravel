@@ -155,6 +155,7 @@ public class Config {
 
     private void noLongerRequiredConfig() {
         config.set("Payment.Resources.Item", null);
+        config.set("Payment.usePayment", null);
     }
 
     private void updateConfig() {
