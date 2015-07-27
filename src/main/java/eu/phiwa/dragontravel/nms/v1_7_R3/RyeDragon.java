@@ -167,6 +167,9 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         }
 
         setCoveredDist(getCoveredDist() + Math.hypot(currentX, currentZ));
+        if (coveredDist > totalDist) {
+            coveredDist = totalDist;
+        }
         ((LivingEntity) getEntity()).setHealth(60 * (coveredDist / totalDist));
 
 		/*
@@ -375,6 +378,9 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         this.pitch = getCorrectPitch(myX, myY, myZ);
         setPositionRotation(myX, myY, myZ, yaw, pitch);
         coveredDist = Math.hypot(getEntity().getLocation().getBlockX() - start.getBlockX(), getEntity().getLocation().getBlockZ() - start.getBlockZ());
+        if (coveredDist > totalDist) {
+            coveredDist = totalDist;
+        }
         ((LivingEntity) getEntity()).setHealth(60 * (coveredDist / totalDist));
     }
 
@@ -397,6 +403,11 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     }
 
     public void fixWings() {
+        if (isFlight || isTravel) {
+            if (rider != null)
+                ((LivingEntity) getEntity()).damage(2, rider);
+            else return;
+        }
         WingFixerTask wfTask = new WingFixerTask();
         wfTask.setId(Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonTravelMain.getInstance(), wfTask, 1L, 21L));
     }

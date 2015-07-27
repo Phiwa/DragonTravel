@@ -1,9 +1,6 @@
 package eu.phiwa.dragontravel.core.commands;
 
-import com.sk89q.intake.Command;
-import com.sk89q.intake.CommandException;
-import com.sk89q.intake.Require;
-import com.sk89q.intake.argument.CommandContext;
+import com.sk89q.minecraft.util.commands.*;
 import eu.phiwa.dragontravel.core.DragonTravelMain;
 import eu.phiwa.dragontravel.core.flights.FlightEditor;
 import eu.phiwa.dragontravel.core.flights.Waypoint;
@@ -56,7 +53,7 @@ public final class DragonTravelCommands {
             usage = "[subcommand] [page]",
             min = 0, max = 2,
             help = "Shows more extensive help for each subcommand")
-    @Require({"dt.seecommand"})
+    @CommandPermissions({"dt.seecommand"})
     public static void help(CommandContext args, CommandSender sender) throws CommandException {
         int page = 1;
         if (args.argsLength() == 0) {
@@ -126,7 +123,7 @@ public final class DragonTravelCommands {
             desc = "Reload the config",
             usage = "/dt reload",
             help = "Reloads all files (extremely buggy!)")
-    @Require({"dt.admin.reload"})
+    @CommandPermissions({"dt.admin.reload"})
     public static void reload(CommandContext args, CommandSender sender) throws CommandException {
         DragonTravelMain.getInstance().reload();
     }
@@ -156,7 +153,7 @@ public final class DragonTravelCommands {
             min = 0, max = 1, flags = "g",
             help = "Removes all dragons (except stationary dragons) without riders.\n"
                     + "It only acts on the world you're currently in, unless you use the -g ('global')")
-    @Require({"dt.admin.remdragons"})
+    @CommandPermissions({"dt.admin.remdragons"})
     public static void removeDragons(CommandContext args, CommandSender sender) throws CommandException {
         if (args.hasFlag('g')) {
             for (World world : Bukkit.getWorlds()) {
@@ -187,7 +184,7 @@ public final class DragonTravelCommands {
             desc = "Create a stationary dragon where you are",
             usage = "/dt addstatdragon <name> [display_name]",
             min = 1, max = 2)
-    @Require({"dt.admin.statdragon"})
+    @CommandPermissions({"dt.admin.statdragon"})
     public static void createStationaryDragon(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -210,7 +207,7 @@ public final class DragonTravelCommands {
             desc = "Delete a stationary dragon",
             usage = "/dt remstatdragon <name>",
             min = 1, max = 2)
-    @Require({"dt.admin.statdragon"})
+    @CommandPermissions({"dt.admin.statdragon"})
     public static void deleteStationaryDragon(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -239,7 +236,7 @@ public final class DragonTravelCommands {
                     + "Depending on the server's settings, "
                     + "you might be teleported back to the "
                     + "point you started your journey from.")
-    @Require({"dt.dismount"})
+    @CommandPermissions({"dt.dismount"})
     public static void dismount(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -256,7 +253,7 @@ public final class DragonTravelCommands {
             min = 0, max = 1,
             flags = "yn",
             help = "Toggles whether you allow/don't allow\n player-travels to you.")
-    @Require({"dt.ptoggle", "dt.ptoggle.other"})
+    @CommandPermissions({"dt.ptoggle", "dt.ptoggle.other"})
     public static void ptoggle(CommandContext args, CommandSender sender) throws CommandException {
         String playerName;
         String playerId;
@@ -304,7 +301,7 @@ public final class DragonTravelCommands {
             desc = "Set your DragonTravel home",
             usage = "/dt sethome",
             help = "Sets your DragonTravel home.")
-    @Require({"dt.sethome"})
+    @CommandPermissions({"dt.sethome"})
     public static void setHome(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -324,7 +321,7 @@ public final class DragonTravelCommands {
             usage = "/dt flight <flight name> [player=you]",
             min = 1, max = 2,
             help = "Starts the specified flight.")
-    @Require({"dt.start.flight.command", "dt.start.flight.command.other"})
+    @CommandPermissions({"dt.start.flight.command", "dt.start.flight.command.other"})
     public static void startFlight(CommandContext args, CommandSender sender) throws CommandException {
         String flight = args.getString(0);
         Player player;
@@ -371,7 +368,7 @@ public final class DragonTravelCommands {
             usage = "/dt travel <station name>",
             min = 1, max = 1,
             help = "Brings you to the specified station")
-    @Require({"dt.start.travel.command"})
+    @CommandPermissions({"dt.start.travel.command"})
     public static void startStationTravel(CommandContext args, CommandSender sender) throws CommandException {
         String station = args.getString(0);
 
@@ -401,7 +398,7 @@ public final class DragonTravelCommands {
             usage = "/dt ptravel <player>",
             min = 1, max = 1,
             help = "Brings you to the specified player")
-    @Require({"dt.start.player.command"})
+    @CommandPermissions({"dt.start.player.command"})
     public static void startPlayerTravel(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -433,7 +430,7 @@ public final class DragonTravelCommands {
             usage = "/dt ctravel x y z [world]",
             min = 3, max = 4,
             help = "Brings you to the specified location")
-    @Require({"dt.start.coord.command"})
+    @CommandPermissions({"dt.start.coord.command"})
     public static void startCoordsTravel(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -461,7 +458,7 @@ public final class DragonTravelCommands {
             desc = "Travel to your home",
             usage = "/dt home",
             help = "Brings you to your home")
-    @Require({"dt.start.home.command"})
+    @CommandPermissions({"dt.start.home.command"})
     public static void startHomeTravel(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -477,7 +474,7 @@ public final class DragonTravelCommands {
     @Command(aliases = {"fhome"},
             desc = "Travel to your faction home",
             usage = "/dt fhome")
-    @Require({"dt.start.fhome.command"})
+    @CommandPermissions({"dt.start.fhome.command"})
     public static void startFHomeTravel(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -499,7 +496,7 @@ public final class DragonTravelCommands {
             usage = "/dt createflight",
             help = "Creates a new flight and puts you into the flight-creation mode.\n\n"
                     + "You MUST NOT be in Flight Editing mode when you use this command.")
-    @Require({"dt.edit.flights", "dt.edit.*"})
+    @CommandPermissions({"dt.edit.flights", "dt.edit.*"})
     public static void newFlight(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -532,7 +529,7 @@ public final class DragonTravelCommands {
             usage = "/dt remflight <name>",
             min = 1, max = 1,
             help = "Removes the flight with the specified name.")
-    @Require({"dt.edit.flights", "dt.edit.*"})
+    @CommandPermissions({"dt.edit.flights", "dt.edit.*"})
     public static void removeFlight(CommandContext args, CommandSender sender) throws CommandException {
         if (DragonTravelMain.getInstance().getDbFlightsHandler().getFlight(args.getString(0)) == null) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightDoesNotExist"));
@@ -549,7 +546,7 @@ public final class DragonTravelCommands {
             usage = "/dt saveflight",
             help = "Saves the flight and ends flight-creation mode.\n\n"
                     + "You MUST be in Flight Editing mode when you use this command.")
-    @Require({"dt.edit.flights", "dt.edit.*"})
+    @CommandPermissions({"dt.edit.flights", "dt.edit.*"})
     public static void saveFlight(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -580,7 +577,7 @@ public final class DragonTravelCommands {
             min = 0, max = 4,
             help = "Add a new waypoint to the flight where you're standing, or at the given coordinates.\n\n"
                     + "You MUST be in Flight Editing mode when you use this command.")
-    @Require({"dt.edit.flights", "dt.edit.*"})
+    @CommandPermissions({"dt.edit.flights", "dt.edit.*"})
     public static void setWaypoint(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -623,7 +620,7 @@ public final class DragonTravelCommands {
             usage = "/dt remwp",
             help = "Remove the most recently added waypoint from the flight.\n\n"
                     + "You MUST be in Flight Editing mode when you use this command.")
-    @Require({"dt.edit.flights", "dt.edit.*"})
+    @CommandPermissions({"dt.edit.flights", "dt.edit.*"})
     public static void removeWaypoint(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -645,7 +642,7 @@ public final class DragonTravelCommands {
             desc = "Creates a new station here.",
             usage = "/dt setstation <name> [display_name]",
             help = "Creates a new station with the given name at your current location.")
-    @Require({"dt.edit.stations", "dt.edit.*"})
+    @CommandPermissions({"dt.edit.stations", "dt.edit.*"})
     public static void setStation(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -679,7 +676,7 @@ public final class DragonTravelCommands {
             desc = "Delete a station",
             usage = "/dt delstation <name>",
             help = "Removes the station with the specified name.")
-    @Require({"dt.edit.stations", "dt.edit.*"})
+    @CommandPermissions({"dt.edit.stations", "dt.edit.*"})
     public static void removeStation(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
@@ -706,7 +703,7 @@ public final class DragonTravelCommands {
 
     public static class DragonTravelParentCommand {
         @Command(aliases = {"dt", "dragontravel"}, desc = "DragonTravel commands")
-        @Require({"dt.seecommand"})
+        @CommandPermissions({"dt.seecommand"})
         @NestedCommand({DragonTravelCommands.class})
         public static void dragonTravel() {
         }

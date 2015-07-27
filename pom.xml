@@ -23,23 +23,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.2</version>
+                <version>1.4</version>
                 <configuration>
                     <artifactSet>
                         <includes>
                             <include>com.sk89q:command-framework-bukkit</include>
                         </includes>
                     </artifactSet>
-                    <relocations>
-                        <relocation>
-                            <pattern>com.sk89q.bukkit.util</pattern>
-                            <shadedPattern>eu.phiwa.dragontravel.lib.sk89q.bukkit</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>com.sk89q.minecraft.util</pattern>
-                            <shadedPattern>eu.phiwa.dragontravel.lib.sk89q.minecraft</shadedPattern>
-                        </relocation>
-                    </relocations>
                 </configuration>
                 <executions>
                     <execution>
@@ -70,8 +60,8 @@
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
         </repository>
         <repository>
-            <id>maven.sk89q.com</id>
-            <url>http://maven.sk89q.com/repo/</url>
+            <id>overcast releases</id>
+            <url>http://repo.oc.tc/content/repositories/releases/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -124,9 +114,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.sk89q.intake</groupId>
-            <artifactId>intake</artifactId>
-            <version>4.0-SNAPSHOT</version>
+            <groupId>com.sk89q</groupId>
+            <artifactId>command-framework-bukkit</artifactId>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

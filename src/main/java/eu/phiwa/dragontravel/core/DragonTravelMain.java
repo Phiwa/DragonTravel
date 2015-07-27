@@ -1,5 +1,8 @@
 package eu.phiwa.dragontravel.core;
 
+import com.sk89q.bukkit.util.BukkitCommandsManager;
+import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.minecraft.util.commands.*;
 import eu.phiwa.dragontravel.core.anticheatplugins.CheatProtectionHandler;
 import eu.phiwa.dragontravel.core.commands.CommandHelpTopic;
 import eu.phiwa.dragontravel.core.commands.DragonTravelCommands;
