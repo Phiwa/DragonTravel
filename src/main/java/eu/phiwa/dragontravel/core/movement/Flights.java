@@ -90,7 +90,8 @@ public class Flights {
 		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.getDisplayName())));
 		dragon.setTotalDist(Math.round(flight.getDistance() + Math.hypot(firstwp.getBlockX() - temploc.getBlockX(), firstwp.getBlockZ() - temploc.getBlockZ())));
 		dragon.setCoveredDist(0);
-        ((LivingEntity) dragon.getEntity()).setMaxHealth(60);
+		((LivingEntity) dragon.getEntity()).setMaxHealth(61d);
+		((LivingEntity) dragon.getEntity()).setHealth(1d);
 		dragon.startFlight(flight);
 	}
 }

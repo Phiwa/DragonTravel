@@ -26,12 +26,6 @@ import java.util.List;
 
 public class PlayerListener implements Listener {
 
-    DragonTravelMain plugin;
-
-    public PlayerListener(DragonTravelMain plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         DragonTravelMain.ptogglers.put(event.getPlayer().getUniqueId(), DragonTravelMain.getInstance().getConfigHandler().isPtoggleDefault());

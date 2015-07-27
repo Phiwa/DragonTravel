@@ -70,6 +70,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         this.start = loc;
         setPosition(loc.getX(), loc.getY(), loc.getZ());
         yaw = loc.getYaw() + 180;
+        pitch = 0f;
         while (yaw > 360)
             yaw -= 360;
         while (yaw < 0)
@@ -103,6 +104,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         else if (isFlight) {
             flight();
         }
+        setYawPitch(yaw, pitch);
     }
 
     /**
@@ -167,6 +169,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                 currentZ -= ZperTick;
         }
 
+        setYawPitch(yaw, pitch);
+
         setCoveredDist(getCoveredDist() + Math.hypot(currentX, currentZ));
         if (coveredDist > totalDist) {
             coveredDist = totalDist;
@@ -185,7 +189,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 		   >> Reached the next (and not last) waypoint? <<
 		   The next waypoint is loaded and the dragon moves towards it
 		 */
-        if ((Math.abs((int) currentX - nextWaypoint.getX()) == 0 && Math.abs((int) currentZ - nextWaypoint.getZ()) <= 3) || (Math.abs((int) currentZ - nextWaypoint.getZ()) == 0 && Math.abs((int) currentX - nextWaypoint.getZ()) <= 3) && (Math.abs((int) currentY - nextWaypoint.getY()) <= 5)) {
+        if ((Math.abs((int) currentZ - nextWaypoint.getZ()) <= 3) && Math.abs((int) currentX - nextWaypoint.getX()) <= 3 && (Math.abs((int) currentY - nextWaypoint.getY()) <= 5)) {
             if (currentindexWaypoint == numberOfWaypoints) {
                 try {
                     DragonManagement.removeRiderandDragon(dragonEntity,
@@ -218,13 +222,15 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             this.startY = locY;
             this.startZ = locZ;
 
+            if (!this.nextWaypoint.getWorldName().equals(this.getEntity().getWorld().getName())) {
+                this.teleportTo(this.nextWaypoint.getAsLocation(), true);
+                this.currentindexWaypoint++;
+                this.nextWaypoint = waypoints.get(currentindexWaypoint);
+            }
+
             this.yaw = getCorrectYaw(nextWaypoint.getX(), nextWaypoint.getZ());
             this.pitch = getCorrectPitch(nextWaypoint.getX(), nextWaypoint.getZ(), nextWaypoint.getY());
-            Bukkit.getScheduler().runTaskLater(DragonTravelMain.getInstance(), () -> {
-                if (isAlive())
-                    setYawPitch(yaw, pitch);
-            }, 1L);
-
+            setYawPitch(yaw, pitch);
             setMoveFlight();
             return;
         }

@@ -184,7 +184,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 		   >> Reached the next (and not last) waypoint? <<
 		   The next waypoint is loaded and the dragon moves towards it
 		 */
-        if ((Math.abs((int) currentX - nextWaypoint.getX()) == 0 && Math.abs((int) currentZ - nextWaypoint.getZ()) <= 3) || (Math.abs((int) currentZ - nextWaypoint.getZ()) == 0 && Math.abs((int) currentX - nextWaypoint.getX()) <= 3) && (Math.abs((int) currentY - nextWaypoint.getY()) <= 5)) {
+        if ((Math.abs((int) currentZ - nextWaypoint.getZ()) <= 3) && Math.abs((int) currentX - nextWaypoint.getX()) <= 3 && (Math.abs((int) currentY - nextWaypoint.getY()) <= 5)) {
             if (currentindexWaypoint == numberOfWaypoints) {
                 try {
                     DragonManagement.removeRiderandDragon(dragonEntity,
@@ -196,7 +196,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                                     dragonEntity.getPassenger().getLocation().getPitch())
                     );
                     return;
-
                 } catch (NullPointerException ex) {
                     DragonManagement.removeRiderandDragon(dragonEntity,
                             new Location(Bukkit.getWorld(nextWaypoint.getWorldName()),
@@ -217,8 +216,16 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             this.startY = locY;
             this.startZ = locZ;
 
+            if (!this.nextWaypoint.getWorldName().equals(this.getEntity().getWorld().getName())) {
+                this.teleportTo(this.nextWaypoint.getAsLocation(), true);
+                this.currentindexWaypoint++;
+                this.nextWaypoint = waypoints.get(currentindexWaypoint);
+            }
+
             this.yaw = getCorrectYaw(nextWaypoint.getX(), nextWaypoint.getZ());
             this.pitch = getCorrectPitch(nextWaypoint.getX(), nextWaypoint.getZ(), nextWaypoint.getY());
+
+            this.setPositionRotation(this.nextWaypoint.getX(), this.nextWaypoint.getY(), this.nextWaypoint.getZ(), yaw, pitch);
 
             setMoveFlight();
             return;

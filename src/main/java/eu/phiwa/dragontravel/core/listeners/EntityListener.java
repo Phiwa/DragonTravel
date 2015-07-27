@@ -16,25 +16,19 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class EntityListener implements Listener {
 
-	DragonTravelMain plugin;
-
-	public EntityListener(DragonTravelMain plugin) {
-		this.plugin = plugin;
-	}
-
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 		if (event.getSpawnReason() != SpawnReason.CUSTOM)
 			return;
 
-		if (!event.getEntity().getType().toString().equals("ENDER_DRAGON"))
-			return;
+        if (!event.getEntity().getType().toString().equals("RyeDragon"))
+            return;
 
 		if (!event.isCancelled())
 			return;
 
-		if (DragonTravelMain.getInstance().getConfigHandler().isIgnoreAntiMobspawnAreas() == true)
-			event.setCancelled(false);
+        if (!DragonTravelMain.getInstance().getConfigHandler().isIgnoreAntiMobspawnAreas())
+            event.setCancelled(false);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
