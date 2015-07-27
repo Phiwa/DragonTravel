@@ -13,16 +13,6 @@ public class NMSHandler {
 
     private static final String packageName = "eu.phiwa.dragontravel.nms..";
 
-    private static final Class<?>[] nmsDragonClasses = new Class<?>[]{
-            eu.phiwa.dragontravel.nms.v1_8_R3.RyeDragon.class,
-            eu.phiwa.dragontravel.nms.v1_7_R3.RyeDragon.class
-    };
-
-    private static final Class<?>[] nmsEntityRegisterClasses = new Class<?>[]{
-            eu.phiwa.dragontravel.nms.v1_8_R3.EntityRegister.class,
-            eu.phiwa.dragontravel.nms.v1_7_R3.EntityRegister.class
-    };
-
     private String sourcePath, version;
 
     public NMSHandler() {
@@ -34,11 +24,11 @@ public class NMSHandler {
         version = sourcePath.substring(sourcePath.lastIndexOf('.') + 1);
     }
 
-    public IRyeDragon getRyeDragon(Location loc, org.bukkit.World world) {
+    public IRyeDragon getRyeDragon(Location loc) {
         try {
             final Class<?> clazz = Class.forName(packageName.replace("..", "." + version + ".RyeDragon"));
             if (IRyeDragon.class.isAssignableFrom(clazz)) {
-                return (IRyeDragon) clazz.getConstructor(new Class[]{Location.class, org.bukkit.World.class}).newInstance(loc, world);
+                return (IRyeDragon) clazz.getConstructor(new Class[]{Location.class}).newInstance(loc);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

@@ -14,7 +14,7 @@ public class Messages {
     // Messages
     private FileConfiguration messages;
     private File messagesFile;
-    private double messagesVersion = 0.6;
+    private double messagesVersion = 0.7;
 
     private String language = "";
     private String pathInsideJAR = "main/resources/messages/";
@@ -117,6 +117,12 @@ public class Messages {
             messages.set("Messages.Travels.Successful.TravellingToFactionHome", "&aTravelling to the faction home.");
         if (messages.get("Messages.General.Error.RequireSkyLight") == null)
             messages.set("Messages.General.Error.RequireSkyLight", "&cYou must have access to sky light!");
+        if (messages.get("Messages.General.Error.NoConsole") == null)
+            messages.set("Messages.General.Error.NoConsole", "&cThe console may not use this command in that way.");
+        if (messages.get("Messages.General.Error.NameTaken") == null)
+            messages.set("Messages.General.Error.NameTaken", "&cThat name is already taken.");
+        if (messages.get("Messages.Payment.Free") == null)
+            messages.set("Messages.Payment.Free", "&aNo charge for you, hop on!");
 
         // Update the file version
         messages.set("File.Version", messagesVersion);

@@ -144,7 +144,7 @@ public class Travels {
 
 		Home home = DragonTravelMain.getInstance().getDbHomesHandler().getHome(player.getUniqueId().toString());
 
-		if ((home) == null) {
+		if (home == null) {
 			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.NoHomeSet"));
 			return;
 		}
@@ -155,11 +155,7 @@ public class Travels {
 				return;
 			}
 		}
-
-
-		Location destinationLoc = new Location(home.world, home.x, home.y, home.z);
-		travel(player, destinationLoc, checkForStation, DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToHome"));
-
+		travel(player, home.toLocation(), checkForStation, DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToHome"));
 		player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToHome"));
 	}
 
@@ -245,10 +241,9 @@ public class Travels {
 			}
 		}
 
-		player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.displayname));
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.getDisplayName())));
 
-		Location destinationLoc = new Location(destination.world, destination.x, destination.y, destination.z);
-		travel(player, destinationLoc, checkForStation, DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.displayname));
+		travel(player, destination.toLocation(), checkForStation, DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.getDisplayName()));
 	}
 
 	/**

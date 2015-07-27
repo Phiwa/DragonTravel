@@ -6,6 +6,7 @@ import eu.phiwa.dragontravel.core.objects.Flight;
 import eu.phiwa.dragontravel.nms.IRyeDragon;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -34,32 +35,20 @@ public class Flights {
 	 * @param sendingPlayer   Player who sent the player on a flight.
 	 *                        Gets all messages about problems until the flight is started
 	 */
-	public static void startFlight(Player player, String flightname, Boolean checkForStation, boolean sentbyadmin, Player sendingPlayer) {
+	public static void startFlight(Player player, String flightname, Boolean checkForStation, boolean sentbyadmin, CommandSender sendingPlayer) {
 
-		Player playerToSendMessagesTo;
+		CommandSender sender;
 
 		if (sentbyadmin)
-			playerToSendMessagesTo = sendingPlayer;
+			sender = sendingPlayer;
 		else
-			playerToSendMessagesTo = player;
+			sender = player;
 
 		Flight flight = DragonTravelMain.getInstance().getDbFlightsHandler().getFlight(flightname);
 
 		if (flight == null) {
 			// Sent by console
-			if (sentbyadmin && playerToSendMessagesTo == null)
-				System.out.println("[DragonTravel] Flight does not exist!");
-			else
-				playerToSendMessagesTo.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightDoesNotExist"));
-			return;
-		}
-
-		if (flight.waypoints.get(0).world.getName() != player.getWorld().getName()) {
-			// Sent by console
-			if (sentbyadmin && playerToSendMessagesTo == null)
-				System.out.println("[DragonTravel] The flight is in a different world than the player!");
-			else
-				playerToSendMessagesTo.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightIsInDifferentWorld"));
+			sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightDoesNotExist"));
 			return;
 		}
 
@@ -68,21 +57,21 @@ public class Flights {
 		if (!sentbyadmin) {
 			if (checkForStation && DragonTravelMain.getInstance().getConfig().getBoolean("MountingLimit.EnableForFlights") && !player.hasPermission("dt.ignoreusestations.flights")) {
 				if (!DragonTravelMain.getInstance().getDbStationsHandler().checkForStation(player)) {
-					player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.NotAtAStation"));
+					sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.NotAtAStation"));
 					return;
 				}
 			}
 
 			if (DragonTravelMain.getInstance().getConfigHandler().isRequireItemFlight()) {
 				if (!player.getInventory().contains(DragonTravelMain.getInstance().getConfigHandler().getRequiredItem()) && !player.hasPermission("dt.notrequireitem.flight")) {
-					player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequiredItemMissing"));
+					sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequiredItemMissing"));
 					return;
 				}
 			}
 		}
 
 		Location temploc = player.getLocation();
-		Location firstwp = flight.waypoints.get(0).getAsLocation();
+		Location firstwp = flight.getWaypoints().get(0).getAsLocation();
 		temploc.setYaw(getCorrectYawForPlayer(player, firstwp));
 		player.teleport(temploc);
 
@@ -93,12 +82,12 @@ public class Flights {
 			return;
 
 		if (sentbyadmin) {
-			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.SentPlayer").replace("{flightname}", flight.displayname));
-			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.SendingPlayer").replace("{playername}", player.getName()).replace("{flightname}", flight.displayname));
+			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.SentPlayer").replace("{flightname}", flight.getDisplayName()));
+			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.SendingPlayer").replace("{playername}", player.getName()).replace("{flightname}", flight.getDisplayName()));
 		} else
-			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.displayname));
+			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.getDisplayName()));
 		IRyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);
-		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.displayname)));
+		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.getDisplayName())));
 		dragon.setTotalDist(Math.round(flight.getDistance() + Math.hypot(firstwp.getBlockX() - temploc.getBlockX(), firstwp.getBlockZ() - temploc.getBlockZ())));
 		dragon.setCoveredDist(0);
         ((LivingEntity) dragon.getEntity()).setMaxHealth(60);

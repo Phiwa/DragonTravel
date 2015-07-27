@@ -1,63 +1,65 @@
 package eu.phiwa.dragontravel.core;
 
-import eu.phiwa.dragontravel.core.anticheatplugins.AntiCheatHandler;
-import eu.phiwa.dragontravel.core.anticheatplugins.NoCheatPlusHandler;
-import eu.phiwa.dragontravel.core.commands.CommandHandler;
+import com.sk89q.bukkit.util.BukkitCommandsManager;
+import com.sk89q.bukkit.util.CommandsManagerRegistration;
+import com.sk89q.minecraft.util.commands.*;
+import eu.phiwa.dragontravel.core.anticheatplugins.CheatProtectionHandler;
+import eu.phiwa.dragontravel.core.commands.CommandHelpTopic;
+import eu.phiwa.dragontravel.core.commands.DragonTravelCommands;
 import eu.phiwa.dragontravel.core.filehandlers.*;
 import eu.phiwa.dragontravel.core.flights.FlightEditor;
 import eu.phiwa.dragontravel.core.listeners.BlockListener;
 import eu.phiwa.dragontravel.core.listeners.EntityListener;
 import eu.phiwa.dragontravel.core.listeners.PlayerListener;
 import eu.phiwa.dragontravel.core.modules.MountingScheduler;
-import eu.phiwa.dragontravel.core.modules.StationaryDragon;
-import eu.phiwa.dragontravel.core.payment.PaymentHandler;
+import eu.phiwa.dragontravel.core.objects.Flight;
+import eu.phiwa.dragontravel.core.objects.Home;
+import eu.phiwa.dragontravel.core.objects.Station;
+import eu.phiwa.dragontravel.core.objects.StationaryDragon;
+import eu.phiwa.dragontravel.core.payment.PaymentManager;
+import eu.phiwa.dragontravel.nms.IEntityRegister;
 import eu.phiwa.dragontravel.nms.IRyeDragon;
 import eu.phiwa.dragontravel.nms.NMSHandler;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
 public class DragonTravelMain extends JavaPlugin {
 
-    // Payment-Types
-    public static final int TRAVEL_TOSTATION = 1;
-    public static final int TRAVEL_TORANDOM = 2;
-    public static final int TRAVEL_TOPLAYER = 3;
-    public static final int TRAVEL_TOCOORDINATES = 4;
-    public static final int TRAVEL_TOHOME = 5;
-    public static final int TRAVEL_TOFACTIONHOME = 6;
-    public static final int FLIGHT = 7;
-    public static final int SETHOME = 8;
     public static HashMap<UUID, Long> dmgReceivers = new HashMap<>();
     public static HashMap<UUID, Boolean> ptogglers = new HashMap<>();
     public static HashMap<Block, Block> globalwaypointmarkers = new HashMap<>();
-    // CheatProtection-Pluginstatus
-    public static boolean anticheat;
-    public static boolean nocheatplus;
-    // Hashmaps
     public static HashMap<Player, IRyeDragon> listofDragonriders = new HashMap<>();
     public static HashMap<Player, Location> listofDragonsridersStartingpoints = new HashMap<>();
-    public static HashMap<String, IRyeDragon> listofStatDragons = new HashMap<>();
-    // Payment (Costs are directly read from the config/sign on-the-fly)
-    public static Economy economyProvider;
+    public static HashMap<String, StationaryDragon> listofStatDragons = new HashMap<>();
+
     private static DragonTravelMain instance;
+    public CustomCommandsManager commands;
+    public CommandHelpTopic help;
     //Handlers
     private Config configHandler;
     private NMSHandler nmsHandler;
+    private IEntityRegister entityRegister;
     private Messages messagesHandler;
     private FlightsDB dbFlightsHandler;
     private HomesDB dbHomesHandler;
     private StationsDB dbStationsHandler;
     private StatDragonsDB dbStatDragonsHandler;
+    private PaymentManager paymentManager;
+
+
     public DragonTravelMain() {
         instance = this;
     }
@@ -67,13 +69,26 @@ public class DragonTravelMain extends JavaPlugin {
     }
 
     @Override
+    public void onLoad() {
+        ConfigurationSerialization.registerClass(Station.class);
+        ConfigurationSerialization.registerClass(Home.class);
+        ConfigurationSerialization.registerClass(Flight.class);
+        ConfigurationSerialization.registerClass(StationaryDragon.class);
+        commands = new CustomCommandsManager();
+
+        final CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, commands);
+        cmdRegister.register(DragonTravelCommands.DragonTravelParentCommand.class);
+    }
+
+    @Override
     public void onEnable() {
         instance = this;
         nmsHandler = new NMSHandler();
+        entityRegister = nmsHandler.getEntityRegister();
 
         // Add the new entity to Minecraft's (Craftbukkit's) entities
         // Returns false if plugin disabled
-        if (!nmsHandler.getEntityRegister().registerEntity()) return;
+        if (!entityRegister.registerEntity()) return;
 
         Bukkit.getPluginManager().registerEvents(new EntityListener(this), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
@@ -99,50 +114,23 @@ public class DragonTravelMain extends JavaPlugin {
         dbStatDragonsHandler = new StatDragonsDB();
         if (dbStatDragonsHandler.getDbStatDragonsConfig().getConfigurationSection("StatDragons") != null) {
             for (String key : dbStatDragonsHandler.getDbStatDragonsConfig().getConfigurationSection("StatDragons").getKeys(false)) {
-                String path = "StatDragons." + key + ".";
-                String displayName = ChatColor.translateAlternateColorCodes('&', dbStatDragonsHandler.getDbStatDragonsConfig().getString(path + "displayname"));
-                Location loc = new Location(Bukkit.getWorld(dbStatDragonsHandler.getDbStatDragonsConfig().getString(path + "world")), dbStatDragonsHandler.getDbStatDragonsConfig().getDouble(path + "x"), dbStatDragonsHandler.getDbStatDragonsConfig().getDouble(path + "y"), dbStatDragonsHandler.getDbStatDragonsConfig().getDouble(path + "z"), (float) dbStatDragonsHandler.getDbStatDragonsConfig().getDouble(path + "yaw"), (float) dbStatDragonsHandler.getDbStatDragonsConfig().getDouble(path + "pitch"));
-                StationaryDragon.createStatDragon(loc, key, displayName, false);
+                dbStatDragonsHandler.getStatDragon(key.toLowerCase());
             }
         }
 
-        // Commands
-        getCommand("dt").setExecutor(new CommandHandler(this));
+        getServer().getHelpMap().addTopic((help = new CommandHelpTopic("DragonTravel")));
+        getServer().getHelpMap().addTopic(new CommandHelpTopic("/dt"));
 
-        // AntiCheat
-        if (AntiCheatHandler.getAntiCheat())
-            Bukkit.getLogger().info("[DragonTravel] AntiCheat-support enabled");
+        // Anti-cheat setup
+        CheatProtectionHandler.setup();
 
-        // NoCheatPlus
-        if (NoCheatPlusHandler.getNoCheatPlus())
-            Bukkit.getLogger().info("[DragonTravel] NoCheatPlus-support enabled");
-
-        if (configHandler.isUsePayment()) {
-
-            if (!configHandler.isByEconomy() && !configHandler.isByResources()) {
-                Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Payment has been enabled, but both payment-types are disabled, how should a player be able to pay?! Disabling payment...");
-                configHandler.setUsePayment(false);
-            }
-
-            if (configHandler.isByEconomy() && configHandler.isByResources()) {
-                Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Payment has been set to Economy AND Resources, but you can only use one type of payment! Disabling payment...");
-                configHandler.setUsePayment(false);
-            }
-
-            // Set up Economy (if config-option is set to true)
-            if (configHandler.isByEconomy()) {
-                if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-                    Bukkit.getLogger().info(String.format("[DragonTravel] Hooked into Vault, using it for economy-support"));
-                    Bukkit.getLogger().info(String.format("[DragonTravel] Enabled %s", getDescription().getVersion()));
-                    new PaymentHandler(this.getServer()).setupEconomy();
-                } else {
-                    Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] \"Vault\" was not found,");
-                    Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] disabling economy-support!");
-                    Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Turn off \"Payment.byEconomy\"");
-                    Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] in the config.yml or install Vault!");
-                }
-            }
+        if (configHandler.isByEconomy() && configHandler.isByResources()) {
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Payment has been set to Economy AND Resources, but you can only use one type of payment! Disabling payment...");
+            configHandler.setUsePayment(false);
         }
+
+        paymentManager = new PaymentManager(getServer());
+        Bukkit.getLogger().info(ChatColor.stripColor(String.format("Payment set up using '%s'.", paymentManager.handler.toString())));
 
         //Mounting Scheduler
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new MountingScheduler(), 60L, 30L);
@@ -150,8 +138,8 @@ public class DragonTravelMain extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for (String name : listofStatDragons.keySet()) {
-            StationaryDragon.removeStatDragon(name, false);
+        for (StationaryDragon sDragon : listofStatDragons.values()) {
+            sDragon.removeDragon(false);
         }
         Bukkit.getLogger().log(Level.INFO, String.format("[DragonTravel] -----------------------------------------------"));
         Bukkit.getLogger().log(Level.INFO, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
@@ -163,8 +151,8 @@ public class DragonTravelMain extends JavaPlugin {
         Bukkit.getLogger().log(Level.INFO, "WE RECOMMEND NOT TO DO THIS BECAUSE IT MIGHT CAUSE SERIUOS PROBLEMS!");
         Bukkit.getLogger().log(Level.INFO, "SIMPLY RESTART YOUR SERVER INSTEAD; THAT'S MUCH SAFER!");
 
-        for (String name : listofStatDragons.keySet()) {
-            StationaryDragon.removeStatDragon(name, false);
+        for (StationaryDragon sDragon : listofStatDragons.values()) {
+            sDragon.removeDragon(false);
         }
         listofStatDragons.clear();
 
@@ -184,14 +172,37 @@ public class DragonTravelMain extends JavaPlugin {
 
         if (dbStatDragonsHandler.getDbStatDragonsConfig().getConfigurationSection("StatDragons") != null) {
             for (String key : dbStatDragonsHandler.getDbStatDragonsConfig().getConfigurationSection("StatDragons").getKeys(false)) {
-                String path = "StatDragons." + key + ".";
-                String displayName = ChatColor.translateAlternateColorCodes('&', dbStatDragonsHandler.getDbStatDragonsConfig().getString(path + "displayname"));
-                Location loc = new Location(Bukkit.getWorld(dbStatDragonsHandler.getDbStatDragonsConfig().getString(path + "world")), dbStatDragonsHandler.getDbStatDragonsConfig().getDouble(path + "x"), dbStatDragonsHandler.getDbStatDragonsConfig().getDouble(path + "y"), dbStatDragonsHandler.getDbStatDragonsConfig().getDouble(path + "z"), (float) dbStatDragonsHandler.getDbStatDragonsConfig().getDouble(path + "yaw"), (float) dbStatDragonsHandler.getDbStatDragonsConfig().getDouble(path + "pitch"));
-                StationaryDragon.createStatDragon(loc, key, displayName, false);
+                StationaryDragon sDragon = dbStatDragonsHandler.getStatDragon(key.toLowerCase());
             }
         }
 
         Bukkit.getLogger().log(Level.INFO, "Successfully reloaded all files.");
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String label, String[] args) {
+
+        try {
+            commands.execute(cmd.getName(), args, sender, sender);
+        } catch (CommandPermissionsException e) {
+            sender.sendMessage(cmd.getPermissionMessage());
+        } catch (MissingNestedCommandException e) {
+            sender.sendMessage(ChatColor.RED + e.getUsage());
+        } catch (CommandUsageException e) {
+            sender.sendMessage(ChatColor.RED + e.getMessage());
+            sender.sendMessage(ChatColor.RED + e.getUsage());
+        } catch (WrappedCommandException e) {
+            if (e.getCause() instanceof NumberFormatException) {
+                sender.sendMessage(ChatColor.RED + "Number expected, string received instead.");
+            } else {
+                sender.sendMessage(ChatColor.RED + "An error has occurred. See console.");
+                e.printStackTrace();
+            }
+        } catch (CommandException e) {
+            sender.sendMessage(ChatColor.RED + e.getMessage());
+        }
+
+        return true;
     }
 
     public Config getConfigHandler() {
@@ -248,5 +259,28 @@ public class DragonTravelMain extends JavaPlugin {
 
     public void setDbStatDragonsHandler(StatDragonsDB dbStatDragonsHandler) {
         this.dbStatDragonsHandler = dbStatDragonsHandler;
+    }
+
+    public IEntityRegister getEntityRegister() {
+        return entityRegister;
+    }
+
+    public void setEntityRegister(IEntityRegister entityRegister) {
+        this.entityRegister = entityRegister;
+    }
+
+    public PaymentManager getPaymentManager() {
+        return paymentManager;
+    }
+
+    public void setPaymentManager(PaymentManager paymentManager) {
+        this.paymentManager = paymentManager;
+    }
+
+    public static class CustomCommandsManager extends BukkitCommandsManager {
+        public Map<String, Method> getSubcommandMethods(String rootCommand) {
+            Method m = this.commands.get(null).get(rootCommand);
+            return this.commands.get(m);
+        }
     }
 }

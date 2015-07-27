@@ -5,6 +5,7 @@ import eu.phiwa.dragontravel.core.objects.Station;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -18,8 +19,9 @@ import java.util.logging.Level;
 
 public class StationsDB {
 
-    private FileConfiguration dbStationsConfig;
     private File dbStationsFile;
+    private FileConfiguration dbStationsConfig;
+    private ConfigurationSection stationSection;
 
     public StationsDB() {
         init();
@@ -27,9 +29,7 @@ public class StationsDB {
 
     public boolean checkForStation(Player player) {
         String pathToStation;
-        int x,
-                y,
-                z;
+        int x, y, z;
         World world;
         Location tempLoc;
         Location playerLoc = player.getLocation();
@@ -73,63 +73,6 @@ public class StationsDB {
         return false;
     }
 
-    public Station getNearestStation(Player player) {
-        Station station = null;
-        String pathToStation;
-        int x,
-                y,
-                z;
-        World world;
-        Location tempLoc;
-        Location playerLoc = player.getLocation();
-
-        for (String string : dbStationsConfig.getConfigurationSection("Stations").getKeys(true)) {
-            if (string.contains(".displayname")) {
-                pathToStation = "Stations." + string;
-                pathToStation = pathToStation.replace(".displayname", "");
-
-                String worldname = dbStationsConfig.getString(pathToStation + ".world");
-                String name = dbStationsConfig.getString("Stations." + string + ".name");
-                String displayname = dbStationsConfig.getString("Stations." + string + ".displayname", name);
-                String pid = dbStationsConfig.getString("Stations." + string + ".owner", "admin");
-
-                if (worldname == null) {
-                    Bukkit.getLogger().log(Level.SEVERE, "The world of the station "
-                            + dbStationsConfig.getString(pathToStation + ".displayname")
-                            + " could not be read from the database, please check it for errors!");
-                    player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.DatabaseCorrupted"));
-                    return null;
-                }
-
-                world = Bukkit.getWorld(worldname);
-
-                if (world == null) {
-                    Bukkit.getLogger().log(Level.SEVERE, "Skipping station '" + dbStationsConfig.getString(pathToStation + ".displayname") + "' while checking for a station. There is no world '" + dbStationsConfig.getString(pathToStation + ".world") + "' on the server!");
-                    continue;
-                }
-
-
-                if (!world.getName().equalsIgnoreCase(player.getWorld().getName()))
-                    continue;
-
-                x = dbStationsConfig.getInt(pathToStation + ".x");
-                y = dbStationsConfig.getInt(pathToStation + ".y");
-                z = dbStationsConfig.getInt(pathToStation + ".z");
-
-
-                if (station == null) {
-                    station = new Station(name, displayname, x, y, z, worldname, pid);
-                }
-
-                tempLoc = new Location(world, x, y, z);
-                if (station.loc.distance(playerLoc) > tempLoc.distance(playerLoc))
-                    station = new Station(name, displayname, x, y, z, worldname, pid);
-            }
-        }
-
-        return null;
-    }
-
     private void copy(InputStream in, File file) {
 
         try {
@@ -168,30 +111,14 @@ public class StationsDB {
      * @param station Station to create.
      * @return Returns true if the station was created successfully, false if not.
      */
-    @SuppressWarnings("static-access")
-    public boolean createStation(Station station) {
-
-        String path = "Stations." + station.name;
-
-        ConfigurationSection sec = dbStationsConfig.createSection(path);
-        dbStationsConfig.createPath(sec, "displayname");
-        dbStationsConfig.createPath(sec, "owner");
-        dbStationsConfig.createPath(sec, "x");
-        dbStationsConfig.createPath(sec, "y");
-        dbStationsConfig.createPath(sec, "z");
-        dbStationsConfig.createPath(sec, "world");
-        dbStationsConfig.set(path + ".displayname", station.displayname);
-        dbStationsConfig.set(path + ".owner", station.owner);
-        dbStationsConfig.set(path + ".x", station.x);
-        dbStationsConfig.set(path + ".y", station.y);
-        dbStationsConfig.set(path + ".z", station.z);
-        dbStationsConfig.set(path + ".world", station.world.getName());
+    public boolean saveStation(Station station) {
+        stationSection.set(station.getName(), station);
 
         try {
             dbStationsConfig.save(dbStationsFile);
             return true;
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not write new station to config.");
+            Bukkit.getLogger().info("[DragonTravel] [Error] Could not write new station to config.");
             return false;
         }
     }
@@ -204,10 +131,7 @@ public class StationsDB {
      * @return True if successful, false if not.
      */
     public boolean deleteStation(String stationname) {
-
-        String stationpath = "Stations." + stationname.toLowerCase();
-        dbStationsConfig.set(stationpath, null);
-
+        stationSection.set(stationname.toLowerCase(), null);
         try {
             dbStationsConfig.save(dbStationsFile);
             return true;
@@ -220,31 +144,22 @@ public class StationsDB {
     /**
      * Returns the details of the station with the given name.
      *
-     * @param stationname Name of the station which should be returned.
+     * @param stationName Name of the station which should be returned.
      * @return The station as a station-object.
      */
-    public Station getStation(String stationname) {
-
-        String stationpath = "Stations." + stationname.toLowerCase();
-
-        if (dbStationsConfig.getString(stationpath + ".world") == null)
-            return null;
-
-        Location stationLoc = new Location(
-                Bukkit.getWorld(dbStationsConfig.getString(stationpath + ".world")),
-                (double) dbStationsConfig.getInt(stationpath + ".x"),
-                (double) dbStationsConfig.getInt(stationpath + ".y"),
-                (double) dbStationsConfig.getInt(stationpath + ".z")
-        );
-        String displayname = dbStationsConfig.getString(stationpath + ".displayname", "Dragon Station");
-        String owner = dbStationsConfig.getString(stationpath + ".owner", "admin");
-        return new Station(stationname, displayname, stationLoc, owner);
+    public Station getStation(String stationName) {
+        Object obj = stationSection.get(stationName, null);
+        if (obj != null) {
+            // Transition support
+            if (obj instanceof ConfigurationSection) {
+                return new Station(stationName, ((ConfigurationSection) obj).getValues(true));
+            }
+        }
+        return (Station) obj;
     }
 
     public void init() {
-
         dbStationsFile = new File("plugins/DragonTravel/databases", "stations.yml");
-
         try {
             create();
         } catch (Exception e) {
@@ -255,6 +170,10 @@ public class StationsDB {
         dbStationsConfig = new YamlConfiguration();
         load();
 
+        stationSection = dbStationsConfig.getConfigurationSection("Stations");
+        if (stationSection == null) {
+            stationSection = dbStationsConfig.createSection("Stations");
+        }
     }
 
     private void load() {
@@ -267,20 +186,17 @@ public class StationsDB {
         }
     }
 
-    public void showStations() {
-        System.out.println("Available stations: ");
-        dbStationsConfig.getConfigurationSection("Stations").getKeys(true).stream().filter(string -> string.contains(".displayname")).forEach(string -> {
-            System.out.println("- " + dbStationsConfig.getString("Stations." + string));
-        });
-    }
-
-    public void showStations(Player player) {
-        player.sendMessage("Available stations: ");
-        dbStationsConfig.getConfigurationSection("Stations").getKeys(true).stream().filter(string -> string.contains(".displayname")).forEach(string -> {
-            String stationname = string.replace(".displayname", "");
-            if (player.hasPermission("dt.travel.*") || player.hasPermission("dt.travel." + stationname))
-                player.sendMessage("- " + dbStationsConfig.getString("Stations." + string));
-        });
+    public void showStations(CommandSender sender) {
+        sender.sendMessage("Available stations: ");
+        int i = 0;
+        for (String string : dbStationsConfig.getConfigurationSection("Stations").getKeys(false)) {
+            Station station = getStation(string);
+            if (station != null) {
+                sender.sendMessage(" - " + station.getDisplayName());
+                i++;
+            }
+        }
+        sender.sendMessage(String.format("(total %d)", i));
     }
 
 }

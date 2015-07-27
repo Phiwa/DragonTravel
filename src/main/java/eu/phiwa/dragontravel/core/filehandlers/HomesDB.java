@@ -3,11 +3,10 @@ package eu.phiwa.dragontravel.core.filehandlers;
 import eu.phiwa.dragontravel.core.DragonTravelMain;
 import eu.phiwa.dragontravel.core.objects.Home;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,8 +16,9 @@ import java.util.logging.Level;
 
 public class HomesDB {
 
-    private FileConfiguration dbHomesConfig;
     private File dbHomesFile;
+    private FileConfiguration dbHomesConfig;
+    private ConfigurationSection homeSection;
 
     public HomesDB() {
         init();
@@ -60,19 +60,8 @@ public class HomesDB {
      * @param home Home to create.
      * @return Returns true if the home was created successfully, false if not.
      */
-    @SuppressWarnings("static-access")
-    public boolean createHome(Home home) {
-        String path = "Homes." + home.playername;
-        ConfigurationSection sec = dbHomesConfig.createSection(path);
-        dbHomesConfig.createPath(sec, "x");
-        dbHomesConfig.createPath(sec, "y");
-        dbHomesConfig.createPath(sec, "z");
-        dbHomesConfig.createPath(sec, "world");
-        dbHomesConfig.set(path + ".x", home.x);
-        dbHomesConfig.set(path + ".y", home.y);
-        dbHomesConfig.set(path + ".z", home.z);
-        dbHomesConfig.set(path + ".world", home.world.getName());
-
+    public boolean saveHome(String playerName, Home home) {
+        homeSection.set(playerName, home);
         try {
             dbHomesConfig.save(dbHomesFile);
             return true;
@@ -105,26 +94,22 @@ public class HomesDB {
     /**
      * Returns the details of the home with the given name.
      *
-     * @param playername Name of the home which should be returned.
+     * @param playerName Name of the home which should be returned.
      * @return The home as a home-object.
      */
-    public Home getHome(String playername) {
-        playername = "Homes." + playername.toLowerCase();
-        if (dbHomesConfig.getString(playername + ".world") == null)
-            return null;
-        Location homeLoc = new Location(
-                Bukkit.getWorld(dbHomesConfig.getString(playername + ".world")),
-                (double) dbHomesConfig.getInt(playername + ".x"),
-                (double) dbHomesConfig.getInt(playername + ".y"),
-                (double) dbHomesConfig.getInt(playername + ".z")
-        );
-        return new Home(playername, homeLoc);
+    public Home getHome(String playerName) {
+        Object obj = homeSection.get(playerName, null);
+        if (obj != null) {
+            // Transition support
+            if (obj instanceof ConfigurationSection) {
+                return new Home(((ConfigurationSection) obj).getValues(true));
+            }
+        }
+        return (Home) obj;
     }
 
     public void init() {
-
         dbHomesFile = new File("plugins/DragonTravel/databases", "homes.yml");
-
         try {
             create();
         } catch (Exception e) {
@@ -135,6 +120,10 @@ public class HomesDB {
         dbHomesConfig = new YamlConfiguration();
         load();
 
+        homeSection = dbHomesConfig.getConfigurationSection("Homes");
+        if (homeSection == null) {
+            homeSection = dbHomesConfig.createSection("Homes");
+        }
     }
 
     private void load() {
@@ -147,14 +136,13 @@ public class HomesDB {
         }
     }
 
-    public void showHomes() {
-        System.out.println("Player's who registered a home: ");
-        dbHomesConfig.getConfigurationSection("Homes").getKeys(true).stream().filter(string -> !string.contains(".")).forEach(string -> System.out.println("- " + string));
-    }
-
-    public void showStations(Player player) {
-        player.sendMessage("Player's who registered a home: ");
-        dbHomesConfig.getConfigurationSection("Homes").getKeys(true).stream().filter(string -> !string.contains(".")).forEach(string -> player.sendMessage("- " + string));
+    public void showHomes(CommandSender sender) {
+        sender.sendMessage("Players who have registered a home: ");
+        for (String string : dbHomesConfig.getConfigurationSection("Homes").getKeys(false)) {
+            Home home = getHome(string);
+            if (home != null)
+                sender.sendMessage(" - " + string + " [" + home.worldName + "@" + home.x + "," + home.y + "," + home.z + "]");
+        }
     }
 
 }

@@ -2,18 +2,13 @@ package eu.phiwa.dragontravel.core.modules;
 
 import eu.phiwa.dragontravel.core.DragonTravelMain;
 import eu.phiwa.dragontravel.core.anticheatplugins.CheatProtectionHandler;
+import eu.phiwa.dragontravel.core.objects.StationaryDragon;
 import eu.phiwa.dragontravel.nms.IRyeDragon;
-import eu.phiwa.dragontravel.nms.v1_8_R3.RyeDragon;
-import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEnderDragon;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
 import java.util.Map.Entry;
 
@@ -158,14 +153,9 @@ public class DragonManagement {
 			}
 		}
 
-		// Spawn RyeDragon
-		World craftWorld = ((CraftWorld) player.getWorld()).getHandle();
-		RyeDragon ryeDragon = new RyeDragon(player.getLocation(), craftWorld);
-		craftWorld.addEntity(ryeDragon, SpawnReason.CUSTOM);
-		final LivingEntity dragon = (LivingEntity) ryeDragon.getEntity();
-
+		IRyeDragon ryeDragon = DragonTravelMain.getInstance().getNmsHandler().getRyeDragon(player.getLocation());
 		CheatProtectionHandler.exemptPlayerFromCheatChecks(player);
-		dragon.setPassenger(player);
+		ryeDragon.getEntity().setPassenger(player);
 		ryeDragon.fixWings();
 		DragonTravelMain.listofDragonriders.put(player, ryeDragon);
 		if (setNewStartingPoint)
@@ -204,12 +194,12 @@ public class DragonManagement {
 		for (Entity entity : world.getEntitiesByClass(EnderDragon.class)) {
 
 			// Check if EnderDragon
-			if (!(entity instanceof CraftEnderDragon))
+			if (!(entity instanceof EnderDragon))
 				continue;
 
-			if (entity instanceof RyeDragon) {
-				for (String dragonName : DragonTravelMain.listofStatDragons.keySet()) {
-					if (!dragonName.equalsIgnoreCase(entity.getCustomName()))
+			if (entity instanceof IRyeDragon) {
+				for (StationaryDragon sDragon : DragonTravelMain.listofStatDragons.values()) {
+					if (sDragon.getDragon().getCustomName().equals(entity.getCustomName()))
 						continue entity_check;
 				}
 				System.out.println("-----");

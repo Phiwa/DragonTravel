@@ -3,73 +3,67 @@ package eu.phiwa.dragontravel.core.objects;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@SerializableAs("DT-Home")
+public class Home implements ConfigurationSerializable {
+
+    public String playerName;
+    public String worldName;
+    public int x;
+    public int y;
+    public int z;
 
 
-public class Home {
+    public Home(Map<String, Object> data) {
+        this.x = (Integer) data.get("x");
+        this.y = (Integer) data.get("y");
+        this.z = (Integer) data.get("z");
+        this.worldName = (String) data.get("world");
+    }
 
-	// Complete Location
-	public Location loc;
+    public Home(String playerName, int x, int y, int z, World world) {
+        this.playerName = playerName.toLowerCase();
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.worldName = worldName;
+    }
 
-	public String playername;
-	public World world;
-	// Single values
-	public int x;
-	public int y;
+    public Home(Location loc) {
+        this.x = (int) loc.getX();
+        this.y = (int) loc.getY();
+        this.z = (int) loc.getZ();
+        this.worldName = loc.getWorld().getName();
+    }
 
-	public int z;
+    public Location toLocation() {
+        return new Location(Bukkit.getWorld(worldName), x, y, z);
+    }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append('\n');
+        sb.append("--- Home ---").append('\n');
+        sb.append("X: " + x).append('\n');
+        sb.append("Y: " + y).append('\n');
+        sb.append("Z: " + z).append('\n');
+        sb.append("World: " + worldName).append('\n');
+        sb.append("---------------").append('\n');
+        return sb.toString();
+    }
 
-	public Home(String playername, int x, int y, int z, String worldname) {
-		this.playername = playername;
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.world = Bukkit.getWorld(worldname);
-	}
-
-	public Home(String playername, int x, int y, int z, World world) {
-		this.playername = playername.toLowerCase();
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.world = world;
-	}
-
-	public Home(String playername, Location loc) {
-		this.playername = playername;
-		this.loc = loc;
-		this.x = (int) loc.getX();
-		this.y = (int) loc.getY();
-		this.z = (int) loc.getZ();
-		this.world = loc.getWorld();
-	}
-
-	/**
-	 * Prints the station's details to the console.
-	 */
-	public void print() {
-		System.out.println("--- Home ---");
-		System.out.println("Owner: " + playername);
-		System.out.println("X: " + x);
-		System.out.println("Y: " + y);
-		System.out.println("Z: " + z);
-		System.out.println("World: " + world.getName());
-		System.out.println("---------------");
-	}
-
-	/**
-	 * Prints the station's details to the player's chat.
-	 *
-	 * @param player Player to send the details to.
-	 */
-	public void print(Player player) {
-		player.sendMessage("--- Station ---");
-		player.sendMessage("Owner: " + playername);
-		player.sendMessage("X: " + x);
-		player.sendMessage("Y: " + y);
-		player.sendMessage("Z: " + z);
-		player.sendMessage("World: " + world.getName());
-		player.sendMessage("---------------");
-	}
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> ret = new HashMap<>();
+        ret.put("x", x);
+        ret.put("y", y);
+        ret.put("z", z);
+        ret.put("world", worldName);
+        return ret;
+    }
 }

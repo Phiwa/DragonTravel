@@ -1,43 +1,26 @@
 package eu.phiwa.dragontravel.core.anticheatplugins;
 
-import eu.phiwa.dragontravel.core.DragonTravelMain;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
+import net.gravitydevelopment.anticheat.api.AntiCheatAPI;
+import org.bukkit.entity.Player;
 
-/**
- * Copyright (C) 2011-2013 Philipp Wagner
- * mail@phiwa.eu
- * <p>
- * Credits for one year of development go to Luca Moser (moser.luca@gmail.com/)
- * <p>
- * This file is part of the Bukkit-plugin DragonTravel.
- * <p>
- * DragonTravel is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * <p>
- * DragonTravel is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- * <p>
- * You should have received a copy of the GNU General Public License along with this project.
- * If not, see <http://www.gnu.org/licenses/>.
- */
-public class AntiCheatHandler {
+public class AntiCheatHandler implements AbstractHandler {
 
-	// Gets the instance of AntiCheat
-	public static boolean getAntiCheat() {
+    static {        // This throws an exception if the class isn't loaded
+        AntiCheatAPI.getManager();
+    }
 
-		Plugin plugin = Bukkit.getPluginManager().getPlugin("AntiCheat");
+    @Override
+    public void startExempting(Player player) {
+        if (!AntiCheatAPI.isExempt(player, net.gravitydevelopment.anticheat.check.CheckType.FLY)) {
+            AntiCheatAPI.exemptPlayer(player, net.gravitydevelopment.anticheat.check.CheckType.FLY);
+        }
 
-		if (plugin == null)
-			return false;
+    }
 
-		DragonTravelMain.anticheat = true;
-
-		return true;
-	}
-
+    @Override
+    public void stopExempting(Player player) {
+        if (AntiCheatAPI.isExempt(player, net.gravitydevelopment.anticheat.check.CheckType.FLY)) {
+            AntiCheatAPI.unexemptPlayer(player, net.gravitydevelopment.anticheat.check.CheckType.FLY);
+        }
+    }
 }
