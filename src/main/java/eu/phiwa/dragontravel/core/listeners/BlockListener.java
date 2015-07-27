@@ -15,12 +15,6 @@ import org.bukkit.event.block.SignChangeEvent;
 
 public class BlockListener implements Listener {
 
-	DragonTravelMain plugin;
-
-	public BlockListener(DragonTravelMain plugin) {
-		this.plugin = plugin;
-	}
-
 	@EventHandler
 	public void onMarkerDestroy(BlockBreakEvent event) {
 		if (DragonTravelMain.globalwaypointmarkers.containsKey(event.getBlock())) {

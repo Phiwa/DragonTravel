@@ -10,6 +10,7 @@ import eu.phiwa.dragontravel.core.filehandlers.*;
 import eu.phiwa.dragontravel.core.flights.FlightEditor;
 import eu.phiwa.dragontravel.core.listeners.BlockListener;
 import eu.phiwa.dragontravel.core.listeners.EntityListener;
+import eu.phiwa.dragontravel.core.listeners.HeroesListener;
 import eu.phiwa.dragontravel.core.listeners.PlayerListener;
 import eu.phiwa.dragontravel.core.modules.MountingScheduler;
 import eu.phiwa.dragontravel.core.objects.Flight;
@@ -90,10 +91,13 @@ public class DragonTravelMain extends JavaPlugin {
         // Returns false if plugin disabled
         if (!entityRegister.registerEntity()) return;
 
-        Bukkit.getPluginManager().registerEvents(new EntityListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
         Bukkit.getPluginManager().registerEvents(new FlightEditor(), this);
-        Bukkit.getPluginManager().registerEvents(new BlockListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
+        if (Bukkit.getPluginManager().getPlugin("Heroes") != null) {
+            Bukkit.getPluginManager().registerEvents(new HeroesListener(), this);
+        }
 
         if (!(new File(getDataFolder(), "databases").exists()))
             new File(getDataFolder(), "databases").mkdirs();

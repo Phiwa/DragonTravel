@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.util.Map.Entry;
@@ -156,7 +157,8 @@ public class DragonManagement {
 		IRyeDragon ryeDragon = DragonTravelMain.getInstance().getNmsHandler().getRyeDragon(player.getLocation());
 		CheatProtectionHandler.exemptPlayerFromCheatChecks(player);
 		ryeDragon.getEntity().setPassenger(player);
-		ryeDragon.fixWings();
+        ((LivingEntity) ryeDragon.getEntity()).setLeashHolder(player);
+        ryeDragon.fixWings();
 		DragonTravelMain.listofDragonriders.put(player, ryeDragon);
 		if (setNewStartingPoint)
 			DragonTravelMain.listofDragonsridersStartingpoints.put(player, player.getLocation());
@@ -236,6 +238,8 @@ public class DragonManagement {
 
 		DragonTravelMain.listofDragonriders.remove(player);
 
+        ((LivingEntity) entity).setLeashHolder(player);
+
 		// Interworld (dismount before teleport)
 		if (dismountAtcurrentLocation == null) {
 			Location startLoc = DragonTravelMain.listofDragonsridersStartingpoints.get(player);
@@ -290,7 +294,8 @@ public class DragonManagement {
 			player = getRiderByEntity(entity);
 
 		DragonTravelMain.listofDragonriders.remove(player);
-		entity.eject();
+        ((LivingEntity) entity).setLeashHolder(player);
+        entity.eject();
 		entity.remove();
 
 		player.teleport(customDismountLoc);

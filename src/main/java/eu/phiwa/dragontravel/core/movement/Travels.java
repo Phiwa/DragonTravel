@@ -302,7 +302,8 @@ public class Travels {
 		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));
 		dragon.setTotalDist(Math.hypot(temploc.getBlockX() - destination.getBlockX(), temploc.getBlockZ() - destination.getBlockZ()));
         dragon.setCoveredDist(0);
-		((LivingEntity) dragon.getEntity()).setMaxHealth(60);
+		((LivingEntity) dragon.getEntity()).setMaxHealth(61d);
+		((LivingEntity) dragon.getEntity()).setHealth(1d);
 		if (destination.getWorld().getName() == player.getWorld().getName())
 			dragon.startTravel(destination, false);
 		else
