@@ -200,7 +200,8 @@ public final class DragonTravelCommands {
             sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NameTaken"));
             return;
         }
-        new StationaryDragon(player, name, displayName, player.getLocation(), true);
+        StationaryDragon sDragon = new StationaryDragon(player, name, displayName, player.getLocation(), true);
+        DragonTravelMain.listofStatDragons.put(name.toLowerCase(), sDragon);
     }
 
     @Command(aliases = {"remstatdragon", "remstationarydragon"},
@@ -312,7 +313,8 @@ public final class DragonTravelCommands {
         if (!DragonTravelMain.getInstance().getPaymentManager().chargePlayer(ChargeType.SETHOME, player))
             return;
         Home home = new Home(player.getLocation());
-        DragonTravelMain.getInstance().getDbHomesHandler().saveHome(player.getName(), home);
+        DragonTravelMain.getInstance().getDbHomesHandler().saveHome(player.getUniqueId().toString(), home);
+        sender.sendMessage(ChatColor.GREEN + "Home set!"); //TODO: Add to messages
     }
 
     @Console
@@ -641,6 +643,7 @@ public final class DragonTravelCommands {
     @Command(aliases = {"setstation", "setstat"},
             desc = "Creates a new station here.",
             usage = "/dt setstation <name> [display_name]",
+            min = 1, max = 2,
             help = "Creates a new station with the given name at your current location.")
     @CommandPermissions({"dt.edit.stations", "dt.edit.*"})
     public static void setStation(CommandContext args, CommandSender sender) throws CommandException {
@@ -652,7 +655,7 @@ public final class DragonTravelCommands {
         String station = args.getString(0).toLowerCase();
         String displayName = station;
         if (args.argsLength() == 2) {
-            displayName = args.getString(1);
+            displayName = args.getRemainingString(1);
         }
 
         if (station.equalsIgnoreCase(DragonTravelMain.getInstance().getConfig().getString("RandomDest.Name"))) {
@@ -660,7 +663,11 @@ public final class DragonTravelCommands {
             return;
         }
 
-        if (DragonTravelMain.getInstance().getDbStationsHandler().getStation(station) != null) {
+        if (DragonTravelMain
+                .getInstance()
+                .getDbStationsHandler()
+                .getStation(
+                        station) != null) {
             player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationAlreadyExists").replace("{stationname}", station));
         } else {
             if (DragonTravelMain.getInstance().getDbStationsHandler().saveStation(new Station(station, displayName, player.getLocation(), player.getUniqueId().toString()))) {
@@ -690,7 +697,11 @@ public final class DragonTravelCommands {
             return;
         }
 
-        if (DragonTravelMain.getInstance().getDbStationsHandler().getStation(station) == null) {
+        if (DragonTravelMain
+                .getInstance()
+                .getDbStationsHandler()
+                .getStation(
+                        station) == null) {
             player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist"));
         } else {
             if (DragonTravelMain.getInstance().getDbStationsHandler().deleteStation(station)) {

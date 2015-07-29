@@ -13,6 +13,14 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <outputDirectory>C:\Users\ollie\Downloads\CraftBukkit\target\plugins</outputDirectory>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
@@ -28,6 +36,8 @@
                     <artifactSet>
                         <includes>
                             <include>com.sk89q:command-framework-bukkit</include>
+                            <include>org.mcstats.*:*</include>
+                            <include>net.gravitydevelopment.updater:updater</include>
                         </includes>
                     </artifactSet>
                 </configuration>
@@ -62,6 +72,10 @@
         <repository>
             <id>overcast releases</id>
             <url>http://repo.oc.tc/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>Plugin Metrics</id>
+            <url>http://repo.mcstats.org/content/repositories/public</url>
         </repository>
     </repositories>
     <dependencies>
@@ -123,6 +137,17 @@
             <groupId>com.sk89q</groupId>
             <artifactId>command-framework-bukkit</artifactId>
             <version>0.5-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mcstats.bukkit</groupId>
+            <artifactId>metrics</artifactId>
+            <version>R7</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.gravitydevelopment.updater</groupId>
+            <artifactId>updater</artifactId>
+            <version>2.1</version>
         </dependency>
     </dependencies>
 </project>

@@ -10,6 +10,7 @@ import net.minecraft.server.v1_7_R3.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -61,7 +62,11 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     private double ZperTick;
 
     public RyeDragon(Location loc) {
-        this(loc, ((org.bukkit.craftbukkit.v1_7_R3.CraftWorld) loc.getWorld()).getHandle());
+        this(loc, ((CraftWorld) loc.getWorld()).getHandle());
+    }
+
+    public RyeDragon(World notchWorld) {
+        super(notchWorld);
     }
 
     public RyeDragon(Location loc, World notchWorld) {
@@ -94,6 +99,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             if (dragonEntity.getPassenger() != null)
                 dragonEntity.setPassenger(rider);
 
+        yaw = getCorrectYaw(toX, toZ);
+
         // Travel
         if (isTravel) {
             travel();
@@ -102,6 +109,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         else if (isFlight) {
             flight();
         }
+
+        yaw = getCorrectYaw(toX, toZ);
     }
 
     /**
@@ -116,6 +125,9 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         this.waypoints = flight.getWaypoints();
         this.numberOfWaypoints = waypoints.size();
         this.nextWaypoint = waypoints.get(currentindexWaypoint);
+        this.toX = this.nextWaypoint.getX();
+        this.toY = this.nextWaypoint.getY();
+        this.toZ = this.nextWaypoint.getZ();
         this.currentindexWaypoint++;
 
         this.startX = start.getX();
@@ -216,22 +228,21 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             this.startY = locY;
             this.startZ = locZ;
 
+            this.toX = this.nextWaypoint.getX();
+            this.toY = this.nextWaypoint.getY();
+            this.toZ = this.nextWaypoint.getZ();
+
             if (!this.nextWaypoint.getWorldName().equals(this.getEntity().getWorld().getName())) {
                 this.teleportTo(this.nextWaypoint.getAsLocation(), true);
                 this.currentindexWaypoint++;
                 this.nextWaypoint = waypoints.get(currentindexWaypoint);
             }
 
-            this.yaw = getCorrectYaw(nextWaypoint.getX(), nextWaypoint.getZ());
-            this.pitch = getCorrectPitch(nextWaypoint.getX(), nextWaypoint.getZ(), nextWaypoint.getY());
-
-            this.setPositionRotation(this.nextWaypoint.getX(), this.nextWaypoint.getY(), this.nextWaypoint.getZ(), yaw, pitch);
-
             setMoveFlight();
             return;
         }
 
-        setPositionRotation(currentX, currentY, currentZ, yaw, pitch);
+        setPosition(currentX, currentY, currentZ);
     }
 
     /**
@@ -272,8 +283,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             travelY = DragonTravelMain.getInstance().getConfigHandler().getTravelHeight();
         }
 
-        this.yaw = getCorrectYaw(toX, toZ);
-        this.pitch = getCorrectPitch(toX, toZ, toY);
         this.startX = start.getX();
         this.startY = start.getY();
         this.startZ = start.getZ();
@@ -357,9 +366,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                     return;
                 }
             }
-            this.yaw = getCorrectYaw(myX, myZ);
-            this.pitch = getCorrectPitch(myX, myY, myZ);
-            setPositionRotation(myX, myY, myZ, yaw, pitch);
+            setPosition(myX, myY, myZ);
             return;
         }
 
@@ -381,9 +388,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                 || (int) myX == (int) toX + 1 || (int) myX == (int) toX - 1)) {
             finalmove = true;
         }
-        this.yaw = getCorrectYaw(myX, myZ);
-        this.pitch = getCorrectPitch(myX, myY, myZ);
-        setPositionRotation(myX, myY, myZ, yaw, pitch);
+
+        setPosition(myX, myY, myZ);
         coveredDist = Math.hypot(getEntity().getLocation().getBlockX() - start.getBlockX(), getEntity().getLocation().getBlockZ() - start.getBlockZ());
         if (coveredDist > totalDist) {
             coveredDist = totalDist;
@@ -422,31 +428,13 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     /**
      * Gets the correct yaw for this specific path
      */
-    @Override
-    public float getCorrectYaw(double targetx, double targetz) {
-
-        if (this.locZ > targetz)
-            return (float) (-Math.toDegrees(Math.atan((this.locX - targetx) / (this.locZ - targetz))));
-        else if (this.locZ < targetz)
-            return (float) (-Math.toDegrees(Math.atan((this.locX - targetx) / (this.locZ - targetz)))) + 180.0F;
-        else
-            return this.yaw;
-    }
-
-    /**
-     * Gets the correct pitch for this specific path
-     */
-    @Override
-    public float getCorrectPitch(double targetx, double targetz, double targety) {
-        double distanceZ = this.locZ - targetz;
-        double distanceX = this.locX - targetx;
-        double distanceUp = this.locY - targety;
-        float pitch = (float) -Math.toDegrees(Math.atan2(Math.sqrt(distanceZ * distanceZ + distanceX * distanceX), distanceUp) + Math.PI);
-        if (pitch < -90)
-            pitch = -90;
-        else if (pitch > 90)
-            pitch = 90;
-        return pitch;
+    public float getCorrectYaw(double toX, double toZ) {
+        if (locZ > toZ)
+            return (float) (-Math.toDegrees(Math.atan((locX - toX) / (locZ - toZ))));
+        if (locZ < toZ) {
+            return (float) (-Math.toDegrees(Math.atan((locX - toX) / (locZ - toZ)))) + 180.0F;
+        }
+        return yaw;
     }
 
     @Override
@@ -471,6 +459,22 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 
     public void setTotalDist(double totalDist) {
         this.totalDist = totalDist;
+    }
+
+    public boolean isFlight() {
+        return isFlight;
+    }
+
+    public void setIsFlight(boolean isFlight) {
+        this.isFlight = isFlight;
+    }
+
+    public boolean isTravel() {
+        return isTravel;
+    }
+
+    public void setIsTravel(boolean isTravel) {
+        this.isTravel = isTravel;
     }
 
 	/*

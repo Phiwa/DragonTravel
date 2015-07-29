@@ -23,9 +23,7 @@ public interface IRyeDragon {
 
     Entity getEntity();
 
-    float getCorrectYaw(double targetx, double targetz);
-
-    float getCorrectPitch(double targetx, double targety, double targetz);
+    float getCorrectYaw(double toX, double toZ);
 
     String getCustomName();
 
@@ -38,6 +36,10 @@ public interface IRyeDragon {
     double getTotalDist();
 
     void setTotalDist(double dist);
+
+    boolean isFlight();
+
+    boolean isTravel();
 
     void fixWings();
 

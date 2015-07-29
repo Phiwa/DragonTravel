@@ -8,7 +8,7 @@ public class PermissionsHandler {
 	/**
 	 * Checks if the specified player has the permission to use the specified flight
 	 *
-	 * @param player     Player to check the permission for
+	 * @param sender     Player to check the permission for
 	 * @param flightname Flight to check the permission for (if null, only checks the general permission)
 	 * @return "True" if the player has the permissions, "false" if he hasn't
 	 */
@@ -32,7 +32,7 @@ public class PermissionsHandler {
 	 * Checks if the specified player has the permission to use
 	 * the specified travel-type to travel to the specified destination.
 	 *
-	 * @param player          Player to check the permission for
+	 * @param sender          Player to check the permission for
 	 * @param traveltype      Type of travel ("travel", "...", ...)
 	 * @param destinationname Destination to check the permission for (if null, only checks the general permission)
 	 * @return "True" if the player has the permissions, "false" if he hasn't

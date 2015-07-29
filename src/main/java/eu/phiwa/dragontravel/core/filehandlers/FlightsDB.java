@@ -103,11 +103,12 @@ public class FlightsDB {
     public Flight getFlight(String flightName) {
         flightName = flightName.toLowerCase();
         Object obj = flightSection.get(flightName, null);
+
         if (obj == null) {
             return null;
         }
         if (obj instanceof ConfigurationSection) {
-            Flight f = new Flight(flightName, ((ConfigurationSection) obj).getValues(true));
+            Flight f = new Flight(((ConfigurationSection) obj).getValues(true));
             f.setName(flightName);
             saveFlight(f);
             return f;
@@ -148,10 +149,10 @@ public class FlightsDB {
     public void showFlights(CommandSender sender) {
         sender.sendMessage("Available flights: ");
         int i = 0;
-        for (String string : dbFlightsConfig.getConfigurationSection("Flights").getKeys(false)) {
+        for (String string : flightSection.getKeys(false)) {
             Flight flight = getFlight(string);
             if (flight != null) {
-                sender.sendMessage(" - " + (sender instanceof Player ? (PermissionsHandler.hasFlightPermission((Player) sender, flight.getName()) ? ChatColor.GREEN : ChatColor.RED) : ChatColor.AQUA) + flight.getDisplayName());
+                sender.sendMessage(" - " + (sender instanceof Player ? (PermissionsHandler.hasFlightPermission((Player) sender, flight.getName()) ? ChatColor.GREEN : ChatColor.RED) : ChatColor.AQUA) + flight.getName());
                 i++;
             }
         }

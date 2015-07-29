@@ -2,7 +2,9 @@ package eu.phiwa.dragontravel.core.filehandlers;
 
 import eu.phiwa.dragontravel.core.DragonTravelMain;
 import eu.phiwa.dragontravel.core.objects.Station;
+import eu.phiwa.dragontravel.core.permissions.PermissionsHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -148,14 +150,21 @@ public class StationsDB {
      * @return The station as a station-object.
      */
     public Station getStation(String stationName) {
-        Object obj = stationSection.get(stationName, null);
-        if (obj != null) {
-            // Transition support
-            if (obj instanceof ConfigurationSection) {
-                return new Station(stationName, ((ConfigurationSection) obj).getValues(true));
-            }
+        Object obj = stationSection.get(stationName.toLowerCase(), null);
+
+        if (obj == null) {
+            return null;
         }
-        return (Station) obj;
+        if (obj instanceof ConfigurationSection) {
+            Station s = new Station(((ConfigurationSection) obj).getValues(true));
+            s.setName(stationName);
+            saveStation(s);
+            return s;
+        } else {
+            Station s = (Station) obj;
+            s.setName(stationName);
+            return s;
+        }
     }
 
     public void init() {
@@ -192,7 +201,7 @@ public class StationsDB {
         for (String string : dbStationsConfig.getConfigurationSection("Stations").getKeys(false)) {
             Station station = getStation(string);
             if (station != null) {
-                sender.sendMessage(" - " + station.getDisplayName());
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', " - " + (sender instanceof Player ? (PermissionsHandler.hasTravelPermission((Player) sender, "travel", station.getDisplayName()) ? ChatColor.GREEN : ChatColor.RED) : ChatColor.AQUA) + station.getDisplayName()));
                 i++;
             }
         }

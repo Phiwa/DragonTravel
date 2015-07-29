@@ -146,6 +146,10 @@ public class Config {
             config.set("Payment.Resources.ItemName", "Gold Ingot");
         if (!config.isSet("RequireSkyLight"))
             config.set("RequireSkyLight", false);
+        if (!config.isSet("UseMetrics"))
+            config.set("UseMetrics", true);
+        if (!config.isSet("UseAutoUpdater"))
+            config.set("UseAutoUpdater", false);
 
 
         // Update the file version

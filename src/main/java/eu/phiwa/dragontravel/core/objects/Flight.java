@@ -4,22 +4,18 @@ import eu.phiwa.dragontravel.core.flights.Waypoint;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SerializableAs("DT-Flight")
 public class Flight implements ConfigurationSerializable {
 
     private String displayName;
     private String name;
-    private List<Waypoint> waypoints = new ArrayList<>();
+    private List<Waypoint> waypoints;
 
-    public Flight(String name, Map<String, Object> data) {
+    public Flight(Map<String, Object> data) {
         displayName = (String) data.get("displayname");
-        this.name = name;
-
+        this.waypoints = new LinkedList<>();
         @SuppressWarnings("unchecked")
         List<Object> wps = (List<Object>) data.get("waypoints");
         for (Object o : wps) {
@@ -33,6 +29,7 @@ public class Flight implements ConfigurationSerializable {
     public Flight(String flightName, String displayName) {
         this.displayName = displayName;
         this.name = flightName.toLowerCase();
+        this.waypoints = new LinkedList<>();
     }
 
     public void addWaypoint(Waypoint wp) {

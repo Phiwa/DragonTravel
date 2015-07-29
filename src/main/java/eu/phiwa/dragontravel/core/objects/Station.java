@@ -21,18 +21,13 @@ public class Station implements ConfigurationSerializable {
     private int z;
 
 
-    public Station(String name, Map<String, Object> data) {
+    public Station(Map<String, Object> data) {
         this.x = (Integer) data.get("x");
         this.y = (Integer) data.get("y");
         this.z = (Integer) data.get("z");
         this.worldName = (String) data.get("world");
-        this.name = name;
         this.displayName = (String) data.get("displayname");
-        if (data.containsKey("displayname")) {
             this.displayName = (String) data.get("displayname");
-        } else {
-            this.displayName = name;
-        }
         if (data.containsKey("owner")) {
             this.owner = (String) data.get("owner");
         } else {

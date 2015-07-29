@@ -59,8 +59,8 @@ public class StatDragonsDB {
     /**
      * Creates a new stat dragon.
      *
-     * @param name Dragon name to create.
-     * @param dragon  Dragon to save.
+     * @param name   Dragon name to create.
+     * @param dragon Dragon to save.
      * @return Returns true if the stat dragon was created successfully, false if not.
      */
     public boolean createStatDragon(String name, StationaryDragon dragon) {
@@ -101,15 +101,25 @@ public class StatDragonsDB {
      * @return The dragon as a ryedragon-object.
      */
     public StationaryDragon getStatDragon(String name) {
+        name = name.toLowerCase();
+        System.out.println(0);
         if (!DragonTravelMain.listofStatDragons.containsKey(name)) {
             Object obj = statDragonsSection.get(name.toLowerCase(), null);
-            if (obj != null) {
-                // Transition support
-                if (obj instanceof ConfigurationSection) {
-                    return new StationaryDragon(name.toLowerCase(), ((ConfigurationSection) obj).getValues(true));
-                }
+
+            if (obj == null) {
+                return null;
             }
-            return (StationaryDragon) obj;
+            if (obj instanceof ConfigurationSection) {
+                System.out.println(1);
+                StationaryDragon s = new StationaryDragon(((ConfigurationSection) obj).getValues(true));
+                s.setName(name);
+                return s;
+            } else {
+                System.out.println(2);
+                StationaryDragon s = (StationaryDragon) obj;
+                s.setName(name);
+                return s;
+            }
         }
         return DragonTravelMain.listofStatDragons.get(name);
 

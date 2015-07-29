@@ -21,14 +21,14 @@ public class EntityListener implements Listener {
 		if (event.getSpawnReason() != SpawnReason.CUSTOM)
 			return;
 
-        if (!event.getEntity().getType().toString().equals("RyeDragon"))
-            return;
+		if (!event.getEntity().getType().toString().equals("ENDER_DRAGON"))
+			return;
 
 		if (!event.isCancelled())
 			return;
 
-        if (!DragonTravelMain.getInstance().getConfigHandler().isIgnoreAntiMobspawnAreas())
-            event.setCancelled(false);
+		if (DragonTravelMain.getInstance().getConfigHandler().isIgnoreAntiMobspawnAreas())
+			event.setCancelled(false);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)

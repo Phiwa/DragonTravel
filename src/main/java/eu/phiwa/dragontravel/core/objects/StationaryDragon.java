@@ -28,19 +28,14 @@ public class StationaryDragon implements ConfigurationSerializable {
     private IRyeDragon dragon;
 
 
-    public StationaryDragon(String name, Map<String, Object> data) {
+    public StationaryDragon(Map<String, Object> data) {
         this.x = (double) data.get("x");
         this.y = (double) data.get("y");
         this.z = (double) data.get("z");
         this.yaw = (double) data.get("yaw");
         this.pitch = (double) data.get("pitch");
         this.worldName = (String) data.get("world");
-        this.name = name;
-        if (data.containsKey("displayname")) {
             this.displayName = (String) data.get("displayname");
-        } else {
-            this.displayName = (String) data.get("name");
-        }
         if (data.containsKey("owner")) {
             this.owner = (String) data.get("owner");
         } else {
@@ -48,7 +43,6 @@ public class StationaryDragon implements ConfigurationSerializable {
         }
 
         this.dragon = createDragon(false);
-        DragonTravelMain.listofStatDragons.put(name.toLowerCase(), this);
     }
 
     public StationaryDragon(Player player, String name, String displayName, Location loc, boolean isNew) {
@@ -81,16 +75,6 @@ public class StationaryDragon implements ConfigurationSerializable {
     }
 
     public void removeDragon(boolean isPermanent) {
-        String name = null;
-        for (Map.Entry<String, StationaryDragon> entry : DragonTravelMain.listofStatDragons.entrySet()) {
-            if (entry.getValue().equals(this)) {
-                name = entry.getKey();
-                break;
-            }
-        }
-        if (name == null) {
-            return;
-        }
         DragonTravelMain.listofStatDragons.remove(name);
         dragon.getEntity().remove();
         if (isPermanent)

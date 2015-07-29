@@ -21,6 +21,7 @@ import eu.phiwa.dragontravel.core.payment.PaymentManager;
 import eu.phiwa.dragontravel.nms.IEntityRegister;
 import eu.phiwa.dragontravel.nms.IRyeDragon;
 import eu.phiwa.dragontravel.nms.NMSHandler;
+import net.gravitydevelopment.updater.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -29,8 +30,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.Metrics;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,10 +74,10 @@ public class DragonTravelMain extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        ConfigurationSerialization.registerClass(Station.class);
-        ConfigurationSerialization.registerClass(Home.class);
-        ConfigurationSerialization.registerClass(Flight.class);
-        ConfigurationSerialization.registerClass(StationaryDragon.class);
+        ConfigurationSerialization.registerClass(Station.class, "DT-Station");
+        ConfigurationSerialization.registerClass(Home.class, "DT-Home");
+        ConfigurationSerialization.registerClass(Flight.class, "DT-Flight");
+        ConfigurationSerialization.registerClass(StationaryDragon.class, "DT-StatDragon");
         commands = new CustomCommandsManager();
 
         final CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, commands);
@@ -84,6 +87,7 @@ public class DragonTravelMain extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
         nmsHandler = new NMSHandler();
         entityRegister = nmsHandler.getEntityRegister();
 
@@ -117,8 +121,58 @@ public class DragonTravelMain extends JavaPlugin {
         dbFlightsHandler = new FlightsDB();
         dbStatDragonsHandler = new StatDragonsDB();
         if (dbStatDragonsHandler.getDbStatDragonsConfig().getConfigurationSection("StatDragons") != null) {
+            System.out.println(dbStatDragonsHandler);
+            System.out.println(dbStatDragonsHandler.getDbStatDragonsConfig());
+            System.out.println(dbStatDragonsHandler.getDbStatDragonsConfig().getConfigurationSection("StatDragons").getValues(true));
             for (String key : dbStatDragonsHandler.getDbStatDragonsConfig().getConfigurationSection("StatDragons").getKeys(false)) {
-                dbStatDragonsHandler.getStatDragon(key.toLowerCase());
+                StationaryDragon sDragon = dbStatDragonsHandler.getStatDragon(key);
+                DragonTravelMain.listofStatDragons.put(key.toLowerCase(), sDragon);
+            }
+        }
+
+        if (getConfig().getBoolean("UseAutoUpdater")) {
+            new Updater(this, 34251, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
+        }
+        if (getConfig().getBoolean("UseMetrics")) {
+            try {
+                Metrics metrics = new Metrics(this);
+                Metrics.Graph dragonsFlyingGraph = metrics.createGraph("Number of dragons flying");
+                dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Flight") {
+
+                    @Override
+                    public int getValue() {
+                        int x = 0;
+                        for (Map.Entry<Player, IRyeDragon> entry : listofDragonriders.entrySet()) {
+                            if (entry.getValue().isFlight()) {
+                                x++;
+                            }
+                        }
+                        return x;
+                    }
+
+                });
+                dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Travel") {
+                    @Override
+                    public int getValue() {
+                        int x = 0;
+                        for (Map.Entry<Player, IRyeDragon> entry : listofDragonriders.entrySet()) {
+                            if (entry.getValue().isTravel()) {
+                                x++;
+                            }
+                        }
+                        return x;
+                    }
+
+                });
+                dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Stationary Dragons") {
+                    @Override
+                    public int getValue() {
+                        return listofStatDragons.size();
+                    }
+
+                });
+                metrics.start();
+            } catch (IOException e) {
             }
         }
 
@@ -176,7 +230,8 @@ public class DragonTravelMain extends JavaPlugin {
 
         if (dbStatDragonsHandler.getDbStatDragonsConfig().getConfigurationSection("StatDragons") != null) {
             for (String key : dbStatDragonsHandler.getDbStatDragonsConfig().getConfigurationSection("StatDragons").getKeys(false)) {
-                StationaryDragon sDragon = dbStatDragonsHandler.getStatDragon(key.toLowerCase());
+                StationaryDragon sDragon = dbStatDragonsHandler.getStatDragon(key);
+                DragonTravelMain.listofStatDragons.put(key.toLowerCase(), sDragon);
             }
         }
 

@@ -60,8 +60,8 @@ public class HomesDB {
      * @param home Home to create.
      * @return Returns true if the home was created successfully, false if not.
      */
-    public boolean saveHome(String playerName, Home home) {
-        homeSection.set(playerName, home);
+    public boolean saveHome(String playerId, Home home) {
+        homeSection.set(playerId, home);
         try {
             dbHomesConfig.save(dbHomesFile);
             return true;
@@ -94,18 +94,25 @@ public class HomesDB {
     /**
      * Returns the details of the home with the given name.
      *
-     * @param playerName Name of the home which should be returned.
+     * @param playerId Name of the home which should be returned.
      * @return The home as a home-object.
      */
-    public Home getHome(String playerName) {
-        Object obj = homeSection.get(playerName, null);
-        if (obj != null) {
-            // Transition support
-            if (obj instanceof ConfigurationSection) {
-                return new Home(((ConfigurationSection) obj).getValues(true));
-            }
+    public Home getHome(String playerId) {
+        Object obj = homeSection.get(playerId.toLowerCase(), null);
+
+        if (obj == null) {
+            return null;
         }
-        return (Home) obj;
+        if (obj instanceof ConfigurationSection) {
+            Home h = new Home(((ConfigurationSection) obj).getValues(true));
+            h.playerName = playerId;
+            saveHome(playerId, h);
+            return h;
+        } else {
+            Home h = (Home) obj;
+            h.playerName = playerId;
+            return h;
+        }
     }
 
     public void init() {
