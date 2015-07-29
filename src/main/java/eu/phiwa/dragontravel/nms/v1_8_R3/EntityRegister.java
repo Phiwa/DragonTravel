@@ -76,7 +76,7 @@ public class EntityRegister implements IEntityRegister {
                 e.addSuppressed(ex);
             }
 
-            Bukkit.getLogger().info("[DragonTravel] [Error] Could not register the RyeDragon-entity!");
+            Bukkit.getLogger().info("[DragonTravel] [Error] Could not register the RayDragon-entity!");
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(DragonTravelMain.getInstance());
 

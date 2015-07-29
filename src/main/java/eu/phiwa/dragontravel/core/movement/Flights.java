@@ -12,16 +12,6 @@ import org.bukkit.entity.Player;
 
 public class Flights {
 
-	private static float getCorrectYawForPlayer(Player player, Location destination) {
-
-		if (player.getLocation().getBlockZ() > destination.getBlockZ())
-			return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX()) / (player.getLocation().getBlockZ() - destination.getBlockZ())))) + 180.0F;
-		else if (player.getLocation().getBlockZ() < destination.getBlockZ())
-			return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX()) / (player.getLocation().getBlockZ() - destination.getBlockZ()))));
-		else
-			return player.getLocation().getYaw();
-	}
-
 	/**
 	 * @param player
 	 * @param flightname
@@ -89,9 +79,19 @@ public class Flights {
 		IRyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);
 		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.getDisplayName())));
 		dragon.setTotalDist(Math.round(flight.getDistance() + Math.hypot(firstwp.getBlockX() - temploc.getBlockX(), firstwp.getBlockZ() - temploc.getBlockZ())));
-		dragon.setCoveredDist(0);
-		((LivingEntity) dragon.getEntity()).setMaxHealth(61d);
-		((LivingEntity) dragon.getEntity()).setHealth(1d);
+		dragon.setCoveredDist(1);
+		((LivingEntity) dragon.getEntity()).setMaxHealth(dragon.getTotalDist() + 10);
+		((LivingEntity) dragon.getEntity()).setHealth(dragon.getCoveredDist());
 		dragon.startFlight(flight);
+	}
+
+	private static float getCorrectYawForPlayer(Player player, Location destination) {
+
+		if (player.getLocation().getBlockZ() > destination.getBlockZ())
+			return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX()) / (player.getLocation().getBlockZ() - destination.getBlockZ())))) + 180.0F;
+		else if (player.getLocation().getBlockZ() < destination.getBlockZ())
+			return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX()) / (player.getLocation().getBlockZ() - destination.getBlockZ()))));
+		else
+			return player.getLocation().getYaw();
 	}
 }

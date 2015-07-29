@@ -45,6 +45,23 @@ public class StationaryDragon implements ConfigurationSerializable {
         this.dragon = createDragon(false);
     }
 
+    /**
+     * Creates a stationary dragon
+     */
+    public IRyeDragon createDragon(boolean isNew) {
+        final IRyeDragon dragon = DragonTravelMain.getInstance().getNmsHandler().getRyeDragon(toLocation());
+        dragon.fixWings();
+        dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', displayName));
+        dragon.setCustomNameVisible(true);
+        if (isNew)
+            DragonTravelMain.getInstance().getDbStatDragonsHandler().createStatDragon(name, this);
+        return dragon;
+    }
+
+    public Location toLocation() {
+        return new Location(Bukkit.getWorld(worldName), x, y, z, (float) yaw, (float) pitch);
+    }
+
     public StationaryDragon(Player player, String name, String displayName, Location loc, boolean isNew) {
         this.owner = player.getUniqueId().toString();
         this.x = loc.getBlockX();
@@ -61,21 +78,7 @@ public class StationaryDragon implements ConfigurationSerializable {
         player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.AddedStatDragon"));
     }
 
-    /**
-     * Creates a stationary dragon
-     */
-    public IRyeDragon createDragon(boolean isNew) {
-        final IRyeDragon dragon = DragonTravelMain.getInstance().getNmsHandler().getRyeDragon(toLocation());
-        dragon.fixWings();
-        dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', displayName));
-        dragon.setCustomNameVisible(true);
-        if (isNew)
-            DragonTravelMain.getInstance().getDbStatDragonsHandler().createStatDragon(name, this);
-        return dragon;
-    }
-
     public void removeDragon(boolean isPermanent) {
-        DragonTravelMain.listofStatDragons.remove(name);
         dragon.getEntity().remove();
         if (isPermanent)
             DragonTravelMain.getInstance().getDbStatDragonsHandler().deleteStatDragon(name);
@@ -110,10 +113,6 @@ public class StationaryDragon implements ConfigurationSerializable {
         ret.put("owner", owner);
         ret.put("displayname", displayName);
         return ret;
-    }
-
-    public Location toLocation() {
-        return new Location(Bukkit.getWorld(worldName), x, y, z, (float) yaw, (float) pitch);
     }
 
     public IRyeDragon getDragon() {

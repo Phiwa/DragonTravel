@@ -24,19 +24,23 @@ public class StatDragonsDB {
         init();
     }
 
-    private void copy(InputStream in, File file) {
+    public void init() {
+
+        dbStatDragonsFile = new File("plugins/DragonTravel/databases", "statdragons.yml");
 
         try {
-            OutputStream out = new FileOutputStream(file);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) != -1) {
-                out.write(buf, 0, len);
-            }
-            out.close();
-            in.close();
+            create();
         } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Could not initialize the statdragons-database.");
             e.printStackTrace();
+        }
+
+        dbStatDragonsConfig = new YamlConfiguration();
+        load();
+
+        statDragonsSection = dbStatDragonsConfig.getConfigurationSection("StatDragons");
+        if (statDragonsSection == null) {
+            statDragonsSection = dbStatDragonsConfig.createSection("StatDragons");
         }
     }
 
@@ -54,6 +58,32 @@ public class StatDragonsDB {
         }
 
 
+    }
+
+    private void load() {
+        try {
+            dbStatDragonsConfig.load(dbStatDragonsFile);
+            Bukkit.getLogger().log(Level.INFO, "Loaded statdragons-database.");
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "No statdragons-database found");
+            e.printStackTrace();
+        }
+    }
+
+    private void copy(InputStream in, File file) {
+
+        try {
+            OutputStream out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
+            out.close();
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -93,7 +123,6 @@ public class StatDragonsDB {
         }
     }
 
-
     /**
      * Returns the details of the dragon with the given name.
      *
@@ -102,7 +131,6 @@ public class StatDragonsDB {
      */
     public StationaryDragon getStatDragon(String name) {
         name = name.toLowerCase();
-        System.out.println(0);
         if (!DragonTravelMain.listofStatDragons.containsKey(name)) {
             Object obj = statDragonsSection.get(name.toLowerCase(), null);
 
@@ -110,12 +138,10 @@ public class StatDragonsDB {
                 return null;
             }
             if (obj instanceof ConfigurationSection) {
-                System.out.println(1);
                 StationaryDragon s = new StationaryDragon(((ConfigurationSection) obj).getValues(true));
                 s.setName(name);
                 return s;
             } else {
-                System.out.println(2);
                 StationaryDragon s = (StationaryDragon) obj;
                 s.setName(name);
                 return s;
@@ -123,36 +149,6 @@ public class StatDragonsDB {
         }
         return DragonTravelMain.listofStatDragons.get(name);
 
-    }
-
-    public void init() {
-
-        dbStatDragonsFile = new File("plugins/DragonTravel/databases", "statdragons.yml");
-
-        try {
-            create();
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not initialize the statdragons-database.");
-            e.printStackTrace();
-        }
-
-        dbStatDragonsConfig = new YamlConfiguration();
-        load();
-
-        statDragonsSection = dbStatDragonsConfig.getConfigurationSection("StatDragons");
-        if (statDragonsSection == null) {
-            statDragonsSection = dbStatDragonsConfig.createSection("StatDragons");
-        }
-    }
-
-    private void load() {
-        try {
-            dbStatDragonsConfig.load(dbStatDragonsFile);
-            Bukkit.getLogger().log(Level.INFO, "Loaded statdragons-database.");
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "No statdragons-database found");
-            e.printStackTrace();
-        }
     }
 
     public void showStatDragons() {

@@ -16,16 +16,6 @@ import org.bukkit.entity.Player;
 
 public class Travels {
 
-	private static float getCorrectYawForPlayer(Player player, Location destination) {
-
-		if (player.getLocation().getBlockZ() > destination.getBlockZ())
-			return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX()) / (player.getLocation().getBlockZ() - destination.getBlockZ())))) + 180.0F;
-		else if (player.getLocation().getBlockZ() < destination.getBlockZ())
-			return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX()) / (player.getLocation().getBlockZ() - destination.getBlockZ()))));
-		else
-			return player.getLocation().getYaw();
-	}
-
 	/**
 	 * Travel to specified coordinates
 	 *
@@ -90,6 +80,81 @@ public class Travels {
 
 		travel(player, loc, checkForStation, message);
 
+	}
+
+	/**
+	 * Core-method of this class, handles the travel itself (e.g. the difference between normal and interworld-travels
+	 *
+	 * @param player
+	 * @param destination
+	 * @param checkForStation Whether or not DragonTravel should check
+	 *                        if the player is at a station and return if not.
+	 *                        If the admin disabled the station-check globally,
+	 *                        this has no function.
+	 */
+	public static void travel(Player player, Location destination, Boolean checkForStation, String destName) {
+
+		// Check for station
+		if (checkForStation && DragonTravelMain.getInstance().getConfig().getBoolean("MountingLimit.EnableForTravels") && !player.hasPermission("dt.ignoreusestations.travels")) {
+			if (!DragonTravelMain.getInstance().getDbStationsHandler().checkForStation(player)) {
+				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.NotAtAStation"));
+				return;
+			}
+		}
+
+		Location temploc = player.getLocation();
+
+		if (!player.hasPermission("dt.bypassrequireskylight") && (temploc.getWorld().getHighestBlockYAt(temploc) < temploc.getY() || destination.getWorld().getHighestBlockYAt(destination) < destination.getY())) {
+			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequireSkyLight"));
+			return;
+		}
+
+		// Check if max distance to target is exceeded
+		int maxdist = DragonTravelMain.getInstance().getConfig().getInt("MaxTravelDistance");
+
+		if (maxdist != -1) {
+			if (temploc.distance(destination) >= maxdist) {
+				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.MaxTravelDistanceExceeded"));
+				return;
+			}
+		}
+
+		if (destination.getWorld().getName() == player.getWorld().getName()) {
+			temploc.setYaw(getCorrectYawForPlayer(player, destination));
+			player.teleport(temploc);
+		} else {
+			Location temploc2 = new Location(player.getWorld(), player.getLocation().getX() + 80, player.getLocation().getY() + 80, player.getLocation().getZ() + 80);
+			temploc.setYaw(getCorrectYawForPlayer(player, temploc2));
+			player.teleport(temploc);
+		}
+
+		if (!DragonManagement.mount(player, true))
+			return;
+
+		if (!DragonTravelMain.listofDragonriders.containsKey(player))
+			return;
+
+		IRyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);
+		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));
+		dragon.setTotalDist(Math.hypot(temploc.getBlockX() - destination.getBlockX(), temploc.getBlockZ() - destination.getBlockZ()));
+		dragon.setCoveredDist(1);
+		((LivingEntity) dragon.getEntity()).setMaxHealth(dragon.getTotalDist() + 10);
+		((LivingEntity) dragon.getEntity()).setHealth(dragon.getCoveredDist());
+		if (destination.getWorld().getName() == player.getWorld().getName())
+			dragon.startTravel(destination, false);
+		else
+			dragon.startTravel(destination, true);
+
+	}
+
+	private static float getCorrectYawForPlayer(Player player, Location destination) {
+
+		if (player.getLocation().getBlockZ() > destination.getBlockZ())
+			return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX()) / (player.getLocation().getBlockZ() - destination.getBlockZ())))) + 180.0F;
+		else if (player.getLocation().getBlockZ() < destination.getBlockZ())
+			return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX()) / (player.getLocation().getBlockZ() - destination.getBlockZ()))));
+		else
+			return player.getLocation().getYaw();
 	}
 
 	/**
@@ -244,70 +309,5 @@ public class Travels {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.getDisplayName())));
 
 		travel(player, destination.toLocation(), checkForStation, DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.getDisplayName()));
-	}
-
-	/**
-	 * Core-method of this class, handles the travel itself (e.g. the difference between normal and interworld-travels
-	 *
-	 * @param player
-	 * @param destination
-	 * @param checkForStation Whether or not DragonTravel should check
-	 *                        if the player is at a station and return if not.
-	 *                        If the admin disabled the station-check globally,
-	 *                        this has no function.
-	 */
-	public static void travel(Player player, Location destination, Boolean checkForStation, String destName) {
-
-		// Check for station
-		if (checkForStation && DragonTravelMain.getInstance().getConfig().getBoolean("MountingLimit.EnableForTravels") && !player.hasPermission("dt.ignoreusestations.travels")) {
-			if (!DragonTravelMain.getInstance().getDbStationsHandler().checkForStation(player)) {
-				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.NotAtAStation"));
-				return;
-			}
-		}
-
-		Location temploc = player.getLocation();
-
-        if (!player.hasPermission("dt.bypassrequireskylight") && (temploc.getWorld().getHighestBlockYAt(temploc) < temploc.getY() || destination.getWorld().getHighestBlockYAt(destination) < destination.getY())) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequireSkyLight"));
-            return;
-        }
-
-		// Check if max distance to target is exceeded
-		int maxdist = DragonTravelMain.getInstance().getConfig().getInt("MaxTravelDistance");
-
-		if (maxdist != -1) {
-			if (temploc.distance(destination) >= maxdist) {
-				player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.MaxTravelDistanceExceeded"));
-				return;
-			}
-		}
-
-		if (destination.getWorld().getName() == player.getWorld().getName()) {
-			temploc.setYaw(getCorrectYawForPlayer(player, destination));
-            player.teleport(temploc);
-		} else {
-			Location temploc2 = new Location(player.getWorld(), player.getLocation().getX() + 80, player.getLocation().getY() + 80, player.getLocation().getZ() + 80);
-			temploc.setYaw(getCorrectYawForPlayer(player, temploc2));
-			player.teleport(temploc);
-        }
-
-		if (!DragonManagement.mount(player, true))
-			return;
-
-		if (!DragonTravelMain.listofDragonriders.containsKey(player))
-			return;
-
-		IRyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);
-		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));
-		dragon.setTotalDist(Math.hypot(temploc.getBlockX() - destination.getBlockX(), temploc.getBlockZ() - destination.getBlockZ()));
-        dragon.setCoveredDist(0);
-		((LivingEntity) dragon.getEntity()).setMaxHealth(61d);
-		((LivingEntity) dragon.getEntity()).setHealth(1d);
-		if (destination.getWorld().getName() == player.getWorld().getName())
-			dragon.startTravel(destination, false);
-		else
-			dragon.startTravel(destination, true);
-
 	}
 }

@@ -21,9 +21,11 @@ public interface IRyeDragon {
 
     void startTravel(Location destLoc, boolean interworld);
 
+    MovementType getMovementType();
+
     Entity getEntity();
 
-    float getCorrectYaw(double toX, double toZ);
+    float getCorrectYaw(Location toLoc);
 
     String getCustomName();
 
@@ -36,10 +38,6 @@ public interface IRyeDragon {
     double getTotalDist();
 
     void setTotalDist(double dist);
-
-    boolean isFlight();
-
-    boolean isTravel();
 
     void fixWings();
 
