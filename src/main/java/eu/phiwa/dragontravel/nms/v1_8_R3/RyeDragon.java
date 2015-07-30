@@ -15,6 +15,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
+import org.bukkit.util.Vector;
 
 public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 
@@ -35,10 +36,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     private Location midLocA;
     private Location midLocB;
     private boolean finalMove = false;
-
-
-    private double coveredDist;
-    private double totalDist;
 
     private double XperTick;
     private double YperTick;
@@ -70,9 +67,35 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
      */
     @Override
     public void m() {
-        if (getEntity() != null && rider != null)
-            if (getEntity().getPassenger() != null)
+        if (getEntity() != null && rider != null) {
+            if (getEntity().getPassenger() != null) {
                 getEntity().setPassenger(rider);
+            }
+        }
+
+        if (midLocA != null || toLoc != null) {
+            Vector a = fromLoc.toVector();
+            Vector b = midLocA != null ? midLocA.toVector() : toLoc.toVector();
+            double distX = b.getX() - a.getX();
+            double distY = b.getY() - a.getY();
+            double distZ = b.getZ() - a.getZ();
+
+            //vector trig functions have to be in rads...
+            float yaw = 0f, pitch = (float) -Math.atan(distY / Math.sqrt(distX * distX + distZ * distZ));
+
+            if (distX != 0) {
+                if (distX < 0) {
+                    yaw = (float) (1.5 * Math.PI);
+                } else {
+                    yaw = (float) (0.5 * Math.PI);
+                }
+                yaw = yaw - (float) Math.atan(distZ / distX);
+            } else if (distZ < 0) {
+                yaw = (float) Math.PI;
+            }
+            //back to degrees
+            setYawPitch(-yaw * 180F / (float) Math.PI - 180F, pitch * 180F / (float) Math.PI - 180F);
+        }
 
         switch (movementType) {
             case TRAVEL:
@@ -107,11 +130,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             else
                 locZ -= ZperTick;
 
-        setCoveredDist(getCoveredDist() + Math.hypot(locX, locZ));
-        if (coveredDist > totalDist)
-            coveredDist = totalDist;
-        ((LivingEntity) getEntity()).setHealth(coveredDist);
-
         if ((Math.abs((int) locZ - flight.getWaypoints().get(currentWaypointIndex).getZ()) <= 3) && Math.abs((int) locX - flight.getWaypoints().get(currentWaypointIndex).getX()) <= 3 && (Math.abs((int) locY - flight.getWaypoints().get(currentWaypointIndex).getY()) <= 5)) {
             if (currentWaypointIndex == flight.getWaypoints().size() - 1) {
                 DragonManagement.removeRiderandDragon(getEntity(), flight.getWaypoints().get(currentWaypointIndex).getAsLocation());
@@ -122,7 +140,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 
             this.fromLoc = getEntity().getLocation();
             this.toLoc = flight.getWaypoints().get(currentWaypointIndex).getAsLocation();
-            this.yaw = getCorrectYaw(toLoc);
 
             if (!flight.getWaypoints().get(currentWaypointIndex).getWorldName().equals(this.getEntity().getWorld().getName())) {
                 this.teleportTo(flight.getWaypoints().get(currentWaypointIndex).getAsLocation(), true);
@@ -130,7 +147,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             }
 
             setMoveFlight();
-            return;
         }
     }
 
@@ -144,7 +160,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         double distZ = fromLoc.getZ() - flight.getWaypoints().get(currentWaypointIndex).getZ();
         double tick = Math.sqrt((distX * distX) + (distY * distY)
                 + (distZ * distZ)) / DragonTravelMain.getInstance().getConfigHandler().getSpeed();
-        this.yaw = getCorrectYaw(flight.getWaypoints().get(currentWaypointIndex).getAsLocation());
         this.XperTick = Math.abs(distX) / tick;
         this.YperTick = Math.abs(distY) / tick;
         this.ZperTick = Math.abs(distZ) / tick;
@@ -163,7 +178,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 
         this.toLoc = flight.getWaypoints().get(currentWaypointIndex).getAsLocation();
         this.fromLoc = getEntity().getLocation();
-        this.yaw = getCorrectYaw(toLoc);
 
         setMoveFlight();
     }
@@ -228,13 +242,9 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             myZ -= ZperTick;
 
         if ((int) myZ == (int) toLoc.getZ() && ((int) myX == (int) toLoc.getX()
-                || (((int) myX == (int) toLoc.getX() + 1 || (int) myX == (int) toLoc.getX() - 1) && ((int) myZ == (int) toLoc.getZ() + 1 || (int) myZ == (int) toLoc.getZ() - 1)))) {
+                || ((int) myX == (int) toLoc.getX() + 1 || (int) myX == (int) toLoc.getX() - 1))) {
             finalMove = true;
         }
-        coveredDist = Math.hypot(getEntity().getLocation().getBlockX() - fromLoc.getBlockX(), getEntity().getLocation().getBlockZ() - fromLoc.getBlockZ());
-        if (coveredDist > totalDist)
-            coveredDist = totalDist;
-        ((LivingEntity) getEntity()).setHealth(coveredDist);
         setPosition(myX, myY, myZ);
     }
 
@@ -252,13 +262,11 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             distX = fromLoc.getX() - midLocA.getX();
             distY = fromLoc.getY() - midLocA.getY();
             distZ = fromLoc.getZ() - midLocA.getZ();
-            this.yaw = getCorrectYaw(midLocA);
         } else {
             dist = fromLoc.distance(toLoc);
             distX = fromLoc.getX() - toLoc.getX();
             distY = fromLoc.getY() - toLoc.getY();
             distZ = fromLoc.getZ() - toLoc.getZ();
-            this.yaw = getCorrectYaw(toLoc);
         }
         double tick = dist / DragonTravelMain.getInstance().getConfigHandler().getSpeed();
         XperTick = Math.abs(distX) / tick;
@@ -279,10 +287,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         if (interWorld) {
             this.midLocA = new Location(getEntity().getWorld(), locX + 50 + Math.random() * 100, travelY, locZ + 50 + Math.random() * 100);
             this.midLocB = destLoc.clone().add(scatter, scatter, scatter);
-            this.yaw = getCorrectYaw(midLocA);
         } else {
             this.toLoc = destLoc;
-            this.yaw = getCorrectYaw(toLoc);
         }
         setMoveTravel();
     }
@@ -297,39 +303,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         if (bukkitEntity != null)
             return bukkitEntity;
         return null;
-    }
-
-    /**
-     * Gets the correct yaw for this specific path
-     */
-    public float getCorrectYaw(Location destLoc) {
-        float f = getEntity().getLocation().getYaw();
-
-        if (getEntity().getLocation().getBlockZ() > destLoc.getBlockZ())
-            f = (float) (-Math.toDegrees(Math.atan((getEntity().getLocation().getBlockX() - destLoc.getBlockX()) / (getEntity().getLocation().getBlockZ() - destLoc.getBlockZ()))));
-        else if (getEntity().getLocation().getBlockZ() < destLoc.getBlockZ())
-            f = (float) (-Math.toDegrees(Math.atan((getEntity().getLocation().getBlockX() - destLoc.getBlockX()) / (getEntity().getLocation().getBlockZ() - destLoc.getBlockZ())))) + 180.0F;
-        this.yaw = f;
-        this.setSneaking(true);
-        ((LivingEntity) getEntity()).damage(1);
-        this.getControllerLook().a(destLoc.getX(), destLoc.getY(), destLoc.getZ(), f, 0f);
-        return f;
-    }
-
-    public double getCoveredDist() {
-        return coveredDist;
-    }
-
-    public void setCoveredDist(double coveredDist) {
-        this.coveredDist = coveredDist;
-    }
-
-    public double getTotalDist() {
-        return totalDist;
-    }
-
-    public void setTotalDist(double totalDist) {
-        this.totalDist = totalDist;
     }
 
 	/*
@@ -478,4 +451,5 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             }, 20L);
         }
     }
+
 }

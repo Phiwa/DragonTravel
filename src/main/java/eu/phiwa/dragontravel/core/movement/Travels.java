@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class Travels {
@@ -136,10 +135,6 @@ public class Travels {
 
 		IRyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);
 		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));
-		dragon.setTotalDist(Math.hypot(temploc.getBlockX() - destination.getBlockX(), temploc.getBlockZ() - destination.getBlockZ()));
-		dragon.setCoveredDist(1);
-		((LivingEntity) dragon.getEntity()).setMaxHealth(dragon.getTotalDist() + 10);
-		((LivingEntity) dragon.getEntity()).setHealth(dragon.getCoveredDist());
 		if (destination.getWorld().getName() == player.getWorld().getName())
 			dragon.startTravel(destination, false);
 		else

@@ -6,9 +6,6 @@ import org.bukkit.entity.Entity;
 
 public interface IRyeDragon {
 
-    double coveredDist = 0;
-    double totalDist = 0;
-
     void flight();
 
     void setMoveFlight();
@@ -25,19 +22,9 @@ public interface IRyeDragon {
 
     Entity getEntity();
 
-    float getCorrectYaw(Location toLoc);
-
     String getCustomName();
 
     void setCustomName(String name);
-
-    double getCoveredDist();
-
-    void setCoveredDist(double dist);
-
-    double getTotalDist();
-
-    void setTotalDist(double dist);
 
     void fixWings();
 

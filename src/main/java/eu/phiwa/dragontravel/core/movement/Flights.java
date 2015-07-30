@@ -7,7 +7,6 @@ import eu.phiwa.dragontravel.nms.IRyeDragon;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class Flights {
@@ -78,10 +77,6 @@ public class Flights {
 			player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.getDisplayName()));
 		IRyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);
 		dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.getDisplayName())));
-		dragon.setTotalDist(Math.round(flight.getDistance() + Math.hypot(firstwp.getBlockX() - temploc.getBlockX(), firstwp.getBlockZ() - temploc.getBlockZ())));
-		dragon.setCoveredDist(1);
-		((LivingEntity) dragon.getEntity()).setMaxHealth(dragon.getTotalDist() + 10);
-		((LivingEntity) dragon.getEntity()).setHealth(dragon.getCoveredDist());
 		dragon.startFlight(flight);
 	}
 
