@@ -1,7 +1,7 @@
-package eu.phiwa.dragontravel.core.objects;
+package eu.phiwa.dragontravel.core.movement.stationary;
 
-import eu.phiwa.dragontravel.core.DragonTravelMain;
-import eu.phiwa.dragontravel.nms.IRyeDragon;
+import eu.phiwa.dragontravel.core.DragonTravel;
+import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -49,12 +49,12 @@ public class StationaryDragon implements ConfigurationSerializable {
      * Creates a stationary dragon
      */
     public IRyeDragon createDragon(boolean isNew) {
-        final IRyeDragon dragon = DragonTravelMain.getInstance().getNmsHandler().getRyeDragon(toLocation());
+        final IRyeDragon dragon = DragonTravel.getInstance().getNmsHandler().getRyeDragon(toLocation());
         dragon.fixWings();
         dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', displayName));
         dragon.setCustomNameVisible(true);
         if (isNew)
-            DragonTravelMain.getInstance().getDbStatDragonsHandler().createStatDragon(name, this);
+            DragonTravel.getInstance().getDbStatDragonsHandler().createStatDragon(name, this);
         return dragon;
     }
 
@@ -74,31 +74,18 @@ public class StationaryDragon implements ConfigurationSerializable {
         this.displayName = displayName;
 
         this.dragon = createDragon(isNew);
-        DragonTravelMain.listofStatDragons.put(name.toLowerCase(), this);
-        player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.AddedStatDragon"));
+        DragonTravel.getInstance().getDragonManager().getStationaryDragons().put(name.toLowerCase(), this);
+        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.AddedStatDragon"));
     }
 
     public void removeDragon(boolean isPermanent) {
         dragon.getEntity().remove();
         if (isPermanent)
-            DragonTravelMain.getInstance().getDbStatDragonsHandler().deleteStatDragon(name);
+            DragonTravel.getInstance().getDbStatDragonsHandler().deleteStatDragon(name);
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append('\n');
-        sb.append("--- StatDragon ---").append('\n');
-        sb.append("Name: " + name).append('\n');
-        sb.append("Display Name: " + displayName).append('\n');
-        sb.append("Owner: " + owner).append('\n');
-        sb.append("X: " + x).append('\n');
-        sb.append("Y: " + y).append('\n');
-        sb.append("Z: " + z).append('\n');
-        sb.append("Yaw: " + yaw).append('\n');
-        sb.append("Pitch: " + pitch).append('\n');
-        sb.append("World: " + worldName).append('\n');
-        sb.append("---------------").append('\n');
-        return sb.toString();
+        return "\n" + "--- StatDragon ---" + '\n' + "Name: " + name + '\n' + "Display Name: " + displayName + '\n' + "Owner: " + owner + '\n' + "X: " + x + '\n' + "Y: " + y + '\n' + "Z: " + z + '\n' + "Yaw: " + yaw + '\n' + "Pitch: " + pitch + '\n' + "World: " + worldName + '\n' + "---------------" + '\n';
     }
 
     @Override
