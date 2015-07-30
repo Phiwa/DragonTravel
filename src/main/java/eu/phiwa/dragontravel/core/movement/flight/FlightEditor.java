@@ -44,7 +44,7 @@ public class FlightEditor implements Listener {
 
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
             Flight flight = editors.get(player);
-            if (!flight.getWayPoints().isEmpty()) {
+            if (!flight.getWaypoints().isEmpty()) {
                 flight.removelastWayPoint();
             }
 
@@ -54,7 +54,7 @@ public class FlightEditor implements Listener {
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) {
             Flight flight = editors.get(player);
-            WayPoint wp = new WayPoint();
+            Waypoint wp = new Waypoint();
             wp.setX(loc.getBlockX());
             wp.setY(loc.getBlockY());
             wp.setZ(loc.getBlockZ());

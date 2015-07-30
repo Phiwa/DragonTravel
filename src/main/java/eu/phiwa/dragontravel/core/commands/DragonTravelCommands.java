@@ -6,7 +6,7 @@ import eu.phiwa.dragontravel.core.hooks.payment.ChargeType;
 import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
 import eu.phiwa.dragontravel.core.movement.flight.Flights;
-import eu.phiwa.dragontravel.core.movement.flight.WayPoint;
+import eu.phiwa.dragontravel.core.movement.flight.Waypoint;
 import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
 import eu.phiwa.dragontravel.core.movement.travel.Home;
 import eu.phiwa.dragontravel.core.movement.travel.Station;
@@ -562,13 +562,13 @@ public final class DragonTravelCommands {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.NotInFlightCreationMode"));
             return;
         }
-        if (wipFlight.getWayPoints().size() < 1) {
+        if (wipFlight.getWaypoints().size() < 1) {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.AtLeastOneWaypoint"));
             return;
         }
 
         DragonTravel.getInstance().getDbFlightsHandler().saveFlight(wipFlight);
-        WayPoint.removeWayPointMarkersOfFlight(wipFlight);
+        Waypoint.removeWayPointMarkersOfFlight(wipFlight);
         DragonTravel.getInstance().getFlightEditor().removeEditor(player);
 
         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.FlightSaved"));
@@ -607,7 +607,7 @@ public final class DragonTravelCommands {
             loc.setZ(args.getInteger(2));
             loc.setWorld(Bukkit.getWorld(args.getString(3)));
         }
-        WayPoint wp = new WayPoint(loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+        Waypoint wp = new Waypoint(loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 
         wp.setMarker(player);
         Block block = loc.getBlock();

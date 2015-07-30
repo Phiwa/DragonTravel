@@ -56,7 +56,7 @@ public class Flights {
         }
 
         Location temploc = player.getLocation();
-        Location firstwp = flight.getWayPoints().get(0).getAsLocation();
+        Location firstwp = flight.getWaypoints().get(0).getAsLocation();
         temploc.setYaw(getCorrectYawForPlayer(player, firstwp));
         player.teleport(temploc);
 

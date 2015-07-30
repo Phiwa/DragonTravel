@@ -10,40 +10,40 @@ public class Flight implements ConfigurationSerializable {
 
     private String displayName;
     private String name;
-    private List<WayPoint> wayPoints;
+    private List<Waypoint> waypoints;
 
     public Flight(Map<String, Object> data) {
         displayName = (String) data.get("displayname");
-        this.wayPoints = new LinkedList<>();
+        this.waypoints = new LinkedList<>();
         @SuppressWarnings("unchecked")
         List<Object> wps = (List<Object>) data.get("waypoints");
         for (Object o : wps) {
             if (!(o instanceof String))
                 continue;
             String wpData = (String) o;
-            wayPoints.add(WayPoint.loadFromString(wpData));
+            waypoints.add(Waypoint.loadFromString(wpData));
         }
     }
 
     public Flight(String flightName, String displayName) {
         this.displayName = displayName;
         this.name = flightName.toLowerCase();
-        this.wayPoints = new LinkedList<>();
+        this.waypoints = new LinkedList<>();
     }
 
-    public void addWayPoint(WayPoint wp) {
-        wayPoints.add(wp);
+    public void addWayPoint(Waypoint wp) {
+        waypoints.add(wp);
     }
 
     public void removelastWayPoint() {
-        wayPoints.get(wayPoints.size() - 1).removeMarker();
-        wayPoints.remove(wayPoints.size() - 1);
+        waypoints.get(waypoints.size() - 1).removeMarker();
+        waypoints.remove(waypoints.size() - 1);
     }
 
     public long getDistance() {
         long dist = 0;
-        WayPoint lwp = null;
-        for (WayPoint wp : wayPoints) {
+        Waypoint lwp = null;
+        for (Waypoint wp : waypoints) {
             if (lwp == null) {
                 lwp = wp;
                 continue;
@@ -59,7 +59,7 @@ public class Flight implements ConfigurationSerializable {
         Map<String, Object> ret = new HashMap<>();
         ret.put("displayname", displayName);
         List<String> wpStrings = new ArrayList<>();
-        for (WayPoint wp : wayPoints) {
+        for (Waypoint wp : waypoints) {
             wpStrings.add(wp.saveToString());
         }
         ret.put("waypoints", wpStrings);
@@ -71,7 +71,7 @@ public class Flight implements ConfigurationSerializable {
         StringBuilder sb = new StringBuilder(name);
         sb.append(":\n");
 
-        for (WayPoint wp : wayPoints) {
+        for (Waypoint wp : waypoints) {
             sb.append("- " + wp.getX() + ", " + wp.getY() + ", " + wp.getZ() + ", " + wp.getWorldName() + "\n");
         }
 
@@ -94,11 +94,11 @@ public class Flight implements ConfigurationSerializable {
         this.name = name;
     }
 
-    public List<WayPoint> getWayPoints() {
-        return wayPoints;
+    public List<Waypoint> getWaypoints() {
+        return waypoints;
     }
 
-    public void setWayPoints(List<WayPoint> wayPoints) {
-        this.wayPoints = wayPoints;
+    public void setWaypoints(List<Waypoint> waypoints) {
+        this.waypoints = waypoints;
     }
 }

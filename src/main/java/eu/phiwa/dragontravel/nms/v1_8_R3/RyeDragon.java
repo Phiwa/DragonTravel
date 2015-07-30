@@ -113,35 +113,35 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
      */
     @Override
     public void flight() {
-        if ((int) locX != flight.getWayPoints().get(currentWaypointIndex).getX())
-            if (locX < flight.getWayPoints().get(currentWaypointIndex).getX())
+        if ((int) locX != flight.getWaypoints().get(currentWaypointIndex).getX())
+            if (locX < flight.getWaypoints().get(currentWaypointIndex).getX())
                 locX += XperTick;
             else
                 locX -= XperTick;
-        if ((int) locY != flight.getWayPoints().get(currentWaypointIndex).getY())
-            if ((int) locY < flight.getWayPoints().get(currentWaypointIndex).getY())
+        if ((int) locY != flight.getWaypoints().get(currentWaypointIndex).getY())
+            if ((int) locY < flight.getWaypoints().get(currentWaypointIndex).getY())
                 locY += YperTick;
             else
                 locY -= YperTick;
-        if ((int) locZ != flight.getWayPoints().get(currentWaypointIndex).getZ())
-            if (locZ < flight.getWayPoints().get(currentWaypointIndex).getZ())
+        if ((int) locZ != flight.getWaypoints().get(currentWaypointIndex).getZ())
+            if (locZ < flight.getWaypoints().get(currentWaypointIndex).getZ())
                 locZ += ZperTick;
             else
                 locZ -= ZperTick;
 
-        if ((Math.abs((int) locZ - flight.getWayPoints().get(currentWaypointIndex).getZ()) <= 3) && Math.abs((int) locX - flight.getWayPoints().get(currentWaypointIndex).getX()) <= 3 && (Math.abs((int) locY - flight.getWayPoints().get(currentWaypointIndex).getY()) <= 5)) {
-            if (currentWaypointIndex == flight.getWayPoints().size() - 1) {
-                DragonTravel.getInstance().getDragonManager().removeRiderAndDragon(getEntity(), flight.getWayPoints().get(currentWaypointIndex).getAsLocation());
+        if ((Math.abs((int) locZ - flight.getWaypoints().get(currentWaypointIndex).getZ()) <= 3) && Math.abs((int) locX - flight.getWaypoints().get(currentWaypointIndex).getX()) <= 3 && (Math.abs((int) locY - flight.getWaypoints().get(currentWaypointIndex).getY()) <= 5)) {
+            if (currentWaypointIndex == flight.getWaypoints().size() - 1) {
+                DragonTravel.getInstance().getDragonManager().removeRiderAndDragon(getEntity(), flight.getWaypoints().get(currentWaypointIndex).getAsLocation());
                 return;
             }
 
             this.currentWaypointIndex++;
 
             this.fromLoc = getEntity().getLocation();
-            this.toLoc = flight.getWayPoints().get(currentWaypointIndex).getAsLocation();
+            this.toLoc = flight.getWaypoints().get(currentWaypointIndex).getAsLocation();
 
-            if (!flight.getWayPoints().get(currentWaypointIndex).getWorldName().equals(this.getEntity().getWorld().getName())) {
-                this.teleportTo(flight.getWayPoints().get(currentWaypointIndex).getAsLocation(), true);
+            if (!flight.getWaypoints().get(currentWaypointIndex).getWorldName().equals(this.getEntity().getWorld().getName())) {
+                this.teleportTo(flight.getWaypoints().get(currentWaypointIndex).getAsLocation(), true);
                 this.currentWaypointIndex++;
             }
 
@@ -154,9 +154,9 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
      */
     @Override
     public void setMoveFlight() {
-        double distX = fromLoc.getX() - flight.getWayPoints().get(currentWaypointIndex).getX();
-        double distY = fromLoc.getY() - flight.getWayPoints().get(currentWaypointIndex).getY();
-        double distZ = fromLoc.getZ() - flight.getWayPoints().get(currentWaypointIndex).getZ();
+        double distX = fromLoc.getX() - flight.getWaypoints().get(currentWaypointIndex).getX();
+        double distY = fromLoc.getY() - flight.getWaypoints().get(currentWaypointIndex).getY();
+        double distZ = fromLoc.getZ() - flight.getWaypoints().get(currentWaypointIndex).getZ();
         double tick = Math.sqrt((distX * distX) + (distY * distY)
                 + (distZ * distZ)) / DragonTravel.getInstance().getConfigHandler().getSpeed();
         this.XperTick = Math.abs(distX) / tick;
@@ -175,7 +175,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         this.currentWaypointIndex = 0;
         this.dragonType = DragonType.MANNED_FLIGHT;
 
-        this.toLoc = flight.getWayPoints().get(currentWaypointIndex).getAsLocation();
+        this.toLoc = flight.getWaypoints().get(currentWaypointIndex).getAsLocation();
         this.fromLoc = getEntity().getLocation();
 
         setMoveFlight();
