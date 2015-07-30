@@ -4,6 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+/*
+Class adapted from Riking's contribution
+ */
 public class CommandHelp {
 
 	public static final int HELP_Page1 = 1;
@@ -22,7 +25,6 @@ public class CommandHelp {
 
 	public static void page1_TableOfContents(Player player) {
 		player.sendMessage("    1 - Table of Contents");
-		// TODO: ADD Permission-Checks to show the correct pages
 		player.sendMessage("    2 - General");
 		player.sendMessage("    3 - Travels");
 		player.sendMessage("    4 - Flights");

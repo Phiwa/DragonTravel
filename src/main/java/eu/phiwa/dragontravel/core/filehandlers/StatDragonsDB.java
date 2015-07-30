@@ -1,7 +1,7 @@
 package eu.phiwa.dragontravel.core.filehandlers;
 
-import eu.phiwa.dragontravel.core.DragonTravelMain;
-import eu.phiwa.dragontravel.core.objects.StationaryDragon;
+import eu.phiwa.dragontravel.core.DragonTravel;
+import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -25,7 +25,6 @@ public class StatDragonsDB {
     }
 
     public void init() {
-
         dbStatDragonsFile = new File("plugins/DragonTravel/databases", "statdragons.yml");
 
         try {
@@ -42,6 +41,8 @@ public class StatDragonsDB {
         if (statDragonsSection == null) {
             statDragonsSection = dbStatDragonsConfig.createSection("StatDragons");
         }
+
+        loadStationaryDragons();
     }
 
     private void create() {
@@ -51,7 +52,7 @@ public class StatDragonsDB {
 
         try {
             dbStatDragonsFile.createNewFile();
-            copy(DragonTravelMain.getInstance().getResource("databases/statdragons.yml"), dbStatDragonsFile);
+            copy(DragonTravel.getInstance().getResource("databases/statdragons.yml"), dbStatDragonsFile);
             Bukkit.getLogger().log(Level.INFO, "Created statdragons-database.");
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "Could not create the statdragons-database!");
@@ -70,6 +71,15 @@ public class StatDragonsDB {
         }
     }
 
+    public void loadStationaryDragons() {
+        if (dbStatDragonsConfig.getConfigurationSection("StatDragons") != null) {
+            for (String key : dbStatDragonsConfig.getConfigurationSection("StatDragons").getKeys(false)) {
+                StationaryDragon sDragon = getStatDragon(key);
+                DragonTravel.getInstance().getDragonManager().getStationaryDragons().put(key.toLowerCase(), sDragon);
+            }
+        }
+    }
+
     private void copy(InputStream in, File file) {
 
         try {
@@ -84,6 +94,40 @@ public class StatDragonsDB {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Returns the details of the dragon with the given name.
+     *
+     * @param name Name of the dragon which should be returned.
+     * @return The dragon as a ryedragon-object.
+     */
+    public StationaryDragon getStatDragon(String name) {
+        name = name.toLowerCase();
+        if (!DragonTravel.getInstance().getDragonManager().getStationaryDragons().containsKey(name)) {
+            Object obj = statDragonsSection.get(name.toLowerCase(), null);
+
+            if (obj == null) {
+                return null;
+            }
+            if (obj instanceof ConfigurationSection) {
+                StationaryDragon s = new StationaryDragon(((ConfigurationSection) obj).getValues(true));
+                s.setName(name);
+                return s;
+            } else {
+                StationaryDragon s = (StationaryDragon) obj;
+                s.setName(name);
+                return s;
+            }
+        }
+        return DragonTravel.getInstance().getDragonManager().getStationaryDragons().get(name);
+    }
+
+    public void unloadStationaryDragons() {
+        for (StationaryDragon sDragon : DragonTravel.getInstance().getDragonManager().getStationaryDragons().values()) {
+            sDragon.removeDragon(false);
+        }
+        DragonTravel.getInstance().getDragonManager().getStationaryDragons().clear();
     }
 
     /**
@@ -121,34 +165,6 @@ public class StatDragonsDB {
             Bukkit.getLogger().log(Level.SEVERE, "Could not delete stat dragon from config.");
             return false;
         }
-    }
-
-    /**
-     * Returns the details of the dragon with the given name.
-     *
-     * @param name Name of the dragon which should be returned.
-     * @return The dragon as a ryedragon-object.
-     */
-    public StationaryDragon getStatDragon(String name) {
-        name = name.toLowerCase();
-        if (!DragonTravelMain.listofStatDragons.containsKey(name)) {
-            Object obj = statDragonsSection.get(name.toLowerCase(), null);
-
-            if (obj == null) {
-                return null;
-            }
-            if (obj instanceof ConfigurationSection) {
-                StationaryDragon s = new StationaryDragon(((ConfigurationSection) obj).getValues(true));
-                s.setName(name);
-                return s;
-            } else {
-                StationaryDragon s = (StationaryDragon) obj;
-                s.setName(name);
-                return s;
-            }
-        }
-        return DragonTravelMain.listofStatDragons.get(name);
-
     }
 
     public void showStatDragons() {

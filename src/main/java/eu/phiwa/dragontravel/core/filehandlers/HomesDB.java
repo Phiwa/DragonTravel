@@ -1,7 +1,7 @@
 package eu.phiwa.dragontravel.core.filehandlers;
 
-import eu.phiwa.dragontravel.core.DragonTravelMain;
-import eu.phiwa.dragontravel.core.objects.Home;
+import eu.phiwa.dragontravel.core.DragonTravel;
+import eu.phiwa.dragontravel.core.movement.travel.Home;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,6 +24,49 @@ public class HomesDB {
         init();
     }
 
+    public void init() {
+        dbHomesFile = new File("plugins/DragonTravel/databases", "homes.yml");
+        try {
+            create();
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.INFO, "Could not initialize the homes-database.");
+            e.printStackTrace();
+        }
+
+        dbHomesConfig = new YamlConfiguration();
+        load();
+
+        homeSection = dbHomesConfig.getConfigurationSection("Homes");
+        if (homeSection == null) {
+            homeSection = dbHomesConfig.createSection("Homes");
+        }
+    }
+
+    private void create() {
+        if (dbHomesFile.exists())
+            return;
+
+        try {
+            dbHomesFile.createNewFile();
+            copy(DragonTravel.getInstance().getResource("databases/homes.yml"), dbHomesFile);
+            Bukkit.getLogger().log(Level.INFO, "Created homes-database.");
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Could not create the homes-database!");
+        }
+
+
+    }
+
+    private void load() {
+        try {
+            dbHomesConfig.load(dbHomesFile);
+            Bukkit.getLogger().log(Level.INFO, "Loaded homes-database.");
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "No homes-database found");
+            e.printStackTrace();
+        }
+    }
+
     private void copy(InputStream in, File file) {
         try {
             OutputStream out = new FileOutputStream(file);
@@ -39,47 +82,15 @@ public class HomesDB {
         }
     }
 
-    private void create() {
-        if (dbHomesFile.exists())
-            return;
-
-        try {
-            dbHomesFile.createNewFile();
-            copy(DragonTravelMain.getInstance().getResource("databases/homes.yml"), dbHomesFile);
-            Bukkit.getLogger().log(Level.INFO, "Created homes-database.");
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not create the homes-database!");
-        }
-
-
-    }
-
-    /**
-     * Creates a new home.
-     *
-     * @param home Home to create.
-     * @return Returns true if the home was created successfully, false if not.
-     */
-    public boolean saveHome(String playerId, Home home) {
-        homeSection.set(playerId, home);
-        try {
-            dbHomesConfig.save(dbHomesFile);
-            return true;
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not write new home to config.");
-            return false;
-        }
-    }
-
     /**
      * Deletes the given home.
      *
-     * @param homename Name of the home to delete
+     * @param homeName Name of the home to delete
      * @return True if successful, false if not.
      */
-    public boolean deleteHome(String homename) {
-        homename = "Homes." + homename;
-        dbHomesConfig.set(homename, null);
+    public boolean deleteHome(String homeName) {
+        homeName = "Homes." + homeName;
+        dbHomesConfig.set(homeName, null);
 
         try {
             dbHomesConfig.save(dbHomesFile);
@@ -90,6 +101,14 @@ public class HomesDB {
         }
     }
 
+    public void showHomes(CommandSender sender) {
+        sender.sendMessage("Players who have registered a home: ");
+        for (String string : dbHomesConfig.getConfigurationSection("Homes").getKeys(false)) {
+            Home home = getHome(string);
+            if (home != null)
+                sender.sendMessage(" - " + string + " [" + home.worldName + "@" + home.x + "," + home.y + "," + home.z + "]");
+        }
+    }
 
     /**
      * Returns the details of the home with the given name.
@@ -115,40 +134,20 @@ public class HomesDB {
         }
     }
 
-    public void init() {
-        dbHomesFile = new File("plugins/DragonTravel/databases", "homes.yml");
+    /**
+     * Creates a new home.
+     *
+     * @param home Home to create.
+     * @return Returns true if the home was created successfully, false if not.
+     */
+    public boolean saveHome(String playerId, Home home) {
+        homeSection.set(playerId, home);
         try {
-            create();
+            dbHomesConfig.save(dbHomesFile);
+            return true;
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.INFO, "Could not initialize the homes-database.");
-            e.printStackTrace();
-        }
-
-        dbHomesConfig = new YamlConfiguration();
-        load();
-
-        homeSection = dbHomesConfig.getConfigurationSection("Homes");
-        if (homeSection == null) {
-            homeSection = dbHomesConfig.createSection("Homes");
-        }
-    }
-
-    private void load() {
-        try {
-            dbHomesConfig.load(dbHomesFile);
-            Bukkit.getLogger().log(Level.INFO, "Loaded homes-database.");
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "No homes-database found");
-            e.printStackTrace();
-        }
-    }
-
-    public void showHomes(CommandSender sender) {
-        sender.sendMessage("Players who have registered a home: ");
-        for (String string : dbHomesConfig.getConfigurationSection("Homes").getKeys(false)) {
-            Home home = getHome(string);
-            if (home != null)
-                sender.sendMessage(" - " + string + " [" + home.worldName + "@" + home.x + "," + home.y + "," + home.z + "]");
+            Bukkit.getLogger().log(Level.SEVERE, "Could not write new home to config.");
+            return false;
         }
     }
 

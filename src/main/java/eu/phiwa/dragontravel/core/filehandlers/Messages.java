@@ -1,6 +1,6 @@
 package eu.phiwa.dragontravel.core.filehandlers;
 
-import eu.phiwa.dragontravel.core.DragonTravelMain;
+import eu.phiwa.dragontravel.core.DragonTravel;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,11 +17,58 @@ public class Messages {
     private double messagesVersion = 0.7;
 
     private String language = "";
-    private String pathInsideJAR = "main/resources/messages/";
-    private String pathOnServer = "plugins/DragonTravel/messages";
 
     public Messages() {
         loadMessages();
+    }
+
+    public void loadMessages() {
+
+        language = DragonTravel.getInstance().getConfig().getString("Language");
+
+        if (language == null) {
+            Bukkit.getLogger().log(Level.SEVERE, "Could not load messages-file because the language could not be read from the config! Disabling plugin!");
+            Bukkit.getPluginManager().disablePlugin(DragonTravel.getInstance());
+            return;
+        }
+
+        messagesFile = new File(DragonTravel.getInstance().getDataFolder(), "messages-" + language + ".yml");
+
+        if (!messagesFile.exists())
+            create();
+
+        messages = YamlConfiguration.loadConfiguration(messagesFile);
+        updateConfig();
+    }
+
+    private void create() {
+        if (messagesFile.exists())
+            return;
+        try {
+            messagesFile.createNewFile();
+            copy(DragonTravel.getInstance().getResource("messages/messages-" + language + ".yml"), messagesFile);
+            Bukkit.getLogger().log(Level.INFO, "Created messages file.");
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Could not create the languages file - check the language!");
+            e.printStackTrace();
+        }
+    }
+
+    private void updateConfig() {
+
+        if (messages.getDouble("File.Version") != messagesVersion)
+            newlyRequiredMessages();
+
+        noLongerRequiredMessages();
+
+        // Refresh file and config variables for persistence.
+        try {
+            messagesFile = new File(DragonTravel.getInstance().getDataFolder(), "messages-" + language + ".yml");
+            messages.save(messagesFile);
+            messages = YamlConfiguration.loadConfiguration(messagesFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void copy(InputStream in, File file) {
@@ -37,51 +84,6 @@ public class Messages {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void create() {
-        if (messagesFile.exists())
-            return;
-        try {
-            messagesFile.createNewFile();
-            copy(DragonTravelMain.getInstance().getResource("messages/messages-" + language + ".yml"), messagesFile);
-            Bukkit.getLogger().log(Level.INFO, "Created messages file.");
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not create the languages file - check the language!");
-            e.printStackTrace();
-        }
-    }
-
-    public String getMessage(String path) {
-        String message;
-        message = replaceColors(messages.getString(path));
-        if (message == null) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not find the message looking for at path '" + path + "' which leads to a serious problem! Be try to generate a new language file if you previously updated DragonTravel!");
-            return replaceColors("&cAn error occured, please contact the admin! Missing message '" + path + "'");
-        }
-        if (message.length() == 0)
-            return ChatColor.RED + "Error, could not read message-text from file, please contact the admin.";
-
-        return message;
-    }
-
-    public void loadMessages() {
-
-        language = DragonTravelMain.getInstance().getConfig().getString("Language");
-
-        if (language == null) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not load messages-file because the language could not be read from the config! Disabling plugin!");
-            Bukkit.getPluginManager().disablePlugin(DragonTravelMain.getInstance());
-            return;
-        }
-
-        messagesFile = new File(DragonTravelMain.getInstance().getDataFolder(), "messages-" + language + ".yml");
-
-        if (!messagesFile.exists())
-            create();
-
-        messages = YamlConfiguration.loadConfiguration(messagesFile);
-        updateConfig();
     }
 
     private void newlyRequiredMessages() {
@@ -130,9 +132,21 @@ public class Messages {
 
 
     private void noLongerRequiredMessages() {
-        // DragonTravelMain.config.set("example key", null);
+        // DragonTravel.config.set("example key", null);
     }
 
+    public String getMessage(String path) {
+        String message;
+        message = replaceColors(messages.getString(path));
+        if (message == null) {
+            Bukkit.getLogger().log(Level.SEVERE, "Could not find the message looking for at path '" + path + "' which leads to a serious problem! Be try to generate a new language file if you previously updated DragonTravel!");
+            return replaceColors("&cAn error occured, please contact the admin! Missing message '" + path + "'");
+        }
+        if (message.length() == 0)
+            return ChatColor.RED + "Error, could not read message-text from file, please contact the admin.";
+
+        return message;
+    }
 
     private String replaceColors(String string) {
 
@@ -145,22 +159,5 @@ public class Messages {
         }
 
         return formattedMessage;
-    }
-
-    private void updateConfig() {
-
-        if (messages.getDouble("File.Version") != messagesVersion)
-            newlyRequiredMessages();
-
-        noLongerRequiredMessages();
-
-        // Refresh file and config variables for persistence.
-        try {
-            messagesFile = new File(DragonTravelMain.getInstance().getDataFolder(), "messages-" + language + ".yml");
-            messages.save(messagesFile);
-            messages = YamlConfiguration.loadConfiguration(messagesFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

@@ -1,18 +1,16 @@
 package eu.phiwa.dragontravel.core.commands;
 
 import com.sk89q.minecraft.util.commands.*;
-import eu.phiwa.dragontravel.core.DragonTravelMain;
-import eu.phiwa.dragontravel.core.flights.FlightEditor;
-import eu.phiwa.dragontravel.core.flights.Waypoint;
-import eu.phiwa.dragontravel.core.modules.DragonManagement;
-import eu.phiwa.dragontravel.core.movement.Flights;
-import eu.phiwa.dragontravel.core.movement.Travels;
-import eu.phiwa.dragontravel.core.objects.Flight;
-import eu.phiwa.dragontravel.core.objects.Home;
-import eu.phiwa.dragontravel.core.objects.Station;
-import eu.phiwa.dragontravel.core.objects.StationaryDragon;
-import eu.phiwa.dragontravel.core.payment.ChargeType;
-import eu.phiwa.dragontravel.core.permissions.PermissionsHandler;
+import eu.phiwa.dragontravel.core.DragonTravel;
+import eu.phiwa.dragontravel.core.hooks.payment.ChargeType;
+import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
+import eu.phiwa.dragontravel.core.movement.flight.Flight;
+import eu.phiwa.dragontravel.core.movement.flight.Flights;
+import eu.phiwa.dragontravel.core.movement.flight.WayPoint;
+import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
+import eu.phiwa.dragontravel.core.movement.travel.Home;
+import eu.phiwa.dragontravel.core.movement.travel.Station;
+import eu.phiwa.dragontravel.core.movement.travel.Travels;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,6 +24,9 @@ import org.bukkit.util.ChatPaginator;
 
 import java.util.UUID;
 
+/*
+Class adapted from Riking's contribution
+ */
 public final class DragonTravelCommands {
 
     /**
@@ -57,14 +58,14 @@ public final class DragonTravelCommands {
     public static void help(CommandContext args, CommandSender sender) throws CommandException {
         int page = 1;
         if (args.argsLength() == 0) {
-            sendHelpTopic(sender, DragonTravelMain.getInstance().help, 1);
+            sendHelpTopic(sender, DragonTravel.getInstance().getHelp(), 1);
             sender.sendMessage(ChatColor.AQUA + "For additional help, use " + ChatColor.LIGHT_PURPLE + "/dt help <subcommand>" + ChatColor.AQUA + ".");
             return;
         }
         if (args.argsLength() == 1) {
             try {
                 page = Integer.parseInt(args.getString(0));
-                sendHelpTopic(sender, DragonTravelMain.getInstance().help, page);
+                sendHelpTopic(sender, DragonTravel.getInstance().getHelp(), page);
                 sender.sendMessage(ChatColor.AQUA + "For additional help, use " + ChatColor.LIGHT_PURPLE + "/dt help <subcommand>" + ChatColor.AQUA + ".");
                 return;
             } catch (NumberFormatException caught) {
@@ -74,7 +75,7 @@ public final class DragonTravelCommands {
             page = Integer.parseInt(args.getString(1));
         }
 
-        HelpTopic topic = DragonTravelMain.getInstance().help.getSubcommandHelp(sender, args.getString(0));
+        HelpTopic topic = DragonTravel.getInstance().getHelp().getSubcommandHelp(sender, args.getString(0));
         if (topic == null) {
             sender.sendMessage(ChatColor.RED + "No help for " + args.getString(0));
             return;
@@ -125,7 +126,7 @@ public final class DragonTravelCommands {
             help = "Reloads all files (extremely buggy!)")
     @CommandPermissions({"dt.admin.reload"})
     public static void reload(CommandContext args, CommandSender sender) throws CommandException {
-        DragonTravelMain.getInstance().reload();
+        DragonTravel.getInstance().reload();
     }
 
     @Console
@@ -134,7 +135,7 @@ public final class DragonTravelCommands {
             usage = "/dt showstations",
             help = "Shows a list of all available stations.")
     public static void showStations(CommandContext args, CommandSender sender) throws CommandException {
-        DragonTravelMain.getInstance().getDbStationsHandler().showStations(sender);
+        DragonTravel.getInstance().getDbStationsHandler().showStations(sender);
     }
 
     @Console
@@ -143,7 +144,7 @@ public final class DragonTravelCommands {
             usage = "/dt showflights",
             help = "Shows a list of all available flights.")
     public static void showFlights(CommandContext args, CommandSender sender) throws CommandException {
-        DragonTravelMain.getInstance().getDbFlightsHandler().showFlights(sender);
+        DragonTravel.getInstance().getDbFlightsHandler().showFlights(sender);
     }
 
     @Console
@@ -157,14 +158,14 @@ public final class DragonTravelCommands {
     public static void removeDragons(CommandContext args, CommandSender sender) throws CommandException {
         if (args.hasFlag('g')) {
             for (World world : Bukkit.getWorlds()) {
-                sender.sendMessage("[DragonTravel] " + DragonManagement.removeDragons(world));
+                sender.sendMessage("[DragonTravel] " + DragonTravel.getInstance().getDragonManager().removeDragons(world, false));
             }
             return;
         }
         switch (args.argsLength()) {
             case 0:
                 if (sender instanceof Player) {
-                    sender.sendMessage("[DragonTravel] " + DragonManagement.removeDragons(((Player) sender).getWorld()));
+                    sender.sendMessage("[DragonTravel] " + DragonTravel.getInstance().getDragonManager().removeDragons(((Player) sender).getWorld(), false));
                     return;
                 }
                 sender.sendMessage(ChatColor.RED + "You must specify a world to clear");
@@ -176,7 +177,7 @@ public final class DragonTravelCommands {
                     sender.sendMessage(ChatColor.RED + "The world " + w + " does not exist!"); // TODO locale
                     return;
                 }
-                sender.sendMessage("[DragonTravel] " + DragonManagement.removeDragons(world));
+                sender.sendMessage("[DragonTravel] " + DragonTravel.getInstance().getDragonManager().removeDragons(world, false));
         }
     }
 
@@ -187,7 +188,7 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.admin.statdragon"})
     public static void createStationaryDragon(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
@@ -196,12 +197,12 @@ public final class DragonTravelCommands {
         if (args.argsLength() == 2) {
             displayName = args.getString(1).replace('_', ' ');
         }
-        if (DragonTravelMain.listofStatDragons.containsKey(name)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NameTaken"));
+        if (DragonTravel.getInstance().getDragonManager().getStationaryDragons().containsKey(name)) {
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NameTaken"));
             return;
         }
         StationaryDragon sDragon = new StationaryDragon(player, name, displayName, player.getLocation(), true);
-        DragonTravelMain.listofStatDragons.put(name.toLowerCase(), sDragon);
+        DragonTravel.getInstance().getDragonManager().getStationaryDragons().put(name.toLowerCase(), sDragon);
     }
 
     @Command(aliases = {"remstatdragon", "remstationarydragon"},
@@ -211,22 +212,22 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.admin.statdragon"})
     public static void deleteStationaryDragon(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
         String name = args.getString(0).toLowerCase();
         if (!player.hasPermission("dt.admin.statdragon")) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
             return;
         }
 
-        if (!DragonTravelMain.listofStatDragons.keySet().contains(name)) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.StatDragonNotExists"));
+        if (!DragonTravel.getInstance().getDragonManager().getStationaryDragons().keySet().contains(name)) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.StatDragonNotExists"));
             return;
         }
 
-        StationaryDragon sDragon = DragonTravelMain.listofStatDragons.get(name);
+        StationaryDragon sDragon = DragonTravel.getInstance().getDragonManager().getStationaryDragons().get(name);
         sDragon.removeDragon(true);
     }
 
@@ -240,11 +241,11 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.dismount"})
     public static void dismount(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
-        DragonManagement.dismount(player, false);
+        DragonTravel.getInstance().getDragonManager().dismount(player, false);
     }
 
     @Console
@@ -265,7 +266,7 @@ public final class DragonTravelCommands {
             }
             Player p = Bukkit.getPlayer(args.getString(0));
             if (p == null) {
-                sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.PlayerNotOnline").replace("{playername}", args.getString(0)));
+                sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.PlayerNotOnline").replace("{playername}", args.getString(0)));
                 return;
             }
             playerName = p.getName();
@@ -281,21 +282,21 @@ public final class DragonTravelCommands {
 
         if (args.hasFlag('y')) {
             // Allow
-            DragonTravelMain.ptogglers.put(UUID.fromString(playerId), true);
+            DragonTravel.getInstance().getDragonManager().getPlayerToggles().put(UUID.fromString(playerId), true);
         } else if (args.hasFlag('n')) {
             // Disallow
-            DragonTravelMain.ptogglers.put(UUID.fromString(playerId), false);
+            DragonTravel.getInstance().getDragonManager().getPlayerToggles().put(UUID.fromString(playerId), false);
         } else {
-            if (DragonTravelMain.ptogglers.get(playerName)) {
+            if (DragonTravel.getInstance().getDragonManager().getPlayerToggles().get(playerName)) {
                 // Disallow
-                DragonTravelMain.ptogglers.put(UUID.fromString(playerId), false);
+                DragonTravel.getInstance().getDragonManager().getPlayerToggles().put(UUID.fromString(playerId), false);
             } else {
                 // Allow
-                DragonTravelMain.ptogglers.put(UUID.fromString(playerId), true);
+                DragonTravel.getInstance().getDragonManager().getPlayerToggles().put(UUID.fromString(playerId), true);
             }
         }
         // Fancy message sending with the ternary operator
-        sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage(DragonTravelMain.ptogglers.get(playerName) ? "Messages.General.Successful.ToggledPTravelOn" : "Messages.General.Successful.ToggledPTravelOff"));
+        sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage(DragonTravel.getInstance().getDragonManager().getPlayerToggles().get(playerName) ? "Messages.General.Successful.ToggledPTravelOn" : "Messages.General.Successful.ToggledPTravelOff"));
     }
 
     @Command(aliases = {"sethome"},
@@ -305,15 +306,15 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.sethome"})
     public static void setHome(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
 
-        if (!DragonTravelMain.getInstance().getPaymentManager().chargePlayer(ChargeType.SETHOME, player))
+        if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.SETHOME, player))
             return;
         Home home = new Home(player.getLocation());
-        DragonTravelMain.getInstance().getDbHomesHandler().saveHome(player.getUniqueId().toString(), home);
+        DragonTravel.getInstance().getDbHomesHandler().saveHome(player.getUniqueId().toString(), home);
         sender.sendMessage(ChatColor.GREEN + "Home set!"); //TODO: Add to messages
     }
 
@@ -335,7 +336,7 @@ public final class DragonTravelCommands {
         switch (args.argsLength()) {
             case 1:
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+                    sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
                     return;
                 }
                 if (!sender.hasPermission("dt.start.flight.command")) {
@@ -344,7 +345,7 @@ public final class DragonTravelCommands {
 
                 player = (Player) sender;
 
-                if (!DragonTravelMain.getInstance().getPaymentManager().chargePlayer(ChargeType.FLIGHT, player)) {
+                if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.FLIGHT, player)) {
                     return;
                 }
                 Flights.startFlight(player, flight, true, false, sender);
@@ -357,7 +358,7 @@ public final class DragonTravelCommands {
 
                 player = Bukkit.getPlayer(args.getString(1));
                 if (player == null) {
-                    sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.CouldNotfindPlayerToSend").replace("{playername}", args.getString(1)));
+                    sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.CouldNotfindPlayerToSend").replace("{playername}", args.getString(1)));
                     return;
                 }
                 Flights.startFlight(player, flight, true, true, sender);
@@ -375,21 +376,21 @@ public final class DragonTravelCommands {
         String station = args.getString(0);
 
         if (!PermissionsHandler.hasTravelPermission(sender, "travel", station)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
             return;
         }
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
 
-        if (station.equalsIgnoreCase((DragonTravelMain.getInstance().getConfig().getString("RandomDest.Name")))) {
-            if (!DragonTravelMain.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TORANDOM, player))
+        if (station.equalsIgnoreCase((DragonTravel.getInstance().getConfig().getString("RandomDest.Name")))) {
+            if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TORANDOM, player))
                 return;
             Travels.toRandomdest(player, true);
         } else {
-            if (!DragonTravelMain.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOSTATION, player))
+            if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOSTATION, player))
                 return;
             Travels.toStation(player, station, true);
         }
@@ -403,25 +404,25 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.start.player.command"})
     public static void startPlayerTravel(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
         Player targetPlayer = Bukkit.getPlayer(args.getString(0));
 
         if (targetPlayer == null) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.PlayerNotOnline").replace("{playername}", args.getString(0)));
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.PlayerNotOnline").replace("{playername}", args.getString(0)));
             return;
         }
         if (targetPlayer == sender) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.CannotTravelToYourself"));
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.CannotTravelToYourself"));
             return;
         }
-        if (!DragonTravelMain.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOPLAYER, player)) {
+        if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOPLAYER, player)) {
             return;
         }
-        if (!DragonTravelMain.ptogglers.get(targetPlayer.getName())) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.TargetPlayerDoesnotAllowPTravel").replace("{playername}", args.getString(0)));
+        if (!DragonTravel.getInstance().getDragonManager().getPlayerToggles().get(targetPlayer.getName())) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.TargetPlayerDoesnotAllowPTravel").replace("{playername}", args.getString(0)));
             return;
         }
         Travels.toPlayer(player, targetPlayer, true);
@@ -435,7 +436,7 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.start.coord.command"})
     public static void startCoordsTravel(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
@@ -446,12 +447,12 @@ public final class DragonTravelCommands {
             int z = args.getInteger(2);
             String world = args.getString(3, null);
 
-            if (!DragonTravelMain.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOCOORDINATES, (Player) sender))
+            if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOCOORDINATES, (Player) sender))
                 return;
 
             Travels.toCoordinates(player, x, y, z, world, true);
         } catch (NumberFormatException ex) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.InvalidCoordinates"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.InvalidCoordinates"));
             return;
         }
     }
@@ -463,12 +464,12 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.start.home.command"})
     public static void startHomeTravel(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
 
-        if (!DragonTravelMain.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOHOME, player))
+        if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOHOME, player))
             return;
         Travels.toHome(player, true);
     }
@@ -479,16 +480,16 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.start.fhome.command"})
     public static void startFHomeTravel(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
 
         if (Bukkit.getPluginManager().getPlugin("Factions") == null) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionsNotInstalled"));
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionsNotInstalled"));
             return;
         }
-        if (!DragonTravelMain.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOFACTIONHOME, player))
+        if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOFACTIONHOME, player))
             return;
         Travels.toFactionhome(player, true);
     }
@@ -501,13 +502,13 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.edit.flights", "dt.edit.*"})
     public static void newFlight(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
 
-        if (FlightEditor.editors.containsKey(player)) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.AlreadyInFlightCreationMode"));
+        if (DragonTravel.getInstance().getFlightEditor().getEditors().containsKey(player)) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.AlreadyInFlightCreationMode"));
             return;
         }
 
@@ -516,14 +517,14 @@ public final class DragonTravelCommands {
         if (args.argsLength() == 2) {
             displayName = args.getString(1);
         }
-        if (DragonTravelMain.getInstance().getDbFlightsHandler().getFlight(flight) != null) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightAlreadyExists"));
+        if (DragonTravel.getInstance().getDbFlightsHandler().getFlight(flight) != null) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightAlreadyExists"));
             return;
         }
 
-        FlightEditor.addEditor(player, flight, displayName);
+        DragonTravel.getInstance().getFlightEditor().addEditor(player, flight, displayName);
 
-        player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.NowInFlightCreationMode"));
+        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.NowInFlightCreationMode"));
     }
 
     @Command(aliases = {"remflight", "delflight"},
@@ -533,14 +534,14 @@ public final class DragonTravelCommands {
             help = "Removes the flight with the specified name.")
     @CommandPermissions({"dt.edit.flights", "dt.edit.*"})
     public static void removeFlight(CommandContext args, CommandSender sender) throws CommandException {
-        if (DragonTravelMain.getInstance().getDbFlightsHandler().getFlight(args.getString(0)) == null) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightDoesNotExist"));
+        if (DragonTravel.getInstance().getDbFlightsHandler().getFlight(args.getString(0)) == null) {
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightDoesNotExist"));
             return;
         }
 
-        DragonTravelMain.getInstance().getDbFlightsHandler().deleteFlight(args.getString(0));
+        DragonTravel.getInstance().getDbFlightsHandler().deleteFlight(args.getString(0));
 
-        sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.RemovedFlight"));
+        sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.RemovedFlight"));
     }
 
     @Command(aliases = {"saveflight"},
@@ -551,26 +552,26 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.edit.flights", "dt.edit.*"})
     public static void saveFlight(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
 
-        Flight wipFlight = FlightEditor.editors.get(player);
+        Flight wipFlight = DragonTravel.getInstance().getFlightEditor().getEditors().get(player);
         if (wipFlight == null) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.NotInFlightCreationMode"));
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.NotInFlightCreationMode"));
             return;
         }
-        if (wipFlight.getWaypoints().size() < 1) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.AtLeastOneWaypoint"));
+        if (wipFlight.getWayPoints().size() < 1) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.AtLeastOneWaypoint"));
             return;
         }
 
-        DragonTravelMain.getInstance().getDbFlightsHandler().saveFlight(wipFlight);
-        Waypoint.removeWaypointMarkersOfFlight(wipFlight);
-        FlightEditor.removeEditor(player);
+        DragonTravel.getInstance().getDbFlightsHandler().saveFlight(wipFlight);
+        WayPoint.removeWayPointMarkersOfFlight(wipFlight);
+        DragonTravel.getInstance().getFlightEditor().removeEditor(player);
 
-        player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.FlightSaved"));
+        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.FlightSaved"));
     }
 
     @Command(aliases = {"setwp"},
@@ -582,14 +583,14 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.edit.flights", "dt.edit.*"})
     public static void setWaypoint(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
 
-        Flight wipFlight = FlightEditor.editors.get(player);
+        Flight wipFlight = DragonTravel.getInstance().getFlightEditor().getEditors().get(player);
         if (wipFlight == null) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.NotInFlightCreationMode"));
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.NotInFlightCreationMode"));
             return;
         }
 
@@ -606,15 +607,15 @@ public final class DragonTravelCommands {
             loc.setZ(args.getInteger(2));
             loc.setWorld(Bukkit.getWorld(args.getString(3)));
         }
-        Waypoint wp = new Waypoint(loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+        WayPoint wp = new WayPoint(loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 
         wp.setMarker(player);
         Block block = loc.getBlock();
-        DragonTravelMain.globalwaypointmarkers.put(block, block);
+        DragonTravel.getInstance().getFlightEditor().getWayPointMarkers().put(block, block);
 
-        wipFlight.addWaypoint(wp);
+        wipFlight.addWayPoint(wp);
 
-        player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.WaypointAdded") + String.format("%s (%s @ %d,%d,%d)", ChatColor.GRAY, loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
+        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.WaypointAdded") + String.format("%s (%s @ %d,%d,%d)", ChatColor.GRAY, loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
     }
 
     @Command(aliases = {"remlastwp", "remwp"},
@@ -625,19 +626,19 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.edit.flights", "dt.edit.*"})
     public static void removeWaypoint(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
 
-        Flight wipFlight = FlightEditor.editors.get(player);
+        Flight wipFlight = DragonTravel.getInstance().getFlightEditor().getEditors().get(player);
         if (wipFlight == null) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.NotInFlightCreationMode"));
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.NotInFlightCreationMode"));
             return;
         }
 
-        wipFlight.removelastWaypoint();
-        player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.WaypointRemoved"));
+        wipFlight.removelastWayPoint();
+        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.WaypointRemoved"));
     }
 
     @Command(aliases = {"setstation", "setstat"},
@@ -648,7 +649,7 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.edit.stations", "dt.edit.*"})
     public static void setStation(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
@@ -658,22 +659,22 @@ public final class DragonTravelCommands {
             displayName = args.getRemainingString(1);
         }
 
-        if (station.equalsIgnoreCase(DragonTravelMain.getInstance().getConfig().getString("RandomDest.Name"))) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.NotCreateStationWithRandomstatName"));
+        if (station.equalsIgnoreCase(DragonTravel.getInstance().getConfig().getString("RandomDest.Name"))) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.NotCreateStationWithRandomstatName"));
             return;
         }
 
-        if (DragonTravelMain
+        if (DragonTravel
                 .getInstance()
                 .getDbStationsHandler()
                 .getStation(
                         station) != null) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationAlreadyExists").replace("{stationname}", station));
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationAlreadyExists").replace("{stationname}", station));
         } else {
-            if (DragonTravelMain.getInstance().getDbStationsHandler().saveStation(new Station(station, displayName, player.getLocation(), player.getUniqueId().toString()))) {
-                player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Successful.StationCreated").replace("{stationname}", station));
+            if (DragonTravel.getInstance().getDbStationsHandler().saveStation(new Station(station, displayName, player.getLocation(), player.getUniqueId().toString()))) {
+                player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Successful.StationCreated").replace("{stationname}", station));
             } else {
-                player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.CouldNotCreateStation"));
+                player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.CouldNotCreateStation"));
             }
         }
     }
@@ -686,28 +687,28 @@ public final class DragonTravelCommands {
     @CommandPermissions({"dt.edit.stations", "dt.edit.*"})
     public static void removeStation(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
         Player player = (Player) sender;
         String station = args.getString(0);
 
-        if (station.equalsIgnoreCase(DragonTravelMain.getInstance().getConfig().getString("RandomDest.Name"))) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.NotCreateStationWithRandomstatName"));
+        if (station.equalsIgnoreCase(DragonTravel.getInstance().getConfig().getString("RandomDest.Name"))) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.NotCreateStationWithRandomstatName"));
             return;
         }
 
-        if (DragonTravelMain
+        if (DragonTravel
                 .getInstance()
                 .getDbStationsHandler()
                 .getStation(
                         station) == null) {
-            player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist"));
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist"));
         } else {
-            if (DragonTravelMain.getInstance().getDbStationsHandler().deleteStation(station)) {
-                player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Successful.StationRemoved").replace("{stationname}", station));
+            if (DragonTravel.getInstance().getDbStationsHandler().deleteStation(station)) {
+                player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Successful.StationRemoved").replace("{stationname}", station));
             } else {
-                player.sendMessage(DragonTravelMain.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.CouldNotRemoveStation"));
+                player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.CouldNotRemoveStation"));
             }
         }
     }

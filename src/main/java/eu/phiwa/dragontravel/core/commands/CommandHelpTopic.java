@@ -3,7 +3,7 @@ package eu.phiwa.dragontravel.core.commands;
 import com.google.common.collect.Lists;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
-import eu.phiwa.dragontravel.core.DragonTravelMain;
+import eu.phiwa.dragontravel.core.DragonTravel;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -14,6 +14,9 @@ import org.bukkit.help.IndexHelpTopic;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/*
+Class adapted from Riking's contribution
+ */
 public class CommandHelpTopic extends IndexHelpTopic {
     private Map<String, HelpTopic> subcommandHelps = new HashMap<String, HelpTopic>();
 
@@ -25,80 +28,15 @@ public class CommandHelpTopic extends IndexHelpTopic {
     private static Collection<HelpTopic> getTopicCollection() {
         List<HelpTopic> ret = Lists.newArrayList();
 
-        Map<String, Method> subcommands = DragonTravelMain.getInstance().commands.getSubcommandMethods("dt");
+        Map<String, Method> subCommands = DragonTravel.getInstance().getCommands().getSubcommandMethods("dt");
 
-        for (Map.Entry<String, Method> entry : subcommands.entrySet()) {
+        for (Map.Entry<String, Method> entry : subCommands.entrySet()) {
             Command cmd = entry.getValue().getAnnotation(Command.class);
             if (cmd.aliases()[0].equalsIgnoreCase(entry.getKey())) {
                 ret.add(new SubcommandHelpTopic(entry.getValue()));
             }
         }
         return ret;
-    }
-
-    /**
-     * Computes the Dameraur-Levenshtein Distance between two strings.
-     * Adapted from the algorithm at <a
-     * href="http://en.wikipedia.org/wiki/Damerau–Levenshtein_distance"
-     * >Wikipedia: Damerau–Levenshtein distance</a>
-     *
-     * @param s1 The first string being compared.
-     * @param s2 The second string being compared.
-     * @return The number of substitutions, deletions, insertions, and
-     * transpositions required to get from s1 to s2.
-     */
-    protected static int damerauLevenshteinDistance(String s1, String s2) {
-        if (s1 == null && s2 == null) {
-            return 0;
-        }
-        if (s1 != null && s2 == null) {
-            return s1.length();
-        }
-        if (s1 == null && s2 != null) {
-            return s2.length();
-        }
-
-        int s1Len = s1.length();
-        int s2Len = s2.length();
-        int[][] H = new int[s1Len + 2][s2Len + 2];
-
-        int INF = s1Len + s2Len;
-        H[0][0] = INF;
-        for (int i = 0; i <= s1Len; i++) {
-            H[i + 1][1] = i;
-            H[i + 1][0] = INF;
-        }
-        for (int j = 0; j <= s2Len; j++) {
-            H[1][j + 1] = j;
-            H[0][j + 1] = INF;
-        }
-
-        Map<Character, Integer> sd = new HashMap<Character, Integer>();
-        for (char Letter : (s1 + s2).toCharArray()) {
-            if (!sd.containsKey(Letter)) {
-                sd.put(Letter, 0);
-            }
-        }
-
-        for (int i = 1; i <= s1Len; i++) {
-            int DB = 0;
-            for (int j = 1; j <= s2Len; j++) {
-                int i1 = sd.get(s2.charAt(j - 1));
-                int j1 = DB;
-
-                if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
-                    H[i + 1][j + 1] = H[i][j];
-                    DB = j;
-                } else {
-                    H[i + 1][j + 1] = Math.min(H[i][j], Math.min(H[i + 1][j], H[i][j + 1])) + 1;
-                }
-
-                H[i + 1][j + 1] = Math.min(H[i + 1][j + 1], H[i1][j1] + (i - i1 - 1) + 1 + (j - j1 - 1));
-            }
-            sd.put(s1.charAt(i - 1), i);
-        }
-
-        return H[s1Len + 1][s2Len + 1];
     }
 
     private void buildSubcommandHelps(Collection<HelpTopic> allTopics) {
@@ -123,7 +61,7 @@ public class CommandHelpTopic extends IndexHelpTopic {
 
     protected HelpTopic findPossibleMatches(String searchString) {
         int maxDistance = (searchString.length() / 5) + 3;
-        Set<HelpTopic> possibleMatches = new TreeSet<HelpTopic>(HelpTopicComparator.helpTopicComparatorInstance());
+        Set<HelpTopic> possibleMatches = new TreeSet<>(HelpTopicComparator.helpTopicComparatorInstance());
 
         if (searchString.startsWith("DragonTravel")) {
             searchString = searchString.substring("DragonTravel".length());
@@ -160,6 +98,71 @@ public class CommandHelpTopic extends IndexHelpTopic {
         }
     }
 
+    /**
+     * Computes the Dameraur-Levenshtein Distance between two strings.
+     * Adapted from the algorithm at <a
+     * href="http://en.wikipedia.org/wiki/Damerau–Levenshtein_distance"
+     * >Wikipedia: Damerau–Levenshtein distance</a>
+     *
+     * @param s1 The first string being compared.
+     * @param s2 The second string being compared.
+     * @return The number of substitutions, deletions, insertions, and
+     * transpositions required to get from s1 to s2.
+     */
+    protected static int damerauLevenshteinDistance(String s1, String s2) {
+        if (s1 == null && s2 == null) {
+            return 0;
+        }
+        if (s1 != null && s2 == null) {
+            return s1.length();
+        }
+        if (s1 == null) {
+            return s2.length();
+        }
+
+        int s1Len = s1.length();
+        int s2Len = s2.length();
+        int[][] H = new int[s1Len + 2][s2Len + 2];
+
+        int INF = s1Len + s2Len;
+        H[0][0] = INF;
+        for (int i = 0; i <= s1Len; i++) {
+            H[i + 1][1] = i;
+            H[i + 1][0] = INF;
+        }
+        for (int j = 0; j <= s2Len; j++) {
+            H[1][j + 1] = j;
+            H[0][j + 1] = INF;
+        }
+
+        Map<Character, Integer> sd = new HashMap<>();
+        for (char Letter : (s1 + s2).toCharArray()) {
+            if (!sd.containsKey(Letter)) {
+                sd.put(Letter, 0);
+            }
+        }
+
+        for (int i = 1; i <= s1Len; i++) {
+            int DB = 0;
+            for (int j = 1; j <= s2Len; j++) {
+                int i1 = sd.get(s2.charAt(j - 1));
+                int j1 = DB;
+
+                if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+                    H[i + 1][j + 1] = H[i][j];
+                    DB = j;
+                } else {
+                    H[i + 1][j + 1] = Math.min(H[i][j], Math.min(H[i + 1][j], H[i][j + 1])) + 1;
+                }
+
+                H[i + 1][j + 1] = Math.min(H[i + 1][j + 1], H[i1][j1] + (i - i1 - 1) + 1 + (j - j1 - 1));
+            }
+            sd.put(s1.charAt(i - 1), i);
+        }
+
+        return H[s1Len + 1][s2Len + 1];
+    }
+
     private static class SubcommandHelpTopic extends HelpTopic {
         protected Command cmd;
         protected CommandPermissions perms;
@@ -186,9 +189,9 @@ public class CommandHelpTopic extends IndexHelpTopic {
             sb.append("Usage: ");
             sb.append(ChatColor.WHITE);
             String tmp = cmd.usage();
-            tmp.replace("<command>", name.substring(1));
-            tmp.replaceAll("(\\[.*?\\])", ChatColor.LIGHT_PURPLE + "$1" + ChatColor.WHITE);
-            tmp.replaceAll("(<.*?>)", ChatColor.AQUA + "$1" + ChatColor.WHITE);
+            tmp = tmp.replace("<command>", name.substring(1));
+            tmp = tmp.replaceAll("(\\[.*?\\])", ChatColor.LIGHT_PURPLE + "$1" + ChatColor.WHITE);
+            tmp = tmp.replaceAll("(<.*?>)", ChatColor.AQUA + "$1" + ChatColor.WHITE);
             sb.append(tmp);
 
             if (cmd.aliases().length > 0) {

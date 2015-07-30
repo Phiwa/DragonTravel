@@ -1,8 +1,8 @@
 package eu.phiwa.dragontravel.core.filehandlers;
 
-import eu.phiwa.dragontravel.core.DragonTravelMain;
-import eu.phiwa.dragontravel.core.objects.Flight;
-import eu.phiwa.dragontravel.core.permissions.PermissionsHandler;
+import eu.phiwa.dragontravel.core.DragonTravel;
+import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
+import eu.phiwa.dragontravel.core.movement.flight.Flight;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -27,6 +27,48 @@ public class FlightsDB {
         init();
     }
 
+    public void init() {
+        dbFlightsFile = new File("plugins/DragonTravel/databases", "flights.yml");
+        try {
+            create();
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Could not initialize the flights-database.");
+            e.printStackTrace();
+        }
+        dbFlightsConfig = new YamlConfiguration();
+        load();
+
+        flightSection = dbFlightsConfig.getConfigurationSection("Flights");
+        if (flightSection == null) {
+            flightSection = dbFlightsConfig.createSection("Flights");
+        }
+    }
+
+    private void create() {
+        if (dbFlightsFile.exists()) {
+            return;
+        }
+        try {
+            dbFlightsFile.createNewFile();
+            copy(DragonTravel.getInstance().getResource("databases/flights.yml"), dbFlightsFile);
+            Bukkit.getLogger().log(Level.INFO, "Created flights-database.");
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Could not create the flights-database!");
+        }
+
+
+    }
+
+    private void load() {
+        try {
+            dbFlightsConfig.load(dbFlightsFile);
+            Bukkit.getLogger().log(Level.INFO, "Loaded flights-database.");
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "No flights-database found");
+            e.printStackTrace();
+        }
+    }
+
     private void copy(InputStream in, File file) {
         try {
             OutputStream out = new FileOutputStream(file);
@@ -39,39 +81,6 @@ public class FlightsDB {
             in.close();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private void create() {
-        if (dbFlightsFile.exists()) {
-            return;
-        }
-        try {
-            dbFlightsFile.createNewFile();
-            copy(DragonTravelMain.getInstance().getResource("databases/flights.yml"), dbFlightsFile);
-            Bukkit.getLogger().log(Level.INFO, "Created flights-database.");
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not create the flights-database!");
-        }
-
-
-    }
-
-    /**
-     * Creates a new flight.
-     *
-     * @param flight Flight to create.
-     * @return Returns true if the flight was created successfully, false if not.
-     */
-    public boolean saveFlight(Flight flight) {
-        flightSection.set(flight.getName(), flight);
-
-        try {
-            dbFlightsConfig.save(dbFlightsFile);
-            return true;
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not write new flight to config.");
-            return false;
         }
     }
 
@@ -93,6 +102,18 @@ public class FlightsDB {
         }
     }
 
+    public void showFlights(CommandSender sender) {
+        sender.sendMessage("Available flights: ");
+        int i = 0;
+        for (String string : flightSection.getKeys(false)) {
+            Flight flight = getFlight(string);
+            if (flight != null) {
+                sender.sendMessage(" - " + (sender instanceof Player ? (PermissionsHandler.hasFlightPermission((Player) sender, flight.getName()) ? ChatColor.GREEN : ChatColor.RED) : ChatColor.AQUA) + flight.getName());
+                i++;
+            }
+        }
+        sender.sendMessage(String.format("(total %d)", i));
+    }
 
     /**
      * Returns the details of the flight with the given name.
@@ -119,43 +140,21 @@ public class FlightsDB {
         }
     }
 
-    public void init() {
-        dbFlightsFile = new File("plugins/DragonTravel/databases", "flights.yml");
+    /**
+     * Creates a new flight.
+     *
+     * @param flight Flight to create.
+     * @return Returns true if the flight was created successfully, false if not.
+     */
+    public boolean saveFlight(Flight flight) {
+        flightSection.set(flight.getName(), flight);
+
         try {
-            create();
+            dbFlightsConfig.save(dbFlightsFile);
+            return true;
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not initialize the flights-database.");
-            e.printStackTrace();
+            Bukkit.getLogger().log(Level.SEVERE, "Could not write new flight to config.");
+            return false;
         }
-        dbFlightsConfig = new YamlConfiguration();
-        load();
-
-        flightSection = dbFlightsConfig.getConfigurationSection("Flights");
-        if (flightSection == null) {
-            flightSection = dbFlightsConfig.createSection("Flights");
-        }
-    }
-
-    private void load() {
-        try {
-            dbFlightsConfig.load(dbFlightsFile);
-            Bukkit.getLogger().log(Level.INFO, "Loaded flights-database.");
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "No flights-database found");
-            e.printStackTrace();
-        }
-    }
-
-    public void showFlights(CommandSender sender) {
-        sender.sendMessage("Available flights: ");
-        int i = 0;
-        for (String string : flightSection.getKeys(false)) {
-            Flight flight = getFlight(string);
-            if (flight != null) {
-                sender.sendMessage(" - " + (sender instanceof Player ? (PermissionsHandler.hasFlightPermission((Player) sender, flight.getName()) ? ChatColor.GREEN : ChatColor.RED) : ChatColor.AQUA) + flight.getName());
-                i++;
-            }
-        }
-        sender.sendMessage(String.format("(total %d)", i));
     }
 }

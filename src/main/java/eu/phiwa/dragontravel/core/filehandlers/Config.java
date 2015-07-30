@@ -1,6 +1,6 @@
 package eu.phiwa.dragontravel.core.filehandlers;
 
-import eu.phiwa.dragontravel.core.DragonTravelMain;
+import eu.phiwa.dragontravel.core.DragonTravel;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -75,7 +75,7 @@ public class Config {
 
         try {
             configFile.createNewFile();
-            copy(DragonTravelMain.getInstance().getResource("config.yml"), configFile);
+            copy(DragonTravel.getInstance().getResource("config.yml"), configFile);
             Bukkit.getLogger().log(Level.INFO, "Created config file.");
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "Could not create the configuration!");
@@ -84,7 +84,7 @@ public class Config {
     }
 
     public void loadConfig() {
-        configFile = new File(DragonTravelMain.getInstance().getDataFolder(), "config.yml");
+        configFile = new File(DragonTravel.getInstance().getDataFolder(), "config.yml");
         if (!configFile.exists())
             create();
         config = YamlConfiguration.loadConfiguration(configFile);
