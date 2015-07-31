@@ -29,25 +29,6 @@ Class adapted from Riking's contribution
  */
 public final class DragonTravelCommands {
 
-    /**
-     * *******************************************
-     * GENERAL                   *
-     * ********************************************
-     */
-    public byte __SECTION_GENERAL__;
-    /**
-     * ********************************************
-     * FLYING                   *
-     * ********************************************
-     */
-    public byte __SECTION_FLYING__;
-    /**
-     * *******************************************
-     * EDITING                   *
-     * ********************************************
-     */
-    public byte __SECTION_EDITING__;
-
     @Console
     @Command(aliases = {"help", "?", "h"},
             desc = "This help",

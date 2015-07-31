@@ -173,19 +173,6 @@ public class DragonManager {
     }
 
     /**
-     * Removes all enderdragons from all worlds
-     * which do not have players as passengers
-     *
-     * @return Success message
-     */
-    public String removeDragons() {
-        String output = "Removing riderless dragons from all worlds:";
-        for (org.bukkit.World world : Bukkit.getWorlds())
-            output += "\n  - " + removeDragons(world, false);
-        return output;
-    }
-
-    /**
      * Removes all enderdragons from the specified world
      * which do not have players as passengers
      *

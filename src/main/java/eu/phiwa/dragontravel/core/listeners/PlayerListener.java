@@ -205,8 +205,10 @@ public class PlayerListener implements Listener {
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         if (!DragonTravel.getInstance().getDragonManager().getRiderDragons().keySet().contains(event.getPlayer()))
             return;
-        List<String> commands = (List<String>) DragonTravel.getInstance().getConfig().getList("CommandPrevent");
-        commands.stream().filter(command -> command.contains(event.getMessage())).forEach(command -> event.setCancelled(true));
+        List<String> commands = DragonTravel.getInstance().getConfig().getStringList("CommandPrevent");
+        for(String command : commands)
+            if(command.contains(event.getMessage()))
+                event.setCancelled(true);
     }
 
 }

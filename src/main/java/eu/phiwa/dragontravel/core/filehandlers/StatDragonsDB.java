@@ -169,16 +169,16 @@ public class StatDragonsDB {
 
     public void showStatDragons() {
         System.out.println("Stationary Dragons: ");
-        statDragonsSection.getKeys(false).forEach(string -> {
-            System.out.println("- " + string);
-        });
+        for(String s : statDragonsSection.getKeys(false)){
+            System.out.println("- " + s);
+        }
     }
 
     public void showStatDragons(Player player) {
         player.sendMessage("Stationary Dragons: ");
-        statDragonsSection.getKeys(false).forEach(string -> {
-            player.sendMessage("- " + string);
-        });
+        for(String s : statDragonsSection.getKeys(false)){
+            player.sendMessage("- " + s);
+        }
     }
 
     public FileConfiguration getDbStatDragonsConfig() {

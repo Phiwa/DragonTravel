@@ -12,9 +12,6 @@ import java.util.Map;
 
 public class ResourcesPaymentHandler implements PaymentHandler {
 
-    public ResourcesPaymentHandler() {
-    }
-
     @Override
     public boolean setup() {
         return DragonTravel.getInstance().getConfigHandler().isByResources();

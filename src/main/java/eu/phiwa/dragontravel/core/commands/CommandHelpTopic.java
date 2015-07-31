@@ -18,11 +18,11 @@ import java.util.*;
 Class adapted from Riking's contribution
  */
 public class CommandHelpTopic extends IndexHelpTopic {
-    private Map<String, HelpTopic> subcommandHelps = new HashMap<String, HelpTopic>();
+    private Map<String, HelpTopic> subCommandHelps = new HashMap<>();
 
     public CommandHelpTopic(String name) {
         super(name, "DragonTravel subcommands", "dt.seecommand", getTopicCollection());
-        buildSubcommandHelps(this.allTopics);
+        buildSubCommandHelps(this.allTopics);
     }
 
     private static Collection<HelpTopic> getTopicCollection() {
@@ -39,17 +39,17 @@ public class CommandHelpTopic extends IndexHelpTopic {
         return ret;
     }
 
-    private void buildSubcommandHelps(Collection<HelpTopic> allTopics) {
+    private void buildSubCommandHelps(Collection<HelpTopic> allTopics) {
         for (HelpTopic t : allTopics) {
             SubcommandHelpTopic topic = (SubcommandHelpTopic) t;
             for (String alias : topic.cmd.aliases()) {
-                subcommandHelps.put(alias, topic);
+                subCommandHelps.put(alias, topic);
             }
         }
     }
 
     public HelpTopic getSubcommandHelp(CommandSender sender, String subcommand) {
-        HelpTopic topic = subcommandHelps.get(subcommand);
+        HelpTopic topic = subCommandHelps.get(subcommand);
         if (topic == null) {
             topic = findPossibleMatches(subcommand);
         }
@@ -199,7 +199,7 @@ public class CommandHelpTopic extends IndexHelpTopic {
                 sb.append(ChatColor.GOLD);
                 sb.append("Aliases: ");
                 sb.append(ChatColor.WHITE);
-                sb.append(ChatColor.WHITE + StringUtils.join(cmd.aliases(), ", "));
+                sb.append(ChatColor.WHITE).append(StringUtils.join(cmd.aliases(), ", "));
             }
 
             sb.append("\n");

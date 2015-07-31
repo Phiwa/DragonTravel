@@ -12,9 +12,6 @@ import java.util.logging.Level;
 public class EconomyPaymentHandler implements PaymentHandler {
     private Economy economyProvider;
 
-    public EconomyPaymentHandler() {
-    }
-
     @Override
     public boolean setup() {
         if (!DragonTravel.getInstance().getConfigHandler().isByEconomy()) {

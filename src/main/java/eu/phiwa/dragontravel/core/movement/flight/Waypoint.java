@@ -37,7 +37,12 @@ public class Waypoint {
 
         for (final Block marker : globalMarkers) {
             marker.getWorld().getBlockAt(marker.getX(), marker.getY(), marker.getZ()).getChunk().load(true);
-            Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), () -> marker.setType(Material.AIR), 1L);
+            Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    marker.setType(Material.AIR);
+                }
+            }, 1L);
         }
     }
 

@@ -2,12 +2,14 @@ package eu.phiwa.dragontravel.core.hooks.anticheat;
 
 import fr.neatmonster.nocheatplus.NoCheatPlus;
 import fr.neatmonster.nocheatplus.checks.CheckType;
+import fr.neatmonster.nocheatplus.components.NoCheatPlusAPI;
 import fr.neatmonster.nocheatplus.hooks.NCPExemptionManager;
 import org.bukkit.entity.Player;
 
 public class NoCheatPlusHandler implements AbstractHandler {
 
-    static {        // This throws an exception if the class isn't loaded
+    static {
+        //noinspection deprecation
         NoCheatPlus.getAPI();
     }
 

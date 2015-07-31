@@ -39,7 +39,7 @@ public class StationaryDragon implements ConfigurationSerializable {
         if (data.containsKey("owner")) {
             this.owner = (String) data.get("owner");
         } else {
-            this.owner = new String("admin");
+            this.owner = "admin";
         }
 
         this.dragon = createDragon(false);

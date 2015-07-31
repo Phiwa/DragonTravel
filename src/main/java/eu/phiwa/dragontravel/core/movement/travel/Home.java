@@ -26,14 +26,6 @@ public class Home implements ConfigurationSerializable {
         this.worldName = (String) data.get("world");
     }
 
-    public Home(String playerName, int x, int y, int z, World world) {
-        this.playerName = playerName.toLowerCase();
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.worldName = worldName;
-    }
-
     public Home(Location loc) {
         this.x = (int) loc.getX();
         this.y = (int) loc.getY();
@@ -46,15 +38,7 @@ public class Home implements ConfigurationSerializable {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append('\n');
-        sb.append("--- Home ---").append('\n');
-        sb.append("X: " + x).append('\n');
-        sb.append("Y: " + y).append('\n');
-        sb.append("Z: " + z).append('\n');
-        sb.append("World: " + worldName).append('\n');
-        sb.append("---------------").append('\n');
-        return sb.toString();
+        return "\n" + "--- Home ---" + '\n' + "X: " + x + '\n' + "Y: " + y + '\n' + "Z: " + z + '\n' + "World: " + worldName + '\n' + "---------------" + '\n';
     }
 
     @Override

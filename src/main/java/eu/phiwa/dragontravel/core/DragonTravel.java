@@ -109,9 +109,9 @@ public class DragonTravel extends JavaPlugin {
     @Override
     public void onDisable() {
         dbStatDragonsHandler.unloadStationaryDragons();
-        Bukkit.getLogger().log(Level.INFO, String.format("[DragonTravel] -----------------------------------------------"));
+        Bukkit.getLogger().log(Level.INFO, "[DragonTravel] -----------------------------------------------");
         Bukkit.getLogger().log(Level.INFO, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
-        Bukkit.getLogger().log(Level.INFO, String.format("[DragonTravel] -----------------------------------------------"));
+        Bukkit.getLogger().log(Level.INFO, "[DragonTravel] -----------------------------------------------");
     }
 
     @Override
@@ -144,11 +144,14 @@ public class DragonTravel extends JavaPlugin {
         getServer().getHelpMap().addTopic(new CommandHelpTopic("/dt"));
 
         //Mounting Scheduler
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            for (Map.Entry<Player, IRyeDragon> entry : dragonManager.getRiderDragons().entrySet()) {
-                try {
-                    entry.getValue().getEntity().setPassenger(entry.getKey());
-                } catch (Exception ex) {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                for (Map.Entry<Player, IRyeDragon> entry : dragonManager.getRiderDragons().entrySet()) {
+                    try {
+                        entry.getValue().getEntity().setPassenger(entry.getKey());
+                    } catch (Exception ignored) {
+                    }
                 }
             }
         }, 60L, 30L);
@@ -165,8 +168,9 @@ public class DragonTravel extends JavaPlugin {
     }
 
     private void setupFileHandlers() {
-        if (!(new File(getDataFolder(), "databases").exists()))
+        if (!(new File(getDataFolder(), "databases").exists())) {
             new File(getDataFolder(), "databases").mkdirs();
+        }
 
         configHandler = new Config();
         if (configHandler.getConfig().getString("File.Version") == null) {
@@ -186,7 +190,7 @@ public class DragonTravel extends JavaPlugin {
 
     private void setupMetrics() {
         try {
-            Metrics metrics = new Metrics(DragonTravel.getInstance());
+            Metrics metrics = new Metrics(this);
             Metrics.Graph dragonsFlyingGraph = metrics.createGraph("Number of dragons flying");
             dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Flight") {
 
@@ -223,7 +227,7 @@ public class DragonTravel extends JavaPlugin {
 
             });
             metrics.start();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 

@@ -17,7 +17,7 @@ public interface IRyeDragon {
 
     void setMoveTravel();
 
-    void startTravel(Location destLoc, boolean interworld);
+    void startTravel(Location destLoc, boolean interWorld);
 
     DragonType getDragonType();
 

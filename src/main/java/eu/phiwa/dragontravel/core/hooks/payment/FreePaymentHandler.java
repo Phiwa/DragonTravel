@@ -5,9 +5,6 @@ import org.bukkit.entity.Player;
 
 public class FreePaymentHandler implements PaymentHandler {
 
-    public FreePaymentHandler() {
-    }
-
     @Override
     public boolean setup() {
         return true;

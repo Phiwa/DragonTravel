@@ -108,7 +108,7 @@ public class FlightsDB {
         for (String string : flightSection.getKeys(false)) {
             Flight flight = getFlight(string);
             if (flight != null) {
-                sender.sendMessage(" - " + (sender instanceof Player ? (PermissionsHandler.hasFlightPermission((Player) sender, flight.getName()) ? ChatColor.GREEN : ChatColor.RED) : ChatColor.AQUA) + flight.getName());
+                sender.sendMessage(" - " + (sender instanceof Player ? (PermissionsHandler.hasFlightPermission(sender, flight.getName()) ? ChatColor.GREEN : ChatColor.RED) : ChatColor.AQUA) + flight.getName());
                 i++;
             }
         }

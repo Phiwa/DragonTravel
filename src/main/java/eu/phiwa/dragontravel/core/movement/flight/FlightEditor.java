@@ -22,16 +22,12 @@ public class FlightEditor implements Listener {
             editors.put(player, new Flight(flightName, displayName));
     }
 
-    public boolean isEditor(Player player) {
-        return editors.containsKey(player);
-    }
-
     public boolean removeEditor(Player player) {
         return editors.remove(player) != null;
     }
 
     @EventHandler
-    public void onWP(PlayerInteractEvent event) {
+    public void onWayPointSelect(PlayerInteractEvent event) {
 
         Player player = event.getPlayer();
         Location loc = player.getLocation();

@@ -50,17 +50,7 @@ public class Station implements ConfigurationSerializable {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append('\n');
-        sb.append("--- Station ---").append('\n');
-        sb.append("Name: " + displayName).append('\n');
-        sb.append("Owner: " + owner).append('\n');
-        sb.append("X: " + x).append('\n');
-        sb.append("Y: " + y).append('\n');
-        sb.append("Z: " + z).append('\n');
-        sb.append("World: " + worldName).append('\n');
-        sb.append("---------------").append('\n');
-        return sb.toString();
+        return "\n" + "--- Station ---" + '\n' + "Name: " + displayName + '\n' + "Owner: " + owner + '\n' + "X: " + x + '\n' + "Y: " + y + '\n' + "Z: " + z + '\n' + "World: " + worldName + '\n' + "---------------" + '\n';
     }
 
     @Override
