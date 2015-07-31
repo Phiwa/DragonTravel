@@ -1,14 +1,9 @@
 package eu.phiwa.dragontravel.nms.v1_8_R3;
 
-import eu.phiwa.dragontravel.core.DragonTravelMain;
-import eu.phiwa.dragontravel.nms.IEntityRegister;
-import eu.phiwa.dragontravel.nms.IRyeDragon;
+import eu.phiwa.dragontravel.core.DragonTravel;
+import eu.phiwa.dragontravel.core.hooks.server.IEntityRegister;
 import net.minecraft.server.v1_8_R3.EntityTypes;
-import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -35,17 +30,17 @@ public class EntityRegister implements IEntityRegister {
             Field e = entityTypeClass.getDeclaredField("e");
             e.setAccessible(true);
             HashMap<Integer, Class<?>> e_map = (HashMap<Integer, Class<?>>) e.get(null);
-            e_map.put(Integer.valueOf(63), RyeDragon.class);
+            e_map.put(63, RyeDragon.class);
 
             Field f = entityTypeClass.getDeclaredField("f");
             f.setAccessible(true);
             HashMap<Class<?>, Integer> f_map = (HashMap<Class<?>, Integer>) f.get(null);
-            f_map.put(RyeDragon.class, Integer.valueOf(63));
+            f_map.put(RyeDragon.class, 63);
 
             Field g = entityTypeClass.getDeclaredField("g");
             g.setAccessible(true);
             HashMap<String, Integer> g_map = (HashMap<String, Integer>) g.get(null);
-            g_map.put("RyeDragon", Integer.valueOf(63));
+            g_map.put("RyeDragon", 63);
 
             return true;
         } catch (Exception e) {
@@ -76,17 +71,11 @@ public class EntityRegister implements IEntityRegister {
                 e.addSuppressed(ex);
             }
 
-            Bukkit.getLogger().info("[DragonTravel] [Error] Could not register the RyeDragon-entity!");
+            Bukkit.getLogger().info("[DragonTravel] [Error] Could not register the RayDragon-entity!");
             e.printStackTrace();
-            Bukkit.getPluginManager().disablePlugin(DragonTravelMain.getInstance());
+            Bukkit.getPluginManager().disablePlugin(DragonTravel.getInstance());
 
         }
         return false;
-    }
-
-    @Override
-    public void spawnEntity(Location loc, IRyeDragon dragon) {
-        World notchWorld = ((CraftWorld) loc.getWorld()).getHandle();
-        notchWorld.addEntity(((CraftEntity) dragon.getEntity()).getHandle());
     }
 }

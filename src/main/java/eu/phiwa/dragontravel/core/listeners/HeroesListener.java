@@ -2,7 +2,7 @@ package eu.phiwa.dragontravel.core.listeners;
 
 import com.herocraftonline.heroes.api.events.SkillDamageEvent;
 import com.herocraftonline.heroes.api.events.WeaponDamageEvent;
-import eu.phiwa.dragontravel.core.DragonTravelMain;
+import eu.phiwa.dragontravel.core.DragonTravel;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,8 +16,8 @@ public class HeroesListener implements Listener {
             if (event.getEntity().getPassenger() != null) {
                 if (event.getEntity().getPassenger() instanceof Player) {
                     Player player = (Player) event.getEntity().getPassenger();
-                    if (DragonTravelMain.listofDragonriders.containsKey(player))
-                        if (!DragonTravelMain.getInstance().getConfig().getBoolean("VulnerableRiders"))
+                    if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
+                        if (!DragonTravel.getInstance().getConfig().getBoolean("VulnerableRiders"))
                             event.setCancelled(true);
                 }
             }
@@ -30,8 +30,8 @@ public class HeroesListener implements Listener {
             if (event.getEntity().getPassenger() != null) {
                 if (event.getEntity().getPassenger() instanceof Player) {
                     Player player = (Player) event.getEntity().getPassenger();
-                    if (DragonTravelMain.listofDragonriders.containsKey(player))
-                        if (!DragonTravelMain.getInstance().getConfig().getBoolean("VulnerableRiders"))
+                    if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
+                        if (!DragonTravel.getInstance().getConfig().getBoolean("VulnerableRiders"))
                             event.setCancelled(true);
                 }
             }

@@ -1,7 +1,7 @@
 package eu.phiwa.dragontravel.core.listeners;
 
-import eu.phiwa.dragontravel.core.DragonTravelMain;
-import eu.phiwa.dragontravel.nms.IRyeDragon;
+import eu.phiwa.dragontravel.core.DragonTravel;
+import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
 import eu.phiwa.dragontravel.nms.v1_8_R3.RyeDragon;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;
@@ -21,31 +21,22 @@ public class EntityListener implements Listener {
 		if (event.getSpawnReason() != SpawnReason.CUSTOM)
 			return;
 
-        if (!event.getEntity().getType().toString().equals("RyeDragon"))
-            return;
+		if (!event.getEntity().getType().toString().equals("ENDER_DRAGON"))
+			return;
 
 		if (!event.isCancelled())
 			return;
 
-        if (!DragonTravelMain.getInstance().getConfigHandler().isIgnoreAntiMobspawnAreas())
-            event.setCancelled(false);
+		if (DragonTravel.getInstance().getConfigHandler().isIgnoreAntiMobspawnAreas())
+			event.setCancelled(false);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEnderDragonExplode(EntityExplodeEvent event) {
-
-		if (DragonTravelMain.getInstance().getConfigHandler().isOnlydragontraveldragons() && event.getEntity() instanceof RyeDragon)
+		if (DragonTravel.getInstance().getConfigHandler().isOnlydragontraveldragons() && event.getEntity() instanceof RyeDragon)
 			event.setCancelled(true);
-		else if (DragonTravelMain.getInstance().getConfigHandler().isAlldragons() && event.getEntity() instanceof EnderDragon)
+		else if (DragonTravel.getInstance().getConfigHandler().isAlldragons() && event.getEntity() instanceof EnderDragon)
 			event.setCancelled(true);
-	}
-
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onEntityDeath(EntityDeathEvent event) {
-
-		if (event.getEntity() instanceof RyeDragon)
-			return;
-
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -55,8 +46,8 @@ public class EntityListener implements Listener {
 			return;
 
 		Player player = (Player) event.getEntity();
-		if (DragonTravelMain.listofDragonriders.containsKey(player))
-			if (!DragonTravelMain.getInstance().getConfig().getBoolean("VulnerableRiders"))
+		if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
+			if (!DragonTravel.getInstance().getConfig().getBoolean("VulnerableRiders"))
 				event.setCancelled(true);
 	}
 
@@ -68,11 +59,11 @@ public class EntityListener implements Listener {
 
 		Player player = (Player) event.getEntity();
 
-		if (!DragonTravelMain.listofDragonriders.containsKey(player))
+		if (!DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
 			return;
 
-		IRyeDragon dragon = DragonTravelMain.listofDragonriders.get(player);
+		IRyeDragon dragon = DragonTravel.getInstance().getDragonManager().getRiderDragons().get(player);
 		dragon.getEntity().remove();
-		DragonTravelMain.listofDragonriders.remove(player);
+		DragonTravel.getInstance().getDragonManager().getRiderDragons().remove(player);
 	}
 }
