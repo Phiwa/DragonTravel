@@ -1,16 +1,16 @@
 package eu.phiwa.dragontravel.core.commands;
 
 import com.sk89q.minecraft.util.commands.*;
+import eu.phiwa.dragontravel.api.DragonException;
+import eu.phiwa.dragontravel.core.DragonManager;
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.payment.ChargeType;
 import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
-import eu.phiwa.dragontravel.core.movement.flight.FlightEngine;
 import eu.phiwa.dragontravel.core.movement.flight.Waypoint;
 import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
 import eu.phiwa.dragontravel.core.movement.travel.Home;
 import eu.phiwa.dragontravel.core.movement.travel.Station;
-import eu.phiwa.dragontravel.core.movement.travel.TravelEngine;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -329,7 +329,11 @@ public final class DragonTravelCommands {
                 if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.FLIGHT, player)) {
                     return;
                 }
-                FlightEngine.startFlight(player, flight, true, false, sender);
+                try {
+                    DragonManager.getDragonManager().getFlightEngine().startFlight(player, flight, true, false, sender);
+                } catch (DragonException e) {
+                    e.printStackTrace();
+                }
                 return;
 
             case 2:
@@ -342,7 +346,11 @@ public final class DragonTravelCommands {
                     sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.CouldNotfindPlayerToSend").replace("{playername}", args.getString(1)));
                     return;
                 }
-                FlightEngine.startFlight(player, flight, true, true, sender);
+                try {
+                    DragonManager.getDragonManager().getFlightEngine().startFlight(player, flight, true, true, sender);
+                } catch (DragonException e) {
+                    e.printStackTrace();
+                }
                 return;
         }
     }
@@ -369,11 +377,19 @@ public final class DragonTravelCommands {
         if (station.equalsIgnoreCase((DragonTravel.getInstance().getConfig().getString("RandomDest.Name")))) {
             if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TORANDOM, player))
                 return;
-            TravelEngine.toRandomDest(player, true);
+            try {
+                DragonManager.getDragonManager().getTravelEngine().toRandomDest(player, true);
+            } catch (DragonException e) {
+                e.printStackTrace();
+            }
         } else {
             if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOSTATION, player))
                 return;
-            TravelEngine.toStation(player, station, true);
+            try {
+                DragonManager.getDragonManager().getTravelEngine().toStation(player, station, true);
+            } catch (DragonException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -402,11 +418,15 @@ public final class DragonTravelCommands {
         if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOPLAYER, player)) {
             return;
         }
-        if (!DragonTravel.getInstance().getDragonManager().getPlayerToggles().get(targetPlayer.getName())) {
+        if (!DragonTravel.getInstance().getDragonManager().getPlayerToggles().get(targetPlayer.getUniqueId())) {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.TargetPlayerDoesnotAllowPTravel").replace("{playername}", args.getString(0)));
             return;
         }
-        TravelEngine.toPlayer(player, targetPlayer, true);
+        try {
+            DragonManager.getDragonManager().getTravelEngine().toPlayer(player, targetPlayer, true);
+        } catch (DragonException e) {
+            e.printStackTrace();
+        }
     }
 
     @Command(aliases = {"ctravel", "coord", "coords"},
@@ -431,10 +451,11 @@ public final class DragonTravelCommands {
             if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOCOORDINATES, (Player) sender))
                 return;
 
-            TravelEngine.toCoordinates(player, x, y, z, world, true);
+            DragonManager.getDragonManager().getTravelEngine().toCoordinates(player, x, y, z, world, true);
         } catch (NumberFormatException ex) {
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.InvalidCoordinates"));
-            return;
+        } catch (DragonException e) {
+            e.printStackTrace();
         }
     }
 
@@ -452,14 +473,18 @@ public final class DragonTravelCommands {
 
         if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOHOME, player))
             return;
-        TravelEngine.toHome(player, true);
+        try {
+            DragonManager.getDragonManager().getTravelEngine().toHome(player, true);
+        } catch (DragonException e) {
+            e.printStackTrace();
+        }
     }
 
     @Command(aliases = {"fhome"},
             desc = "Travel to your faction home",
             usage = "/dt fhome")
     @CommandPermissions({"dt.start.fhome.command"})
-    public static void startFHomeTravel(CommandContext args, CommandSender sender) throws CommandException {
+    public static void startFactionHomeTravel(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
@@ -472,7 +497,11 @@ public final class DragonTravelCommands {
         }
         if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOFACTIONHOME, player))
             return;
-        TravelEngine.toFactionHome(player, true);
+        try {
+            DragonManager.getDragonManager().getTravelEngine().toFactionHome(player, true);
+        } catch (DragonException e) {
+            e.printStackTrace();
+        }
     }
 
     @Command(aliases = {"createflight", "newflight"},

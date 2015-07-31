@@ -11,13 +11,13 @@ public interface IRyeDragon {
 
     void setMoveFlight();
 
-    void startFlight(Flight flight);
+    void startFlight(Flight flight, DragonType dragonType);
 
     void travel();
 
     void setMoveTravel();
 
-    void startTravel(Location destLoc, boolean interWorld);
+    void startTravel(Location destLoc, boolean interWorld, DragonType dragonType);
 
     DragonType getDragonType();
 

@@ -131,9 +131,9 @@ public class TravelEngine {
         IRyeDragon dragon = DragonTravel.getInstance().getDragonManager().getRiderDragons().get(player);
         dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));
         if (Objects.equals(destination.getWorld().getName(), player.getWorld().getName()))
-            dragon.startTravel(destination, false);
+            dragon.startTravel(destination, false, dragonType);
         else
-            dragon.startTravel(destination, true);
+            dragon.startTravel(destination, true, dragonType);
 
     }
 

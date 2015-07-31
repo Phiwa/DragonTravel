@@ -98,10 +98,15 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         }
 
         switch (dragonType) {
-            case TRAVEL:
+            case LOC_TRAVEL:
+            case HOME_TRAVEL:
+            case FACTION_TRAVEL:
+            case PLAYER_TRAVEL:
+            case STATION_TRAVEL:
                 travel();
                 break;
             case MANNED_FLIGHT:
+            case TIMED_FLIGHT:
                 flight();
                 break;
             default:
@@ -171,10 +176,10 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
      * @param flight Flight to start
      */
     @Override
-    public void startFlight(Flight flight) {
+    public void startFlight(Flight flight, DragonType dragonType) {
         this.flight = flight;
         this.currentWayPointIndex = 0;
-        this.dragonType = DragonType.MANNED_FLIGHT;
+        this.dragonType = dragonType;
 
         this.toLoc = flight.getWaypoints().get(currentWayPointIndex).getAsLocation();
         this.fromLoc = getEntity().getLocation();
@@ -213,12 +218,12 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                             else if (midLocB.getZ() > toLoc.getZ())
                                 midLocB.setYaw((float) (-Math.toDegrees(Math.atan((midLocB.getX() - toLoc.getX()) / (midLocB.getZ() - toLoc.getZ())))) + 180.0F);
                             rider.teleport(midLocB);
-                            if (DragonTravel.getInstance().getDragonManager().mount(rider, false))
+                            if (DragonTravel.getInstance().getDragonManager().mount(rider, false, dragonType))
                                 return;
                             if (!DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(rider))
                                 return;
                             IRyeDragon dragon = DragonTravel.getInstance().getDragonManager().getRiderDragons().get(rider);
-                            dragon.startTravel(toLoc, false);
+                            dragon.startTravel(toLoc, false, dragonType);
                             getEntity().remove();
                         }
                     }, 1L);
@@ -283,8 +288,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
      * @param destLoc Location to start a travel to
      */
     @Override
-    public void startTravel(Location destLoc, boolean interWorld) {
-        this.dragonType = DragonType.TRAVEL;
+    public void startTravel(Location destLoc, boolean interWorld, DragonType dragonType) {
+        this.dragonType = dragonType;
         this.rider = (Player) getEntity().getPassenger();
         this.fromLoc = getEntity().getLocation();
         if (interWorld) {

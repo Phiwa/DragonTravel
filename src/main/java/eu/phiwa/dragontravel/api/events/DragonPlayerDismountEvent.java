@@ -1,7 +1,6 @@
 package eu.phiwa.dragontravel.api.events;
 
 import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
-import eu.phiwa.dragontravel.core.movement.MovementType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
