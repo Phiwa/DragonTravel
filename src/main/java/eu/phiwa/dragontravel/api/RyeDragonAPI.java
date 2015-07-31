@@ -10,11 +10,11 @@ import java.util.UUID;
 /**
  * The DragonTravel API
  */
-public class RayDragonAPI {
+public class RyeDragonAPI {
 
-    private static RayDragonAPI instance;
+    private static RyeDragonAPI instance;
 
-    private RayDragonAPI() {
+    private RyeDragonAPI() {
         instance = this;
     }
 
@@ -68,9 +68,9 @@ public class RayDragonAPI {
     }
 
 
-    public static RayDragonAPI getAPI() {
+    public static RyeDragonAPI getAPI() {
         if (instance == null) {
-            return new RayDragonAPI();
+            return new RyeDragonAPI();
         } else {
             return instance;
         }
