@@ -83,10 +83,6 @@
             <url>http://repo.md-5.net/content/repositories/releases</url>
         </repository>
         <repository>
-            <id>anticheat-repo</id>
-            <url>http://repo.gravitydevelopment.net/</url>
-        </repository>
-        <repository>
             <id>gravity-repo</id>
             <url>http://repo.gravitydevelopment.net/</url>
         </repository>
@@ -166,7 +162,7 @@
         <dependency>
             <groupId>org.mcstats.bukkit</groupId>
             <artifactId>metrics</artifactId>
-            <version>R7</version>
+            <version>R8-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

@@ -5,12 +5,12 @@ import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.payment.ChargeType;
 import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
-import eu.phiwa.dragontravel.core.movement.flight.Flights;
+import eu.phiwa.dragontravel.core.movement.flight.FlightEngine;
 import eu.phiwa.dragontravel.core.movement.flight.Waypoint;
 import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
 import eu.phiwa.dragontravel.core.movement.travel.Home;
 import eu.phiwa.dragontravel.core.movement.travel.Station;
-import eu.phiwa.dragontravel.core.movement.travel.Travels;
+import eu.phiwa.dragontravel.core.movement.travel.TravelEngine;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -329,7 +329,7 @@ public final class DragonTravelCommands {
                 if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.FLIGHT, player)) {
                     return;
                 }
-                Flights.startFlight(player, flight, true, false, sender);
+                FlightEngine.startFlight(player, flight, true, false, sender);
                 return;
 
             case 2:
@@ -342,7 +342,7 @@ public final class DragonTravelCommands {
                     sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.CouldNotfindPlayerToSend").replace("{playername}", args.getString(1)));
                     return;
                 }
-                Flights.startFlight(player, flight, true, true, sender);
+                FlightEngine.startFlight(player, flight, true, true, sender);
                 return;
         }
     }
@@ -369,11 +369,11 @@ public final class DragonTravelCommands {
         if (station.equalsIgnoreCase((DragonTravel.getInstance().getConfig().getString("RandomDest.Name")))) {
             if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TORANDOM, player))
                 return;
-            Travels.toRandomdest(player, true);
+            TravelEngine.toRandomDest(player, true);
         } else {
             if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOSTATION, player))
                 return;
-            Travels.toStation(player, station, true);
+            TravelEngine.toStation(player, station, true);
         }
     }
 
@@ -406,7 +406,7 @@ public final class DragonTravelCommands {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.TargetPlayerDoesnotAllowPTravel").replace("{playername}", args.getString(0)));
             return;
         }
-        Travels.toPlayer(player, targetPlayer, true);
+        TravelEngine.toPlayer(player, targetPlayer, true);
     }
 
     @Command(aliases = {"ctravel", "coord", "coords"},
@@ -431,7 +431,7 @@ public final class DragonTravelCommands {
             if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOCOORDINATES, (Player) sender))
                 return;
 
-            Travels.toCoordinates(player, x, y, z, world, true);
+            TravelEngine.toCoordinates(player, x, y, z, world, true);
         } catch (NumberFormatException ex) {
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.InvalidCoordinates"));
             return;
@@ -452,7 +452,7 @@ public final class DragonTravelCommands {
 
         if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOHOME, player))
             return;
-        Travels.toHome(player, true);
+        TravelEngine.toHome(player, true);
     }
 
     @Command(aliases = {"fhome"},
@@ -472,7 +472,7 @@ public final class DragonTravelCommands {
         }
         if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOFACTIONHOME, player))
             return;
-        Travels.toFactionhome(player, true);
+        TravelEngine.toFactionHome(player, true);
     }
 
     @Command(aliases = {"createflight", "newflight"},

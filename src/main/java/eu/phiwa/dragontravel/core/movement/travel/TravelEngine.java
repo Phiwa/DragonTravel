@@ -2,8 +2,10 @@ package eu.phiwa.dragontravel.core.movement.travel;
 
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.UPlayer;
+import eu.phiwa.dragontravel.api.DragonException;
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
+import eu.phiwa.dragontravel.core.movement.DragonType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,27 +14,27 @@ import org.bukkit.entity.Player;
 
 import java.util.Objects;
 
-public class Travels {
+public class TravelEngine {
 
     /**
      * Travel to specified coordinates
      *
-     * @param worldname       If "null", the player's current world is used.
+     * @param worldName       If "null", the player's current world is used.
      * @param checkForStation Whether or not DragonTravel should check
      *                        if the player is at a station and return if not.
      *                        If the admin disabled the station-check globally,
      *                        this has no function.
      */
-    public static void toCoordinates(Player player, int x, int y, int z, String worldname, Boolean checkForStation) {
+    public void toCoordinates(Player player, int x, int y, int z, String worldName, Boolean checkForStation) throws DragonException {
 
         World world;
 
-        if (worldname == null) {
+        if (worldName == null) {
             //No world was used in the command, using player's current world
             world = player.getWorld();
         } else {
             // Trying to find the world with the name the player used in the command
-            world = Bukkit.getWorld(worldname);
+            world = Bukkit.getWorld(worldName);
 
             // If the world cannot be found, send an error-message to the player
             if (world == null) {
@@ -72,7 +74,7 @@ public class Travels {
             player.sendMessage(message);
         }
 
-        travel(player, loc, checkForStation, message);
+        travel(player, loc, checkForStation, message, DragonType.LOC_TRAVEL);
 
     }
 
@@ -84,13 +86,13 @@ public class Travels {
      *                        If the admin disabled the station-check globally,
      *                        this has no function.
      */
-    public static void travel(Player player, Location destination, Boolean checkForStation, String destName) {
+    public void travel(Player player, Location destination, Boolean checkForStation, String destName, DragonType dragonType) throws DragonException {
 
         // Check for station
         if (checkForStation && DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.EnableForTravels") && !player.hasPermission("dt.ignoreusestations.travels")) {
             if (!DragonTravel.getInstance().getDbStationsHandler().checkForStation(player)) {
                 player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.NotAtAStation"));
-                return;
+                throw new DragonException("Player is not near a station.");
             }
         }
 
@@ -107,7 +109,7 @@ public class Travels {
         if (maxdist != -1) {
             if (temploc.distance(destination) >= maxdist) {
                 player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.MaxTravelDistanceExceeded"));
-                return;
+                throw new DragonException("Player cannot travel this far in one journey.");
             }
         }
 
@@ -115,16 +117,16 @@ public class Travels {
             temploc.setYaw(getCorrectYawForPlayer(player, destination));
             player.teleport(temploc);
         } else {
-            Location temploc2 = new Location(player.getWorld(), player.getLocation().getX() + 80, player.getLocation().getY() + 80, player.getLocation().getZ() + 80);
-            temploc.setYaw(getCorrectYawForPlayer(player, temploc2));
+            Location tempLoc2 = new Location(player.getWorld(), player.getLocation().getX() + 1, player.getLocation().getY() + 1, player.getLocation().getZ() + 1);
+            temploc.setYaw(getCorrectYawForPlayer(player, tempLoc2));
             player.teleport(temploc);
         }
 
-        if (DragonTravel.getInstance().getDragonManager().mount(player, true))
-            return;
+        if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
+            throw new DragonException("Player already has a registered dragon.");
 
-        if (!DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
-            return;
+        if (!DragonTravel.getInstance().getDragonManager().mount(player, true, dragonType))
+            throw new DragonException("Player failed to mount dragon.");
 
         IRyeDragon dragon = DragonTravel.getInstance().getDragonManager().getRiderDragons().get(player);
         dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));
@@ -135,7 +137,7 @@ public class Travels {
 
     }
 
-    private static float getCorrectYawForPlayer(Player player, Location destination) {
+    private float getCorrectYawForPlayer(Player player, Location destination) {
 
         if (player.getLocation().getBlockZ() > destination.getBlockZ())
             return (float) (-Math.toDegrees(Math.atan((player.getLocation().getBlockX() - destination.getBlockX()) / (player.getLocation().getBlockZ() - destination.getBlockZ())))) + 180.0F;
@@ -154,7 +156,7 @@ public class Travels {
      *                        If the admin disabled the station-check globally,
      *                        this has no function.
      */
-    public static void toFactionhome(Player player, Boolean checkForStation) {
+    public void toFactionHome(Player player, Boolean checkForStation) throws DragonException {
 
         if (Bukkit.getPluginManager().getPlugin("Factions") == null) {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionsNotInstalled"));
@@ -179,7 +181,7 @@ public class Travels {
         if (!faction.hasHome()) {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
         } else
-            travel(player, faction.getHome().asBukkitLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"));
+            travel(player, faction.getHome().asBukkitLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"), DragonType.FACTION_TRAVEL);
     }
 
     /**
@@ -191,7 +193,7 @@ public class Travels {
      *                        If the admin disabled the station-check globally,
      *                        this has no function.
      */
-    public static void toHome(Player player, Boolean checkForStation) {
+    public void toHome(Player player, Boolean checkForStation) throws DragonException {
 
         Home home = DragonTravel.getInstance().getDbHomesHandler().getHome(player.getUniqueId().toString());
 
@@ -206,7 +208,7 @@ public class Travels {
                 return;
             }
         }
-        travel(player, home.toLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToHome"));
+        travel(player, home.toLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToHome"), DragonType.HOME_TRAVEL);
         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToHome"));
     }
 
@@ -220,7 +222,7 @@ public class Travels {
      *                        If the admin disabled the station-check globally,
      *                        this has no function.
      */
-    public static void toPlayer(Player player, Player targetplayer, Boolean checkForStation) {
+    public void toPlayer(Player player, Player targetplayer, Boolean checkForStation) throws DragonException {
 
         if (DragonTravel.getInstance().getConfigHandler().isRequireItemTravelPlayer()) {
             if (!player.getInventory().contains(DragonTravel.getInstance().getConfigHandler().getRequiredItem()) && !player.hasPermission("dt.notrequireitem.travel")) {
@@ -230,7 +232,7 @@ public class Travels {
         }
 
         Location targetLoc = targetplayer.getLocation();
-        travel(player, targetLoc, checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToPlayer").replace("{playername}", targetplayer.getDisplayName()));
+        travel(player, targetLoc, checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToPlayer").replace("{playername}", targetplayer.getDisplayName()), DragonType.PLAYER_TRAVEL);
 
     }
 
@@ -241,7 +243,7 @@ public class Travels {
      * @param checkForStation Whether or not DragonTravel should check
      *                        if the player is at a station and return if not
      */
-    public static void toRandomdest(Player player, Boolean checkForStation) {
+    public void toRandomDest(Player player, Boolean checkForStation) throws DragonException {
 
         if (DragonTravel.getInstance().getConfigHandler().isRequireItemTravelRandom()) {
             if (!player.getInventory().contains(DragonTravel.getInstance().getConfigHandler().getRequiredItem()) && !player.hasPermission("dt.notrequireitem.travel")) {
@@ -263,7 +265,7 @@ public class Travels {
 
         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToRandomLocation"));
 
-        travel(player, randomLoc, checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToRandomLocation"));
+        travel(player, randomLoc, checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToRandomLocation"), DragonType.LOC_TRAVEL);
     }
 
     /**
@@ -274,7 +276,7 @@ public class Travels {
      *                        If the admin disabled the station-check globally,
      *                        this has no function.
      */
-    public static void toStation(Player player, String stationName, Boolean checkForStation) {
+    public void toStation(Player player, String stationName, Boolean checkForStation) throws DragonException {
 
         Station destination = DragonTravel.getInstance().getDbStationsHandler().getStation(stationName);
 
@@ -292,6 +294,6 @@ public class Travels {
 
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.getDisplayName())));
 
-        travel(player, destination.toLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.getDisplayName()));
+        travel(player, destination.toLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.getDisplayName()), DragonType.STATION_TRAVEL);
     }
 }

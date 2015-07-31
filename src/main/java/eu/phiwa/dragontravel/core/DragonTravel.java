@@ -15,7 +15,6 @@ import eu.phiwa.dragontravel.core.listeners.BlockListener;
 import eu.phiwa.dragontravel.core.listeners.EntityListener;
 import eu.phiwa.dragontravel.core.listeners.HeroesListener;
 import eu.phiwa.dragontravel.core.listeners.PlayerListener;
-import eu.phiwa.dragontravel.core.movement.DragonManager;
 import eu.phiwa.dragontravel.core.movement.DragonType;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
 import eu.phiwa.dragontravel.core.movement.flight.FlightEditor;
@@ -120,7 +119,7 @@ public class DragonTravel extends JavaPlugin {
 
         nmsHandler = new NMSHandler();
         entityRegister = nmsHandler.getEntityRegister();
-        dragonManager = new DragonManager();
+        dragonManager = DragonManager.getDragonManager();
         flightEditor = new FlightEditor();
         paymentManager = new PaymentManager();
         if (!entityRegister.registerEntity()) return;
@@ -192,8 +191,7 @@ public class DragonTravel extends JavaPlugin {
         try {
             Metrics metrics = new Metrics(this);
             Metrics.Graph dragonsFlyingGraph = metrics.createGraph("Number of dragons flying");
-            dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Flight") {
-
+            dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Manned Flight") {
                 @Override
                 public int getValue() {
                     int x = 0;
@@ -206,12 +204,90 @@ public class DragonTravel extends JavaPlugin {
                 }
 
             });
-            dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Travel") {
+            dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Timed Flight") {
                 @Override
                 public int getValue() {
                     int x = 0;
                     for (Map.Entry<Player, IRyeDragon> entry : dragonManager.getRiderDragons().entrySet()) {
-                        if (entry.getValue().getDragonType().equals(DragonType.TRAVEL)) {
+                        if (entry.getValue().getDragonType().equals(DragonType.TIMED_FLIGHT)) {
+                            x++;
+                        }
+                    }
+                    return x;
+                }
+
+            });
+            dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Faction Travel") {
+                @Override
+                public int getValue() {
+                    int x = 0;
+                    for (Map.Entry<Player, IRyeDragon> entry : dragonManager.getRiderDragons().entrySet()) {
+                        if (entry.getValue().getDragonType().equals(DragonType.FACTION_TRAVEL)) {
+                            x++;
+                        }
+                    }
+                    return x;
+                }
+
+            });
+            dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Home Travel") {
+                @Override
+                public int getValue() {
+                    int x = 0;
+                    for (Map.Entry<Player, IRyeDragon> entry : dragonManager.getRiderDragons().entrySet()) {
+                        if (entry.getValue().getDragonType().equals(DragonType.HOME_TRAVEL)) {
+                            x++;
+                        }
+                    }
+                    return x;
+                }
+
+            });
+            dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Location Travel") {
+                @Override
+                public int getValue() {
+                    int x = 0;
+                    for (Map.Entry<Player, IRyeDragon> entry : dragonManager.getRiderDragons().entrySet()) {
+                        if (entry.getValue().getDragonType().equals(DragonType.LOC_TRAVEL)) {
+                            x++;
+                        }
+                    }
+                    return x;
+                }
+
+            });
+            dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Player Travel") {
+                @Override
+                public int getValue() {
+                    int x = 0;
+                    for (Map.Entry<Player, IRyeDragon> entry : dragonManager.getRiderDragons().entrySet()) {
+                        if (entry.getValue().getDragonType().equals(DragonType.PLAYER_TRAVEL)) {
+                            x++;
+                        }
+                    }
+                    return x;
+                }
+
+            });
+            dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Station Travel") {
+                @Override
+                public int getValue() {
+                    int x = 0;
+                    for (Map.Entry<Player, IRyeDragon> entry : dragonManager.getRiderDragons().entrySet()) {
+                        if (entry.getValue().getDragonType().equals(DragonType.STATION_TRAVEL)) {
+                            x++;
+                        }
+                    }
+                    return x;
+                }
+
+            });
+            dragonsFlyingGraph.addPlotter(new Metrics.Plotter("Pet") {
+                @Override
+                public int getValue() {
+                    int x = 0;
+                    for (Map.Entry<Player, IRyeDragon> entry : dragonManager.getRiderDragons().entrySet()) {
+                        if (entry.getValue().getDragonType().equals(DragonType.PET)) {
                             x++;
                         }
                     }

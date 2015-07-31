@@ -5,8 +5,8 @@ import com.massivecraft.factions.entity.UPlayer;
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.payment.ChargeType;
 import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
-import eu.phiwa.dragontravel.core.movement.flight.Flights;
-import eu.phiwa.dragontravel.core.movement.travel.Travels;
+import eu.phiwa.dragontravel.core.movement.flight.FlightEngine;
+import eu.phiwa.dragontravel.core.movement.travel.TravelEngine;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -94,7 +94,7 @@ public class PlayerListener implements Listener {
                             return;
                         }
                     }
-                    Travels.toRandomdest(player, !DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"));
+                    TravelEngine.toRandomDest(player, !DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"));
                 } else if (DragonTravel.getInstance().getDbStationsHandler().getStation(stationname) == null) {
                     player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));
                     return;
@@ -102,7 +102,7 @@ public class PlayerListener implements Listener {
                     if (!DragonTravel.getInstance().getPaymentManager().chargePlayerCustom(ChargeType.TRAVEL_TOSTATION, player, Double.parseDouble(lines[3]))) {
                         return;
                     }
-                    Travels.toStation(player, stationname, !DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"));
+                    TravelEngine.toStation(player, stationname, !DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"));
                 }
                 break;
             case "Faction":
@@ -132,7 +132,7 @@ public class PlayerListener implements Listener {
                         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
                         return;
                     } else
-                        Travels.travel(player, faction.getHome().asBukkitLocation(), false, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"));
+                        TravelEngine.travel(player, faction.getHome().asBukkitLocation(), false, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"));
 
                 } else {
 
@@ -158,7 +158,7 @@ public class PlayerListener implements Listener {
                         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
                         return;
                     } else
-                        Travels.travel(player, faction.getHome().asBukkitLocation(), false, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"));
+                        TravelEngine.travel(player, faction.getHome().asBukkitLocation(), false, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"));
                 }
                 break;
             case "Flight":
@@ -181,7 +181,7 @@ public class PlayerListener implements Listener {
                             return;
                         }
                     }
-                    Flights.startFlight(player, flightName, !DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"), false, null);
+                    FlightEngine.startFlight(player, flightName, !DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"), false, null);
                 }
                 break;
         }

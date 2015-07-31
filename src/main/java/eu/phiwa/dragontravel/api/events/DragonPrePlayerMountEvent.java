@@ -1,19 +1,19 @@
 package eu.phiwa.dragontravel.api.events;
 
 import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
-import eu.phiwa.dragontravel.core.movement.MovementType;
+import eu.phiwa.dragontravel.core.movement.DragonType;
 import org.bukkit.entity.Player;
 
 public class DragonPrePlayerMountEvent extends DragonCancellableEvent {
 
     private Player player;
     private IRyeDragon dragon;
-    private MovementType movementType;
+    private DragonType dragonType;
 
-    public DragonPrePlayerMountEvent(Player player, IRyeDragon dragon, MovementType movementType){
+    public DragonPrePlayerMountEvent(Player player, IRyeDragon dragon, DragonType dragonType) {
         this.player = player;
         this.dragon = dragon;
-        this.movementType = movementType;
+        this.dragonType = dragonType;
     }
 
     public Player getPlayer() {
@@ -32,12 +32,11 @@ public class DragonPrePlayerMountEvent extends DragonCancellableEvent {
         this.dragon = dragon;
     }
 
-    public MovementType getMovementType() {
-        return movementType;
+    public DragonType getDragonType() {
+        return dragonType;
     }
 
-    public void setMovementType(MovementType movementType) {
-        this.movementType = movementType;
+    public void setDragonType(DragonType dragonType) {
+        this.dragonType = dragonType;
     }
-
 }

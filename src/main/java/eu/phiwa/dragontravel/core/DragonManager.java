@@ -1,12 +1,14 @@
-package eu.phiwa.dragontravel.core.movement;
+package eu.phiwa.dragontravel.core;
 
 import eu.phiwa.dragontravel.api.events.DragonPlayerDismountEvent;
 import eu.phiwa.dragontravel.api.events.DragonPostPlayerMountEvent;
 import eu.phiwa.dragontravel.api.events.DragonPrePlayerMountEvent;
-import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.anticheat.CheatProtectionHandler;
 import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
+import eu.phiwa.dragontravel.core.movement.DragonType;
+import eu.phiwa.dragontravel.core.movement.flight.FlightEngine;
 import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
+import eu.phiwa.dragontravel.core.movement.travel.TravelEngine;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EnderDragon;
@@ -21,11 +23,22 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DragonManager {
 
+    private static DragonManager instance;
+
+    private FlightEngine flightEngine;
+    private TravelEngine travelEngine;
+
     private final HashMap<UUID, Long> damageReceipts = new HashMap<>();
     private final HashMap<UUID, Boolean> playerToggles = new HashMap<>();
     private final ConcurrentHashMap<Player, IRyeDragon> riderDragons = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Player, Location> riderStartPoints = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, StationaryDragon> stationaryDragons = new ConcurrentHashMap<>();
+
+    private DragonManager() {
+        instance = this;
+        flightEngine = new FlightEngine();
+        travelEngine = new TravelEngine();
+    }
 
     public void dismount(Player player, Boolean isMultiWorld) {
         if (!riderDragons.containsKey(player)) {
@@ -129,7 +142,7 @@ public class DragonManager {
         return tempLoc;
     }
 
-    public boolean mount(Player player, boolean asNew, MovementType movementType) {
+    public boolean mount(Player player, boolean asNew, DragonType dragonType) {
         // Remove current dragon if the player is already mounted
         if (riderDragons.containsKey(player)) {
             IRyeDragon dragon = riderDragons.get(player);
@@ -173,7 +186,7 @@ public class DragonManager {
 
         IRyeDragon ryeDragon = DragonTravel.getInstance().getNmsHandler().getRyeDragon(player.getLocation());
         ryeDragon.fixWings();
-        DragonPrePlayerMountEvent preEvent = new DragonPrePlayerMountEvent(player, ryeDragon, movementType);
+        DragonPrePlayerMountEvent preEvent = new DragonPrePlayerMountEvent(player, ryeDragon, dragonType);
         Bukkit.getPluginManager().callEvent(preEvent);
         if (preEvent.isCancelled()) {
             return false;
@@ -183,8 +196,7 @@ public class DragonManager {
             riderDragons.put(player, ryeDragon);
             if (asNew)
                 riderStartPoints.put(player, player.getLocation());
-            DragonPostPlayerMountEvent postEvent = new DragonPostPlayerMountEvent(player, ryeDragon, movementType);
-            Bukkit.getPluginManager().callEvent(postEvent);
+            Bukkit.getPluginManager().callEvent(new DragonPostPlayerMountEvent(player, ryeDragon, dragonType));
         }
         return true;
     }
@@ -263,5 +275,33 @@ public class DragonManager {
 
     public ConcurrentHashMap<String, StationaryDragon> getStationaryDragons() {
         return stationaryDragons;
+    }
+
+    public FlightEngine getFlightEngine() {
+        return flightEngine;
+    }
+
+    public void setFlightEngine(FlightEngine flightEngine) {
+        this.flightEngine = flightEngine;
+    }
+
+    public TravelEngine getTravelEngine() {
+        return travelEngine;
+    }
+
+    public void setTravelEngine(TravelEngine travelEngine) {
+        this.travelEngine = travelEngine;
+    }
+
+    public ConcurrentHashMap<Player, Location> getRiderStartPoints() {
+        return riderStartPoints;
+    }
+
+    public static DragonManager getDragonManager() {
+        if (instance == null) {
+            return new DragonManager();
+        } else {
+            return instance;
+        }
     }
 }
