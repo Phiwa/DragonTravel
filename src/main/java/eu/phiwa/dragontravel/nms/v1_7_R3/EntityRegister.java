@@ -6,6 +6,7 @@ import net.minecraft.server.v1_7_R3.EntityTypes;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
+@SuppressWarnings("unchecked")
 public class EntityRegister implements IEntityRegister {
 
     @Override

@@ -1,5 +1,8 @@
 package eu.phiwa.dragontravel.core.movement;
 
+import eu.phiwa.dragontravel.api.events.DragonPlayerDismountEvent;
+import eu.phiwa.dragontravel.api.events.DragonPostPlayerMountEvent;
+import eu.phiwa.dragontravel.api.events.DragonPrePlayerMountEvent;
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.anticheat.CheatProtectionHandler;
 import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
@@ -18,11 +21,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DragonManager {
 
-    private HashMap<UUID, Long> damageReceipts = new HashMap<>();
-    private HashMap<UUID, Boolean> playerToggles = new HashMap<>();
-    private ConcurrentHashMap<Player, IRyeDragon> riderDragons = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<Player, Location> riderStartPoints = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String, StationaryDragon> stationaryDragons = new ConcurrentHashMap<>();
+    private final HashMap<UUID, Long> damageReceipts = new HashMap<>();
+    private final HashMap<UUID, Boolean> playerToggles = new HashMap<>();
+    private final ConcurrentHashMap<Player, IRyeDragon> riderDragons = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Player, Location> riderStartPoints = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, StationaryDragon> stationaryDragons = new ConcurrentHashMap<>();
 
     public void dismount(Player player, Boolean isMultiWorld) {
         if (!riderDragons.containsKey(player)) {
@@ -51,7 +54,7 @@ public class DragonManager {
 
         if (player == null)
             player = getRiderByEntity(entity);
-
+        IRyeDragon dragon = riderDragons.get(player);
         riderDragons.remove(player);
 
         // Interworld (dismount before teleport)
@@ -60,6 +63,8 @@ public class DragonManager {
             entity.eject();
             entity.remove();
             player.teleport(startLoc);
+            DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, startLoc);
+            Bukkit.getPluginManager().callEvent(event);
             return;
         }
         // Normal absteigen
@@ -75,6 +80,8 @@ public class DragonManager {
             saveTeleportLoc.setY(saveTeleportLoc.getY() + 1.2);
             player.teleport(saveTeleportLoc);
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.DismountedHere"));
+            DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, saveTeleportLoc);
+            Bukkit.getPluginManager().callEvent(event);
         }
         // Back to start of travel
         else {
@@ -83,6 +90,8 @@ public class DragonManager {
             entity.remove();
             player.teleport(startLoc);
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.DismountedToStart"));
+            DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, startLoc);
+            Bukkit.getPluginManager().callEvent(event);
         }
 
         CheatProtectionHandler.unexemptPlayerFromCheatChecks(player);
@@ -120,7 +129,7 @@ public class DragonManager {
         return tempLoc;
     }
 
-    public boolean mount(Player player, boolean asNew) {
+    public boolean mount(Player player, boolean asNew, MovementType movementType) {
         // Remove current dragon if the player is already mounted
         if (riderDragons.containsKey(player)) {
             IRyeDragon dragon = riderDragons.get(player);
@@ -163,12 +172,20 @@ public class DragonManager {
         }
 
         IRyeDragon ryeDragon = DragonTravel.getInstance().getNmsHandler().getRyeDragon(player.getLocation());
-        CheatProtectionHandler.exemptPlayerFromCheatChecks(player);
-        ryeDragon.getEntity().setPassenger(player);
         ryeDragon.fixWings();
-        riderDragons.put(player, ryeDragon);
-        if (asNew)
-            riderStartPoints.put(player, player.getLocation());
+        DragonPrePlayerMountEvent preEvent = new DragonPrePlayerMountEvent(player, ryeDragon, movementType);
+        Bukkit.getPluginManager().callEvent(preEvent);
+        if (preEvent.isCancelled()) {
+            return false;
+        } else {
+            CheatProtectionHandler.exemptPlayerFromCheatChecks(player);
+            ryeDragon.getEntity().setPassenger(player);
+            riderDragons.put(player, ryeDragon);
+            if (asNew)
+                riderStartPoints.put(player, player.getLocation());
+            DragonPostPlayerMountEvent postEvent = new DragonPostPlayerMountEvent(player, ryeDragon, movementType);
+            Bukkit.getPluginManager().callEvent(postEvent);
+        }
         return true;
     }
 
@@ -221,52 +238,30 @@ public class DragonManager {
         Player player = (Player) entity.getPassenger();
         if (player == null)
             player = getRiderByEntity(entity);
-
+        IRyeDragon dragon = riderDragons.get(player);
         riderDragons.remove(player);
         entity.eject();
         entity.remove();
 
         player.teleport(customDismountLoc);
         CheatProtectionHandler.unexemptPlayerFromCheatChecks(player);
+        DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, customDismountLoc);
+        Bukkit.getPluginManager().callEvent(event);
     }
 
     public HashMap<UUID, Long> getDamageReceipts() {
         return damageReceipts;
     }
 
-    public void setDamageReceipts(HashMap<UUID, Long> damageReceipts) {
-        this.damageReceipts = damageReceipts;
-    }
-
     public HashMap<UUID, Boolean> getPlayerToggles() {
         return playerToggles;
-    }
-
-    public void setPlayerToggles(HashMap<UUID, Boolean> playerToggles) {
-        this.playerToggles = playerToggles;
     }
 
     public ConcurrentHashMap<Player, IRyeDragon> getRiderDragons() {
         return riderDragons;
     }
 
-    public void setRiderDragons(ConcurrentHashMap<Player, IRyeDragon> riderDragons) {
-        this.riderDragons = riderDragons;
-    }
-
-    public ConcurrentHashMap<Player, Location> getRiderStartPoints() {
-        return riderStartPoints;
-    }
-
-    public void setRiderStartPoints(ConcurrentHashMap<Player, Location> riderStartPoints) {
-        this.riderStartPoints = riderStartPoints;
-    }
-
     public ConcurrentHashMap<String, StationaryDragon> getStationaryDragons() {
         return stationaryDragons;
-    }
-
-    public void setStationaryDragons(ConcurrentHashMap<String, StationaryDragon> stationaryDragons) {
-        this.stationaryDragons = stationaryDragons;
     }
 }

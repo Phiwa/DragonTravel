@@ -60,7 +60,7 @@ public class Flights {
         temploc.setYaw(getCorrectYawForPlayer(player, firstwp));
         player.teleport(temploc);
 
-        if (!DragonTravel.getInstance().getDragonManager().mount(player, true))
+        if (DragonTravel.getInstance().getDragonManager().mount(player, true))
             return;
 
         if (!DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))

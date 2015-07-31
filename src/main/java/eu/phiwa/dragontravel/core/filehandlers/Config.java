@@ -83,7 +83,7 @@ public class Config {
         }
     }
 
-    public void loadConfig() {
+    private void loadConfig() {
         configFile = new File(DragonTravel.getInstance().getDataFolder(), "config.yml");
         if (!configFile.exists())
             create();

@@ -48,7 +48,7 @@ public class StationaryDragon implements ConfigurationSerializable {
     /**
      * Creates a stationary dragon
      */
-    public IRyeDragon createDragon(boolean isNew) {
+    private IRyeDragon createDragon(boolean isNew) {
         final IRyeDragon dragon = DragonTravel.getInstance().getNmsHandler().getRyeDragon(toLocation());
         dragon.fixWings();
         dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', displayName));
@@ -58,7 +58,7 @@ public class StationaryDragon implements ConfigurationSerializable {
         return dragon;
     }
 
-    public Location toLocation() {
+    private Location toLocation() {
         return new Location(Bukkit.getWorld(worldName), x, y, z, (float) yaw, (float) pitch);
     }
 

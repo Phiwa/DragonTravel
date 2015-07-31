@@ -24,7 +24,7 @@ public class StatDragonsDB {
         init();
     }
 
-    public void init() {
+    private void init() {
         dbStatDragonsFile = new File("plugins/DragonTravel/databases", "statdragons.yml");
 
         try {
@@ -71,7 +71,7 @@ public class StatDragonsDB {
         }
     }
 
-    public void loadStationaryDragons() {
+    private void loadStationaryDragons() {
         if (dbStatDragonsConfig.getConfigurationSection("StatDragons") != null) {
             for (String key : dbStatDragonsConfig.getConfigurationSection("StatDragons").getKeys(false)) {
                 StationaryDragon sDragon = getStatDragon(key);
@@ -102,7 +102,7 @@ public class StatDragonsDB {
      * @param name Name of the dragon which should be returned.
      * @return The dragon as a ryedragon-object.
      */
-    public StationaryDragon getStatDragon(String name) {
+    private StationaryDragon getStatDragon(String name) {
         name = name.toLowerCase();
         if (!DragonTravel.getInstance().getDragonManager().getStationaryDragons().containsKey(name)) {
             Object obj = statDragonsSection.get(name.toLowerCase(), null);
@@ -137,15 +137,15 @@ public class StatDragonsDB {
      * @param dragon Dragon to save.
      * @return Returns true if the stat dragon was created successfully, false if not.
      */
-    public boolean createStatDragon(String name, StationaryDragon dragon) {
+    public void createStatDragon(String name, StationaryDragon dragon) {
         statDragonsSection.set(name, dragon);
 
         try {
             dbStatDragonsConfig.save(dbStatDragonsFile);
-            return true;
+            return;
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "Could not write new stat dragon to config.");
-            return false;
+            return;
         }
     }
 
@@ -155,15 +155,15 @@ public class StatDragonsDB {
      * @param name Name of the stat dragon to delete
      * @return True if successful, false if not.
      */
-    public boolean deleteStatDragon(String name) {
+    public void deleteStatDragon(String name) {
         statDragonsSection.set(name.toLowerCase(), null);
 
         try {
             dbStatDragonsConfig.save(dbStatDragonsFile);
-            return true;
+            return;
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "Could not delete stat dragon from config.");
-            return false;
+            return;
         }
     }
 

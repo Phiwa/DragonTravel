@@ -12,7 +12,7 @@ public enum ChargeType {
     FLIGHT("dt.nocost.flight"),
     SETHOME("dt.nocost.home.set"),;
 
-    private String noCostPermission;
+    private final String noCostPermission;
 
     ChargeType(String noCostPermission) {
         this.noCostPermission = noCostPermission;

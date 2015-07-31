@@ -14,7 +14,7 @@ public class Messages {
     // Messages
     private FileConfiguration messages;
     private File messagesFile;
-    private double messagesVersion = 0.7;
+    private final double messagesVersion = 0.7;
 
     private String language = "";
 
@@ -22,7 +22,7 @@ public class Messages {
         loadMessages();
     }
 
-    public void loadMessages() {
+    private void loadMessages() {
 
         language = DragonTravel.getInstance().getConfig().getString("Language");
 

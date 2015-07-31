@@ -7,21 +7,17 @@ import org.bukkit.entity.Player;
 /*
 Class adapted from Riking's contribution
  */
-public class CommandHelp {
+class CommandHelp {
 
 	public static final int HELP_Page1 = 1;
 	public static final int HELP_Page2 = 2;
 	public static final int HELP_Page3 = 3;
 	public static final int HELP_Page4 = 4;
 	public static final int HELP_Page5 = 5;
-	public static ChatColor blue = ChatColor.BLUE;
-	public static ChatColor darkgrey = ChatColor.DARK_GRAY;
-	public static ChatColor gold = ChatColor.GOLD;
-	public static ChatColor grey = ChatColor.GRAY;
-	public static ChatColor purple = ChatColor.LIGHT_PURPLE;
-	public static ChatColor red = ChatColor.RED;
-	public static ChatColor white = ChatColor.WHITE;
-	public static ChatColor yellow = ChatColor.YELLOW;
+	private static final ChatColor darkgrey = ChatColor.DARK_GRAY;
+	private static final ChatColor grey = ChatColor.GRAY;
+	private static final ChatColor purple = ChatColor.LIGHT_PURPLE;
+	private static final ChatColor white = ChatColor.WHITE;
 
 	public static void page1_TableOfContents(Player player) {
 		player.sendMessage("    1 - Table of Contents");

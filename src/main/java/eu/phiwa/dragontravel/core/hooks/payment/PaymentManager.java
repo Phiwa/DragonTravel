@@ -18,7 +18,7 @@ public class PaymentManager {
      * <p>
      * The code must run before DragonTravel's onEnable().
      */
-    public static List<Class<? extends PaymentHandler>> availableHandlers = Lists.newArrayListWithCapacity(3);
+    private static final List<Class<? extends PaymentHandler>> availableHandlers = Lists.newArrayListWithCapacity(3);
 
     static {
         availableHandlers.add(EconomyPaymentHandler.class);

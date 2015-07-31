@@ -24,7 +24,7 @@ public class HomesDB {
         init();
     }
 
-    public void init() {
+    private void init() {
         dbHomesFile = new File("plugins/DragonTravel/databases", "homes.yml");
         try {
             create();
@@ -140,14 +140,14 @@ public class HomesDB {
      * @param home Home to create.
      * @return Returns true if the home was created successfully, false if not.
      */
-    public boolean saveHome(String playerId, Home home) {
+    public void saveHome(String playerId, Home home) {
         homeSection.set(playerId, home);
         try {
             dbHomesConfig.save(dbHomesFile);
-            return true;
+            return;
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "Could not write new home to config.");
-            return false;
+            return;
         }
     }
 

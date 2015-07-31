@@ -22,8 +22,8 @@ public class FlightEditor implements Listener {
             editors.put(player, new Flight(flightName, displayName));
     }
 
-    public boolean removeEditor(Player player) {
-        return editors.remove(player) != null;
+    public void removeEditor(Player player) {
+        editors.remove(player);
     }
 
     @EventHandler

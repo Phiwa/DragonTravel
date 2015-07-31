@@ -66,7 +66,7 @@ public final class DragonTravelCommands {
     }
 
     // Ripped from org.bukkit.command.defaults.HelpCommand
-    public static void sendHelpTopic(CommandSender sender, HelpTopic topic, int pageNumber) {
+    private static void sendHelpTopic(CommandSender sender, HelpTopic topic, int pageNumber) {
         int pageHeight, pageWidth;
         if (sender instanceof ConsoleCommandSender) {
             pageHeight = ChatPaginator.UNBOUNDED_PAGE_HEIGHT;

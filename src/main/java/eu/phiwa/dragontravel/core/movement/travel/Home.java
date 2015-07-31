@@ -13,10 +13,10 @@ import java.util.Map;
 public class Home implements ConfigurationSerializable {
 
     public String playerName;
-    public String worldName;
-    public int x;
-    public int y;
-    public int z;
+    public final String worldName;
+    public final int x;
+    public final int y;
+    public final int z;
 
 
     public Home(Map<String, Object> data) {

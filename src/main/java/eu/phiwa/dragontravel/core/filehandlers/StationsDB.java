@@ -29,7 +29,7 @@ public class StationsDB {
         init();
     }
 
-    public void init() {
+    private void init() {
         dbStationsFile = new File("plugins/DragonTravel/databases", "stations.yml");
         try {
             create();

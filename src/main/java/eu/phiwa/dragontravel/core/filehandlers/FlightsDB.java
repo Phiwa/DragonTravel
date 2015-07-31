@@ -27,7 +27,7 @@ public class FlightsDB {
         init();
     }
 
-    public void init() {
+    private void init() {
         dbFlightsFile = new File("plugins/DragonTravel/databases", "flights.yml");
         try {
             create();
@@ -90,15 +90,15 @@ public class FlightsDB {
      * @param flightName Name of the flight to delete
      * @return True if successful, false if not.
      */
-    public boolean deleteFlight(String flightName) {
+    public void deleteFlight(String flightName) {
         flightSection.set(flightName.toLowerCase(), null);
 
         try {
             dbFlightsConfig.save(dbFlightsFile);
-            return true;
+            return;
         } catch (Exception e) {
             Bukkit.getLogger().info("[DragonTravel] [Error] Could not delete flight from config.");
-            return false;
+            return;
         }
     }
 
@@ -146,15 +146,15 @@ public class FlightsDB {
      * @param flight Flight to create.
      * @return Returns true if the flight was created successfully, false if not.
      */
-    public boolean saveFlight(Flight flight) {
+    public void saveFlight(Flight flight) {
         flightSection.set(flight.getName(), flight);
 
         try {
             dbFlightsConfig.save(dbFlightsFile);
-            return true;
+            return;
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "Could not write new flight to config.");
-            return false;
+            return;
         }
     }
 }

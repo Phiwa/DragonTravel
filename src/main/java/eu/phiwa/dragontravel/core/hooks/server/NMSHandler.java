@@ -19,7 +19,7 @@ public class NMSHandler {
         go();
     }
 
-    public void go() {
+    private void go() {
         String sourcePath = Bukkit.getServer().getClass().getPackage().getName();
         version = sourcePath.substring(sourcePath.lastIndexOf('.') + 1);
     }

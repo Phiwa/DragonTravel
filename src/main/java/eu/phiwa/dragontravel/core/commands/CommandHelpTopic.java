@@ -18,7 +18,7 @@ import java.util.*;
 Class adapted from Riking's contribution
  */
 public class CommandHelpTopic extends IndexHelpTopic {
-    private Map<String, HelpTopic> subCommandHelps = new HashMap<>();
+    private final Map<String, HelpTopic> subCommandHelps = new HashMap<>();
 
     public CommandHelpTopic(String name) {
         super(name, "DragonTravel subcommands", "dt.seecommand", getTopicCollection());
@@ -59,7 +59,7 @@ public class CommandHelpTopic extends IndexHelpTopic {
         return topic;
     }
 
-    protected HelpTopic findPossibleMatches(String searchString) {
+    private HelpTopic findPossibleMatches(String searchString) {
         int maxDistance = (searchString.length() / 5) + 3;
         Set<HelpTopic> possibleMatches = new TreeSet<>(HelpTopicComparator.helpTopicComparatorInstance());
 
@@ -109,7 +109,7 @@ public class CommandHelpTopic extends IndexHelpTopic {
      * @return The number of substitutions, deletions, insertions, and
      * transpositions required to get from s1 to s2.
      */
-    protected static int damerauLevenshteinDistance(String s1, String s2) {
+    private static int damerauLevenshteinDistance(String s1, String s2) {
         if (s1 == null && s2 == null) {
             return 0;
         }
@@ -164,8 +164,8 @@ public class CommandHelpTopic extends IndexHelpTopic {
     }
 
     private static class SubcommandHelpTopic extends HelpTopic {
-        protected Command cmd;
-        protected CommandPermissions perms;
+        final Command cmd;
+        final CommandPermissions perms;
 
         public SubcommandHelpTopic(Method method) {
             cmd = method.getAnnotation(Command.class);

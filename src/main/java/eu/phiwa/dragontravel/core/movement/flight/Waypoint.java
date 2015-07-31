@@ -63,11 +63,11 @@ public class Waypoint {
         }
     }
 
-    public Block getMarker() {
+    private Block getMarker() {
         return marker;
     }
 
-    public void setMarker(Block marker) {
+    private void setMarker(Block marker) {
         this.marker = marker;
     }
 
