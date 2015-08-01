@@ -88,6 +88,9 @@ public class TravelEngine {
      */
     public void travel(Player player, Location destination, Boolean checkForStation, String destName, DragonType dragonType) throws DragonException {
 
+        if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
+            return;
+
         // Check for station
         if (checkForStation && DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.EnableForTravels") && !player.hasPermission("dt.ignoreusestations.travels")) {
             if (!DragonTravel.getInstance().getDbStationsHandler().checkForStation(player)) {
@@ -122,11 +125,8 @@ public class TravelEngine {
             player.teleport(temploc);
         }
 
-        if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
-            throw new DragonException("Player already has a registered dragon.");
-
         if (!DragonTravel.getInstance().getDragonManager().mount(player, true, dragonType))
-            throw new DragonException("Player failed to mount dragon.");
+            return;
 
         IRyeDragon dragon = DragonTravel.getInstance().getDragonManager().getRiderDragons().get(player);
         dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));

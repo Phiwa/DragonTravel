@@ -28,7 +28,6 @@ public class FlightEditor implements Listener {
 
     @EventHandler
     public void onWayPointSelect(PlayerInteractEvent event) {
-
         Player player = event.getPlayer();
         Location loc = player.getLocation();
 

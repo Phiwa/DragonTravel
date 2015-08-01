@@ -33,6 +33,9 @@ public class FlightEngine {
 
         Flight flight = DragonTravel.getInstance().getDbFlightsHandler().getFlight(flightName);
 
+        if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
+            return;
+
         if (flight == null) {
             // Sent by console
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightDoesNotExist"));
@@ -62,13 +65,8 @@ public class FlightEngine {
         tempLoc.setYaw(getCorrectYawForPlayer(player, firstWP));
         player.teleport(tempLoc);
 
-
-
-        if (!DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
-            throw new DragonException("Player has already mounted dragon.");
-
         if (!DragonTravel.getInstance().getDragonManager().mount(player, true, DragonType.MANNED_FLIGHT))
-            throw new DragonException("Player failed to mount dragon.");
+            return;
 
         if (sentByAdmin) {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.SentPlayer").replace("{flightname}", flight.getDisplayName()));
