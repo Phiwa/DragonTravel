@@ -1,5 +1,6 @@
 name: DragonTravel
-main: eu.phiwa.dragontravel.core.DragonTravelhor: Phiwa
+main: eu.phiwa.dragontravel.core.DragonTravel
+authors: [Phiwa, x3nec]
 version: ${project.version}
 load: POSTWORLD
 softdepend: [Vault, AntiCheat, NoCheatPlus, Factions, Heroes]

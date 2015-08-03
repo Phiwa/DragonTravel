@@ -134,7 +134,10 @@ public class DragonTravel extends JavaPlugin {
             configHandler.setUsePayment(false);
         }
         if (getConfig().getBoolean("UseAutoUpdater")) {
-            new Updater(this, 34251, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
+            Updater updater = new Updater(this, 34251, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
+            if (updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE) {
+                Bukkit.getLogger().log(Level.INFO, "There is an update available for DragonTravel on BukkitDev!");
+            }
         }
         if (getConfig().getBoolean("UseMetrics"))
             setupMetrics();
@@ -159,7 +162,7 @@ public class DragonTravel extends JavaPlugin {
     private void setupListeners() {
         Bukkit.getPluginManager().registerEvents(new EntityListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-        Bukkit.getPluginManager().registerEvents(new FlightEditor(), this);
+        Bukkit.getPluginManager().registerEvents(flightEditor, this);
         Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
         if (Bukkit.getPluginManager().getPlugin("Heroes") != null) {
             Bukkit.getPluginManager().registerEvents(new HeroesListener(), this);
