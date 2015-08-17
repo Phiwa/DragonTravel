@@ -104,9 +104,17 @@ public class PlayerListener implements Listener {
                     player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));
                     return;
                 } else {
-                    if (!DragonTravel.getInstance().getPaymentManager().chargePlayerCustom(ChargeType.TRAVEL_TOSTATION, player, Double.parseDouble(lines[3]))) {
-                        return;
-                    }
+                	
+                	if(lines[3].isEmpty()) {
+                		if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOSTATION, player)) {
+                			return;
+                		}
+                	}
+                	else {
+	                    if (!DragonTravel.getInstance().getPaymentManager().chargePlayerCustom(ChargeType.TRAVEL_TOSTATION, player, Double.parseDouble(lines[3]))) {
+	                        return;
+	                    }
+                	}
                     try {
                         DragonManager.getDragonManager().getTravelEngine().toStation(player, stationname, !DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"));
                     } catch (DragonException e) {
