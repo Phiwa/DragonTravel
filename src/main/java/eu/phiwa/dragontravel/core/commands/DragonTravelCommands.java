@@ -708,12 +708,8 @@ public final class DragonTravelCommands {
             return;
         }
 
-        if (DragonTravel
-                .getInstance()
-                .getDbStationsHandler()
-                .getStation(
-                        station) == null) {
-            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist"));
+        if (DragonTravel.getInstance().getDbStationsHandler() .getStation(station) == null) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", station));
         } else {
             if (DragonTravel.getInstance().getDbStationsHandler().deleteStation(station)) {
                 player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Successful.StationRemoved").replace("{stationname}", station));
