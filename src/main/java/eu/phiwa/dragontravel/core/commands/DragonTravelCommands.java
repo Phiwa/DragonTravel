@@ -342,6 +342,11 @@ public final class DragonTravelCommands {
 //           		sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
 //                  throw new CommandPermissionsException();
 //              }
+            	
+            	if (!sender.hasPermission("dt.*")) {
+            		sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+            		throw new CommandPermissionsException();
+            	}
 
                 player = Bukkit.getPlayer(args.getString(1));
                 if (player == null) {
