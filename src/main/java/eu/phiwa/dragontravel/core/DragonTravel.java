@@ -121,14 +121,17 @@ public class DragonTravel extends JavaPlugin {
         entityRegister = nmsHandler.getEntityRegister();
         dragonManager = DragonManager.getDragonManager();
         flightEditor = new FlightEditor();
-        paymentManager = new PaymentManager();
+        
         if (!entityRegister.registerEntity()) return;
-        Bukkit.getLogger().info(ChatColor.stripColor(String.format("Payment set up using '%s'.", paymentManager.handler.toString())));
+        
 
         setupListeners();
         setupFileHandlers();
         CheatProtectionHandler.setup();
 
+        paymentManager = new PaymentManager();
+        Bukkit.getLogger().info(ChatColor.stripColor(String.format("Payment set up using '%s'.", paymentManager.handler.toString())));
+        
         if (configHandler.isByEconomy() && configHandler.isByResources()) {
             Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Payment has been set to Economy AND Resources, but you can only use one type of payment! Disabling payment...");
             configHandler.setUsePayment(false);
