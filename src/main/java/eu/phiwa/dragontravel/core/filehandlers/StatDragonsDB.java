@@ -30,7 +30,7 @@ public class StatDragonsDB {
         try {
             create();
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not initialize the statdragons-database.");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not initialize the statdragons-database.");
             e.printStackTrace();
         }
 
@@ -53,9 +53,9 @@ public class StatDragonsDB {
         try {
             dbStatDragonsFile.createNewFile();
             copy(DragonTravel.getInstance().getResource("databases/statdragons.yml"), dbStatDragonsFile);
-            Bukkit.getLogger().log(Level.INFO, "Created statdragons-database.");
+            Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Created statdragons-database.");
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not create the statdragons-database!");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not create the statdragons-database!");
         }
 
 
@@ -64,9 +64,9 @@ public class StatDragonsDB {
     private void load() {
         try {
             dbStatDragonsConfig.load(dbStatDragonsFile);
-            Bukkit.getLogger().log(Level.INFO, "Loaded statdragons-database.");
+            Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Loaded statdragons-database.");
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "No statdragons-database found");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] No statdragons-database found");
             e.printStackTrace();
         }
     }
@@ -144,7 +144,7 @@ public class StatDragonsDB {
             dbStatDragonsConfig.save(dbStatDragonsFile);
             return;
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not write new stat dragon to config.");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not write new stat dragon to database.");
             return;
         }
     }
@@ -162,7 +162,7 @@ public class StatDragonsDB {
             dbStatDragonsConfig.save(dbStatDragonsFile);
             return;
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not delete stat dragon from config.");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not delete stat dragon from database.");
             return;
         }
     }

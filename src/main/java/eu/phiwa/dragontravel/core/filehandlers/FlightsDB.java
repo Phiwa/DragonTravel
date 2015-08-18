@@ -32,7 +32,7 @@ public class FlightsDB {
         try {
             create();
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not initialize the flights-database.");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not initialize the flights-database.");
             e.printStackTrace();
         }
         dbFlightsConfig = new YamlConfiguration();
@@ -51,9 +51,9 @@ public class FlightsDB {
         try {
             dbFlightsFile.createNewFile();
             copy(DragonTravel.getInstance().getResource("databases/flights.yml"), dbFlightsFile);
-            Bukkit.getLogger().log(Level.INFO, "Created flights-database.");
+            Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Created flights-database.");
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not create the flights-database!");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not create the flights-database!");
         }
 
 
@@ -62,9 +62,9 @@ public class FlightsDB {
     private void load() {
         try {
             dbFlightsConfig.load(dbFlightsFile);
-            Bukkit.getLogger().log(Level.INFO, "Loaded flights-database.");
+            Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Loaded flights-database.");
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "No flights-database found");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] No flights-database found");
             e.printStackTrace();
         }
     }
@@ -97,7 +97,7 @@ public class FlightsDB {
             dbFlightsConfig.save(dbFlightsFile);
             return;
         } catch (Exception e) {
-            Bukkit.getLogger().info("[DragonTravel] [Error] Could not delete flight from config.");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not delete flight from database.");
             return;
         }
     }
@@ -153,7 +153,7 @@ public class FlightsDB {
             dbFlightsConfig.save(dbFlightsFile);
             return;
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not write new flight to config.");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not write new flight to database.");
             return;
         }
     }

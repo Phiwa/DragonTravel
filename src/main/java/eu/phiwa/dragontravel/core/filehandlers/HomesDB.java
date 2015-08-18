@@ -29,7 +29,7 @@ public class HomesDB {
         try {
             create();
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.INFO, "Could not initialize the homes-database.");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not initialize the homes-database.");
             e.printStackTrace();
         }
 
@@ -49,9 +49,9 @@ public class HomesDB {
         try {
             dbHomesFile.createNewFile();
             copy(DragonTravel.getInstance().getResource("databases/homes.yml"), dbHomesFile);
-            Bukkit.getLogger().log(Level.INFO, "Created homes-database.");
+            Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Created homes-database.");
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not create the homes-database!");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not create the homes-database!");
         }
 
 
@@ -60,9 +60,9 @@ public class HomesDB {
     private void load() {
         try {
             dbHomesConfig.load(dbHomesFile);
-            Bukkit.getLogger().log(Level.INFO, "Loaded homes-database.");
+            Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Loaded homes-database.");
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "No homes-database found");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] No homes-database found");
             e.printStackTrace();
         }
     }
@@ -96,7 +96,7 @@ public class HomesDB {
             dbHomesConfig.save(dbHomesFile);
             return true;
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not delete home from config.");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not delete home from database.");
             return false;
         }
     }
@@ -146,7 +146,7 @@ public class HomesDB {
             dbHomesConfig.save(dbHomesFile);
             return;
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not write new home to config.");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not write new home to database.");
             return;
         }
     }

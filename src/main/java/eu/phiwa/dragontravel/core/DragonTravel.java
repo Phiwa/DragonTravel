@@ -61,12 +61,12 @@ public class DragonTravel extends JavaPlugin {
     }
 
     public void reload() {
-        Bukkit.getLogger().log(Level.INFO, "Reloading all files.");
-        Bukkit.getLogger().log(Level.INFO, "WE RECOMMEND NOT TO DO THIS BECAUSE IT MIGHT CAUSE SERIUOS PROBLEMS!");
-        Bukkit.getLogger().log(Level.INFO, "SIMPLY RESTART YOUR SERVER INSTEAD; THAT'S MUCH SAFER!");
+        Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Reloading all files.");
+        Bukkit.getLogger().log(Level.INFO, "[DragonTravel] WE RECOMMEND NOT TO DO THIS BECAUSE IT MIGHT CAUSE SERIUOS PROBLEMS!");
+        Bukkit.getLogger().log(Level.INFO, "[DragonTravel] SIMPLY RESTART YOUR SERVER INSTEAD; THAT'S MUCH SAFER!");
         dbStatDragonsHandler.unloadStationaryDragons();
         setupFileHandlers();
-        Bukkit.getLogger().log(Level.INFO, "Successfully reloaded all files.");
+        Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Successfully reloaded all files.");
     }
 
     @Override
@@ -130,7 +130,7 @@ public class DragonTravel extends JavaPlugin {
         CheatProtectionHandler.setup();
 
         paymentManager = new PaymentManager();
-        Bukkit.getLogger().info(ChatColor.stripColor(String.format("Payment set up using '%s'.", paymentManager.handler.toString())));
+        Bukkit.getLogger().info(ChatColor.stripColor(String.format("[DragonTravel] Payment set up using '%s'.", paymentManager.handler.toString())));
         
         if (configHandler.isByEconomy() && configHandler.isByResources()) {
             Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Payment has been set to Economy AND Resources, but you can only use one type of payment! Disabling payment...");
@@ -139,7 +139,7 @@ public class DragonTravel extends JavaPlugin {
         if (getConfig().getBoolean("UseAutoUpdater")) {
             Updater updater = new Updater(this, 34251, this.getFile(), Updater.UpdateType.NO_VERSION_CHECK, true);
             if (updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE) {
-                Bukkit.getLogger().log(Level.INFO, "There is an update available for DragonTravel on BukkitDev!");
+                Bukkit.getLogger().log(Level.INFO, "[DragonTravel] There is an update available for DragonTravel on BukkitDev!");
             }
         }
         if (getConfig().getBoolean("UseMetrics"))
@@ -179,11 +179,11 @@ public class DragonTravel extends JavaPlugin {
 
         configHandler = new Config();
         if (configHandler.getConfig().getString("File.Version") == null) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not initialize config! Disabling the plugin!");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not initialize config! Disabling the plugin!");
             this.getPluginLoader().disablePlugin(this);
             return;
         } else {
-            Bukkit.getLogger().info("Config loaded successfully.");
+            Bukkit.getLogger().info("[DragonTravel] Config loaded successfully.");
         }
 
         messagesHandler = new Messages();
