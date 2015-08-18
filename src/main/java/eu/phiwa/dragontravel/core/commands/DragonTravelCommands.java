@@ -243,6 +243,7 @@ public final class DragonTravelCommands {
 
         if (args.getString(0, null) != null) {
             if (!sender.hasPermission("dt.ptoggle.other")) {
+            	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
                 throw new CommandPermissionsException();
             }
             Player p = Bukkit.getPlayer(args.getString(0));
@@ -305,24 +306,24 @@ public final class DragonTravelCommands {
             usage = "/dt flight <flight name> [player=you]",
             min = 1, max = 2,
             help = "Starts the specified flight.")
-    @CommandPermissions({"dt.start.flight.command", "dt.start.flight.command.other"})
+    //@CommandPermissions({"dt.start.flight.command", "dt.start.flight.command.other"})
     public static void startFlight(CommandContext args, CommandSender sender) throws CommandException {
         String flight = args.getString(0);
         Player player;
-
         if (!PermissionsHandler.hasFlightPermission(sender, flight)) {
+        	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
             throw new CommandPermissionsException();
         }
-
         switch (args.argsLength()) {
             case 1:
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
                     return;
                 }
-                if (!sender.hasPermission("dt.start.flight.command")) {
-                    throw new CommandPermissionsException();
-                }
+//              if (!sender.hasPermission("dt.start.flight.command")) {
+//                  sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+//                  throw new CommandPermissionsException();
+//              }
 
                 player = (Player) sender;
 
@@ -337,9 +338,10 @@ public final class DragonTravelCommands {
                 return;
 
             case 2:
-                if (!sender.hasPermission("dt.start.flight.command.other")) {
-                    throw new CommandPermissionsException();
-                }
+//              if (!sender.hasPermission("dt.start.flight.command.other")) {
+//           		sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+//                  throw new CommandPermissionsException();
+//              }
 
                 player = Bukkit.getPlayer(args.getString(1));
                 if (player == null) {
@@ -362,14 +364,14 @@ public final class DragonTravelCommands {
             help = "Brings you to the specified station")
     @CommandPermissions({"dt.start.travel.command"})
     public static void startStationTravel(CommandContext args, CommandSender sender) throws CommandException {
-        String station = args.getString(0);
 
-        if (!PermissionsHandler.hasTravelPermission(sender, "travel", station)) {
-            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
-            return;
-        }
+        String station = args.getString(0);
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            return;
+        }
+        if (!PermissionsHandler.hasTravelPermission(sender, "travel", station)) {
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
             return;
         }
         Player player = (Player) sender;
