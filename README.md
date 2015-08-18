@@ -13,7 +13,7 @@ A plugin for the Minecraft-servermod "Bukkit". Projectpage: http://dev.bukkit.or
 **Free BSD License**
 
 
-Copyright (c) 2011-2014, Philipp "*Phiwa*" Wagner & Oliver Hayes (*Seyah*)
+Copyright (c) 2011-2015, Philipp "*Phiwa*" Wagner & Oliver Hayes (*Seyah*)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
