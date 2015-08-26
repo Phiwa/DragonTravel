@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.phiwa</groupId>
     <artifactId>DragonTravel</artifactId>
-    <version>01.002.14</version>
+    <version>01.002.15</version>
     <build>
         <resources>
             <resource>
@@ -122,6 +122,13 @@
             <version>1.7.10-R0.4-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/craftbukkit-1.7.10-R0.4-SNAPSHOT.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit-1.7.9</artifactId>
+            <version>1.7.9-R0.2-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/craftbukkit-1.7.9-R0.2-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
