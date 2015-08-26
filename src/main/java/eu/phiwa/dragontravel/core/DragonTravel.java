@@ -107,7 +107,12 @@ public class DragonTravel extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        dbStatDragonsHandler.unloadStationaryDragons();
+    	
+    	// Do not unload database if plugin failed to load
+    	// because if unsupported server version
+    	if(dbStatDragonsHandler != null)
+    		dbStatDragonsHandler.unloadStationaryDragons();      
+        
         Bukkit.getLogger().log(Level.INFO, "[DragonTravel] -----------------------------------------------");
         Bukkit.getLogger().log(Level.INFO, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
         Bukkit.getLogger().log(Level.INFO, "[DragonTravel] -----------------------------------------------");

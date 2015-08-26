@@ -9,8 +9,8 @@ permissions:
         default: op
         description: All permissions
         children:
-            dt.admin: true
-    dt.admin:
+            dt.admin.*: true
+    dt.admin.*:
         default: op
         description: All permissions
         children:
@@ -35,7 +35,22 @@ permissions:
             dt.ignoreminheight: true
             dt.ignoredamagerestriction: true
             dt.bypassrequireskylight: true
+            
+    dt.admin.reload:
+        description: Allow reloading of the configuration (may be buggy)
 
+    dt.admin.signs:
+        default: op
+        description: Allows travels to all stations
+    dt.admin.stations:
+        default: op
+        description: Allows travels to all stations
+    dt.admin.flights:
+        default: op
+        description: Allows travels to all stations
+    dt.admin.remdragons:
+        description: Allows you to clear a world or the entire server of all dragons.
+        
     dt.defaults:
         default: true
         description: Defaults available to all players
@@ -54,21 +69,6 @@ permissions:
 
     dt.sethome:
         description: Allow the player to set their home.
-
-    dt.admin.reload:
-        description: Allow reloading of the configuration (may be buggy)
-
-    dt.admin.signs:
-        default: op
-        description: Allows travels to all stations
-    dt.admin.stations:
-        default: op
-        description: Allows travels to all stations
-    dt.admin.flights:
-        default: op
-        description: Allows travels to all stations
-    dt.admin.remdragons:
-        description: Allows you to clear a world or the entire server of all dragons.
     
     # Station and Flight permissions
     dt.flight.*:
@@ -192,7 +192,8 @@ permissions:
         description: Player does not need to be at a station to start a travel when station-spawnlimit is enabled
     dt.ignoreusestations.flights:
         default: op
-        description: Player does not need to be at a station to start a flight when station-spawnlimit is enabled       
+        description: Player does not need to be at a station to start a flight when station-spawnlimit is enabled  
+        
     dt.ignoredragonlimit:
         default: op
         description: Allows player to mount a dragon, even if the server has already reached the limit of dragons set in the config
