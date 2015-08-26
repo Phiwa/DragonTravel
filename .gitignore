@@ -35,10 +35,4 @@
 /src/main/resources/achievement
 /src/main/resources/lang
 
-factions-*.jar
-mcore-*.jar
-lib/NoCheatPlus.jar
-lib/craftbukkit-1.8.3-R0.1-SNAPSHOT.jar
-lib/craftbukkit-1.8.4-R0.1-SNAPSHOT.jar
-lib/craftbukkit-1.8.7-R0.1-SNAPSHOT.jar
-lib/craftbukkit-1.7.10-R0.4-SNAPSHOT.jar
+lib/*.jar
