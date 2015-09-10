@@ -154,6 +154,7 @@ public class FlightsDB {
             return;
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not write new flight to database.");
+            e.printStackTrace();
             return;
         }
     }

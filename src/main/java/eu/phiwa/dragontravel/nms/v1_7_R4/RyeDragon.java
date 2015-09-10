@@ -427,14 +427,24 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                 for (int x = -1; x <= 1; x++) {
                     m[counter] = loc.clone().add(x, -y, 0).getBlock().getType();
                     md[counter] = loc.clone().add(x, -y, 0).getBlock().getState().getData();
-                    loc.clone().add(x, -y, 0).getBlock().setType(Material.BARRIER);
+                    try {
+                    	loc.clone().add(x, -y, 0).getBlock().setType(Material.BARRIER);
+                    }
+                    catch(NoSuchFieldError ex) {
+                    	loc.clone().add(x, -y, 0).getBlock().setType(Material.GLASS); // Fallback option for servers older than MC 1.8
+                    }
                     counter++;
                 }
                 for (int z = -1; z <= 1; z++) {
                     if (z == 0) continue;
                     m[counter] = loc.clone().add(0, -y, z).getBlock().getType();
                     md[counter] = loc.clone().add(0, -y, z).getBlock().getState().getData();
-                    loc.clone().add(0, -y, z).getBlock().setType(Material.BARRIER);
+                    try {
+                    	loc.clone().add(0, -y, z).getBlock().setType(Material.BARRIER);
+                    }
+                    catch(NoSuchFieldError ex) {
+                    	loc.clone().add(0, -y, z).getBlock().setType(Material.GLASS); // Fallback option for servers older than MC 1.8
+                    }
                     counter++;
                 }
                 if (y == 0) {

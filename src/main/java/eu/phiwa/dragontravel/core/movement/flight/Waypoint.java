@@ -105,7 +105,12 @@ public class Waypoint {
 
     public void setMarker(Player player) {
         setMarker(player.getLocation().getBlock());
-        getMarker().setType(Material.SEA_LANTERN);
+        try {
+        	getMarker().setType(Material.SEA_LANTERN);
+        }
+        catch(NoSuchFieldError ex) {
+        	getMarker().setType(Material.GLOWSTONE); // Fallback option for servers older than MC 1.8
+        }
         DragonTravel.getInstance().getFlightEditor().getWayPointMarkers().put(this.marker, this.marker);
     }
 
