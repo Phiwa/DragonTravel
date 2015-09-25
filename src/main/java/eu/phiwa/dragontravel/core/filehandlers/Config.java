@@ -15,7 +15,7 @@ public class Config {
     // Config
     private FileConfiguration config;
     private File configFile;
-    private double configVersion = 0.6;
+    private double configVersion = 0.7;
 
     // Required Item
     private Material requiredItem;
@@ -76,9 +76,9 @@ public class Config {
         try {
             configFile.createNewFile();
             copy(DragonTravel.getInstance().getResource("config.yml"), configFile);
-            Bukkit.getLogger().log(Level.INFO, "Created config file.");
+            Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Created config file.");
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not create the configuration!");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not create the configuration!");
             e.printStackTrace();
         }
     }
@@ -143,14 +143,17 @@ public class Config {
         if (!config.isSet("Payment.Resources.ItemType"))
             config.set("Payment.Resources.ItemType", Material.GOLD_INGOT.name());
         if (!config.isSet("Payment.Resources.ItemName"))
-            config.set("Payment.Resources.ItemName", "Gold Ingot");
+            config.set("Payment.Resources.ItemName", "<default>");
         if (!config.isSet("RequireSkyLight"))
             config.set("RequireSkyLight", false);
         if (!config.isSet("UseMetrics"))
             config.set("UseMetrics", true);
         if (!config.isSet("UseAutoUpdater"))
             config.set("UseAutoUpdater", false);
-
+        
+        // Changed default in 0.7
+        if(config.getDouble("File.Version") < 0.7)
+        	config.set("Payment.Resources.ItemName", "<default>");
 
         // Update the file version
         config.set("File.Version", configVersion);
@@ -172,7 +175,7 @@ public class Config {
             config = YamlConfiguration.loadConfiguration(configFile);
         } catch (IOException e) {
             e.printStackTrace();
-            Bukkit.getLogger().log(Level.SEVERE, "Could not update config, disabling plugin!");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not update config, disabling plugin!");
         }
     }
 

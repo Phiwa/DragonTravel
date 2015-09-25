@@ -1,5 +1,5 @@
 File:
-    Version: 0.5
+    Version: 0.7
 #Send usage statistics to mcstats.org
 UseMetrics: true
 #Automatically update to the latest version on BukkitDev
@@ -116,7 +116,7 @@ Payment:
             Flight: 5.0
     Resources:
         ItemType: GOLD_INGOT
-        ItemName: 'Gold Ingot'
+        ItemName: '<default>'
         Prices:
             toStation: 5
             toRandom: 5

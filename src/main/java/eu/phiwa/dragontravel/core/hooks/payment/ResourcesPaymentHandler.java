@@ -71,10 +71,12 @@ public class ResourcesPaymentHandler implements PaymentHandler {
     private boolean removeItems(Player player, int amount) {
         Inventory inv = player.getInventory();
         ItemStack item = new ItemStack(DragonTravel.getInstance().getConfigHandler().getPaymentItemType(), amount);
-        // TODO: Bug leading to problems with non-manipulated items (no changes in meta data)
-        //ItemMeta im = item.getItemMeta();       
-        //im.setDisplayName(ChatColor.translateAlternateColorCodes('&', DragonTravel.getInstance().getConfigHandler().getPaymentItemName()));
-        //item.setItemMeta(im);
+         
+        ItemMeta im = item.getItemMeta();        
+        if(!DragonTravel.getInstance().getConfigHandler().getPaymentItemName().equalsIgnoreCase("<default>"))
+        	im.setDisplayName(ChatColor.translateAlternateColorCodes('&', DragonTravel.getInstance().getConfigHandler().getPaymentItemName()));       
+        item.setItemMeta(im);
+        
         if (inv.containsAtLeast(item, amount)) {
             Map<Integer, ItemStack> leftover = inv.removeItem(item);
             if (!leftover.isEmpty()) {
