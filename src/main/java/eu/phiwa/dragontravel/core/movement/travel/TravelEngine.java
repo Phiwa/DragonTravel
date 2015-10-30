@@ -2,6 +2,12 @@ package eu.phiwa.dragontravel.core.movement.travel;
 
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.UPlayer;
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.exceptions.TownyException;
+import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.Town;
+import com.palmergames.bukkit.towny.object.TownyUniverse;
+
 import eu.phiwa.dragontravel.api.DragonException;
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
@@ -182,6 +188,56 @@ public class TravelEngine {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
         } else
             travel(player, faction.getHome().asBukkitLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"), DragonType.FACTION_TRAVEL);
+    }
+    
+    public void toTownSpawn(Player player, Boolean checkForStation) throws DragonException {
+
+        if (Bukkit.getPluginManager().getPlugin("Towny") == null) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Towny.Error.TownyNotInstalled"));
+            return;
+        }
+
+        if (DragonTravel.getInstance().getConfigHandler().isRequireItemTravelTownSpawn()) {
+            if (!player.getInventory().contains(DragonTravel.getInstance().getConfigHandler().getRequiredItem()) && !player.hasPermission("dt.notrequireitem.travel")) {
+                player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequiredItemMissing"));
+                return;
+            }
+        }
+
+        Resident res = null;
+        Location tspawn = null;
+        boolean hasTown = false;
+        try {
+			res = TownyUniverse.getDataSource().getResident(player.getName());
+		} catch (NotRegisteredException e1) {
+			hasTown = false;
+		}
+        if(res!=null){
+            Town town = null;
+          	try {
+                town = res.getTown();
+                
+				} catch (NotRegisteredException e) {
+					hasTown = false;
+				}
+          	if(town!=null){
+          		try {
+					tspawn = town.getSpawn();
+				} catch (TownyException e) {
+					hasTown = false;
+				}
+          		hasTown = true;
+          	}
+         }else{
+				player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Towny.Error.NoTown"));
+         }
+        
+        if (!hasTown) {
+        	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Towny.Error.NoTown"));
+            return;
+        } else{
+            travel(player, tspawn, checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToTownSpawn"), DragonType.FACTION_TRAVEL);
+        }
     }
 
     /**

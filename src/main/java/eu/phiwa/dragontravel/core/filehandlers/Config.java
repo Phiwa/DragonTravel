@@ -22,6 +22,7 @@ public class Config {
     private boolean requireItemFlight;
     private boolean requireItemTravelCoordinates;
     private boolean requireItemTravelFactionhome;
+    private boolean requireItemTravelTownSpawn;
     private boolean requireItemTravelHome;
     private boolean requireItemTravelPlayer;
     private boolean requireItemTravelRandom;
@@ -101,6 +102,7 @@ public class Config {
         requireItemTravelPlayer = config.getBoolean("RequiredItem.For.toPlayer", false);
         requireItemTravelHome = config.getBoolean("RequiredItem.For.toHome", false);
         requireItemTravelFactionhome = config.getBoolean("RequiredItem.For.toFactionhome", false);
+        requireItemTravelTownSpawn = config.getBoolean("RequiredItem.For.toTownSpawn", false);
         requireItemFlight = config.getBoolean("RequiredItem.For.Flight", false);
         dismountAtExactLocation = config.getBoolean("DismountAtExactLocation", false);
         requireSkyLight = config.getBoolean("RequireSkyLight", false);
@@ -241,6 +243,10 @@ public class Config {
 
     public boolean isRequireItemTravelFactionhome() {
         return requireItemTravelFactionhome;
+    }
+    
+    public boolean isRequireItemTravelTownSpawn() {
+        return requireItemTravelTownSpawn;
     }
 
     public void setRequireItemTravelFactionhome(boolean requireItemTravelFactionhome) {

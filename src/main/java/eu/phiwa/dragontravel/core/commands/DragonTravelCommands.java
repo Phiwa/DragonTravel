@@ -229,7 +229,8 @@ public final class DragonTravelCommands {
         DragonTravel.getInstance().getDragonManager().dismount(player, false);
     }
 
-    @Console
+    @SuppressWarnings("deprecation")
+	@Console
     @Command(aliases = {"ptoggle"},
             desc = "Toggle whether you can recieve player dragon travels",
             usage = "/dt ptoggle [-y|-n]",
@@ -300,7 +301,8 @@ public final class DragonTravelCommands {
         sender.sendMessage(ChatColor.GREEN + "Home set!"); //TODO: Add to messages
     }
 
-    @Console
+    @SuppressWarnings("deprecation")
+	@Console
     @Command(aliases = {"flight"},
             desc = "Start a Flight",
             usage = "/dt flight <flight name> [player=you]",
@@ -400,7 +402,8 @@ public final class DragonTravelCommands {
         }
     }
 
-    @Command(aliases = {"ptravel", "player"},
+    @SuppressWarnings("deprecation")
+	@Command(aliases = {"ptravel", "player"},
             desc = "Travel to another player",
             usage = "/dt ptravel <player>",
             min = 1, max = 1,
@@ -506,6 +509,30 @@ public final class DragonTravelCommands {
             return;
         try {
             DragonManager.getDragonManager().getTravelEngine().toFactionHome(player, true);
+        } catch (DragonException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Command(aliases = {"tspawn"},
+            desc = "Travel to your town spawn",
+            usage = "/dt tspawn")
+    //@CommandPermissions({"dt.start.tspawn.command"})
+    public static void startTownSpawnTravel(CommandContext args, CommandSender sender) throws CommandException {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            return;
+        }
+        Player player = (Player) sender;
+
+        if (Bukkit.getPluginManager().getPlugin("Towny") == null) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Towny.Error.TownyNotInstalled"));
+            return;
+        }
+        if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOTOWNSPAWN, player))
+            return;
+        try {
+            DragonManager.getDragonManager().getTravelEngine().toTownSpawn(player, true);
         } catch (DragonException e) {
             e.printStackTrace();
         }
