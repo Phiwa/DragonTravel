@@ -191,22 +191,20 @@ public class TravelEngine {
     }
     
     public void toTownSpawn(Player player, Boolean checkForStation) throws DragonException {
-
+    	Resident res = null;
+        Location tspawn = null;
+        boolean hasTown = false;
+        
         if (Bukkit.getPluginManager().getPlugin("Towny") == null) {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Towny.Error.TownyNotInstalled"));
             return;
         }
-
         if (DragonTravel.getInstance().getConfigHandler().isRequireItemTravelTownSpawn()) {
             if (!player.getInventory().contains(DragonTravel.getInstance().getConfigHandler().getRequiredItem()) && !player.hasPermission("dt.notrequireitem.travel")) {
                 player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequiredItemMissing"));
                 return;
             }
         }
-
-        Resident res = null;
-        Location tspawn = null;
-        boolean hasTown = false;
         try {
 			res = TownyUniverse.getDataSource().getResident(player.getName());
 		} catch (NotRegisteredException e1) {
@@ -228,9 +226,9 @@ public class TravelEngine {
 				}
           		hasTown = true;
           	}
-         }else{
-				player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Towny.Error.NoTown"));
-         }
+        }else{
+        	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Towny.Error.NoTown"));
+        }
         
         if (!hasTown) {
         	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Towny.Error.NoTown"));
