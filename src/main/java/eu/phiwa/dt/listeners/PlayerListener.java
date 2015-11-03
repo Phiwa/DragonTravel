@@ -104,7 +104,7 @@ public class PlayerListener implements Listener {
 				if(lines[3].length() != 0) {	
 					try {
 						double costOnSign = Double.parseDouble(lines[3]);					
-						if(!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.TRAVEL_TORANDOM, player))
+						if(!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, TravelType.TORANDOM, player))
 							return;
 					}
 					catch(NumberFormatException ex) {
@@ -112,7 +112,7 @@ public class PlayerListener implements Listener {
 					}				
 				}
 				else {
-					if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TORANDOM, player))
+					if(!PaymentHandler.chargePlayerNORMAL(TravelType.TORANDOM, player))
 						return;					
 				}
 				
