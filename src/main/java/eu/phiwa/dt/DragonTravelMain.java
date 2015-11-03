@@ -22,9 +22,11 @@ import eu.phiwa.dt.listeners.BlockListener;
 import eu.phiwa.dt.listeners.EntityListener;
 import eu.phiwa.dt.listeners.PlayerListener;
 import eu.phiwa.dt.modules.MountingScheduler;
+import eu.phiwa.dt.movement.TravelType;
 import eu.phiwa.dt.payment.PaymentHandler;
 import net.milkbowl.vault.economy.Economy;
-import net.minecraft.server.v1_8_R3.EntityTypes;
+
+import net.minecraft.server.v1_8_R3.EntityTypes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -65,7 +67,8 @@ public class DragonTravelMain extends JavaPlugin {
 	// Config
 	public static FileConfiguration config;
 	public static File configFile;
-	public static Config configHandler;		public static double configVersion = 0.5;
+	public static Config configHandler;	
+	public static double configVersion = 0.5;
 	
 	// FlightsDB	
 	public static FileConfiguration dbFlightsConfig;
@@ -117,18 +120,7 @@ public class DragonTravelMain extends JavaPlugin {
 	public static boolean byResources = false;
 	public static boolean usePayment = false;
 	public static int paymentItem = 371;
-	
-	// Payment-Types
-	public static final int TRAVEL_TOSTATION = 1;	
-	public static final int TRAVEL_TORANDOM = 2;
-	public static final int TRAVEL_TOPLAYER = 3;
-	public static final int TRAVEL_TOCOORDINATES = 4;	
-	public static final int TRAVEL_TOHOME = 5;
-	public static final int TRAVEL_TOFACTIONHOME = 6;
-	public static final int FLIGHT = 7;
-	public static final int SETHOME = 8;
-	
-    
+
     public DragonTravelMain() {
         this.dragonClass = RyeDragon.class;
     }

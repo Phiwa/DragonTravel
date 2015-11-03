@@ -4,6 +4,7 @@ import java.util.IllegalFormatException;
 import java.util.logging.Level;
 
 import eu.phiwa.dt.DragonTravelMain;
+import eu.phiwa.dt.movement.TravelType;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Server;
@@ -25,16 +26,16 @@ public class PaymentHandler {
 	 * @return
 	 * 			Payment successful? If usePayment is set to false in the config, this returns "true"
 	 */
-	public static boolean chargePlayerNORMAL(int paymenttype, Player player) {
+	public static boolean chargePlayerNORMAL(TravelType travelType, Player player) {
 			
 		if(!DragonTravelMain.usePayment)
 			return true;
 		
 		if(DragonTravelMain.byResources) {
-			return chargePlayerResourcesNORMAL(paymenttype, player);
+			return chargePlayerResourcesNORMAL(travelType, player);
 		}	
 		else if(DragonTravelMain.byEconomy) {
-			return chargePlayerEconomyNORMAL(paymenttype, player);
+			return chargePlayerEconomyNORMAL(travelType, player);
 		}
 		else {
 			return false;
@@ -42,46 +43,46 @@ public class PaymentHandler {
 	}
 	
 	@SuppressWarnings("deprecation")
-	private static boolean chargePlayerResourcesNORMAL(int paymenttype, Player player) {
+	private static boolean chargePlayerResourcesNORMAL(TravelType travelType, Player player) {
 		int amount;
-		
-		switch(paymenttype) {
-			case DragonTravelMain.TRAVEL_TOSTATION:
+
+		switch(travelType) {
+			case TOSTATION:
 				if(player.hasPermission("dt.nocost.travel.command") || player.hasPermission("dt.nocost.travel.*"))
 					return true;
 				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.toStation");
 				break;
-			case DragonTravelMain.TRAVEL_TORANDOM:
+			case TORANDOM:
 				if(player.hasPermission("dt.nocost.randomtravel.command") || player.hasPermission("dt.nocost.randomtravel.*"))
 					return true;
 				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.toRandom");
 				break;
-			case DragonTravelMain.TRAVEL_TOPLAYER:
+			case TOPLAYER:
 				if(player.hasPermission("dt.nocost.ptravel"))
 					return true;
 				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.toPlayer");
 				break;
-			case DragonTravelMain.TRAVEL_TOCOORDINATES:
+			case TOCOORDINATES:
 				if(player.hasPermission("dt.nocost.ctravel"))
 					return true;
 				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.toCoordinates");
 				break;
-			case DragonTravelMain.TRAVEL_TOHOME:
+			case TOHOME:
 				if(player.hasPermission("dt.nocost.home.travel") || player.hasPermission("dt.nocost.home.*"))
 					return true;
 				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.toHome");
 				break;
-			case DragonTravelMain.TRAVEL_TOFACTIONHOME:
+			case TOFACTIONHOME:
 				if(player.hasPermission("dt.nocost.fhome"))
 					return true;
 				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.toFactionhome");
 				break;
-			case DragonTravelMain.SETHOME:
+			case SETHOME:
 				if(player.hasPermission("dt.nocost.home.set") || player.hasPermission("dt.nocost.home.*"))
 					return true;
 				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.setHome");
 				break;
-			case DragonTravelMain.FLIGHT:
+			case FLIGHT:
 				if(player.hasPermission("dt.nocost.flight.command") || player.hasPermission("dt.nocost.flight.*"))
 					return true;
 				amount = DragonTravelMain.config.getInt("Payment.Resources.Prices.Flight");
@@ -113,46 +114,46 @@ public class PaymentHandler {
 	    }
 	}
 	
-	private static boolean chargePlayerEconomyNORMAL(int paymenttype, Player player) {
+	private static boolean chargePlayerEconomyNORMAL(TravelType travelType, Player player) {
 		double amount;
 		
-		switch(paymenttype) {
-			case DragonTravelMain.TRAVEL_TOSTATION:
+		switch(travelType) {
+			case TOSTATION:
 				if(player.hasPermission("dt.nocost.travel.command") || player.hasPermission("dt.nocost.travel.*"))
 					return true;
 				amount = DragonTravelMain.config.getDouble("Payment.Economy.Prices.toStation");
 				break;
-			case DragonTravelMain.TRAVEL_TORANDOM:
+			case TORANDOM:
 				if(player.hasPermission("dt.nocost.randomtravel.command") || player.hasPermission("dt.nocost.randomtravel.*"))
 					return true;
 				amount = DragonTravelMain.config.getDouble("Payment.Economy.Prices.toRandom");
 				break;
-			case DragonTravelMain.TRAVEL_TOPLAYER:
+			case TOPLAYER:
 				if(player.hasPermission("dt.nocost.ptravel"))
 					return true;
 				amount = DragonTravelMain.config.getDouble("Payment.Economy.Prices.toPlayer");
 				break;
-			case DragonTravelMain.TRAVEL_TOCOORDINATES:
+			case TOCOORDINATES:
 				if(player.hasPermission("dt.nocost.ctravel"))
 					return true;
 				amount = DragonTravelMain.config.getDouble("Payment.Economy.Prices.toCoordinates");
 				break;
-			case DragonTravelMain.TRAVEL_TOHOME:
+			case TOHOME:
 				if(player.hasPermission("dt.nocost.home.travel") || player.hasPermission("dt.nocost.home.*"))
 					return true;
 				amount = DragonTravelMain.config.getDouble("Payment.Economy.Prices.toHome");
 				break;
-			case DragonTravelMain.TRAVEL_TOFACTIONHOME:
+			case TOFACTIONHOME:
 				if(player.hasPermission("dt.nocost.fhome"))
 					return true;
 				amount = DragonTravelMain.config.getInt("Payment.Economy.Prices.toFactionhome");
 				break;
-			case DragonTravelMain.SETHOME:
+			case SETHOME:
 				if(player.hasPermission("dt.nocost.home.set") || player.hasPermission("dt.nocost.home.*"))
 					return true;
 				amount = DragonTravelMain.config.getInt("Payment.Economy.Prices.setHome");
 				break;
-			case DragonTravelMain.FLIGHT:
+			case FLIGHT:
 				if(player.hasPermission("dt.nocost.flight.command") || player.hasPermission("dt.nocost.flight.*"))
 					return true;
 				amount = DragonTravelMain.config.getDouble("Payment.Economy.Prices.Flight");
@@ -202,23 +203,23 @@ public class PaymentHandler {
 	 * @return
 	 * 			Payment successful? If usePayment is set to false in the config, this returns "true"
 	 */
-	public static boolean chargePlayerCUSTOMCOST(double customcost, int paymenttype, Player player) {
+	public static boolean chargePlayerCUSTOMCOST(double customcost, TravelType travelType, Player player) {
 		
 		boolean successful = false;
 		
 		if(!DragonTravelMain.usePayment)
 			return true;
 		
-		switch(paymenttype) {
-			case DragonTravelMain.TRAVEL_TOSTATION:
+		switch(travelType) {
+			case TOSTATION:
 				if(player.hasPermission("dt.nocost.travel.sign") || player.hasPermission("dt.nocost.travel.*"))
 					return true;
 				break;
-			case DragonTravelMain.TRAVEL_TORANDOM:
+			case TORANDOM:
 				if(player.hasPermission("dt.nocost.randomtravel.sign") || player.hasPermission("dt.nocost.randomtravel.*"))
 					return true;
 				break;
-			case DragonTravelMain.FLIGHT:
+			case FLIGHT:
 				if(player.hasPermission("dt.nocost.flight.sign") || player.hasPermission("dt.nocost.flight.*"))
 					return true;
 				break;
@@ -226,17 +227,17 @@ public class PaymentHandler {
 		}
 		
 		if(DragonTravelMain.byResources) {
-			successful = chargePlayerResourcesCUSTOMCOST(customcost, paymenttype, player);
+			successful = chargePlayerResourcesCUSTOMCOST(customcost, travelType, player);
 		}
 		else if(DragonTravelMain.byEconomy) {
-			successful = chargePlayerEconomyCUSTOMCOST(customcost, paymenttype, player);
+			successful = chargePlayerEconomyCUSTOMCOST(customcost, travelType, player);
 		}
 		
 		return successful;
 	}
 		
 	@SuppressWarnings("deprecation")
-	private static boolean chargePlayerResourcesCUSTOMCOST(double customcost, int paymenttype, Player player) {
+	private static boolean chargePlayerResourcesCUSTOMCOST(double customcost, TravelType travelType, Player player) {
 	
 		
 		
@@ -260,18 +261,18 @@ public class PaymentHandler {
 	    }
 	}
 	
-	private static boolean chargePlayerEconomyCUSTOMCOST(double customcost, int paymenttype, Player player) {
+	private static boolean chargePlayerEconomyCUSTOMCOST(double customcost, TravelType travelType, Player player) {
 		
-		switch(paymenttype) {
-			case DragonTravelMain.TRAVEL_TOSTATION:
+		switch(travelType) {
+			case TOSTATION:
 				if(player.hasPermission("dt.nocost.travel.sign"))
 					return true;
 				break;
-			case DragonTravelMain.TRAVEL_TORANDOM:
+			case TORANDOM:
 				if(player.hasPermission("dt.nocost.randomtravel.sign"))
 					return true;
 				break;
-			case DragonTravelMain.FLIGHT:
+			case FLIGHT:
 				if(player.hasPermission("dt.nocost.flight.sign"))
 					return true;
 				break;

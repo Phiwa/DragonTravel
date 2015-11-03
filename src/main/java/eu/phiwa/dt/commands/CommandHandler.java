@@ -6,6 +6,7 @@ import eu.phiwa.dt.flights.Waypoint;
 import eu.phiwa.dt.modules.DragonManagement;
 import eu.phiwa.dt.modules.StationaryDragon;
 import eu.phiwa.dt.movement.Flights;
+import eu.phiwa.dt.movement.TravelType;
 import eu.phiwa.dt.movement.Travels;
 import eu.phiwa.dt.objects.Flight;
 import eu.phiwa.dt.objects.Home;
@@ -254,7 +255,7 @@ public class CommandHandler implements CommandExecutor {
 					}
 					
 					if(DragonTravelMain.usePayment)
-						if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.SETHOME, player))
+						if(!PaymentHandler.chargePlayerNORMAL(TravelType.SETHOME, player))
 							return false;
 					
 					if(DragonTravelMain.dbHomesHandler.getHome(player.getName()) != null)
@@ -273,7 +274,7 @@ public class CommandHandler implements CommandExecutor {
 					}
 						
 					if(DragonTravelMain.usePayment)
-						if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOHOME, player))
+						if(!PaymentHandler.chargePlayerNORMAL(TravelType.TOHOME, player))
 							return false;
 					
 					Travels.toHome(player, true);
@@ -288,7 +289,7 @@ public class CommandHandler implements CommandExecutor {
 					}
 												
 					if(DragonTravelMain.usePayment)
-						if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOFACTIONHOME, player))
+						if(!PaymentHandler.chargePlayerNORMAL(TravelType.TOFACTIONHOME, player))
 							return false;
 					
 					Travels.toFactionhome(player, true);		
@@ -432,7 +433,7 @@ public class CommandHandler implements CommandExecutor {
 						}
 							
 						if(DragonTravelMain.usePayment)
-							if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TORANDOM, player))
+							if(!PaymentHandler.chargePlayerNORMAL(TravelType.TORANDOM, player))
 								return false;
 						
 						Travels.toRandomdest(player, true);
@@ -445,7 +446,7 @@ public class CommandHandler implements CommandExecutor {
 						}
 						
 						if(DragonTravelMain.usePayment)
-							if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOSTATION, player))
+							if(!PaymentHandler.chargePlayerNORMAL(TravelType.TOSTATION, player))
 								return false;
 						
 						Travels.toStation(player, argument1, true);
@@ -474,7 +475,7 @@ public class CommandHandler implements CommandExecutor {
 					}
 					
 					if(DragonTravelMain.usePayment)
-						if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOPLAYER, player))
+						if(!PaymentHandler.chargePlayerNORMAL(TravelType.TOPLAYER, player))
 							return false;
 					
 					if(!DragonTravelMain.ptogglers.get(targetplayer.getUniqueId())) {
@@ -501,7 +502,7 @@ public class CommandHandler implements CommandExecutor {
 					}
 					
 					if(DragonTravelMain.usePayment)
-						if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.FLIGHT, player))
+						if(!PaymentHandler.chargePlayerNORMAL(TravelType.FLIGHT, player))
 							return false;
 				
 					Flights.startFlight(player, argument1, true, false, null);
@@ -645,7 +646,7 @@ public class CommandHandler implements CommandExecutor {
 						int z = Integer.parseInt(argument3);
 						
 						if(DragonTravelMain.usePayment)
-							if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOCOORDINATES, player))
+							if(!PaymentHandler.chargePlayerNORMAL(TravelType.TOCOORDINATES, player))
 								return false;
 						
 						Travels.toCoordinates(player, x, y, z, null, true);
@@ -679,7 +680,7 @@ public class CommandHandler implements CommandExecutor {
 						int z = Integer.parseInt(argument3);
 						
 						if(DragonTravelMain.usePayment)
-							if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOCOORDINATES, player))
+							if(!PaymentHandler.chargePlayerNORMAL(TravelType.TOCOORDINATES, player))
 								return false;
 						
 						Travels.toCoordinates(player, x, y, z, argument4, true);

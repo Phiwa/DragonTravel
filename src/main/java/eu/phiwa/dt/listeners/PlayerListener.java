@@ -5,6 +5,7 @@ import java.util.List;
 import eu.phiwa.dt.DragonTravelMain;
 import eu.phiwa.dt.modules.DragonManagement;
 import eu.phiwa.dt.movement.Flights;
+import eu.phiwa.dt.movement.TravelType;
 import eu.phiwa.dt.movement.Travels;
 import eu.phiwa.dt.payment.PaymentHandler;
 import eu.phiwa.dt.permissions.PermissionsHandler;
@@ -129,11 +130,11 @@ public class PlayerListener implements Listener {
 				try {
 					double costOnSign = Double.parseDouble(lines[3]);
 					
-					if(!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.TRAVEL_TOSTATION, player))
+					if(!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, TravelType.TOSTATION, player))
 						return;
 				}
 				catch(NumberFormatException ex) {
-					if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.TRAVEL_TOSTATION, player))
+					if(!PaymentHandler.chargePlayerNORMAL(TravelType.TOSTATION, player))
 						return;
 				}	
 				Travels.toStation(player, stationname, !DragonTravelMain.config.getBoolean("MountingLimit.ExcludeSigns"));
@@ -215,7 +216,7 @@ public class PlayerListener implements Listener {
 					
 					try {
 						double costOnSign = Double.parseDouble(lines[3]);
-						if(!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, DragonTravelMain.FLIGHT, player))
+						if(!PaymentHandler.chargePlayerCUSTOMCOST(costOnSign, TravelType.FLIGHT, player))
 							return;
 					}
 					catch(NumberFormatException ex) {
@@ -223,7 +224,7 @@ public class PlayerListener implements Listener {
 					}
 				}
 				else {					
-					if(!PaymentHandler.chargePlayerNORMAL(DragonTravelMain.FLIGHT, player))
+					if(!PaymentHandler.chargePlayerNORMAL(TravelType.FLIGHT, player))
 						return;
 				}
 				Flights.startFlight(player, flightname, !DragonTravelMain.config.getBoolean("MountingLimit.ExcludeSigns"), false, null);
