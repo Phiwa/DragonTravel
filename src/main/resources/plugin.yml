@@ -1,24 +1,27 @@
 name: DragonTravel
-main: eu.phiwa.dt.DragonTravelMain
-author: Phiwa
-version: Phoenix v0.0.1.7
-load: STARTUP
-softdepend: [Vault, AntiCheat, NoCheatPlus, Factions]
+main: eu.phiwa.dragontravel.core.DragonTravel
+authors: [Phiwa, x3nec]
+version: ${project.version}
+load: POSTWORLD
+softdepend: [Vault, AntiCheat, NoCheatPlus, Factions, Heroes]
 permissions:
     dt.*:
         default: op
-        description: Full control over the plugin
+        description: All permissions
         children:
-            dt.admin.*: true           
+            dt.admin.*: true
     dt.admin.*:
         default: op
-        description: All administrative functions
+        description: All permissions
         children:
             dt.admin.signs: true
             dt.admin.stations: true
+            dt.admin.reload: true
             dt.admin.flights: true
             dt.admin.statdragon: true
-            dt.admin.remdragons: true   
+            dt.admin.remdragons: true
+            dt.sethome: true
+            dt.edit.*: true
             dt.travel.*: true
             dt.ctravel: true
             dt.ptravel: true
@@ -27,11 +30,15 @@ permissions:
             dt.flight.*: true
             dt.nocost.*: true
             dt.notrequireitem.*: true
+            dt.start.*: true
             dt.ptoggle: true
             dt.ignoreminheight: true
             dt.ignoredamagerestriction: true
+            dt.bypassrequireskylight: true
             
-    
+    dt.admin.reload:
+        description: Allow reloading of the configuration (may be buggy)
+
     dt.admin.signs:
         default: op
         description: Allows travels to all stations
@@ -42,31 +49,92 @@ permissions:
         default: op
         description: Allows travels to all stations
     dt.admin.remdragons:
-        default: op
-        description: Allows travels to all stations
-    
-    dt.travel.*:
-        default: op
-        description: Allows travels to all stations
-    dt.ctravel:
-        default: op
-        description: Allows travels to coordinates
-    dt.ptravel:
-        default: op
-        description: Allows travels to players        
-    dt.home:
-        default: op
-        description: Allows travels to home (and to set one)
-    dt.fhome:
-        default: op
-        description: Allows travels to faction-home    
-    dt.flight.*:
-        default: op
-        description: Allows all flights
-       
+        description: Allows you to clear a world or the entire server of all dragons.
+        
+    dt.defaults:
+        default: true
+        description: Defaults available to all players
+        children:
+            dt.seecommand: true
+
+    # Misc command permissions
+    dt.seecommand:
+        default: true
+        description: See /dt in the global tab-complete (note - disallowing this will disallow all commands)
+
     dt.ptoggle:
-        default: op
-        description: Player is allowed to turn of player-travels to himself  
+        description: Allow turning off player-travels to yourself
+    dt.ptoggle.other:
+        description: Forcibly change the player travel toggle for another player.
+
+    dt.sethome:
+        description: Allow the player to set their home.
+    
+    # Station and Flight permissions
+    dt.flight.*:
+        description: Allows usage of every flight.
+        # Use dt.flight.FLIGHTNAME for individual flights.
+    dt.travel.*:
+        description: Allows usage of every station.
+        # Use dt.travel.STATIONNAME for individual stations.
+    dt.travel.random:
+        description: Allows travel to a random station.
+
+    dt.start.*:
+        children:
+            dt.start.flight.*: true
+            dt.start.travel.*: true
+            dt.start.coord.command: true
+            dt.start.player.command: true
+            dt.start.home.command: true
+            dt.start.fhome.command: true
+
+    dt.start.flight.*:
+        children:
+            dt.start.flight.sign: true
+            dt.start.flight.command: true
+            dt.start.flight.command.other: true
+    dt.start.travel.*:
+        children:
+            dt.start.travel.sign: true
+            dt.start.travel.command: true
+
+    dt.start.flight.sign:
+        description: Player may start a flight from a sign
+    dt.start.flight.command:
+        description: Player may start a flight with a command
+    dt.start.flight.command.other:
+        description: Can start another player on a flight with a command
+
+    dt.start.travel.sign:
+        description: Player may start a travel to a station from a sign
+    dt.start.travel.command:
+        description: Player may start a travel to a station with a command
+
+    dt.start.coord.command:
+        description: Player may start a travel to coordinates with a command
+    dt.start.player.command:
+        description: Player may start a travel to another player with a command
+    dt.start.home.command:
+        description: Player may start a travel to their set home with a command
+    dt.start.fhome.command:
+        description: Player may start a travel to their faction's home with a command
+
+
+    # Permissions to edit flights and stations
+    dt.edit.*:
+        description: Player is allowed to edit
+        children:
+            dt.edit.stations: true
+            dt.edit.flights: true
+            dt.edit.signs: true
+    dt.edit.stations:
+        description: Player is allowed to edit stations
+    dt.edit.flights:
+        description: Player is allowed to edit flights
+    dt.edit.signs:
+        description: Player is allowed to edit and create signs that start a flight or travel
+
         
     dt.nocost.*:
         default: op
@@ -79,33 +147,26 @@ permissions:
             dt.nocost.ctravel: true
             dt.nocost.fhome: true                  
             
-    dt.nocost.travel.*:
-        default: op
-        description: Player does not need to pay for anything related to travels       
-    dt.nocost.flight.*:
-        default: op
-        description: Player does not need to pay for anything related to flights           
-    dt.nocost.randomtravel.*:
-        default: op
+    dt.nocost.travel:
+        description: Player does not need to pay for anything related to travels
+    dt.nocost.flight:
+        description: Player does not need to pay for anything related to flights
+    dt.nocost.randomtravel:
         description: Player does not need to pay for anything related to travels to random destinations
-        children:
-            dt.nocost.randomtravel.command: true
-            dt.nocost.randomtravel.sign: true                   
-    dt.nocost.randomtravel.command:
-        default: op
-        description: Player does not need to pay for command-travels to random destinations    
-    dt.nocost.randomtravel.sign:
-        default: op
-        description: Player does not need to pay for sign-travels to random destinations           
     dt.nocost.ptravel:
-        default: op
-        description: Player does not need to pay for travels to other players        
+        description: Player does not need to pay to travel to another player
     dt.nocost.ctravel:
-        default: op
-        description: Player does not need to pay for travels to coordinations          
+        description: Player does not need to pay for travels to coordinations
     dt.nocost.fhome:
-        default: op
-        description: Player does not need to pay for travels to the faction-home 
+        description: Player does not need to pay for travels to the faction-home
+    dt.nocost.home:
+        description: Player does not need to pay to travel to their set home
+    dt.nocost.home.set:
+        description: Player does not need to pay to set their home
+    dt.nocost.home.*:
+        children:
+            dt.nocost.home: true
+            dt.nocost.home.set: true
       
     dt.notrequireitem.*: 
         default: op
@@ -131,7 +192,8 @@ permissions:
         description: Player does not need to be at a station to start a travel when station-spawnlimit is enabled
     dt.ignoreusestations.flights:
         default: op
-        description: Player does not need to be at a station to start a flight when station-spawnlimit is enabled       
+        description: Player does not need to be at a station to start a flight when station-spawnlimit is enabled  
+        
     dt.ignoredragonlimit:
         default: op
         description: Allows player to mount a dragon, even if the server has already reached the limit of dragons set in the config
@@ -141,7 +203,35 @@ permissions:
     dt.ignoredamagerestriction:
         default: op
         description: Allows player to mount a dragon, even if the he received damage within the last X seconds (set via config)
+    dt.bypassrequireskylight:
+        default: op
+        description: Allows player to mount a dragon when not in skylight
 
-commands:
-    dt:
-        usage: 
+    # Legacy conversions
+    dt.admin.*:
+        children:
+            dt.admin: true
+    dt.admin.signs:
+        children:
+            dt.edit.signs: true
+    dt.admin.stations:
+        children:
+            dt.travel.*: true
+    dt.admin.flights:
+        children:
+            dt.flight.*: true
+    dt.ctravel:
+        children:
+            dt.start.coord.command: true
+    dt.ptravel:
+        children:
+            dt.start.player.command: true
+    dt.home:
+        children:
+            dt.start.home.command: true
+    dt.fhome:
+        children:
+            dt.start.fhome.command: true
+#commands:
+#    dt:
+#        permission: dt.seecommand

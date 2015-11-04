@@ -1,6 +1,9 @@
 File:
-    Version: 0.5
-
+    Version: 0.7
+#Send usage statistics to mcstats.org
+UseMetrics: true
+#Automatically update to the latest version on BukkitDev
+UseAutoUpdater: false
     
 ################################
 ####### General Settings #######
@@ -110,7 +113,8 @@ Payment:
             setHome: 5.0
             Flight: 5.0
     Resources:
-        Item: 371
+        ItemType: GOLD_INGOT
+        ItemName: '<default>'
         Prices:
             toStation: 5
             toRandom: 5
@@ -121,5 +125,6 @@ Payment:
             setHome: 5
             Flight: 5
 
-
-
+#If this is true, the player must mount and dismount in places with direct access to skylight.
+#This only applies to travels. Flights are exempt of this rule.
+RequireSkyLight: false
