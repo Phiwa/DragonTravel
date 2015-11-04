@@ -52,13 +52,15 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
-			<version>1.8.4-R0.1-SNAPSHOT</version>
+			<version>1.8.8</version>
+			<systemPath>${project.basedir}/lib/craftbukkit-1.8.8.jar</systemPath>
+			<scope>system</scope>
 		</dependency>
 		<dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.5</version>
-            <scope>provided</scope>
+			<groupId>net.milkbowl.vault</groupId>
+			<artifactId>VaultAPI</artifactId>
+			<version>1.5</version>
+			<scope>provided</scope>
         </dependency>
 		<dependency>
 			<groupId>com.massivecraft</groupId>
