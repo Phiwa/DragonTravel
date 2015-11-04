@@ -92,6 +92,51 @@
             <id>yeti-repo</id>
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
         </repository>
+<<<<<<< HEAD
+	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>craftbukkit</artifactId>
+			<version>1.8.8</version>
+			<systemPath>${project.basedir}/lib/craftbukkit-1.8.8.jar</systemPath>
+			<scope>system</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.milkbowl.vault</groupId>
+			<artifactId>VaultAPI</artifactId>
+			<version>1.5</version>
+			<scope>provided</scope>
+        </dependency>
+		<dependency>
+			<groupId>com.massivecraft</groupId>
+			<artifactId>factions</artifactId>
+			<version>2.3.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/Factions.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.massivecraft</groupId>
+			<artifactId>mcore</artifactId>
+			<version>7.1.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/mcore.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>fr.neatmonster</groupId>
+			<artifactId>ncpplugin</artifactId>
+			<version>static</version>
+		</dependency>
+		<dependency>
+			<groupId>net.gravitydevelopment.anticheat</groupId>
+			<artifactId>AntiCheat</artifactId>
+			<version>2.0.2</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+</project>
+=======
         <repository>
             <id>overcast releases</id>
             <url>http://repo.oc.tc/content/repositories/public/</url>
@@ -188,3 +233,4 @@
         </dependency>
     </dependencies>
 </project>
+>>>>>>> upstream/master

@@ -9,14 +9,7 @@ UseAutoUpdater: false
 ####### General Settings #######
 ################################
 
-# <<< Choose which dragon-entities can't destroy blocks >>>
-AntiGriefDragons:
-    bypassWorldGuardAntiSpawn: true
-    ofDragonTravel: false
-    all: true
-
-# <<< Choose which messages-file DragonTravel should use >>>
-# Possible values are:
+# Which messages-file DragonTravel should use:
 # 'en' - English
 # 'de' - German
 # 'fr' - French
@@ -24,53 +17,31 @@ AntiGriefDragons:
 # 'custom' - leads to the use of the file named "messages-custom.yml"
 # Default: 'en'
 Language: 'en'
-    
-# <<< Set the dragon's flying-speed >>>
-# The number represents the blocks in 1 server tick, 20 ticks = 1 second
-# Do not set it above 1.0 or your server will lag like hell and/or crash!
-# Default: 0.5
+
+################################
+####### Travel Settings  #######
+################################
+
+# Whether dragontravel will block enderdragon death explosions.
+AntiGriefDragons:
+    bypassWorldGuardAntiSpawn: true
+    ofDragonTravel: false
+    all: false
+# Altitude in blocks that dragons will fly at.
+TravelHeight: 100
+# Dragon speed in blocks per tick (20 ticks = 1 second).  Values over 1.0 can cause serious lag.
 DragonSpeed: 0.5
-
-# <<< Set the maximum amount of dragons on your server >>>
-# Use this if you encounter lags on your server which are caused
-# by too many dragons travelling at the same time.
-# This only limits DragonTravel-dragons and does not
-# handle stationary dragons spawned by DragonTravel!
-# Default: -1 (disabled)
+# Maximum number of dragons which DT will spawn to transport players.  -1 is no limit.  Use this if DT is lagging your server.
 DragonLimit: -1
-
-# <<< Set the maximum distance a player is allowed to travel >>>
-# Use this if you encounter lags on your server which are caused
-# by too many chunks being loaded due to too many long-distance travels.
-# This distance is in blocks.
-# Default: -1 (no limit)
+# Maximum distance in blocks.  -1 is no limit.
 MaxTravelDistance: -1
-
-# <<< Teleport a player who dismounts back to the point he started from >>>
-# Some players use flights or travels to a location to "jump off" during the
-# flight an that way get to other places.
-# If set to true, those players will be teleported back to the point they started from.
-# If set to false, those players will just be dismounted where they are and teleported to the ground.
-# Default: true
+# If true, players who dismount will be teleported to their starting-point.
 TeleportToStartOnDismount: true
-
-# <<< Toggles vulnerability of players >>>
+# If set to 'true', riders are dismounted at their exact location.
+# If set to 'false', riders are dismounted to the next blocks below them.
+DismountAtExactLocation: false
 # If set to true, dragon-riders take damage (players can also be killed by the environment when travelling through mountains!)
-# If set to false, dragon-riders do not take damage at all.
-# Default: false
 VulnerableRiders: false
-
-# <<< Choose the commands which can't be executed while being on a dragon >>>
-# Make sure to list all commands which could teleport a player away from the dragon!
-# You must only define the first word with the "/", in this list!
-CommandPrevent:
-- /spawn
-- /f
-- /kill
-- /home
-- /tp
-
-# <<< The Random Destination >>>
 # When traveling to a destination with this name (Default: _random_) will start a travel
 # to a random destination within the borders you can set below.
 RandomDest:
@@ -82,24 +53,51 @@ RandomDest:
         Z-Axis:
             Min: -100
             Max: 100
-            
-# <<< Limit mounting to stations >>>
+# You must only define the first word with the "/", in this list!
+CommandPrevent:
+- /spawn
+- /f
+- /kill
+- /home
+- /tp
+
+##########################
+## Travel requirements  ##
+##########################
+
+
+# Choose whether travels to a player are allowed (true) or denied (false) by default
+PToggleDefault: true
+
+# This disables the command /dt travel for all players with the admin-permissions.
+OnlySigns: false
+# TODO: Replace this config setting with a permission.
+
+# Set it to the Y value the players must have at least to mount a dragon.  -1 is disabled.  Good for stopping cave spawns!
+MinimumMountHeight: -1
+
+# To prevent players from escaping fights by using dragons, you can use this option.
+# Set it to the number of seconds a player must wait before mounting a dragon after he received damage.  -1 is disabled.
+DamageCooldown: -1
+
 # You can limit the mounting of dragons to stations (and a specified radius around it)
-# Defaults:
-#   EnableForTravels: false
-#   EnableForFlights: false
-#   Radius: 5
-#   ExcludeSigns: false
 MountingLimit:
     EnableForTravels: false
     EnableForFlights: false
-    Radius: 5
     ExcludeSigns: false
-            
-################################
-####### Payment-Settings #######
-################################
+    Radius: 5
 
+# Choose the item a player needs to have in his hands to use DragonTravel.  Default is a dragon egg.
+RequiredItem:
+    Item: 122
+    For:
+        toStation: false
+        toRandom: false
+        toPlayer: false
+        toCoordinates: false
+        toFactionhome: false
+        toHome: false
+        Flight: false
 Payment:
     usePayment: false
     byResources: false
@@ -127,62 +125,6 @@ Payment:
             setHome: 5
             Flight: 5
 
-
-            
-################################            
-####### Travel-Settings #######
-################################
-
-# <<< Choose how high the dragon flys during a travel >>>
-# The number represents blocks Numbers over sky-height are allowed
-# Default: 100
-TravelHeight: 100
-
-# <<< Does a player need to have a special item in hand to use DragonTravel? >>>
-# Choose the item a player needs to have in his hands to use DragonTravel.
-# Default: 122 (Dragon-Egg which can be obtained by killing the Enderdragon)     
-RequiredItem:
-    Item: 122
-    For:
-        toStation: false
-        toRandom: false
-        toPlayer: false
-        toCoordinates: false
-        toFactionhome: false
-        toHome: false
-        Flight: false
-    
-# <<< Limit the use of the normal travels to signs >>>
-# This disables the command /dt travel for all players with the admin-permissions.
-# Default: false
-OnlySigns: false
-
-# <<< Default setting for the ptoggle-flag of a player >>>
-# Choose whether travels to a player are allowed (true) or denied (false) by default
-# Default: true
-PToggleDefault: true
-
-# <<< Toggles where riders are dismounted when reaching their target location. >>>
-# If set to 'true', riders are dismounted at their exact location.
-# If set to 'false', riders are dismounted to the next blocks below them.
-# Default: false
-DismountAtExactLocation: false
-
-# <<< Minimum height required to mount a dragon >>>
-# To prevent players from escaping mines by using dragons, you can use this option.
-# Set it to the Y value the players must have at least to mount a dragon.
-# Set it to -1 to disable the check
-# Default: -1
-MinimumMountHeight: -1
-
-# <<< Damage cooldown time >>>
-# To prevent players from escaping fights by using dragons, you can use this option.
-# Set it to the number of seconds a player must wait before mounting a dragon after he received damage.
-# Set it to -1 to disable the check
-# Default: -1
-DamageCooldown: -1
-
-# <<< Sky Light Limits >>>
 #If this is true, the player must mount and dismount in places with direct access to skylight.
 #This only applies to travels. Flights are exempt of this rule.
 RequireSkyLight: false
