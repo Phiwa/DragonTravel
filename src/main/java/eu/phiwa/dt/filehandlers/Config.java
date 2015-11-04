@@ -14,7 +14,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class Config {
 
 	DragonTravelMain plugin;
-	
+	private File configFile;
+	private YamlConfiguration configuration;
+
 	public Config (DragonTravelMain plugin) {
 		this.plugin = plugin;
 	}
@@ -48,7 +50,7 @@ public class Config {
 		catch(Exception e) {
 			DragonTravelMain.logger.info("[DragonTravel] [Error] Could not create the configuration!");
 			e.printStackTrace();
-		}	
+		}
 	}
 	
 	public void loadConfig(){

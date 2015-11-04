@@ -127,9 +127,8 @@ public class DragonTravelMain extends JavaPlugin {
     
 	@Override
 	public void onDisable() {
-		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
-		logger.log(Level.SEVERE, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
-		logger.log(Level.SEVERE, String.format("[DragonTravel] -----------------------------------------------"));
+		// TODO: Check for players in flight; teleport to start and remove dragon?  Refund money?  Drop to their deaths?
+		logger.log(Level.INFO, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
 	}
 	
 	@Override
