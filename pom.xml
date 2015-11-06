@@ -157,6 +157,13 @@
             <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>com.palmergames.bukkit.towny</groupId>
+            <artifactId>Towny</artifactId>
+            <version>0.90.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Towny.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>fr.neatmonster</groupId>
             <artifactId>ncpplugin</artifactId>
             <version>static</version>

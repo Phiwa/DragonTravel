@@ -9,6 +9,7 @@ public enum ChargeType {
     TRAVEL_TOCOORDINATES("dt.nocost.ctravel"),
     TRAVEL_TOHOME("dt.nocost.home"),
     TRAVEL_TOFACTIONHOME("dt.nocost.fhome"),
+    TRAVEL_TOTOWNSPAWN("dt.nocost.tspawn"),
     FLIGHT("dt.nocost.flight"),
     SETHOME("dt.nocost.home.set"),;
 

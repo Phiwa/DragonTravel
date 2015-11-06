@@ -56,6 +56,9 @@ public class EconomyPaymentHandler implements PaymentHandler {
             case TRAVEL_TOFACTIONHOME:
                 amount = DragonTravel.getInstance().getConfig().getDouble("Payment.Economy.Prices.toFactionhome");
                 break;
+            case TRAVEL_TOTOWNSPAWN:
+                amount = DragonTravel.getInstance().getConfig().getDouble("Payment.Economy.Prices.toTownSpawn");
+                break;
             case SETHOME:
                 amount = DragonTravel.getInstance().getConfig().getDouble("Payment.Economy.Prices.setHome");
                 break;

@@ -15,6 +15,7 @@ import eu.phiwa.dragontravel.core.listeners.BlockListener;
 import eu.phiwa.dragontravel.core.listeners.EntityListener;
 import eu.phiwa.dragontravel.core.listeners.HeroesListener;
 import eu.phiwa.dragontravel.core.listeners.PlayerListener;
+import eu.phiwa.dragontravel.core.listeners.TownyListener;
 import eu.phiwa.dragontravel.core.movement.DragonType;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
 import eu.phiwa.dragontravel.core.movement.flight.FlightEditor;
@@ -174,6 +175,9 @@ public class DragonTravel extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
         if (Bukkit.getPluginManager().getPlugin("Heroes") != null) {
             Bukkit.getPluginManager().registerEvents(new HeroesListener(), this);
+        }
+        if(Bukkit.getPluginManager().getPlugin("Towny") != null) {
+        	Bukkit.getPluginManager().registerEvents(new TownyListener(), this);
         }
     }
 
