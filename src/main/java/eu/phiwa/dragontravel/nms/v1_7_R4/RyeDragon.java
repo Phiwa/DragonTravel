@@ -39,7 +39,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     private double yPerTick;
     private double zPerTick;
 
-    @SuppressWarnings("unused")
     public RyeDragon(Location loc) {
         this(loc, ((CraftWorld) loc.getWorld()).getHandle());
     }
@@ -56,7 +55,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         notchWorld.addEntity(this);
     }
 
-    @SuppressWarnings("unused")
     public RyeDragon(World notchWorld) {
         super(notchWorld);
     }
