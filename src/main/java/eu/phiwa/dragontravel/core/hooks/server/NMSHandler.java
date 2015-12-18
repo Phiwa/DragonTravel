@@ -3,6 +3,8 @@ package eu.phiwa.dragontravel.core.hooks.server;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+import com.sk89q.minecraft.util.commands.ChatColor;
+
 import eu.phiwa.dragontravel.core.DragonTravel;
 
 import java.lang.reflect.InvocationTargetException;
