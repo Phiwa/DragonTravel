@@ -216,7 +216,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                             else if (midLocB.getZ() > toLoc.getZ())
                                 midLocB.setYaw((float) (-Math.toDegrees(Math.atan((midLocB.getX() - toLoc.getX()) / (midLocB.getZ() - toLoc.getZ())))) + 180.0F);
                             rider.teleport(midLocB);
-                            if (DragonTravel.getInstance().getDragonManager().mount(rider, false, dragonType))
+                            if (!DragonTravel.getInstance().getDragonManager().mount(rider, false, dragonType))
                                 return;
                             if (!DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(rider))
                                 return;
@@ -294,6 +294,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             this.midLocA = new Location(getEntity().getWorld(), locX + 50 + Math.random() * 100, travelHeight, locZ + 50 + Math.random() * 100);
             int scatter = 80;
             this.midLocB = destLoc.clone().add(scatter, scatter, scatter);
+            this.toLoc = destLoc;
         } else {
             this.toLoc = destLoc;
         }
