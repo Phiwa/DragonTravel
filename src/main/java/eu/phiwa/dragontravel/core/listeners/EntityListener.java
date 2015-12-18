@@ -18,8 +18,6 @@ public class EntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
-		if (event.getSpawnReason() != SpawnReason.CUSTOM)
-			return;
 
 		if (!event.getEntity().getType().toString().equals("ENDER_DRAGON"))
 			return;
