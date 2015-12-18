@@ -31,7 +31,6 @@ public class Waypoint {
     /**
      * Removes all WaypointMarkers in the server
      */
-    @SuppressWarnings("unused")
     public static void removeWayPointMarkersGlobally() {
         Collection<Block> globalMarkers = DragonTravel.getInstance().getFlightEditor().getWayPointMarkers().values();
 
