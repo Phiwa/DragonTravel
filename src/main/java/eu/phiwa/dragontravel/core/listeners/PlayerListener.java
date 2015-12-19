@@ -26,11 +26,21 @@ import java.util.List;
 
 public class PlayerListener implements Listener {
 
+	/** 
+	 * Sets player-specific options to default values
+	 * 
+	 * @param event
+	 */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         DragonTravel.getInstance().getDragonManager().getPlayerToggles().put(event.getPlayer().getUniqueId(), DragonTravel.getInstance().getConfigHandler().isPtoggleDefault());
     }
 
+    /** 
+     * Dismounts players leaving the server (being kicked)
+     * 
+     * @param event
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerKick(PlayerKickEvent event) {
 
@@ -43,6 +53,11 @@ public class PlayerListener implements Listener {
         DragonTravel.getInstance().getDragonManager().removeRiderAndDragon(DragonTravel.getInstance().getDragonManager().getRiderDragons().get((player)).getEntity(), false);
     }
 
+    /** 
+     * Dismounts players leaving the server
+     * 
+     * @param event
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
 
@@ -56,6 +71,11 @@ public class PlayerListener implements Listener {
         DragonTravel.getInstance().getDragonManager().removeRiderAndDragon(DragonTravel.getInstance().getDragonManager().getRiderDragons().get((player)).getEntity(), false);
     }
 
+    /** 
+     * Handles players clicking signs 
+     * 
+     * @param event
+     */
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSignInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -215,6 +235,11 @@ public class PlayerListener implements Listener {
         }
     }
 
+    /** 
+     * Prevents players who received damage from escaping by dragon
+     * 
+     * @param event
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDamage(EntityDamageEvent event) {
 
@@ -229,6 +254,11 @@ public class PlayerListener implements Listener {
         DragonTravel.getInstance().getDragonManager().getDamageReceipts().put(player.getUniqueId(), System.currentTimeMillis());
     }
 
+    /** 
+     * Prevents dragon riders from using commands specified in config
+     * 
+     * @param event
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         if (!DragonTravel.getInstance().getDragonManager().getRiderDragons().keySet().contains(event.getPlayer()))
@@ -239,4 +269,17 @@ public class PlayerListener implements Listener {
                 event.setCancelled(true);
     }
 
+    /** 
+     * Prevents riders from picking up items while flying
+     * 
+     * @param event
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerItemPick(PlayerPickupItemEvent event) {
+    	
+        Player player = event.getPlayer();
+        
+        if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
+            event.setCancelled(true);
+    }
 }
