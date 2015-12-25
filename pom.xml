@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.phiwa</groupId>
     <artifactId>DragonTravel</artifactId>
-    <version>01.003.13</version>
+    <version>01.003.15</version>
     <build>
         <resources>
             <resource>
@@ -155,6 +155,13 @@
             <version>7.1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.palmergames.bukkit.towny</groupId>
+            <artifactId>Towny</artifactId>
+            <version>0.90.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Towny.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>fr.neatmonster</groupId>

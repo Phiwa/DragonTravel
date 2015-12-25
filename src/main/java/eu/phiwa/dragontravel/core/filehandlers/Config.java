@@ -15,13 +15,14 @@ public class Config {
     // Config
     private FileConfiguration config;
     private File configFile;
-    private double configVersion = 0.7;
+    private double configVersion = 0.8;
 
     // Required Item
     private Material requiredItem;
     private boolean requireItemFlight;
     private boolean requireItemTravelCoordinates;
     private boolean requireItemTravelFactionhome;
+    private boolean requireItemTravelTownSpawn;
     private boolean requireItemTravelHome;
     private boolean requireItemTravelPlayer;
     private boolean requireItemTravelRandom;
@@ -101,6 +102,7 @@ public class Config {
         requireItemTravelPlayer = config.getBoolean("RequiredItem.For.toPlayer", false);
         requireItemTravelHome = config.getBoolean("RequiredItem.For.toHome", false);
         requireItemTravelFactionhome = config.getBoolean("RequiredItem.For.toFactionhome", false);
+        requireItemTravelTownSpawn = config.getBoolean("RequiredItem.For.toTownSpawn", false);
         requireItemFlight = config.getBoolean("RequiredItem.For.Flight", false);
         dismountAtExactLocation = config.getBoolean("DismountAtExactLocation", false);
         requireSkyLight = config.getBoolean("RequireSkyLight", false);
@@ -121,6 +123,8 @@ public class Config {
 
     private void newlyRequiredConfig() {
 
+    	Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Updating config file to " + configVersion);
+    	
         // New options in version 0.2
         if (!config.isSet("PToggleDefault"))
             config.set("PToggleDefault", true);
@@ -154,7 +158,15 @@ public class Config {
         // Changed default in 0.7
         if(config.getDouble("File.Version") < 0.7)
         	config.set("Payment.Resources.ItemName", "<default>");
-
+        
+        // New options in version 0.8
+        if (!config.isSet("Payment.Economy.Prices.toTownSpawn"))
+        	config.set("Payment.Economy.Prices.toTownSpawn", 5.0);
+        if (!config.isSet("Payment.Resources.Prices.toTownSpawn"))
+        	config.set("Payment.Resources.Prices.toTownSpawn", 5.0);
+        if (!config.isSet("RequiredItem.For.toTownSpawn"))
+        	config.set("RequiredItem.For.toTownSpawn", false);
+        
         // Update the file version
         config.set("File.Version", configVersion);
 
@@ -241,6 +253,10 @@ public class Config {
 
     public boolean isRequireItemTravelFactionhome() {
         return requireItemTravelFactionhome;
+    }
+    
+    public boolean isRequireItemTravelTownSpawn() {
+        return requireItemTravelTownSpawn;
     }
 
     public void setRequireItemTravelFactionhome(boolean requireItemTravelFactionhome) {

@@ -11,6 +11,7 @@ import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
 import eu.phiwa.dragontravel.core.movement.travel.TravelEngine;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -259,6 +260,30 @@ public class DragonManager {
         CheatProtectionHandler.unexemptPlayerFromCheatChecks(player);
         DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, customDismountLoc);
         Bukkit.getPluginManager().callEvent(event);
+    }
+    
+    /*
+	 * I created this method to check to see if a dragon is a DT Dragon. However,
+	 * this doesn't work @ CreatureSpawnEvent. Perhaps dragons aren't added to these
+	 * lists until later?
+	*/
+    public boolean isDragonTravelDragon(Entity e){
+    	ConcurrentHashMap<Player, IRyeDragon> dragons = this.getRiderDragons();
+		ConcurrentHashMap<String, StationaryDragon> statdragons = this.getStationaryDragons();
+    	for(OfflinePlayer p : Bukkit.getServer().getOfflinePlayers()){
+			IRyeDragon dragon = dragons.get(p);
+			if(dragon!=null){
+				if(e == dragon.getEntity()){
+					return true;
+				}
+			}
+		}
+		for (StationaryDragon sDragon : statdragons.values()){
+			if(sDragon.getDragon().getEntity() == e){
+				return true;
+			}
+		}
+		return false;
     }
 
     public HashMap<UUID, Long> getDamageReceipts() {

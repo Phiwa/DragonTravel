@@ -36,7 +36,7 @@
 #       and please report all bugs you find, otherwise I can't fix them. ;)
 
 File:
-    Version: 0.5
+    Version: 0.8
     Language: 'English'
 
 Messages:
@@ -132,3 +132,7 @@ Messages:
             NoFactionMember: '&cYou are not a member of a faction.'
             FactionHasNoHome: '&cYour faction does no have a home-point.'
             NotYourFaction: '&cThis is not your faction.'
+    Towny:
+        Error:
+            TownyNotInstalled: '&c Towny is not installed on this server.'
+            NoTown: '&c You do not have a town.'

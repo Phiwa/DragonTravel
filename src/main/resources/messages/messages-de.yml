@@ -36,7 +36,7 @@
 #       und melde bitte alle Bugs, die du findest, sonst kann ich sie nicht beheben. ;)
 
 File:
-    Version: 0.3
+    Version: 0.8
     Language: 'German'
     
 Messages:
@@ -47,13 +47,19 @@ Messages:
             DismountedToStart: '&aDu hast deine Reise abgebrochen und wirst zum Ausgangspunkt zurück gebracht.'
             ToggledPTravelOn: '&aDu erlaubst nun Spieler-Reisen zu dir.'
             ToggledPTravelOff: '&aDu erlaubst nun keine Spieler-Reisen zu dir mehr.'
-        Error:        
+        Error:    
+            NoConsole: '&cDie Konsole kann diesen Befehl dieser Form nicht nutzen.'
+            NameTaken: '&cDieser Name ist bereits vergeben.'        
             NoPermission: '&cDu hast nicht die erforderliche Berechtigung um dies zu nutzen.'
             NotMounted: '&cDu sitzt auf keinem Drachen.'
+            RequireSkyLight: '&cDu musst direkten Zugang zum Himmel haben!'
             RequiredItemMissing: '&cDu hast nicht das benötigte Item in deinem Inventar, um das Plugin zu nutzen.'       
             DatabaseCorrupted: '&cDie Datenbank ist beschädigt, deshalb konnte ein benötigter Eintrag nicht geladen werden. Bitte informiere den Admin.' 
-            ReachedDragonLimit: '&cDer Server hat bereits sein Drachen-Limit erreicht, du kannst keinen weiteren Drachen spawnen. Bitte warte bis ein anderer Spieler absteigt.'            
+            ReachedDragonLimit: '&cDer Server hat bereits sein Drachen-Limit erreicht, du kannst keinen weiteren Drachen spawnen. Bitte warte bis ein anderer Spieler absteigt.' 
+            BelowMinMountHeight: '&cDu befindest dich unter der minimalen Höhe fürs besteigen eines Drachens. Die minimale Höhe ist &f{minheight}&c.'
+            DamageCooldown: '&cYou must wait &f{seconds} &cmore seconds before you can mount a dragon.'            
     Payment:
+        Free: '&aKeine Kosten für dich, weiter gehts!'
         Resources:
             Successful:
                 WithdrawMessage: '&aVerabschiede dich von &f{amount}&a Gold-Nuggets.'
@@ -97,24 +103,26 @@ Messages:
             TravellingToCoordinatesSameWorld: '&aStarte Reise zu den Koordinaten &f{x}&a, &f{y}&a, &f{z}&a.'
             TravellingToCoordinatesOtherWorld: '&aStarte Reise zu den Koordinaten &f{x}&a, &f{y}&a, &f{z}&a in Welt &f{worldname}&a.'
             TravellingToHome: '&aStarte Reise &fnach Hause&a.'
+            TravellingToFactionHome: '&aStart Reise zum Faction-Home.'
             TravellingToStation: '&aStarte Reise nach &f{stationname}&a.'
+            TravellingToPlayer: '&aStarte Reise zu &f{playername}&a.'
         Error:
             InvalidCoordinates: '&cUngültige Koordinaten.'
             PlayerNotOnline: '&cDer Spieler &f{playername}&c ist nicht online.'
             NoHomeSet: '&cDu hast noch kein Zuhause gesetzt.'
             OnlySigns: '&cDieser Befehl wurde vom Admin deaktiviert, nutze stattdessen Schilder zum reisen.'
             WorldNotFound: '&cDie angegebene Welt konnte nicht gefunden werden.'
-            NotCreateStationWithRandomstatName: '&cDu kannst keine Station mit dem Namen des Zufallsortes erstellen.'
             TargetPlayerDoesnotAllowPTravel: '&cDer Spieler &f{playername}&c erlaubt keine Spieler-Reisen zu sich.'
             CannotTravelToYourself: '&cEs macht keinen Sinn zu dir selbst zu reisen...'
             MaxTravelDistanceExceeded: '&cDie Strecke zum Zielort ist zu groß.'
     Stations:
         Successful:
             StationCreated: '&aDie Station &f{stationname}&a wurde erstellt.'
-            StationCreated: '&aDie Station &f{stationname}&a wurde entfernt.'
+            StationRemoved: '&aDie Station &f{stationname}&a wurde entfernt.'
         Error:
             StationAlreadyExists: '&cDie Station &f{stationname}&c existiert bereits.'
             StationDoesNotExist: '&cDie Station &f{stationname}&c existiert nicht.'
+            NotCreateStationWithRandomstatName: '&cDu kannst keine Station mit dem Namen des Zufallsortes erstellen.'
             NotAtAStation: '&cDu kannst nur an einer Station aufsteigen.'
             CouldNotCreateStation: '&cKonnte die Station nicht erstellen.'
             CouldNotRemoveStation: '&cKonnte die Station nicht entfernen.'
@@ -124,3 +132,7 @@ Messages:
             NoFactionMember: '&cDu bist in keiner Fraktion.'
             FactionHasNoHome: '&cDeine Fraktion hat kein Zuhause gesetzt.'
             NotYourFaction: '&cDas ist nicht deine Fraktion.'
+    Towny:
+        Error:
+            TownyNotInstalled: '&c Towny ist auf diesem Server nicht installiert.'
+            NoTown: '&c Du hast keinen Town.'

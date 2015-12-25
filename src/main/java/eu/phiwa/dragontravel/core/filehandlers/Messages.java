@@ -14,7 +14,7 @@ public class Messages {
     // Messages
     private FileConfiguration messages;
     private File messagesFile;
-    private final double messagesVersion = 0.7;
+    private final double messagesVersion = 0.8;
 
     private String language = "";
 
@@ -88,18 +88,18 @@ public class Messages {
 
     private void newlyRequiredMessages() {
 
-        // Add new keys here!
+    	Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Updating messages file to " + messagesVersion);
 
-        // v0.0.0.9
+        // old
         if (messages.get("Messages.Flights.Error.OnlySigns") == null)
             messages.set("Messages.Flights.Error.OnlySigns", "&cThis command has been disabled by the admin, you can only use flights using signs.");
         if (messages.get("Messages.Stations.Error.NotCreateStationWithRandomstatName") == null)
             messages.set("Messages.Stations.Error.NotCreateStationWithRandomstatName", "&cYou cannot create a staion with the name of the RandomDest.");
-
-        // v0.0.0.17
         if (messages.get("Messages.Factions.Error.NotYourFaction") == null)
             messages.set("Messages.Factions.Error.NotYourFaction", ": &cThis is not your faction.");
-
+        if(messages.get("Messages.Factions.Error.FactionsNotInstalled") == null)
+        	messages.set("Messages.Factions.Error.FactionsNotInstalled", ": &cFactions is not installed");
+        
         // 0.5
         if (messages.get("Messages.General.Error.BelowMinMountHeight") == null)
             messages.set("Messages.General.Error.BelowMinMountHeight", "&cYou are below the minimum height required to mount a dragon. Minimum height is &f{minheight}&c.");
@@ -117,6 +117,8 @@ public class Messages {
             messages.set("Messages.Travels.Successful.TravellingToPlayer", "&aTravelling to &f{playername}&a.");
         if (messages.get("Messages.Travels.Successful.TravellingToFactionHome") == null)
             messages.set("Messages.Travels.Successful.TravellingToFactionHome", "&aTravelling to the faction home.");
+        if (messages.get("Messages.Travels.Successful.TravellingToTownSpawn") == null)
+            messages.set("Messages.Travels.Successful.TravellingToTownSpawn", "&aTravelling to the town spawn.");
         if (messages.get("Messages.General.Error.RequireSkyLight") == null)
             messages.set("Messages.General.Error.RequireSkyLight", "&cYou must have access to sky light!");
         if (messages.get("Messages.General.Error.NoConsole") == null)
@@ -126,6 +128,15 @@ public class Messages {
         if (messages.get("Messages.Payment.Free") == null)
             messages.set("Messages.Payment.Free", "&aNo charge for you, hop on!");
 
+        //0.7 skipped due to merge problems to ensure compatibility
+        
+        //0.8
+        if (messages.get("Messages.Towny.Error.NoTown") == null)
+            messages.set("Messages.Towny.Error.NoTown", ": &cYou do not have a town.");
+        if(messages.get("Messages.Towny.Error.TownyNotInstalled") == null)
+        	messages.set("Messages.Towny.Error.TownyNotInstalled", ": &cTowny is not installed");
+        
+        
         // Update the file version
         messages.set("File.Version", messagesVersion);
     }

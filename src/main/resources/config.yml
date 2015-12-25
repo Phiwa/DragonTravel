@@ -1,5 +1,5 @@
 File:
-    Version: 0.7
+    Version: 0.8
 #Send usage statistics to mcstats.org
 UseMetrics: true
 #Automatically update to the latest version on BukkitDev
@@ -112,6 +112,7 @@ Payment:
             toCoordinates: 5.0
             toHome: 5.0
             toFactionhome: 5.0
+            toTownSpawn: 5.0
             setHome: 5.0
             Flight: 5.0
     Resources:
@@ -124,6 +125,7 @@ Payment:
             toCoordinates: 5
             toHome: 5
             toFactionhome: 5
+            toTownSpawn: 5
             setHome: 5
             Flight: 5
 
@@ -149,6 +151,7 @@ RequiredItem:
         toPlayer: false
         toCoordinates: false
         toFactionhome: false
+        toTownSpawn: false
         toHome: false
         Flight: false
     

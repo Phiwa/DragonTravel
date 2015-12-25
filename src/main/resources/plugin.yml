@@ -3,7 +3,7 @@ main: eu.phiwa.dragontravel.core.DragonTravel
 authors: [Phiwa, x3nec]
 version: ${project.version}
 load: POSTWORLD
-softdepend: [Vault, AntiCheat, NoCheatPlus, Factions, Heroes]
+softdepend: [Vault, AntiCheat, NoCheatPlus, Factions, Heroes, Towny]
 permissions:
     dt.*:
         default: op
