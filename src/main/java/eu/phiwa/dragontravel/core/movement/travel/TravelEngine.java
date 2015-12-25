@@ -76,9 +76,9 @@ public class TravelEngine {
             message = String.format(message, z);
             message = message.replace("{worldname}", "%s");
             message = String.format(message, world.getName());
-        player.sendMessage(message);
         }
-
+        
+        player.sendMessage(message);
         travel(player, loc, checkForStation, message, DragonType.LOC_TRAVEL);
 
     }
