@@ -106,6 +106,7 @@ Messages:
             TravellingToFactionHome: '&aStart Reise zum Faction-Home.'
             TravellingToStation: '&aStarte Reise nach &f{stationname}&a.'
             TravellingToPlayer: '&aStarte Reise zu &f{playername}&a.'
+            TravellingToTownSpawn: '&aStarte Reise zum Town-Spawn.'
         Error:
             InvalidCoordinates: '&cUngültige Koordinaten.'
             PlayerNotOnline: '&cDer Spieler &f{playername}&c ist nicht online.'
