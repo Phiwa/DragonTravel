@@ -136,14 +136,24 @@ public final class DragonTravelCommands {
             min = 0, max = 1, flags = "g",
             help = "Removes all dragons (except stationary dragons) without riders.\n"
                     + "It only acts on the world you're currently in, unless you use the -g ('global')")
-    @CommandPermissions({"dt.admin.remdragons"})
+    //@CommandPermissions({"dt.admin.remdragons"})
     public static void removeDragons(CommandContext args, CommandSender sender) throws CommandException {
+    	
+    	if(sender instanceof Player) {
+    		Player player = (Player)sender;
+    		if(!player.hasPermission("dt.admin.remdragons")) {
+    			sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+    			return;
+    		}
+    	}
+    	
         if (args.hasFlag('g')) {
             for (World world : Bukkit.getWorlds()) {
                 sender.sendMessage("[DragonTravel] " + DragonTravel.getInstance().getDragonManager().removeDragons(world, false));
             }
             return;
         }
+        
         switch (args.argsLength()) {
             case 0:
                 if (sender instanceof Player) {
