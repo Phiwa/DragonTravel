@@ -87,7 +87,7 @@ public class EconomyPaymentHandler implements PaymentHandler {
             return true;
 
         if (!economyProvider.has(player, amount)) {
-            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Economy.Error.NotEnoughMoney"));
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Payment.Economy.Error.NotEnoughMoney"));
             return false;
         } else {
             economyProvider.withdrawPlayer(player, amount);
