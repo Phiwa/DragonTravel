@@ -174,7 +174,7 @@ public final class DragonTravelCommands {
         }
         Player player = (Player) sender;
         String name = args.getString(0).toLowerCase();
-        String displayName = name;
+        String displayName = args.getString(0);
         if (args.argsLength() == 2) {
             displayName = args.getString(1).replace('_', ' ');
         }
