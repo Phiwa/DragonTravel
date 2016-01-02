@@ -137,7 +137,8 @@ public class Messages {
         	messages.set("Messages.Towny.Error.TownyNotInstalled", ": &cTowny is not installed");
         if(messages.get("Messages.Travels.Successful.HomeSet") == null)
         	messages.set("Messages.Travels.Successful.HomeSet", ": &aHome set");
-        
+        if(messages.get("Messages.General.Error.WorldNotFound") == null)
+        	messages.set("Messages.General.Error.WorldNotFound", ": &cCould not find the specified world.");
         
         // Update the file version
         messages.set("File.Version", messagesVersion);

@@ -23,6 +23,7 @@ import org.bukkit.help.HelpTopic;
 import org.bukkit.util.ChatPaginator;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 /*
 Class adapted from Riking's contribution
@@ -155,7 +156,7 @@ public final class DragonTravelCommands {
                 String w = args.getString(0);
                 World world = Bukkit.getWorld(w);
                 if (world == null) {
-                    sender.sendMessage(ChatColor.RED + "The world " + w + " does not exist!"); // TODO locale
+                    sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.WorldNotFound"));
                     return;
                 }
                 sender.sendMessage("[DragonTravel] " + DragonTravel.getInstance().getDragonManager().removeDragons(world, false));
@@ -258,8 +259,7 @@ public final class DragonTravelCommands {
             playerName = sender.getName();
             playerId = ((Player) sender).getUniqueId().toString();
         } else {
-            // TODO localize
-            sender.sendMessage("The console must provide a player for this command");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] The console must provide a player for this command!");
             return;
         }
 
@@ -303,7 +303,7 @@ public final class DragonTravelCommands {
             return;
         Home home = new Home(player.getLocation());
         DragonTravel.getInstance().getDbHomesHandler().saveHome(player.getUniqueId().toString(), home);
-        sender.sendMessage(ChatColor.GREEN + "Home set!"); //TODO: Add to messages
+        sender.sendMessage(ChatColor.GREEN + "Home set!");
     }
 
     @SuppressWarnings("deprecation")

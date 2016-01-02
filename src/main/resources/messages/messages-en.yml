@@ -58,6 +58,7 @@ Messages:
             ReachedDragonLimit: '&cThe server already reached its limit, you cannot spawn another dragon, please wait for another player to dismount.'
             BelowMinMountHeight: '&cYou are below the minimum height required to mount a dragon. Minimum height is &f{minheight}&c.'
             DamageCooldown: '&cYou must wait &f{seconds} &cmore seconds before you can mount a dragon.'
+            WorldNotFound: '&cCould not find the specified world.'
     Payment:
         Free: '&aNo charge for you, hop on!'
         Resources:

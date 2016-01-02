@@ -189,7 +189,6 @@ public class PlayerListener implements Listener {
                     }
 
                     if (!faction.getName().equals(factiontag)) {
-                        // TODO: ADD MESSAGE to other messages-xy.yml
                         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NotYourFaction"));
                         return;
                     }

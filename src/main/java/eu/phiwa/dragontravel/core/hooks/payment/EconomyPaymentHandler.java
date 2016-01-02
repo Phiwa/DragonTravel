@@ -23,7 +23,7 @@ public class EconomyPaymentHandler implements PaymentHandler {
             economyProvider = economyRSP.getProvider();
             return true;
         }
-        // XXX logger
+
         Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] You enabled economy in the config, but DragonTravel could not find a Vault economy provider.\n" + "DragonTravel will now go and cry a bit. :(");
         return false;
     }
