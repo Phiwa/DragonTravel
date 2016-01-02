@@ -27,7 +27,7 @@ public class Messages {
         language = DragonTravel.getInstance().getConfig().getString("Language");
 
         if (language == null) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not load messages-file because the language could not be read from the config! Disabling plugin!");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not load messages-file because the language could not be read from the config! Disabling plugin!");
             Bukkit.getPluginManager().disablePlugin(DragonTravel.getInstance());
             return;
         }
@@ -47,9 +47,9 @@ public class Messages {
         try {
             messagesFile.createNewFile();
             copy(DragonTravel.getInstance().getResource("messages/messages-" + language + ".yml"), messagesFile);
-            Bukkit.getLogger().log(Level.INFO, "Created messages file.");
+            Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Created messages file.");
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not create the languages file - check the language!");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not create the languages file - check the language!");
             e.printStackTrace();
         }
     }
@@ -135,6 +135,8 @@ public class Messages {
             messages.set("Messages.Towny.Error.NoTown", ": &cYou do not have a town.");
         if(messages.get("Messages.Towny.Error.TownyNotInstalled") == null)
         	messages.set("Messages.Towny.Error.TownyNotInstalled", ": &cTowny is not installed");
+        if(messages.get("Messages.Travels.Successful.HomeSet") == null)
+        	messages.set("Messages.Travels.Successful.HomeSet", ": &aHome set");
         
         
         // Update the file version
@@ -150,7 +152,7 @@ public class Messages {
         String message;
         message = replaceColors(messages.getString(path));
         if (message == null) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not find the message looking for at path '" + path + "' which leads to a serious problem! Be try to generate a new language file if you previously updated DragonTravel!");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not find the message looking for at path '" + path + "' which leads to a serious problem! Try to generate a new language file if you previously updated DragonTravel!");
             return replaceColors("&cAn error occured, please contact the admin! Missing message '" + path + "'");
         }
         if (message.length() == 0)
@@ -166,7 +168,7 @@ public class Messages {
         try {
             formattedMessage = string.replaceAll("(?i)&([a-f0-9])", "\u00A7$1");
         } catch (Exception ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Could not read a message from the messages-xx.yml!");
+            Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Could not read a message from the messages-xx.yml!");
         }
 
         return formattedMessage;

@@ -107,6 +107,7 @@ Messages:
             TravellingToStation: '&aTravelling to &f{stationname}&a.'
             TravellingToPlayer: '&aTravelling to &f{playername}&a.'
             TravellingToTownSpawn: '&aTravelling to the town spawn.'
+            HomeSet: '&aHome set.'
         Error:
             InvalidCoordinates: '&cInvalid Coordinates.'
             PlayerNotOnline: '&cThe player &f{playername}&a isn''t online.'
@@ -131,7 +132,7 @@ Messages:
         Error:
             FactionsNotInstalled: '&cFactions is not installed on this server.'
             NoFactionMember: '&cYou are not a member of a faction.'
-            FactionHasNoHome: '&cYour faction does no have a home-point.'
+            FactionHasNoHome: '&cYour faction does not have a home-point.'
             NotYourFaction: '&cThis is not your faction.'
     Towny:
         Error:
