@@ -4,6 +4,21 @@ DragonTravel
 A plugin for the Minecraft-servermod "Bukkit". Projectpage: http://dev.bukkit.org/bukkit-plugins/dragontravel/
 
 
+Important
+============
+
+To be able to work on this code, you need to place the following libraries/Bukkit-plugins in your local "lib"-folder which is ignored in Git.
+
+- craftbukkit-1.7.10-R0.4-SNAPSHOT.jar
+- craftbukkit-1.7.9-R0.2-SNAPSHOT.jar
+- craftbukkit-1.8-R0.1-SNAPSHOT.jar
+- craftbukkit-1.8.7-R0.1-SNAPSHOT.jar
+- Factions.jar (version 2.3.1)
+- mcore.jar (version 7.1.0)
+- NoCheatPlus.jar (version 3.8.12-RC2-b472)
+- Towny.jar (version 0.90.0.0)
+
+Other versions than the ones named here may work, but compilation has only been tested with the versions specified.
 
 
   License
