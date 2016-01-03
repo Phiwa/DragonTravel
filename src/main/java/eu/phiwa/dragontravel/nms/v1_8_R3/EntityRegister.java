@@ -12,7 +12,8 @@ import java.util.HashMap;
 
 public class EntityRegister implements IEntityRegister {
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public boolean registerEntity() {
         try {
             Class<EntityTypes> entityTypeClass = EntityTypes.class;
