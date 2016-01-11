@@ -2,8 +2,6 @@ package eu.phiwa.dragontravel.core.movement.travel;
 
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.UPlayer;
-import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
-import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
@@ -208,7 +206,7 @@ public class TravelEngine {
         }
         try {
 			res = TownyUniverse.getDataSource().getResident(player.getName());
-		} catch (NotRegisteredException e1) {
+		} catch (Exception e1) { // TODO: Remove hotfix by replacing with 'NotRegisteredException' again
 			hasTown = false;
 		}
         if(res!=null){
@@ -216,13 +214,13 @@ public class TravelEngine {
           	try {
                 town = res.getTown();
                 
-				} catch (NotRegisteredException e) {
+				} catch (Exception e) { // TODO: Remove hotfix by replacing with 'NotRegisteredException' again
 					hasTown = false;
 				}
           	if(town!=null){
           		try {
 					tspawn = town.getSpawn();
-				} catch (TownyException e) {
+				} catch (Exception e) { // TODO: Remove hotfix by replacing with 'TownyException' again
 					hasTown = false;
 				}
           		hasTown = true;
