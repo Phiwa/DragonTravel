@@ -67,8 +67,9 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     public void m() {
         if (getEntity() != null && rider != null) {
             if (getEntity().getPassenger() != null) {
-                getEntity().setPassenger(rider);
+                //getEntity().setPassenger(rider); //TODO: Reenable
             }
+            rider.teleport(getEntity());
         }
 
         if (midLocA != null || toLoc != null) {
