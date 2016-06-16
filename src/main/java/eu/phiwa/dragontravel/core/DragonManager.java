@@ -9,6 +9,7 @@ import eu.phiwa.dragontravel.core.movement.DragonType;
 import eu.phiwa.dragontravel.core.movement.flight.FlightEngine;
 import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
 import eu.phiwa.dragontravel.core.movement.travel.TravelEngine;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -122,6 +123,7 @@ public class DragonManager {
         return player;
     }
 
+    // TODO: Optimize for better dismount
     private Location getSafeLandingLoc(Location loc) {
         if (DragonTravel.getInstance().getConfigHandler().isDismountAtExactLocation())
             return loc;
@@ -193,7 +195,7 @@ public class DragonManager {
             return false;
         } else {
             CheatProtectionHandler.exemptPlayerFromCheatChecks(player);
-            ryeDragon.getEntity().setPassenger(player);
+            //ryeDragon.getEntity().setPassenger(player); //TODO: Reenable
             riderDragons.put(player, ryeDragon);
             if (asNew)
                 riderStartPoints.put(player, player.getLocation());
