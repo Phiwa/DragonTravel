@@ -1,15 +1,15 @@
-package eu.phiwa.dragontravel.nms.v1_9_R2;
+package eu.phiwa.dragontravel.nms.v1_10_R1;
 
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
 import eu.phiwa.dragontravel.core.movement.DragonType;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
-import net.minecraft.server.v1_9_R2.EntityEnderDragon;
-import net.minecraft.server.v1_9_R2.World;
+import net.minecraft.server.v1_10_R1.EntityEnderDragon;
+import net.minecraft.server.v1_10_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_9_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_10_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -40,7 +40,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     private double zPerTick;
 
     public RyeDragon(Location loc) {
-        this(loc, ((CraftWorld) loc.getWorld()).getHandle());        
+        this(loc, ((CraftWorld) loc.getWorld()).getHandle());
     }
 
     public RyeDragon(Location loc, World notchWorld) {

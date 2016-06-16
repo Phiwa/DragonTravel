@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.phiwa</groupId>
     <artifactId>DragonTravel</artifactId>
-    <version>01.004.02</version>
+    <version>01.004.03</version>
     <build>
         <resources>
             <resource>
@@ -102,6 +102,13 @@
         </repository>
     </repositories>
     <dependencies>
+    	<dependency>    	
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit-1.10-R0.1</artifactId>
+            <version>1.10-R0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/craftbukkit-1.10-R0.1-SNAPSHOT.jar</systemPath>
+        </dependency>
     	<dependency>    	
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.9.4</artifactId>
