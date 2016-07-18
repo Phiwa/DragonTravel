@@ -287,8 +287,8 @@ public class TravelEngine {
         }
 
         Location targetLoc = targetplayer.getLocation();
-        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToPlayer"));
-        travel(player, targetLoc, checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToPlayer").replace("{playername}", targetplayer.getDisplayName()), DragonType.PLAYER_TRAVEL);
+        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToPlayer").replace("{playername}", targetplayer.getDisplayName()));
+        travel(player, targetLoc, checkForStation, targetplayer.getDisplayName(), DragonType.PLAYER_TRAVEL);
 
     }
 
