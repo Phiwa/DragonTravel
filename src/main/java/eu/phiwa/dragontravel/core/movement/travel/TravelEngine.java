@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
@@ -77,19 +78,19 @@ public class TravelEngine {
         }
         
         player.sendMessage(message);
-        travel(player, loc, checkForStation, message, DragonType.LOC_TRAVEL);
+        travel(player, loc, checkForStation, message, DragonType.LOC_TRAVEL, null);
 
     }
 
     /**
-     * Core-method of this class, handles the travel itself (e.g. the difference between normal and interworld-travels
+     * Core-method of this class, handles the travel itself (e.g. the difference between normal and interworld-travels)
      *
      * @param checkForStation Whether or not DragonTravel should check
      *                        if the player is at a station and return if not.
      *                        If the admin disabled the station-check globally,
      *                        this has no function.
      */
-    public void travel(Player player, Location destination, Boolean checkForStation, String destName, DragonType dragonType) throws DragonException {
+    public void travel(Player player, Location destination, Boolean checkForStation, String destName, DragonType dragonType, CommandSender sendingPlayer) throws DragonException {
 
         if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
             return;
@@ -104,19 +105,22 @@ public class TravelEngine {
 
         Location temploc = player.getLocation();
 
-        if (!player.hasPermission("dt.bypassrequireskylight") && (temploc.getWorld().getHighestBlockYAt(temploc) < temploc.getY() || destination.getWorld().getHighestBlockYAt(destination) < destination.getY())) {
-            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequireSkyLight"));
-            return;
-        }
+        // Do not run checks if player is sent by an admin
+        if (sendingPlayer == null) {
+	        if (!player.hasPermission("dt.bypassrequireskylight") && (temploc.getWorld().getHighestBlockYAt(temploc) < temploc.getY() || destination.getWorld().getHighestBlockYAt(destination) < destination.getY())) {
+	            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequireSkyLight"));
+	            return;
+	        }
 
-        // Check if max distance to target is exceeded
-        int maxdist = DragonTravel.getInstance().getConfig().getInt("MaxTravelDistance");
-
-        if (maxdist != -1) {
-            if (temploc.distance(destination) >= maxdist) {
-                player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.MaxTravelDistanceExceeded"));
-                throw new DragonException("Player cannot travel this far in one journey.");
-            }
+	        // Check if max distance to target is exceeded
+	        int maxdist = DragonTravel.getInstance().getConfig().getInt("MaxTravelDistance");
+	
+	        if (maxdist != -1) {
+	            if (temploc.distance(destination) >= maxdist) {
+	                player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.MaxTravelDistanceExceeded"));
+	                throw new DragonException("Player cannot travel this far in one journey.");
+	            }
+	        }
         }
 
         if (Objects.equals(destination.getWorld().getName(), player.getWorld().getName())) {
@@ -185,7 +189,7 @@ public class TravelEngine {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
         } else {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"));
-            travel(player, faction.getHome().asBukkitLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"), DragonType.FACTION_TRAVEL);
+            travel(player, faction.getHome().asBukkitLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"), DragonType.FACTION_TRAVEL, null);
         }
     }
     
@@ -234,7 +238,7 @@ public class TravelEngine {
             return;
         } else{
         	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToTownSpawn"));
-            travel(player, tspawn, checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToTownSpawn"), DragonType.FACTION_TRAVEL);
+            travel(player, tspawn, checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToTownSpawn"), DragonType.FACTION_TRAVEL, null);
         }
     }
 
@@ -264,7 +268,7 @@ public class TravelEngine {
         }
         
         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToHome"));
-        travel(player, home.toLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToHome"), DragonType.HOME_TRAVEL);
+        travel(player, home.toLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToHome"), DragonType.HOME_TRAVEL, null);
     }
 
     /**
@@ -288,7 +292,7 @@ public class TravelEngine {
 
         Location targetLoc = targetplayer.getLocation();
         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToPlayer").replace("{playername}", targetplayer.getDisplayName()));
-        travel(player, targetLoc, checkForStation, targetplayer.getDisplayName(), DragonType.PLAYER_TRAVEL);
+        travel(player, targetLoc, checkForStation, targetplayer.getDisplayName(), DragonType.PLAYER_TRAVEL, null);
 
     }
 
@@ -298,8 +302,11 @@ public class TravelEngine {
      * @param player          Player to bring to a random destination
      * @param checkForStation Whether or not DragonTravel should check
      *                        if the player is at a station and return if not
+     * @param sendingPlayer	  Represents the user who sent the player on the travel
+     * 						  to the random destination. If this variable is null,
+     * 						  the user started the journey by himself.
      */
-    public void toRandomDest(Player player, Boolean checkForStation) throws DragonException {
+    public void toRandomDest(Player player, Boolean checkForStation, CommandSender sendingPlayer) throws DragonException {
 
         if (DragonTravel.getInstance().getConfigHandler().isRequireItemTravelRandom()) {
             if (!player.getInventory().contains(DragonTravel.getInstance().getConfigHandler().getRequiredItem()) && !player.hasPermission("dt.notrequireitem.travel")) {
@@ -319,8 +326,15 @@ public class TravelEngine {
         Location randomLoc = new Location(player.getWorld(), x, 10, z);
         randomLoc.setY(randomLoc.getWorld().getHighestBlockAt(randomLoc).getY());
 
-        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToRandomLocation"));
-        travel(player, randomLoc, checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToRandomLocation"), DragonType.LOC_TRAVEL);
+        //player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToRandomLocation"));
+        
+        if (sendingPlayer != null) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.SentPlayer").replace("{stationname}", DragonTravel.getInstance().getConfig().getString("RandomDest.Name")));
+            sendingPlayer.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.SendingPlayer").replace("{playername}", player.getName()).replace("{stationname}", DragonTravel.getInstance().getConfig().getString("RandomDest.Name")));
+        } else
+        	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToRandomLocation"));
+        	
+        travel(player, randomLoc, checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToRandomLocation"), DragonType.LOC_TRAVEL, sendingPlayer);
     }
 
     /**
@@ -330,9 +344,14 @@ public class TravelEngine {
      *                        if the player is at a station and return if not.
      *                        If the admin disabled the station-check globally,
      *                        this has no function.
+     * @param sendingPlayer	  Represents the user who sent the player on the travel
+     * 						  to the station. If this variable is null,
+     * 						  the user started the journey by himself.
      */
-    public void toStation(Player player, String stationName, Boolean checkForStation) throws DragonException {
+    public void toStation(Player player, String stationName, Boolean checkForStation, CommandSender sendingPlayer) throws DragonException {
 
+    	CommandSender sender;
+    	
         Station destination = DragonTravel.getInstance().getDbStationsHandler().getStation(stationName);
 
         if (destination == null) {
@@ -347,7 +366,14 @@ public class TravelEngine {
             }
         }
 
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.getDisplayName())));
-        travel(player, destination.toLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.getDisplayName()), DragonType.STATION_TRAVEL);
+        //player.sendMessage(ChatColor.translateAlternateColorCodes('&', DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.getDisplayName())));
+        
+        if (sendingPlayer != null) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.SentPlayer").replace("{stationname}", stationName));
+            sendingPlayer.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.SendingPlayer").replace("{playername}", player.getName()).replace("{stationname}", stationName));
+        } else
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", stationName));
+        
+        travel(player, destination.toLocation(), checkForStation, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.getDisplayName()), DragonType.STATION_TRAVEL, sendingPlayer);
     }
 }

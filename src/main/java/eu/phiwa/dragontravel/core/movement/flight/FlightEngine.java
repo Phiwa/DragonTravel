@@ -22,9 +22,12 @@ public class FlightEngine {
      * @param sendingPlayer   Player who sent the player on a flight.
      *                        Gets all messages about problems until the flight is started
      */
-    public void startFlight(Player player, String flightName, Boolean checkForStation, boolean sentByAdmin, CommandSender sendingPlayer) throws DragonException {
+    public void startFlight(Player player, String flightName, Boolean checkForStation, CommandSender sendingPlayer) throws DragonException {
 
         CommandSender sender;
+        
+        // Player sent by an admin?
+        boolean sentByAdmin = (sendingPlayer != null);
 
         if (sentByAdmin)
             sender = sendingPlayer;
@@ -70,7 +73,7 @@ public class FlightEngine {
 
         if (sentByAdmin) {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.SentPlayer").replace("{flightname}", flight.getDisplayName()));
-            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.SendingPlayer").replace("{playername}", player.getName()).replace("{flightname}", flight.getDisplayName()));
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.SendingPlayer").replace("{playername}", player.getName()).replace("{flightname}", flight.getDisplayName()));
         } else
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.getDisplayName()));
         IRyeDragon dragon = DragonTravel.getInstance().getDragonManager().getRiderDragons().get(player);

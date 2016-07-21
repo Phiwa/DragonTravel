@@ -14,7 +14,7 @@ public class Messages {
     // Messages
     private FileConfiguration messages;
     private File messagesFile;
-    private final double messagesVersion = 0.8;
+    private final double messagesVersion = 0.9;
 
     private String language = "";
 
@@ -126,19 +126,25 @@ public class Messages {
         if (messages.get("Messages.General.Error.NameTaken") == null)
             messages.set("Messages.General.Error.NameTaken", "&cThat name is already taken.");
         if (messages.get("Messages.Payment.Free") == null)
-            messages.set("Messages.Payment.Free", "&aNo charge for you, hop on!");
+        	messages.set("Messages.Payment.Free", "&aNo charge for you, hop on!");
 
         //0.7 skipped due to merge problems to ensure compatibility
         
         //0.8
         if (messages.get("Messages.Towny.Error.NoTown") == null)
-            messages.set("Messages.Towny.Error.NoTown", ": &cYou do not have a town.");
-        if(messages.get("Messages.Towny.Error.TownyNotInstalled") == null)
-        	messages.set("Messages.Towny.Error.TownyNotInstalled", ": &cTowny is not installed");
-        if(messages.get("Messages.Travels.Successful.HomeSet") == null)
-        	messages.set("Messages.Travels.Successful.HomeSet", ": &aHome set");
-        if(messages.get("Messages.General.Error.WorldNotFound") == null)
-        	messages.set("Messages.General.Error.WorldNotFound", ": &cCould not find the specified world.");
+            messages.set("Messages.Towny.Error.NoTown", "&cYou do not have a town.");
+        if (messages.get("Messages.Towny.Error.TownyNotInstalled") == null)
+        	messages.set("Messages.Towny.Error.TownyNotInstalled", "&cTowny is not installed");
+        if (messages.get("Messages.Travels.Successful.HomeSet") == null)
+        	messages.set("Messages.Travels.Successful.HomeSet", "&aHome set");
+        if (messages.get("Messages.General.Error.WorldNotFound") == null)
+        	messages.set("Messages.General.Error.WorldNotFound", "&cCould not find the specified world.");
+        
+        // 0.9
+        if (messages.get("Messages.Travels.Successful.SendingPlayer") == null)
+        	messages.set("Messages.Travels.Successful.SendingPlayer", "&aSending player &f{playername}&a on travel to station &f{stationname}&a.");
+        if (messages.get("Messages.Travels.Successful.SentPlayer") == null)
+        	messages.set("Messages.Travels.Successful.SentPlayer", "&aYou were sent on a travel to station &f{stationname} &aby an admin.");
         
         // Update the file version
         messages.set("File.Version", messagesVersion);
