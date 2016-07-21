@@ -36,7 +36,7 @@
 #       und melde bitte alle Bugs, die du findest, sonst kann ich sie nicht beheben. ;)
 
 File:
-    Version: 0.8
+    Version: 0.9
     Language: 'German'
     
 Messages:
@@ -109,6 +109,8 @@ Messages:
             TravellingToPlayer: '&aStarte Reise zu &f{playername}&a.'
             TravellingToTownSpawn: '&aStarte Reise zum Town-Spawn.'
             HomeSet: '&aZuhause wurde gesetzt.'
+            SendingPlayer: '&aSende Spieler &f{playername}&a auf die Reise zur Station &f{stationname}&a.'
+            SentPlayer: '&aDu wurdest von einem Admin auf die Reise zur Station &f{stationname} &ageschickt.'
         Error:
             InvalidCoordinates: '&cUngültige Koordinaten.'
             PlayerNotOnline: '&cDer Spieler &f{playername}&c ist nicht online.'

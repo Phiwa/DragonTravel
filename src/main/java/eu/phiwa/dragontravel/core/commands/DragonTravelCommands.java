@@ -348,7 +348,7 @@ public final class DragonTravelCommands {
                     return;
                 }
                 try {
-                    DragonManager.getDragonManager().getFlightEngine().startFlight(player, flight, true, false, sender);
+                    DragonManager.getDragonManager().getFlightEngine().startFlight(player, flight, true, null);
                 } catch (DragonException e) {
                     e.printStackTrace();
                 }
@@ -371,7 +371,7 @@ public final class DragonTravelCommands {
                     return;
                 }
                 try {
-                    DragonManager.getDragonManager().getFlightEngine().startFlight(player, flight, true, true, sender);
+                    DragonManager.getDragonManager().getFlightEngine().startFlight(player, flight, true, sender);
                 } catch (DragonException e) {
                     e.printStackTrace();
                 }
@@ -381,9 +381,9 @@ public final class DragonTravelCommands {
 
     @Command(aliases = {"travel"},
             desc = "Travel to another station",
-            usage = "/dt travel <station name>",
-            min = 1, max = 1,
-            help = "Brings you to the specified station")
+            usage = "/dt travel <station name> [player=you]",
+            min = 1, max = 2,
+            help = "Brings you (or the given player) to the specified station")
     //@CommandPermissions({"dt.start.travel.command"})
     public static void startStationTravel(CommandContext args, CommandSender sender) throws CommandException {
 
@@ -392,25 +392,41 @@ public final class DragonTravelCommands {
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
-        if (!PermissionsHandler.hasTravelPermission(sender, "travel", station)) {
-            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
-            return;
-        }
-        Player player = (Player) sender;
-
+        
+        Player player = null;        
+        switch (args.argsLength()) {
+	        case 1:
+		        if (!PermissionsHandler.hasTravelPermission(sender, "travel", station)) {
+		            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+		            return;
+		        }
+		        player = (Player) sender;
+		        sender = null;
+	        	break;
+	        case 2:
+	        	if (!sender.hasPermission("dt.*")) {
+	        		sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+		            return;
+		        }
+		        player = Bukkit.getServer().getPlayer(args.getString(1));
+	        	break;
+        }	        	
+        
         if (station.equalsIgnoreCase((DragonTravel.getInstance().getConfig().getString("RandomDest.Name")))) {
-            if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TORANDOM, player))
-                return;
+        	if (sender == null)
+        		if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TORANDOM, player))
+        			return;
             try {
-                DragonManager.getDragonManager().getTravelEngine().toRandomDest(player, true);
+                DragonManager.getDragonManager().getTravelEngine().toRandomDest(player, true, sender);
             } catch (DragonException e) {
                 e.printStackTrace();
             }
         } else {
-            if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOSTATION, player))
-                return;
+        	if (sender == null)
+        		if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOSTATION, player))
+        			return;
             try {
-                DragonManager.getDragonManager().getTravelEngine().toStation(player, station, true);
+                DragonManager.getDragonManager().getTravelEngine().toStation(player, station, true, sender);
             } catch (DragonException e) {
                 e.printStackTrace();
             }
@@ -558,6 +574,7 @@ public final class DragonTravelCommands {
     @Command(aliases = {"createflight", "newflight"},
             desc = "Create a new Flight",
             usage = "/dt createflight",
+            min = 1, max = 1,
             help = "Creates a new flight and puts you into the flight-creation mode.\n\n"
                     + "You MUST NOT be in Flight Editing mode when you use this command.")
     //@CommandPermissions({"dt.edit.flights", "dt.edit.*"})
