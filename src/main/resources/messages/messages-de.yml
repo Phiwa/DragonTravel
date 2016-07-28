@@ -42,7 +42,8 @@ File:
 Messages:
     General:
         Successful:
-            AddedStatDragon: '&aStationärer Drache wurde erfolgreich erstellt.'
+            AddedStatDragon: '&aStationärer Drache &f{dragonname}&a wurde erfolgreich erstellt.'
+            RemovedStatDragon: '&aStationärer Drache &f{dragonname}&a wurde erfolgreich entfernt.'
             DismountedHere: '&aDu bist von deinem Drachen abgestiegen.'
             DismountedToStart: '&aDu hast deine Reise abgebrochen und wirst zum Ausgangspunkt zurück gebracht.'
             ToggledPTravelOn: '&aDu erlaubst nun Spieler-Reisen zu dir.'
@@ -58,7 +59,8 @@ Messages:
             ReachedDragonLimit: '&cDer Server hat bereits sein Drachen-Limit erreicht, du kannst keinen weiteren Drachen spawnen. Bitte warte bis ein anderer Spieler absteigt.' 
             BelowMinMountHeight: '&cDu befindest dich unter der minimalen Höhe fürs besteigen eines Drachens. Die minimale Höhe ist &f{minheight}&c.'
             DamageCooldown: '&cDu must &f{seconds} &cweitere Sekunden warten bis du wieder Drachen besteigen kannst.'
-            WorldNotFound: '&cDie angegebene Welt existiert nicht.'            
+            WorldNotFound: '&cDie angegebene Welt existiert nicht.'
+            StatDragonNotExists: '&cEs existiert kein stationärer Drache &f{name}&c.' 
     Payment:
         Free: '&aKeine Kosten für dich, auf gehts!'
         Resources:
