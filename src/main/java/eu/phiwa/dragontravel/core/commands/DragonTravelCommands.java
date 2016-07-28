@@ -195,6 +195,7 @@ public final class DragonTravelCommands {
         }
         StationaryDragon sDragon = new StationaryDragon(player, name, displayName, player.getLocation(), true);
         DragonTravel.getInstance().getDragonManager().getStationaryDragons().put(name.toLowerCase(), sDragon);
+        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.AddedStatDragon").replace("{dragonname}", displayName));
     }
 
     @Command(aliases = {"remstatdragon", "remstationarydragon"},
@@ -208,19 +209,22 @@ public final class DragonTravelCommands {
             return;
         }
         Player player = (Player) sender;
-        String name = args.getString(0).toLowerCase();
+        String inputname = args.getString(0);
+        String name = inputname.toLowerCase();
         if (!player.hasPermission("dt.admin.statdragon")) {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
             return;
         }
 
         if (!DragonTravel.getInstance().getDragonManager().getStationaryDragons().keySet().contains(name)) {
-            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.StatDragonNotExists"));
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.StatDragonNotExists").replace("{name}", inputname));
             return;
         }
 
         StationaryDragon sDragon = DragonTravel.getInstance().getDragonManager().getStationaryDragons().get(name);
+        String displayName = sDragon.getDisplayName();
         sDragon.removeDragon(true);
+        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.RemovedStatDragon").replace("{dragonname}", displayName));
     }
 
     @Command(aliases = {"dismount"},

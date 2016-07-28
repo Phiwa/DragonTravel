@@ -42,7 +42,8 @@ File:
 Messages:
     General:
         Successful:
-            AddedStatDragon: '&aSuccessfully created stationary dragon.'
+            AddedStatDragon: '&aSuccessfully created stationary dragon &f{dragonname}&a.'
+            RemovedStatDragon: '&aSuccessfully removed stationary dragon &f{dragonname}&a.'
             DismountedHere: '&aYou successfully dismounted your dragon.'
             DismountedToStart: '&aYou cancelled your journey and were brought back to your starting-point.'
             ToggledPTravelOn: '&aYou now allow player-travels to you.'
@@ -59,6 +60,7 @@ Messages:
             BelowMinMountHeight: '&cYou are below the minimum height required to mount a dragon. Minimum height is &f{minheight}&c.'
             DamageCooldown: '&cYou must wait &f{seconds} &cmore seconds before you can mount a dragon.'
             WorldNotFound: '&cCould not find the specified world.'
+            StatDragonNotExists: '&cThere is no stationary dragon &f{name}&c.'
     Payment:
         Free: '&aNo charge for you, hop on!'
         Resources:

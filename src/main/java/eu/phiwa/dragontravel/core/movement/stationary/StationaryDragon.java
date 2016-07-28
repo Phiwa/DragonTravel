@@ -63,7 +63,6 @@ public class StationaryDragon implements ConfigurationSerializable {
 
     public StationaryDragon(Player player, String name, String displayName, Location loc, boolean isNew) {
         this(name, displayName, loc, player.getUniqueId().toString(), isNew);
-        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.AddedStatDragon"));
     }
 
     public StationaryDragon(String name, String displayName, Location loc, String owner, boolean isNew) {
@@ -85,6 +84,7 @@ public class StationaryDragon implements ConfigurationSerializable {
         dragon.getEntity().remove();
         if (isPermanent)
             DragonTravel.getInstance().getDbStatDragonsHandler().deleteStatDragon(name);
+        	DragonTravel.getInstance().getDragonManager().getStationaryDragons().remove(name);
     }
 
     public String toString() {

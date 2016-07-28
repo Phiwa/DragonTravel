@@ -145,6 +145,10 @@ public class Messages {
         	messages.set("Messages.Travels.Successful.SendingPlayer", "&aSending player &f{playername}&a on travel to station &f{stationname}&a.");
         if (messages.get("Messages.Travels.Successful.SentPlayer") == null)
         	messages.set("Messages.Travels.Successful.SentPlayer", "&aYou were sent on a travel to station &f{stationname} &aby an admin.");
+        if(messages.get("Messages.General.Successfull.RemovedStatDragon") == null)
+        	messages.set("Messages.General.Successfull.RemovedStatDragon", ": &aSuccessfully removed stationary dragon &f{dragonname}&a.");
+        if(messages.get("Messages.General.Error.StatDragonNotExists") == null)
+        	messages.set("Messages.General.Successfull.RemovedStatDragon", ": &cThere is no stationary dragon &f{name}&c.");
         
         // Update the file version
         messages.set("File.Version", messagesVersion);
