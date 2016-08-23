@@ -6,6 +6,7 @@ import eu.phiwa.dragontravel.core.DragonManager;
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.payment.ChargeType;
 import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
+import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
 import eu.phiwa.dragontravel.core.movement.flight.Waypoint;
 import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
@@ -18,10 +19,13 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.help.HelpTopic;
 import org.bukkit.util.ChatPaginator;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -227,6 +231,41 @@ public final class DragonTravelCommands {
         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.RemovedStatDragon").replace("{dragonname}", displayName));
     }
 
+    @Command(aliases = {"rembugdragon"},
+            desc = "Removes the enderdragon with the shortest distance to you (within a 10 block radius). Used if there is a buggy stationary dragon which cannot be removed using the normal command.",
+            usage = "/dt rembugdragon",
+            min = 0, max = 0)
+    public static void deleteStationaryDragonBuggy(CommandContext args, CommandSender sender) throws CommandException {
+    	
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+            return;
+        }
+        Player player = (Player) sender;
+        if (!player.hasPermission("dt.admin.*")) {
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+            return;
+        }
+        
+        boolean found = false;
+        double maxdist = 10;
+        for(double dist = 1.0; dist <= maxdist; dist += 0.5) {
+            List<Entity> entities = player.getNearbyEntities(dist, dist, dist);
+            for(Entity ent: entities) {
+                if(!(ent instanceof EnderDragon))
+					continue;
+                player.sendMessage("Removed bugging dragon "+dist+" blocks away from you.");
+                ent.remove();
+                found = true;
+                break;
+            }
+			if(found)
+				return;
+		}
+	
+		player.sendMessage("There are no dragons within "+(int)maxdist+" blocks around you.");
+    }
+    
     @Command(aliases = {"dismount"},
             desc = "Get off of the dragon",
             usage = "/dt dismount",
