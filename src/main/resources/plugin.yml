@@ -119,6 +119,8 @@ permissions:
         description: Player may start a travel to their set home with a command
     dt.start.fhome.command:
         description: Player may start a travel to their faction's home with a command
+    dt.start.tspawn.command:
+        description: Player may start a travel to their town's spawn with a command
 
 
     # Permissions to edit flights and stations
@@ -232,6 +234,9 @@ permissions:
     dt.fhome:
         children:
             dt.start.fhome.command: true
+    dt.tspawn:
+        children:
+            dt.start.tspawn.command: true
 #commands:
 #    dt:
 #        permission: dt.seecommand

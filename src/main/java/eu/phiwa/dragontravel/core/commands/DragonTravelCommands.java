@@ -380,10 +380,6 @@ public final class DragonTravelCommands {
                     sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
                     return;
                 }
-//              if (!sender.hasPermission("dt.start.flight.command")) {
-//                  sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
-//                  throw new CommandPermissionsException();
-//              }
 
                 player = (Player) sender;
 
@@ -398,10 +394,6 @@ public final class DragonTravelCommands {
                 return;
 
             case 2:
-//              if (!sender.hasPermission("dt.start.flight.command.other")) {
-//           		sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
-//                  throw new CommandPermissionsException();
-//              }
             	
             	if (!sender.hasPermission("dt.*")) {
             		sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
@@ -454,7 +446,7 @@ public final class DragonTravelCommands {
 		        player = Bukkit.getServer().getPlayer(args.getString(1));
 	        	break;
         }	        	
-        
+        //TODO: Add message if player already on a travel
         if (station.equalsIgnoreCase((DragonTravel.getInstance().getConfig().getString("RandomDest.Name")))) {
         	if (sender == null)
         		if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TORANDOM, player))
@@ -488,7 +480,14 @@ public final class DragonTravelCommands {
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
+        
         Player player = (Player) sender;
+        
+        if(!player.hasPermission("dt.ptravel")) {
+        	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+			return;
+        }
+        
         Player targetPlayer = Bukkit.getPlayer(args.getString(0));
 
         if (targetPlayer == null) {
@@ -526,6 +525,11 @@ public final class DragonTravelCommands {
         }
         Player player = (Player) sender;
 
+        if(!player.hasPermission("dt.ctravel")) {
+        	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+			return;
+        }
+        
         try {
             int x = args.getInteger(0);
             int y = args.getInteger(1);
@@ -554,6 +558,11 @@ public final class DragonTravelCommands {
             return;
         }
         Player player = (Player) sender;
+        
+        if(!player.hasPermission("dt.home")) {
+        	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+			return;
+        }
 
         if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOHOME, player))
             return;
@@ -574,6 +583,11 @@ public final class DragonTravelCommands {
             return;
         }
         Player player = (Player) sender;
+        
+        if(!player.hasPermission("dt.fhome")) {
+        	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+			return;
+        }
 
         if (Bukkit.getPluginManager().getPlugin("Factions") == null) {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionsNotInstalled"));
@@ -598,9 +612,12 @@ public final class DragonTravelCommands {
             return;
         }
         Player player = (Player) sender;
+        
+        if(!player.hasPermission("dt.tspawn")) {
+        	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+			return;
+        }
 
-        
-        
         if (Bukkit.getPluginManager().getPlugin("Towny") == null) {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Towny.Error.TownyNotInstalled"));
             return;
@@ -626,6 +643,12 @@ public final class DragonTravelCommands {
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
+        
+        if(!sender.hasPermission("dt.admin.flights")) {
+        	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+			return;
+        }
+        
         Player player = (Player) sender;
 
         if (DragonTravel.getInstance().getFlightEditor().getEditors().containsKey(player)) {
@@ -655,6 +678,12 @@ public final class DragonTravelCommands {
             help = "Removes the flight with the specified name.")
     //@CommandPermissions({"dt.edit.flights", "dt.edit.*"})
     public static void removeFlight(CommandContext args, CommandSender sender) throws CommandException {
+
+    	if(!sender.hasPermission("dt.admin.flights")) {
+        	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+			return;
+        }
+    	
         if (DragonTravel.getInstance().getDbFlightsHandler().getFlight(args.getString(0)) == null) {
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightDoesNotExist"));
             return;
@@ -773,7 +802,14 @@ public final class DragonTravelCommands {
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
+        
+        if(!sender.hasPermission("dt.admin.stations")) {
+        	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+			return;
+        }
+        
         Player player = (Player) sender;
+        
         String station = args.getString(0).toLowerCase();
         String displayName = station;
         if (args.argsLength() == 2) {
@@ -811,7 +847,14 @@ public final class DragonTravelCommands {
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
             return;
         }
+        
+        if(!sender.hasPermission("dt.admin.stations")) {
+        	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+			return;
+        }
+        
         Player player = (Player) sender;
+        
         String station = args.getString(0);
 
         if (station.equalsIgnoreCase(DragonTravel.getInstance().getConfig().getString("RandomDest.Name"))) {
