@@ -96,6 +96,7 @@ public class StationsDB {
         Location playerLoc = player.getLocation();
 
         for (String string : dbStationsConfig.getConfigurationSection("Stations").getKeys(true)) {
+            Station stat = getStation(string);
             world = Bukkit.getWorld(stat.getWorldName());
 
             if (world == null) {
