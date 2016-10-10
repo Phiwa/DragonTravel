@@ -90,47 +90,29 @@ public class StationsDB {
     }
 
     public boolean checkForStation(Player player) {
-        String pathToStation;
         int x, y, z;
         World world;
         Location tempLoc;
         Location playerLoc = player.getLocation();
 
         for (String string : dbStationsConfig.getConfigurationSection("Stations").getKeys(true)) {
-            if (string.contains(".displayname")) {
-                pathToStation = "Stations." + string;
-                pathToStation = pathToStation.replace(".displayname", "");
+            world = Bukkit.getWorld(stat.getWorldName());
 
-                String worldname = dbStationsConfig.getString(pathToStation + ".world");
-
-                if (worldname == null) {
-                    Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] The world of the station "
-                            + dbStationsConfig.getString(pathToStation + ".displayname")
-                            + " could not be read from the database, please check it for errors!");
-                    player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.DatabaseCorrupted"));
-                    return false;
-                }
-
-                world = Bukkit.getWorld(worldname);
-
-                if (world == null) {
-                    Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Skipping station '" + dbStationsConfig.getString(pathToStation + ".displayname") + "' while checking for a station. There is no world '" + dbStationsConfig.getString(pathToStation + ".world") + "' on the server!");
-                    continue;
-                }
-
-
-                if (!world.getName().equalsIgnoreCase(player.getWorld().getName()))
-                    continue;
-
-                x = dbStationsConfig.getInt(pathToStation + ".x");
-                y = dbStationsConfig.getInt(pathToStation + ".y");
-                z = dbStationsConfig.getInt(pathToStation + ".z");
-
-                tempLoc = new Location(world, x, y, z);
-
-                if (tempLoc.distance(playerLoc) <= DragonTravel.getInstance().getConfigHandler().getMountingLimitRadius())
-                    return true;
+            if (world == null) {
+                Bukkit.getLogger().log(Level.SEVERE, "[DragonTravel] Skipping station '" + stat.getDisplayName() + "' while checking for a station. There is no world '" + stat.getWorldName() + "' on the server!");
+                continue;
             }
+
+            if (!world.getName().equalsIgnoreCase(player.getWorld().getName()))
+                continue;
+
+            x = stat.getX();
+            y = stat.getY();
+            z = stat.getZ();
+            tempLoc = new Location(world, x, y, z);
+
+            if (tempLoc.distance(playerLoc) <= DragonTravel.getInstance().getConfigHandler().getMountingLimitRadius())
+                return true;
         }
         return false;
     }

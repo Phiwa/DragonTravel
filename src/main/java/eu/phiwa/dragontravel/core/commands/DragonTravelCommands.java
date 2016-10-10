@@ -389,7 +389,7 @@ public final class DragonTravelCommands {
                 try {
                     DragonManager.getDragonManager().getFlightEngine().startFlight(player, flight, true, null);
                 } catch (DragonException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
                 return;
 
@@ -408,7 +408,7 @@ public final class DragonTravelCommands {
                 try {
                     DragonManager.getDragonManager().getFlightEngine().startFlight(player, flight, true, sender);
                 } catch (DragonException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
                 return;
         }
@@ -454,7 +454,7 @@ public final class DragonTravelCommands {
             try {
                 DragonManager.getDragonManager().getTravelEngine().toRandomDest(player, true, sender);
             } catch (DragonException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         } else {
         	if (sender == null)
@@ -463,7 +463,7 @@ public final class DragonTravelCommands {
             try {
                 DragonManager.getDragonManager().getTravelEngine().toStation(player, station, true, sender);
             } catch (DragonException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
     }
@@ -508,7 +508,7 @@ public final class DragonTravelCommands {
         try {
             DragonManager.getDragonManager().getTravelEngine().toPlayer(player, targetPlayer, true);
         } catch (DragonException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -543,7 +543,7 @@ public final class DragonTravelCommands {
         } catch (NumberFormatException ex) {
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.InvalidCoordinates"));
         } catch (DragonException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -569,7 +569,7 @@ public final class DragonTravelCommands {
         try {
             DragonManager.getDragonManager().getTravelEngine().toHome(player, true);
         } catch (DragonException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -598,7 +598,7 @@ public final class DragonTravelCommands {
         try {
             DragonManager.getDragonManager().getTravelEngine().toFactionHome(player, true);
         } catch (DragonException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
     
@@ -627,7 +627,7 @@ public final class DragonTravelCommands {
         try {
             DragonManager.getDragonManager().getTravelEngine().toTownSpawn(player, true);
         } catch (DragonException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
