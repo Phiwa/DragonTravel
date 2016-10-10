@@ -1,0 +1,119 @@
+#                 INSTRUCTIONS
+#          for the usage of this file
+File:
+  Version: 0.9
+  Language: Francais
+Messages:
+  General:
+    Successful:
+      AddedStatDragon: '&2Un dragon stationnaire à bien été créer.'
+      DismountedHere: '&aVous êtes dessendu de votre dragon.'
+      DismountedToStart: '&aVous avez fini votre journée, vous avez été téléporté
+        au point de départ.'
+      ToggledPTravelOn: '&aVous avez autorisé les joueurs a se téléporté vers vous.'
+      ToggledPTravelOff: '&aVous n''autorisé pas les joueur a se téléporter vers vous.'
+    Error:
+      NoConsole: '&cLa console ne devrait pas utilisé cette commande pour cela.'
+      NameTaken: '&cCe nom est déjà pris.'
+      NoPermission: '&l&4Vous n''avez pas la permission.'
+      NotMounted: '&cVous n''êtes pas monté.'
+      RequireSkyLight: '&cVous devez avoir accès aux lumières du ciel!'
+      RequiredItemMissing: '&l&4Vous n''avez pas l''item nécessaire pour utiliser
+        ce plugin.'
+      DatabaseCorrupted: '&cLa base de données est corrompue, contactez un &l&4Administrateur.'
+      ReachedDragonLimit: '&cLe serveur à ateint sa limite, attendez qu''un joueur
+        dessende de son dragon.'
+      BelowMinMountHeight: '&cVous êtes sous le niveau minimal pour monté votre dragon.
+        La hauteur minimale est &f{minheight}&c.'
+      DamageCooldown: '&cVous devez attendre &f{seconds} &csecondes avant de pouvoir
+        monté votre dragon.'
+      WorldNotFound: '&cImpossible de trouver le monde spécifié.'
+  Payment:
+    Free: '&aPas de taxe pour vous, allez-y!'
+    Resources:
+      Successful:
+        WithdrawMessage: '&aDîtes au revoir à &f{amount}&a nugget(s) en or.'
+      Error:
+        NotEnoughResources: '&cVous n''avez pas suffisament de ressources.'
+    Economy:
+      Successful:
+        WithdrawMessage: '&aDîtes au revoir à vos &f{amount}&a pièces.'
+      Error:
+        NotEnoughMoney: '&cVous n''avez pas assez d''argent.'
+  Signs:
+    Successful:
+      SignCreated: '&aLe panneau à bien été créer.'
+    Error:
+      SignCorrupted: '&cLe panneau est corrompu.'
+      NoTargetStationSpecified: '&cMerci de spécifié une destination.'
+      NoTargetFlightSpecified: '&cMerci de spécifié un vol.'
+  Flights:
+    Successful:
+      StartingFlight: '&aDébut du vol &f{flightname}&a.'
+      NowInFlightCreationMode: '&aVous êtes dans le mode de création de vol. Utilisez
+        &f/dt setwp&a pour créer un point et &f/dt saveflight&a enregistez le vol
+        et quittez le mode.'
+      WaypointAdded: '&aPoint de sauvegarde créé.'
+      WaypointRemoved: '&aLe dernier point de sauvegarde à été supprimé.'
+      FlightSaved: '&ale vol à bien été enregisté.'
+      RemovedFlight: '&aLe vol à bien été supprimé.'
+      SendingPlayer: '&aEnvoi du joueur &f{playername}&a sur le vol &f{flightname}&a.'
+      SentPlayer: '&aVous avez été envoyé sur le vol &f{flightname} &apar un &4Administrateur&a.'
+    Error:
+      FlightDoesNotExist: '&cCe vol n''existe pas.'
+      FlightAlreadyExists: '&cCe vl existe déjà.'
+      FlightIsInDifferentWorld: '&cCe vol est dans un autre monde'
+      AlreadyInFlightCreationMode: '&cVous êtes déjà dans le mode de création de vol.'
+      NotInFlightCreationMode: '&cVous n''êtes pas dans le mode de création de vol.'
+      AtLeastOneWaypoint: '&cVous devez créer au moins 1 point de sauvergarde.'
+      CannotDestroyMarkerByHand: '&cVous ne pouvez pas détruire un marqueur à la main.
+        Utilisez &f/dt remlastwp &cà la place.'
+      CouldNotfindPlayerToSend: '&cImpossible de trouver le jouer &f{playername}&c.'
+      OnlySigns: '&cCette commande à été désactivé par &4Administrateur&c, vous pouvez
+        utilisez les vols seulement via les panneaux.'
+  Travels:
+    Successful:
+      TravellingToRandomLocation: '&aTéléportation dans un endroit aléatoire.'
+      TravellingToCoordinatesSameWorld: '&aTéléportation aux coordonnées &f{x}&a,
+        &f{y}&a, &f{z}&a.'
+      TravellingToCoordinatesOtherWorld: '&aTéléportation aux coordonnées  &f{x}&a,
+        &f{y}&a, &f{z}&a dans le monde &f{worldname}&a.'
+      TravellingToHome: '&aTéléportation à votre maison.'
+      TravellingToFactionHome: '&aTéléportation à votre maison de &lfaction&r&a.'
+      TravellingToStation: '&aTéléportation vers &f{stationname}&a.'
+      TravellingToPlayer: '&aTéléportation vers &f{playername}&a.'
+      TravellingToTownSpawn: '&aTéléportation vers le lieu principal.'
+      HomeSet: '&aMaison définie.'
+    Error:
+      InvalidCoordinates: '&cCoordonnées incorrectes.'
+      PlayerNotOnline: '&cLe joueur &f{playername}&a n''est pas connécté.'
+      NoHomeSet: '&cVous n''avez pas encore défini de maison.'
+      OnlySigns: '&cCette commande à été désactivé par &4Administrateur&c, vous pouvez
+        vous téléporter seulement via les panneaux.'
+      WorldNotFound: '&cImpossible de trouver le monde spécifié.'
+      TargetPlayerDoesnotAllowPTravel: '&cLe joueur &f{playername}&a n''a pas autorisé
+        les téléportations vers lui.'
+      CannotTravelToYourself: '&cIl n''y a pas de sens de se téléporter à soi-même...'
+      MaxTravelDistanceExceeded: '&cLa distance jusqu''à votre arrivée est trop grande.'
+  Stations:
+    Successful:
+      StationCreated: '&aLa station à été créée &f{stationname}&a.'
+      StationRemoved: '&aLa station à été supprimée &f{stationname}&a.'
+    Error:
+      StationAlreadyExists: '&cLa station &f{stationname}&a existe déjà.'
+      StationDoesNotExist: '&cLa station &f{stationname}&a n''existe pas.'
+      NotCreateStationWithRandomstatName: '&cVous ne pouvez pas nommer votre station
+        RamdomDest.'
+      NotAtAStation: '&cVous devez être à une station pur monter votre dragon.'
+      CouldNotCreateStation: '&cImpossible de créer la station.'
+      CouldNotRemoveStation: '&cImpossible de supprimer la station.'
+  Factions:
+    Error:
+      FactionsNotInstalled: '&cLes Factions ne sont pas instalées sur ce serveur.'
+      NoFactionMember: '&cVous ne faîtes parti d''aucune Faction.'
+      FactionHasNoHome: '&cVotre Faction n''a pas de maison.'
+      NotYourFaction: '&cCe n''est pas votre Faction.'
+  Towny:
+    Error:
+      TownyNotInstalled: '&c Towny n''est pas installé sur ce serveur.'
+      NoTown: '&c Vous n''avez pas de ville.'
