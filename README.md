@@ -11,13 +11,15 @@ Important
 
 To be able to work on this code, you need to place the following libraries/Bukkit-plugins in your local "lib"-folder which is ignored in Git.
 
-- craftbukkit-1.7.10-R0.4-SNAPSHOT.jar
-- craftbukkit-1.7.9-R0.2-SNAPSHOT.jar
-- craftbukkit-1.8-R0.1-SNAPSHOT.jar
-- craftbukkit-1.8.7-R0.1-SNAPSHOT.jar
-- craftbukkit-1.9.2-R0.1-SNAPSHOT.jar
-- craftbukkit-1.9.4-R0.1-SNAPSHOT.jar
-- craftbukkit-1.10-R0.1-SNAPSHOT.jar
+- AntiCheatPlus.jar
+- craftbukkit_v1_7_R3.jar
+- craftbukkit_v1_7_R4.jar
+- craftbukkit_v1_8_R1.jar
+- craftbukkit_v1_8_R2.jar
+- craftbukkit_v1_8_R3.jar
+- craftbukkit_v1_9_R1.jar
+- craftbukkit_v1_9_R2.jar
+- craftbukkit_v1_10_R1.jar
 
 The craftbukkit versions are needed for backwards compatibility, the other files are necessary for DragonTravels hooks to other plugins APIs.
 Other versions than the ones named here may work, but compilation has only been tested with the versions specified.
