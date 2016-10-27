@@ -1,7 +1,7 @@
 package eu.phiwa.dragontravel.core.listeners;
 
 import com.massivecraft.factions.entity.Faction;
-import com.massivecraft.factions.entity.UPlayer;
+import com.massivecraft.factions.entity.MPlayer;
 import eu.phiwa.dragontravel.api.DragonException;
 import eu.phiwa.dragontravel.core.DragonManager;
 import eu.phiwa.dragontravel.core.DragonTravel;
@@ -158,7 +158,7 @@ public class PlayerListener implements Listener {
                         return;
                     }
 
-                    Faction faction = UPlayer.get(player).getFaction();
+                    Faction faction = MPlayer.get(player).getFaction();
 
                     if (faction.isNone()) {
                         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NoFactionMember"));
@@ -181,7 +181,7 @@ public class PlayerListener implements Listener {
                         return;
                     }
 
-                    Faction faction = UPlayer.get(player).getFaction();
+                    Faction faction = MPlayer.get(player).getFaction();
 
                     if (faction.isNone()) {
                         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NoFactionMember"));
