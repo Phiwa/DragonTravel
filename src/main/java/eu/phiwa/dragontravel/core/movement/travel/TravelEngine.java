@@ -1,7 +1,7 @@
 package eu.phiwa.dragontravel.core.movement.travel;
 
 import com.massivecraft.factions.entity.Faction;
-import com.massivecraft.factions.entity.MPlayer;
+import com.massivecraft.factions.entity.UPlayer;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
@@ -177,7 +177,7 @@ public class TravelEngine {
             }
         }
 
-        Faction faction = MPlayer.get(player).getFaction();
+        Faction faction = UPlayer.get(player).getFaction();
 
 
         if (faction.isNone()) {
