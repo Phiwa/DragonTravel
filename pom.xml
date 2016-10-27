@@ -124,51 +124,58 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.10-R0.1</artifactId>
-            <version>1.10-R0.1-SNAPSHOT</version>
+            <version>craftbukkit_v1_10_R1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit-1.10-R0.1-SNAPSHOT.jar</systemPath>
+            <systemPath>${project.basedir}/lib/craftbukkit_v1_10_R1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.9.4</artifactId>
-            <version>1.9.4-R0.1-SNAPSHOT</version>
+            <version>craftbukkit_v1_9_R2</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit-1.9.4-R0.1-SNAPSHOT.jar</systemPath>
+            <systemPath>${project.basedir}/lib/craftbukkit_v1_9_R2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.9.2</artifactId>
-            <version>1.9.2-R0.1-SNAPSHOT</version>
+            <version>craftbukkit_v1_9_R2</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit-1.9.2-R0.1-SNAPSHOT.jar</systemPath>
+            <systemPath>${project.basedir}/lib/craftbukkit_v1_9_R1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit-1.9.7</artifactId>
-            <version>1.8.7-R0.1-SNAPSHOT</version>
+            <artifactId>craftbukkit-1.8.8</artifactId>
+            <version>craftbukkit_v1_8_R3</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit-1.8.7-R0.1-SNAPSHOT.jar</systemPath>
+            <systemPath>${project.basedir}/lib/craftbukkit_v1_8_R3.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit-1.8.3</artifactId>
+            <version>craftbukkit_v1_8_R2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/craftbukkit_v1_8_R2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.8</artifactId>
-            <version>1.8-R0.1-SNAPSHOT</version>
+            <version>craftbukkit_v1_8_R1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit-1.8-R0.1-SNAPSHOT.jar</systemPath>
+            <systemPath>${project.basedir}/lib/craftbukkit_v1_8_R1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.7.10</artifactId>
-            <version>1.7.10-R0.4-SNAPSHOT</version>
+            <version>craftbukkit_v1_7_R4</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit-1.7.10-R0.4-SNAPSHOT.jar</systemPath>
+            <systemPath>${project.basedir}/lib/craftbukkit_v1_7_R4.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.7.9</artifactId>
-            <version>1.7.9-R0.2-SNAPSHOT</version>
+            <version>craftbukkit_v1_7_R3</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit-1.7.9-R0.2-SNAPSHOT.jar</systemPath>
+            <systemPath>${project.basedir}/lib/craftbukkit_v1_7_R3.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
@@ -207,9 +214,9 @@
         <dependency>
             <groupId>net.gravitydevelopment.anticheat</groupId>
             <artifactId>AntiCheat</artifactId>
-            <version>2.0.2</version>
-            <type>jar</type>
-            <scope>compile</scope>
+            <version>AntiCheatPlus.jar</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/AntiCheatPlus.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.sk89q</groupId>
@@ -231,7 +238,7 @@
         <dependency>
             <groupId>net.gravitydevelopment.updater</groupId>
             <artifactId>updater</artifactId>
-            <version>2.1</version>
+            <version>2.4</version>
         </dependency>
     </dependencies>
 </project>
