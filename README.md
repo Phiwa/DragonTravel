@@ -18,10 +18,6 @@ To be able to work on this code, you need to place the following libraries/Bukki
 - craftbukkit-1.9.2-R0.1-SNAPSHOT.jar
 - craftbukkit-1.9.4-R0.1-SNAPSHOT.jar
 - craftbukkit-1.10-R0.1-SNAPSHOT.jar
-- Factions.jar (version 2.3.1)
-- mcore.jar (version 7.1.0)
-- NoCheatPlus.jar (version 3.8.12-RC2-b472)
-- Towny.jar (version 0.90.0.0)
 
 The craftbukkit versions are needed for backwards compatibility, the other files are necessary for DragonTravels hooks to other plugins APIs.
 Other versions than the ones named here may work, but compilation has only been tested with the versions specified.
