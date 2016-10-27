@@ -1,6 +1,6 @@
 package eu.phiwa.dragontravel.core.hooks.anticheat;
 
-import net.gravitydevelopment.anticheat.api.AntiCheatAPI;
+import net.dynamicdev.anticheat.api.AntiCheatAPI;
 import org.bukkit.entity.Player;
 
 public class AntiCheatHandler implements AbstractHandler {
@@ -11,16 +11,16 @@ public class AntiCheatHandler implements AbstractHandler {
 
     @Override
     public void startExempting(Player player) {
-        if (!AntiCheatAPI.isExempt(player, net.gravitydevelopment.anticheat.check.CheckType.FLY)) {
-            AntiCheatAPI.exemptPlayer(player, net.gravitydevelopment.anticheat.check.CheckType.FLY);
+        if (!AntiCheatAPI.isExempt(player, net.dynamicdev.anticheat.check.CheckType.FLY)) {
+            AntiCheatAPI.exemptPlayer(player, net.dynamicdev.anticheat.check.CheckType.FLY);
         }
 
     }
 
     @Override
     public void stopExempting(Player player) {
-        if (AntiCheatAPI.isExempt(player, net.gravitydevelopment.anticheat.check.CheckType.FLY)) {
-            AntiCheatAPI.unexemptPlayer(player, net.gravitydevelopment.anticheat.check.CheckType.FLY);
+        if (AntiCheatAPI.isExempt(player, net.dynamicdev.anticheat.check.CheckType.FLY)) {
+            AntiCheatAPI.unexemptPlayer(player, net.dynamicdev.anticheat.check.CheckType.FLY);
         }
     }
 }
