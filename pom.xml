@@ -74,6 +74,15 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+	                        <createDependencyReducedPom>false</createDependencyReducedPom>
+	                        <relocations>
+	                          <relocation>
+	                             <pattern>com.sk89q</pattern>
+	                             <shadedPattern>eu.phiwa.com.sk89q</shadedPattern>
+	                          </relocation>
+	                        </relocations>
+	                    </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -119,11 +128,17 @@
             <id>gravity-repo</id>
             <url>http://repo.gravitydevelopment.net/</url>
         </repository>
+        
+        <repository>
+            <id>elmakers-repo</id>
+            <url>http://maven.elmakers.com/repository/</url>
+        </repository>
+        
     </repositories>
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit-1.10-R0.1</artifactId>
+            <artifactId>craftbukkit-1.10</artifactId>
             <version>craftbukkit_v1_10_R1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/craftbukkit_v1_10_R1.jar</systemPath>
@@ -138,7 +153,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.9.2</artifactId>
-            <version>craftbukkit_v1_9_R2</version>
+            <version>craftbukkit_v1_9_R1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/craftbukkit_v1_9_R1.jar</systemPath>
         </dependency>
@@ -152,31 +167,47 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.8.3</artifactId>
-            <version>craftbukkit_v1_8_R2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit_v1_8_R2.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit-1.8</artifactId>
             <version>craftbukkit_v1_8_R1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/craftbukkit_v1_8_R1.jar</systemPath>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit-1.7.10</artifactId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.8.0-R0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.7.9-R0.4-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.7.9-R0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.7.9-R0.2-SNAPSHOT</version>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit-1.7.9-R0.4</artifactId>
             <version>craftbukkit_v1_7_R4</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/craftbukkit_v1_7_R4.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit-1.7.9</artifactId>
+            <artifactId>craftbukkit-1.7.9-R0.3</artifactId>
             <version>craftbukkit_v1_7_R3</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/craftbukkit_v1_7_R3.jar</systemPath>
         </dependency>
+        
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
