@@ -123,10 +123,19 @@ public class FlightsDB {
             sender.sendMessage("Waypoints of flight '" + (sender instanceof Player ? (PermissionsHandler.hasFlightPermission(sender, flight.getName()) ? ChatColor.GREEN : ChatColor.RED) : ChatColor.AQUA) + flight.getName()+ChatColor.WHITE+"':");
             int i = 1;
             for (Waypoint wp: flight.getWaypoints()) {
-            	sender.sendMessage("      ("+i+") w: " + wp.getWorldName() 
-									+ " | x: " + wp.getX()
-									+ " | y: " + wp.getY()
-									+ " | z: " + wp.getZ());
+            	
+            	String num_str = "";
+            	if(i < 10)
+            		num_str = "0"+i;
+            	else
+            		num_str = ""+i;
+            	
+            	sender.sendMessage(
+            			"  "+ChatColor.GRAY+"("+num_str+") "
+            					+ChatColor.WHITE  + 	  "w: " +ChatColor.BLUE+ wp.getWorldName() 
+            					+ChatColor.WHITE+ " | " + "x: " +ChatColor.BLUE+ wp.getX()
+            					+ChatColor.WHITE+ " | " + "y: " +ChatColor.BLUE+ wp.getY()
+            					+ChatColor.WHITE+ " | " + "z: " +ChatColor.BLUE+ wp.getZ());
             	i++;
             }
         }

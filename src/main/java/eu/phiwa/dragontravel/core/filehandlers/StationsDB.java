@@ -142,10 +142,11 @@ public class StationsDB {
             Station station = getStation(string);
             if (station != null) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', " - " + (sender instanceof Player ? (PermissionsHandler.hasTravelPermission(sender, "travel", station.getDisplayName()) ? ChatColor.GREEN : ChatColor.RED) : ChatColor.AQUA) + station.getDisplayName()));
-                sender.sendMessage("      w: " + station.getWorldName() 
-                					+ " | x: " + station.getX()
-                					+ " | y: " + station.getY()
-                					+ " | z: " + station.getZ());
+                sender.sendMessage("      "
+					+ChatColor.WHITE  + 	  "w: " +ChatColor.BLUE+ station.getWorldName() 
+					+ChatColor.WHITE+ " | " + "x: " +ChatColor.BLUE+ station.getX()
+					+ChatColor.WHITE+ " | " + "y: " +ChatColor.BLUE+ station.getY()
+					+ChatColor.WHITE+ " | " + "z: " +ChatColor.BLUE+ station.getZ());
                 i++;
             }
         }
