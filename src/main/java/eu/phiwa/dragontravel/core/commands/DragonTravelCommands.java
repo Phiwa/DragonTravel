@@ -132,6 +132,15 @@ public final class DragonTravelCommands {
     public static void showFlights(CommandContext args, CommandSender sender) throws CommandException {
         DragonTravel.getInstance().getDbFlightsHandler().showFlights(sender);
     }
+    
+    @Console
+    @Command(aliases = {"showflight"},
+            desc = "Show details for specified flight",
+            usage = "/dt showflight <flightname>",
+            help = "Show details for specified flight")
+    public static void showFlightDetails(CommandContext args, CommandSender sender) throws CommandException {
+        DragonTravel.getInstance().getDbFlightsHandler().showFlightDetails(sender, args.getString(0));
+    }
 
     @Console
     @Command(aliases = {"removedragons", "remdragons"},

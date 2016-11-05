@@ -3,6 +3,8 @@ package eu.phiwa.dragontravel.core.filehandlers;
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
+import eu.phiwa.dragontravel.core.movement.flight.Waypoint;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -113,6 +115,23 @@ public class FlightsDB {
             }
         }
         sender.sendMessage(String.format("(total %d)", i));
+    }
+    
+    public void showFlightDetails(CommandSender sender, String flightname) {
+        Flight flight = getFlight(flightname);
+        if (flight != null) {
+            sender.sendMessage("Waypoints of flight '" + (sender instanceof Player ? (PermissionsHandler.hasFlightPermission(sender, flight.getName()) ? ChatColor.GREEN : ChatColor.RED) : ChatColor.AQUA) + flight.getName()+ChatColor.WHITE+"':");
+            int i = 1;
+            for (Waypoint wp: flight.getWaypoints()) {
+            	sender.sendMessage("      ("+i+") w: " + wp.getWorldName() 
+									+ " | x: " + wp.getX()
+									+ " | y: " + wp.getY()
+									+ " | z: " + wp.getZ());
+            	i++;
+            }
+        }
+        else
+        	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightDoesNotExist"));
     }
 
     /**

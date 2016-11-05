@@ -142,6 +142,10 @@ public class StationsDB {
             Station station = getStation(string);
             if (station != null) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', " - " + (sender instanceof Player ? (PermissionsHandler.hasTravelPermission(sender, "travel", station.getDisplayName()) ? ChatColor.GREEN : ChatColor.RED) : ChatColor.AQUA) + station.getDisplayName()));
+                sender.sendMessage("      w: " + station.getWorldName() 
+                					+ " | x: " + station.getX()
+                					+ " | y: " + station.getY()
+                					+ " | z: " + station.getZ());
                 i++;
             }
         }
