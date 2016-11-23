@@ -55,63 +55,6 @@ public class DragonManager {
             removeRiderAndDragon(dragon.getEntity(), false);
     }
 
-    /**
-     * Removes the given Dragon-Entity and its rider from the list of riders,
-     * teleports the rider to a safe location on the ground and removes the dragon from the world.
-     *
-     * @param entity                    Entity to remove
-     * @param dismountAtCurrentLocation If set to true, the player is dismounted at his current location.
-     *                                  If set to false, he is teleported back to the point he started his travel/flight
-     */
-    public void removeRiderAndDragon(Entity entity, Boolean dismountAtCurrentLocation) {
-
-        Player player = (Player) entity.getPassenger();
-
-        if (player == null)
-            player = getRiderByEntity(entity);
-        IRyeDragon dragon = riderDragons.get(player);
-        riderDragons.remove(player);
-
-        // Interworld (dismount before teleport)
-        if (dismountAtCurrentLocation == null) {
-            Location startLoc = riderStartPoints.get(player);
-            entity.eject();
-            entity.remove();
-            player.teleport(startLoc);
-            DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, startLoc);
-            Bukkit.getPluginManager().callEvent(event);
-            return;
-        }
-        // Normal absteigen
-        else if (dismountAtCurrentLocation || !DragonTravel.getInstance().getConfig().getBoolean("TeleportToStartOnDismount")) {
-            // Teleport player to a safe location
-            Location saveTeleportLoc = getSafeLandingLoc(player.getLocation());
-
-            // Eject player and remove dragon from world
-            entity.eject();
-            entity.remove();
-
-            // Teleport player to safe location
-            saveTeleportLoc.setY(saveTeleportLoc.getY() + 1.2);
-            player.teleport(saveTeleportLoc);
-            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.DismountedHere"));
-            DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, saveTeleportLoc);
-            Bukkit.getPluginManager().callEvent(event);
-        }
-        // Back to start of travel
-        else {
-            Location startLoc = riderStartPoints.get(player);
-            entity.eject();
-            entity.remove();
-            player.teleport(startLoc);
-            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.DismountedToStart"));
-            DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, startLoc);
-            Bukkit.getPluginManager().callEvent(event);
-        }
-
-        CheatProtectionHandler.unexemptPlayerFromCheatChecks(player);
-    }
-
     private Player getRiderByEntity(Entity entity) {
         Player player = null;
         for (Entry<Player, IRyeDragon> entry : riderDragons.entrySet()) {
@@ -241,6 +184,63 @@ public class DragonManager {
         return String.format("Removed %d dragons in world '%s'.", passed, world.getName());
     }
 
+    /**
+     * Removes the given Dragon-Entity and its rider from the list of riders,
+     * teleports the rider to a safe location on the ground and removes the dragon from the world.
+     *
+     * @param entity                    Entity to remove
+     * @param dismountAtCurrentLocation If set to true, the player is dismounted at his current location.
+     *                                  If set to false, he is teleported back to the point he started his travel/flight
+     */
+    public void removeRiderAndDragon(Entity entity, Boolean dismountAtCurrentLocation) {
+
+        Player player = (Player) entity.getPassenger();
+
+        if (player == null)
+            player = getRiderByEntity(entity);
+        IRyeDragon dragon = riderDragons.get(player);
+        riderDragons.remove(player);
+
+        // Interworld (dismount before teleport)
+        if (dismountAtCurrentLocation == null) {
+            Location startLoc = riderStartPoints.get(player);
+            entity.eject();
+            entity.remove();
+            player.teleport(startLoc);
+            DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, startLoc);
+            Bukkit.getPluginManager().callEvent(event);
+            return;
+        }
+        // Normal dismount
+        else if (dismountAtCurrentLocation || !DragonTravel.getInstance().getConfig().getBoolean("TeleportToStartOnDismount")) {
+            // Teleport player to a safe location
+            Location saveTeleportLoc = getSafeLandingLoc(player.getLocation());
+
+            // Eject player and remove dragon from world
+            entity.eject();
+            entity.remove();
+
+            // Teleport player to safe location
+            saveTeleportLoc.setY(saveTeleportLoc.getY() + 1.2);
+            player.teleport(saveTeleportLoc);
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.DismountedHere"));
+            DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, saveTeleportLoc);
+            Bukkit.getPluginManager().callEvent(event);
+        }
+        // Back to start of travel
+        else {
+            Location startLoc = riderStartPoints.get(player);
+            entity.eject();
+            entity.remove();
+            player.teleport(startLoc);
+            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.DismountedToStart"));
+            DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, startLoc);
+            Bukkit.getPluginManager().callEvent(event);
+        }
+
+        CheatProtectionHandler.unexemptPlayerFromCheatChecks(player);
+    }
+    
     /**
      * Removes the given Dragon-Entity and its rider from the list of riders,
      * teleports the rider to a safe location on the ground below the specified location and removes the dragon from the world.

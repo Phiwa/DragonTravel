@@ -282,7 +282,6 @@ public final class DragonTravelCommands {
                     + "Depending on the server's settings, "
                     + "you might be teleported back to the "
                     + "point you started your journey from.")
-    @CommandPermissions({"dt.dismount"})
     public static void dismount(CommandContext args, CommandSender sender) throws CommandException {
         if (!(sender instanceof Player)) {
             sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
