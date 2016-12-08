@@ -431,14 +431,14 @@ public final class DragonTravelCommands {
     public static void startStationTravel(CommandContext args, CommandSender sender) throws CommandException {
 
         String station = args.getString(0);
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
-            return;
-        }
         
         Player player = null;        
         switch (args.argsLength()) {
 	        case 1:
+	        	if (!(sender instanceof Player)) {
+	                sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoConsole"));
+	                return;
+        		}
 		        if (!PermissionsHandler.hasTravelPermission(sender, "travel", station)) {
 		            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
 		            return;
