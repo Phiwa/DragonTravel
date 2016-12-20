@@ -20,7 +20,6 @@ permissions:
             dt.admin.flights: true
             dt.admin.statdragon: true
             dt.admin.remdragons: true
-            dt.sethome: true
             dt.edit.*: true
             dt.travel.*: true
             dt.ctravel: true
@@ -70,6 +69,9 @@ permissions:
     dt.sethome:
         description: Allow the player to set their home.
     
+    dt.travelhome:
+        description: Allow the player to travel to their home.
+
     # Station and Flight permissions
     dt.flight.*:
         description: Allows usage of every flight.
@@ -230,6 +232,8 @@ permissions:
             dt.start.player.command: true
     dt.home:
         children:
+            dt.sethome: true
+            dt.travelhome: true
             dt.start.home.command: true
     dt.fhome:
         children:
