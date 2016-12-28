@@ -20,7 +20,6 @@ AntiGriefDragons:
 # 'en' - English
 # 'de' - German
 # 'fr' - French
-# 'da' - Danish
 # 'custom' - leads to the use of the file named "messages-custom.yml"
 # Default: 'en'
 Language: 'en'
