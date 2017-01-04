@@ -567,7 +567,7 @@ public final class DragonTravelCommands {
         }
         Player player = (Player) sender;
         
-        if(!player.hasPermission("dt.home")) {
+        if(!player.hasPermission("dt.travelhome")) {
         	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
 			return;
         }
