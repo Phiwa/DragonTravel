@@ -366,8 +366,6 @@ public class TravelEngine {
             }
         }
 
-        //player.sendMessage(ChatColor.translateAlternateColorCodes('&', DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", destination.getDisplayName())));
-        
         if (sendingPlayer != null) {
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.SentPlayer").replace("{stationname}", stationName));
             sendingPlayer.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.SendingPlayer").replace("{playername}", player.getName()).replace("{stationname}", stationName));
