@@ -54,6 +54,7 @@ public class Config {
 
     public Config() {
         loadConfig();
+        printWarnings();
     }
 
     private void copy(InputStream in, File file) {
@@ -119,6 +120,13 @@ public class Config {
         minMountHeight = config.getInt("MinimumMountHeight", -1);
         mountingLimitRadius = config.getInt("MountingLimit.Radius", 4);
         dmgCooldown = config.getInt("DamageCooldown", -1) * 1000;
+    }
+    
+    private void printWarnings() {
+    	if(speed > 1.5) {
+        	System.out.println("[DragonTravel][WARNING] A dragon speed setting above 1.5 may cause serious problems");
+        	System.out.println("[DragonTravel][WARNING] (e.g. lags, dragons stuck in the air, ...). USE AT OWN RISK!");
+    	}
     }
 
     private void newlyRequiredConfig() {
