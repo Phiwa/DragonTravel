@@ -107,10 +107,22 @@ public class TravelEngine {
 
         // Do not run checks if player is sent by an admin
         if (sendingPlayer == null) {
-	        if (!player.hasPermission("dt.bypassrequireskylight") && (temploc.getWorld().getHighestBlockYAt(temploc) < temploc.getY() || destination.getWorld().getHighestBlockYAt(destination) < destination.getY())) {
-	            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequireSkyLight"));
-	            return;
-	        }
+        	// Skylight is required
+        	if (DragonTravel.getInstance().getConfigHandler().isRequireSkyLight()) {
+        		// Player is not allowed to bypass
+        		if (!player.hasPermission("dt.bypassrequireskylight")) {
+                    // If starting point is below the highest block at its coordinates
+        	        if(temploc.getWorld().getHighestBlockYAt(temploc) > temploc.getY()+1) {
+        	        	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequireSkyLightPlayer"));
+    	                throw new DragonException("There are blocks between the player's location and the sky. The dragon would not be able to take off.");
+        	        }
+        	        // If destination point is below the highest block at its coordinates
+        	        if(destination.getWorld().getHighestBlockYAt(destination) > destination.getY()+1) {
+        	        	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequireSkyLightDestination"));
+    	                throw new DragonException("There are blocks between the target location and the sky. The dragon would not be able to land.");
+        	        }
+        		}
+        	}   
 
 	        // Check if max distance to target is exceeded
 	        int maxdist = DragonTravel.getInstance().getConfig().getInt("MaxTravelDistance");

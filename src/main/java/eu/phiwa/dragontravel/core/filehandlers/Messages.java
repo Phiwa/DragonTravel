@@ -14,7 +14,7 @@ public class Messages {
     // Messages
     private FileConfiguration messages;
     private File messagesFile;
-    private final double messagesVersion = 0.9;
+    private final double messagesVersion = 1.0;
 
     private String language = "";
 
@@ -150,13 +150,26 @@ public class Messages {
         if(messages.get("Messages.General.Error.StatDragonNotExists") == null)
         	messages.set("Messages.General.Successfull.RemovedStatDragon", ": &cThere is no stationary dragon &f{name}&c.");
         
+        // 1.0
+        if (messages.get("Messages.General.Error.RequireSkyLightPlayer") == null)
+        	// Copy over old message if available since message has only been moved
+        	if (messages.get("Messages.General.Error.RequireSkyLight") != null)
+        		messages.set("Messages.General.Error.RequireSkyLightPlayer", messages.get("Messages.General.Error.RequireSkyLight"));
+        	// There is no old message, create new entry
+        	else
+        		messages.set("Messages.General.Error.RequireSkyLightPlayer", "&cYou must have access to sky light for the dragon to be able to start!");
+        if (messages.get("Messages.General.Error.RequireSkyLightDestination") == null)
+    		messages.set("Messages.General.Error.RequireSkyLightDestination", "&cThere must not be any obstacles between your destination and the sky, otherwise the dragon would not be able to land!");
+        
         // Update the file version
         messages.set("File.Version", messagesVersion);
     }
 
 
     private void noLongerRequiredMessages() {
-        // DragonTravel.config.set("example key", null);
+    	// 1.0
+    	// Has been moved to 'Messages.General.Error.RequireSkyLightPlayer'
+        messages.set("Messages.General.Error.RequireSkyLight", null);
     }
 
     public String getMessage(String path) {
