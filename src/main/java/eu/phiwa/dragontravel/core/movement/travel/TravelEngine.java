@@ -111,6 +111,7 @@ public class TravelEngine {
         	if (DragonTravel.getInstance().getConfigHandler().isRequireSkyLight()) {
         		// Player is not allowed to bypass
         		if (!player.hasPermission("dt.bypassrequireskylight")) {
+        			// TODO: Do not charge player when travel is cancelled...
                     // If starting point is below the highest block at its coordinates
         	        if(temploc.getWorld().getHighestBlockYAt(temploc) > temploc.getY()+1) {
         	        	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequireSkyLightPlayer"));
