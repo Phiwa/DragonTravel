@@ -15,7 +15,7 @@ public class Config {
     // Config
     private FileConfiguration config;
     private File configFile;
-    private double configVersion = 0.8;
+    private double configVersion = 0.9;
 
     // Required Item
     private Material requiredItem;
@@ -48,6 +48,7 @@ public class Config {
     private int dmgCooldown;
     private int dragonLimit;
     private boolean ignoreAntiMobspawnAreas;
+    private boolean dismountOnShift;
     private boolean dismountAtExactLocation;
     private boolean onlysigns;
     private boolean ptoggleDefault;
@@ -105,7 +106,8 @@ public class Config {
         requireItemTravelFactionhome = config.getBoolean("RequiredItem.For.toFactionhome", false);
         requireItemTravelTownSpawn = config.getBoolean("RequiredItem.For.toTownSpawn", false);
         requireItemFlight = config.getBoolean("RequiredItem.For.Flight", false);
-        dismountAtExactLocation = config.getBoolean("DismountAtExactLocation", false);
+        dismountOnShift = config.getBoolean("DismountOnShift", false);
+        dismountAtExactLocation = config.getBoolean("DismountAtExactLocation", false);        
         requireSkyLight = config.getBoolean("RequireSkyLight", false);
         speed = config.getDouble("DragonSpeed", 0.5d);
         travelHeight = config.getInt("TravelHeight");
@@ -174,6 +176,10 @@ public class Config {
         	config.set("Payment.Resources.Prices.toTownSpawn", 5.0);
         if (!config.isSet("RequiredItem.For.toTownSpawn"))
         	config.set("RequiredItem.For.toTownSpawn", false);
+        
+        // New options in version 0.9
+        if (!config.isSet("DismountOnShift"))
+        	config.set("DismountOnShift", false);
         
         // Update the file version
         config.set("File.Version", configVersion);
@@ -405,6 +411,14 @@ public class Config {
 
     public void setIgnoreAntiMobspawnAreas(boolean ignoreAntiMobspawnAreas) {
         this.ignoreAntiMobspawnAreas = ignoreAntiMobspawnAreas;
+    }
+    
+    public boolean isDismountOnShift() {
+        return dismountOnShift;
+    }
+    
+    public void setDismountonShift(boolean dismountOnShift) {
+        this.dismountOnShift = dismountOnShift;
     }
 
     public boolean isDismountAtExactLocation() {
