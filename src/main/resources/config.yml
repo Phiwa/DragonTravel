@@ -164,6 +164,12 @@ OnlySigns: false
 # Default: true
 PToggleDefault: true
 
+# <<< Toggles if riders are dismounted when pressing shift while riding the dragon. >>>
+# If set to 'true', riders are dismounted on pressing shift.
+# If set to 'false', riders are not dismounted on pressing shift.
+# Default: false
+DismountOnShift: false
+
 # <<< Toggles where riders are dismounted when reaching their target location. >>>
 # If set to 'true', riders are dismounted at their exact location.
 # If set to 'false', riders are dismounted to the next blocks below them.

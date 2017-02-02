@@ -281,4 +281,15 @@ public class PlayerListener implements Listener {
         if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
             event.setCancelled(true);
     }
+    
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    public void onPlayerDismount(PlayerToggleSneakEvent event) {    	
+        if(!DragonTravel.getInstance().getDragonManager().getRiderDragons().keySet().contains(event.getPlayer())){
+        	return;
+        }
+        Player player = event.getPlayer();
+        if(DragonTravel.getInstance().getConfigHandler().isDismountOnShift()){
+        	DragonTravel.getInstance().getDragonManager().dismount(player, false);
+        }
+    }
 }
