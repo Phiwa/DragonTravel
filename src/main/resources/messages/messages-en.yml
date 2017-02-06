@@ -36,7 +36,7 @@
 #       and please report all bugs you find, otherwise I can't fix them. ;)
 
 File:
-    Version: 0.9
+    Version: 1.0
     Language: 'English'
 
 Messages:
@@ -53,8 +53,9 @@ Messages:
             NameTaken: '&cThat name is already taken.'
             NoPermission: '&cYou do not have the permission to use this.'
             NotMounted: '&cYou are not mounted.'
-            RequireSkyLight: '&cYou must have access to sky light!'
             RequiredItemMissing: '&cYou do not have the required item in your inventory to use the plugin.'        
+            RequireSkyLightPlayer: '&cYou must have access to sky light for the dragon to be able to start!'
+            RequireSkyLightDestination: '&cThere must not be any obstacles between your destination and the sky, otherwise the dragon would not be able to land!'
             DatabaseCorrupted: '&cThe database is corrupted, could not load the entry. Please inform the admin.'
             ReachedDragonLimit: '&cThe server already reached its limit, you cannot spawn another dragon, please wait for another player to dismount.'
             BelowMinMountHeight: '&cYou are below the minimum height required to mount a dragon. Minimum height is &f{minheight}&c.'

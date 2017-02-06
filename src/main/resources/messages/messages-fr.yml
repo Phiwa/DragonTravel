@@ -1,7 +1,7 @@
 #                 INSTRUCTIONS
 #          for the usage of this file
 File:
-  Version: 0.9
+  Version: 1.0
   Language: Francais
 Messages:
   General:
@@ -17,7 +17,9 @@ Messages:
       NameTaken: '&cCe nom est déjà pris.'
       NoPermission: '&l&4Vous n''avez pas la permission.'
       NotMounted: '&cVous n''êtes pas monté.'
-      RequireSkyLight: '&cVous devez avoir accès aux lumières du ciel!'
+      RequireSkyLightPlayer: '&cVous devez avoir accès aux lumières du ciel!'
+      RequireSkyLightDestination: '&cIl ne doit pas y avoir d''obstacle entre le ciel et votre
+       destination, sinon le dragon ne pourra pas atterrir!'
       RequiredItemMissing: '&l&4Vous n''avez pas l''item nécessaire pour utiliser
         ce plugin.'
       DatabaseCorrupted: '&cLa base de données est corrompue, contactez un &l&4Administrateur.'

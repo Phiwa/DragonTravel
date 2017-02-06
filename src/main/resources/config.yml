@@ -20,7 +20,6 @@ AntiGriefDragons:
 # 'en' - English
 # 'de' - German
 # 'fr' - French
-# 'da' - Danish
 # 'custom' - leads to the use of the file named "messages-custom.yml"
 # Default: 'en'
 Language: 'en'
@@ -164,6 +163,12 @@ OnlySigns: false
 # Choose whether travels to a player are allowed (true) or denied (false) by default
 # Default: true
 PToggleDefault: true
+
+# <<< Toggles if riders are dismounted when pressing shift while riding the dragon. >>>
+# If set to 'true', riders are dismounted on pressing shift.
+# If set to 'false', riders are not dismounted on pressing shift.
+# Default: false
+DismountOnShift: false
 
 # <<< Toggles where riders are dismounted when reaching their target location. >>>
 # If set to 'true', riders are dismounted at their exact location.

@@ -465,6 +465,10 @@ public final class DragonTravelCommands {
                 //e.printStackTrace();
             }
         } else {
+        	if(DragonTravel.getInstance().getDbStationsHandler().getStation(station) == null) {
+        		player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", station));
+        		return;
+        	}      	
         	if (sender == null)
         		if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOSTATION, player))
         			return;
@@ -567,7 +571,7 @@ public final class DragonTravelCommands {
         }
         Player player = (Player) sender;
         
-        if(!player.hasPermission("dt.home")) {
+        if(!player.hasPermission("dt.travelhome")) {
         	sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
 			return;
         }

@@ -249,7 +249,11 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         else
             myZ -= zPerTick;
 
-        if ((int) myZ == (int) toLoc.getZ() && Math.abs(myX - (int) toLoc.getX()) <= 1) {
+        // For higher travel speeds the accuracy for dismounts needs 
+        // to be decreased to prevent dragons from getting stuck
+        double maxDiff = DragonTravel.getInstance().getConfigHandler().getSpeed() + 1;
+        if (Math.abs(myZ - (int) toLoc.getZ()) <= maxDiff
+    	 && Math.abs(myX - (int) toLoc.getX()) <= maxDiff) {
             finalMove = true;
         }
         setPosition(myX, myY, myZ);        

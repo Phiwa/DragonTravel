@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Signs &mdash; DragonTravel 01.006 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="DragonTravel 01.006 documentation" href="index.html"/>
+        <link rel="next" title="FAQ" href="faq.html"/>
+        <link rel="prev" title="Permissions" href="permissions.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DragonTravel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                01.006
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="flights_and_travels.html">Travels &amp; Flights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="permissions.html">Permissions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Signs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#general">General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#travel-sign">Travel Sign</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flight-sign">Flight Sign</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#faction-signs">Faction Signs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#layout-1-faction-specific">Layout 1 (Faction specific)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#layout-2-universal">Layout 2 (Universal)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_messages.html">Config &amp; Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">DragonTravel</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Signs</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/signs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="signs">
+<h1>Signs<a class="headerlink" href="#signs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<p>Signs give you the possibility to give players access to DragonTravel commands without them typing commands.
+It is therefore a great way to increase the level immersion for role play servers.</p>
+<dl class="docutils">
+<dt>At the moment, it is possible to bind the following actions to signs:</dt>
+<dd><ul class="first last simple">
+<li>Starting a travel to a station</li>
+<li>Starting a flight</li>
+<li>Starting a travel to the player&#8217;s faction&#8217;s home point</li>
+</ul>
+</dd>
+</dl>
+<p><strong>The basic layout of a sign in DragonTravel is the following:</strong></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">DragonTravel</span><span class="p">]</span>
+<span class="o">&lt;</span><span class="n">Action</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">Target</span><span class="o">&gt;</span>
+<span class="p">[</span><span class="n">Cost</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The fourth line which contains the costs is optional. If you have economy-payment activated and the fourth line is empty, the player is charged the default cost set in the config
+Costs have to be specified with a decimal seperator, even if you use payment via items (e.g. to charge a palyer 10 gold nuggets for a flight, specify &#8220;10.0&#8221; in the fourth line)</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="travel-sign">
+<h2>Travel Sign<a class="headerlink" href="#travel-sign" title="Permalink to this headline">¶</a></h2>
+<p>This type of sign brings a player who clicks on it to the station specified on the sign</p>
+<p>The following example sign brings the player to the station &#8220;MyExampleStat&#8221; which costs him 10 bucks (if payment by money is enabled or 10 of the specified resource if payment by resources is enabled).</p>
+<a class="reference internal image-reference" href="_images/sign_travel_create.png"><img alt="_images/sign_travel_create.png" class="align-center" src="_images/sign_travel_create.png" style="width: 500px; height: 500px;" /></a>
+<a class="reference internal image-reference" href="_images/sign_travel_layout.png"><img alt="_images/sign_travel_layout.png" class="align-center" src="_images/sign_travel_layout.png" style="width: 500px; height: 500px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="flight-sign">
+<h2>Flight Sign<a class="headerlink" href="#flight-sign" title="Permalink to this headline">¶</a></h2>
+<p>This type of sign brings a player who clicks on it on the flight specified on the sign</p>
+<p>The following example sign sends the player on the flight &#8220;TestyFlight&#8221; which costs him 20 bucks (if payment by money is enabled or 20 of the specified resource if payment by resources is enabled).</p>
+<a class="reference internal image-reference" href="_images/sign_flight_create.png"><img alt="_images/sign_flight_create.png" class="align-center" src="_images/sign_flight_create.png" style="width: 500px; height: 500px;" /></a>
+<a class="reference internal image-reference" href="_images/sign_flight_layout.png"><img alt="_images/sign_flight_layout.png" class="align-center" src="_images/sign_flight_layout.png" style="width: 500px; height: 500px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="faction-signs">
+<h2>Faction Signs<a class="headerlink" href="#faction-signs" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="section" id="layout-1-faction-specific">
+<h3>Layout 1 (Faction specific)<a class="headerlink" href="#layout-1-faction-specific" title="Permalink to this headline">¶</a></h3>
+<p>This type of sign brings all members of the faction &#8220;MyFaction&#8221; who click the sign to their faction&#8217;s home. If a player is not a member of any faction or a member of a different faction he will get an error message.</p>
+<a class="reference internal image-reference" href="_images/sign_faction_specific_create.png"><img alt="_images/sign_faction_specific_create.png" class="align-center" src="_images/sign_faction_specific_create.png" style="width: 500px; height: 500px;" /></a>
+<a class="reference internal image-reference" href="_images/sign_faction_specific_layout.png"><img alt="_images/sign_faction_specific_layout.png" class="align-center" src="_images/sign_faction_specific_layout.png" style="width: 500px; height: 500px;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="section" id="layout-2-universal">
+<h3>Layout 2 (Universal)<a class="headerlink" href="#layout-2-universal" title="Permalink to this headline">¶</a></h3>
+<p>This type of sign brings all players who click it to their faction&#8217;s home. If a player is not a member of any faction he will get an error message.</p>
+<a class="reference internal image-reference" href="_images/sign_faction_specific_create.png"><img alt="_images/sign_faction_specific_create.png" class="align-center" src="_images/sign_faction_specific_create.png" style="width: 500px; height: 500px;" /></a>
+<a class="reference internal image-reference" href="_images/sign_faction_specific_layout.png"><img alt="_images/sign_faction_specific_layout.png" class="align-center" src="_images/sign_faction_specific_layout.png" style="width: 500px; height: 500px;" /></a>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="faq.html" class="btn btn-neutral float-right" title="FAQ" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="permissions.html" class="btn btn-neutral" title="Permissions" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Phiwa.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'01.006',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+
+  
+  <script type="text/javascript">
+    var _paq = _paq || [];
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="//analytics.phiwa.eu/";
+      _paq.push(['setTrackerUrl', u+'piwik.php']);
+      _paq.push(['setSiteId', 6]);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+    })();
+  </script>
+  <noscript><p><img src="//analytics.phiwa.eu/piwik.php?idsite=6" style="border:0;" alt="" /></p></noscript> 
+
+</body>
+</html>

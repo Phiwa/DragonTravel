@@ -1,0 +1,570 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Permissions &mdash; DragonTravel 01.006 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="DragonTravel 01.006 documentation" href="index.html"/>
+        <link rel="next" title="Signs" href="signs.html"/>
+        <link rel="prev" title="Commands" href="commands.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DragonTravel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                01.006
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="flights_and_travels.html">Travels &amp; Flights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Permissions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Permissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="signs.html">Signs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_messages.html">Config &amp; Messages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">DragonTravel</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Permissions</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/permissions.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="permissions">
+<h1>Permissions<a class="headerlink" href="#permissions" title="Permalink to this headline">¶</a></h1>
+<p>Examples can be found at the end of the page.</p>
+<div class="section" id="id1">
+<h2>Permissions<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Permission</th>
+<th class="head"><div class="first last line-block">
+<div class="line">Description</div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dt.home</td>
+<td><div class="first last line-block">
+<div class="line">Travel to and set home (combines the two child permissions)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.sethome</td>
+<td><div class="first last line-block">
+<div class="line">Only set own home</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.travelhome</td>
+<td><div class="first last line-block">
+<div class="line">Only travel to own home</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.ctravel</td>
+<td><div class="first last line-block">
+<div class="line">Travel to coordinates</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.ptravel</td>
+<td><div class="first last line-block">
+<div class="line">Travel to a player</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.fhome</td>
+<td><div class="first last line-block">
+<div class="line">Travel to faction-home (requires Factions)</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.tspawn</td>
+<td><div class="first last line-block">
+<div class="line">Travel to town spawn (requires Towny)</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.travel.*</td>
+<td><div class="first last line-block">
+<div class="line">Travel to all stations</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.travel.&lt;stationname&gt;</td>
+<td><div class="first last line-block">
+<div class="line">Travel to a specified station</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.flight.*</td>
+<td><div class="first last line-block">
+<div class="line">Using all flights</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.flight.&lt;flightname&gt;</td>
+<td><div class="first last line-block">
+<div class="line">Using the specified flight</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.admin.*</td>
+<td><div class="first last line-block">
+<div class="line">All administrative functions</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.admin.reload</td>
+<td><div class="first last line-block">
+<div class="line">Permission to reload config files</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.admin.signs</td>
+<td><div class="first last line-block">
+<div class="line">All administrative functions connected to signs</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.admin.stations</td>
+<td><div class="first last line-block">
+<div class="line">All administrative functions connected to stations</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.admin.flights</td>
+<td><div class="first last line-block">
+<div class="line">All administrative functions connected to flights</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.admin.statdragon</td>
+<td><div class="first last line-block">
+<div class="line">Create and remove stationary dragons</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.admin.remdragons</td>
+<td><div class="first last line-block">
+<div class="line">Remove dragons without riders near the player</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.nocost.*</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for anything</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.nocost.travel.*</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for travels at all</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.nocost.travel.command</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for travels by command</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.nocost.travel.sign</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for travels by sign</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.nocost.randomtravel.*</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for travels to a random location at all</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.nocost.randomtravel.command</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for travels to a random location by command</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.nocost.randomtravel.sign</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for travels to a random location by sign</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.nocost.ptravel</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for travels to players</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.nocost.ctravel</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for travels to coordinates</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.nocost.fhome</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for travels to faction’s home</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.nocost.flight.*</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for flights at all</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.nocost.flight.command</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for flights by command</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.nocost.flight.sign</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for flights by sign</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.nocost.home.*</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for home-stuff at all</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.nocost.home.travel</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for home-stuff for travelling to his home</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.nocost.home.set</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for home-stuff for setting his home</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.nocost.ctravel</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for travel to coordinates</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.nocost.ptravel</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to pay for travel to players</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.ptoggle</td>
+<td><div class="first last line-block">
+<div class="line">Allows a player to toggle ptravels to him on/off</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.notrequireitem.*</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need the “requiredItem” to use DT at all</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.notrequireitem.travel</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need the “requiredItem” to use DT for travels</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.notrequireitem.flight</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need the “requiredItem” to use DT for flights</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.ignoreusestations.*</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to be at a station to use anything</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.ignoreusestations.travels</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to be at a station to use travels</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.ignoreusestations.flights</td>
+<td><div class="first last line-block">
+<div class="line">Player doesn’t need to be at a station to use flights</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.ignoredragonlimit</td>
+<td><div class="first last line-block">
+<div class="line">Allows player to mount a dragon, even if the server has already</div>
+<div class="line">reached the limit of dragons set in the config</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.ignoreminheight</td>
+<td><div class="first last line-block">
+<div class="line">Allows player to mount a dragon, even if he is below</div>
+<div class="line">the minimum mount height set in the config</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.ignoredamagerestriction</td>
+<td><div class="first last line-block">
+<div class="line">Allows player to mount a dragon, even if the server has already received</div>
+<div class="line">damage and the cooldown time set in the config has not passed since then.</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>dt.travel.stationatspawn</td>
+<td><div class="first last line-block">
+<div class="line">A player with this permission can travel to the starion &#8220;stationatspawn”</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.travel.*</td>
+<td><div class="first last line-block">
+<div class="line">A player with this permission can travel to any station</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.flight.exampleflight</td>
+<td><div class="first last line-block">
+<div class="line">A player with this permission can use the flight “exampleflight”</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td>dt.flight.*</td>
+<td><div class="first last line-block">
+<div class="line">A player with this permission can use all flights</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td>dt.nocost.travel.command</td>
+<td><div class="first last line-block">
+<div class="line">A player with this permission can travel by command                                                        | without getting charged for it</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="signs.html" class="btn btn-neutral float-right" title="Signs" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="commands.html" class="btn btn-neutral" title="Commands" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Phiwa.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'01.006',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+  
+
+  
+  <script type="text/javascript">
+    var _paq = _paq || [];
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="//analytics.phiwa.eu/";
+      _paq.push(['setTrackerUrl', u+'piwik.php']);
+      _paq.push(['setSiteId', 6]);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+    })();
+  </script>
+  <noscript><p><img src="//analytics.phiwa.eu/piwik.php?idsite=6" style="border:0;" alt="" /></p></noscript> 
+
+</body>
+</html>
