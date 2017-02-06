@@ -31,10 +31,12 @@ public class EntityListener implements Listener {
 
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onEnderDragonExplode(EntityExplodeEvent event) {
-		if (DragonTravel.getInstance().getConfigHandler().isOnlydragontraveldragons() && event.getEntity() instanceof RyeDragon)
-			event.setCancelled(true);
-		else if (DragonTravel.getInstance().getConfigHandler().isAlldragons() && event.getEntity() instanceof EnderDragon)
-			event.setCancelled(true);
+		if(event.getEntity() instanceof EnderDragon){
+			if (DragonTravel.getInstance().getConfigHandler().isOnlydragontraveldragons() && event.getEntity() instanceof RyeDragon)
+				event.setCancelled(true);
+			else if (DragonTravel.getInstance().getConfigHandler().isAlldragons() && event.getEntity() instanceof EnderDragon)
+				event.setCancelled(true);
+		}		
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
