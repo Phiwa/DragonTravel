@@ -160,7 +160,10 @@ public class DragonTravel extends JavaPlugin {
             public void run() {
                 for (Map.Entry<Player, IRyeDragon> entry : dragonManager.getRiderDragons().entrySet()) {
                     try {
-                        entry.getValue().getEntity().setPassenger(entry.getKey());
+                        Entity ent = entry.getValue().getEntity();
+                        if(ent.getPassenger == null || ent.getPassenger() != entry.getKey()){
+                            ent.setPassenger(entry.getKey());
+                        }
                     } catch (Exception ignored) {
                     }
                 }
