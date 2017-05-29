@@ -36,7 +36,7 @@
 #       und melde bitte alle Bugs, die du findest, sonst kann ich sie nicht beheben. ;)
 
 File:
-    Version: 1.0
+    Version: 1.1
     Language: 'German'
     
 Messages:
@@ -61,6 +61,8 @@ Messages:
             BelowMinMountHeight: '&cDu befindest dich unter der minimalen Höhe für das besteigen eines Drachens. Die minimale Höhe beträgt &f{minheight}&c.'
             DamageCooldown: '&cDu musst &f{seconds} &cweitere Sekunden warten bis du wieder einen Drachen besteigen kannst.'
             WorldNotFound: '&cDie angegebene Welt existiert nicht.'
+            WorldOnBlacklistTo: '&cDie Zielwelt ist auf der Reise-Blacklist.'
+            WorldOnBlacklistFrom: '&cDie aktuelle Welt ist auf der Reise-Blacklist.'
             StatDragonNotExists: '&cEs existiert kein stationärer Drache mit dem Namen &f{name}&c.' 
     Payment:
         Free: '&aKeine Kosten für dich, auf gehts!'

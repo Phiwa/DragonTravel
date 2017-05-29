@@ -14,7 +14,7 @@ public class Messages {
     // Messages
     private FileConfiguration messages;
     private File messagesFile;
-    private final double messagesVersion = 1.0;
+    private final double messagesVersion = 1.1;
 
     private String language = "";
 
@@ -160,6 +160,12 @@ public class Messages {
         		messages.set("Messages.General.Error.RequireSkyLightPlayer", "&cYou must have access to sky light for the dragon to be able to start!");
         if (messages.get("Messages.General.Error.RequireSkyLightDestination") == null)
     		messages.set("Messages.General.Error.RequireSkyLightDestination", "&cThere must not be any obstacles between your destination and the sky, otherwise the dragon would not be able to land!");
+        
+        // 1.1
+        if (messages.get("Messages.General.Error.WorldOnBlacklistTo") == null)
+        	messages.set("Messages.General.Error.WorldOnBlacklistTo", "&cTarget world is on travel blacklist.");
+        if (messages.get("Messages.General.Error.WorldOnBlacklistFrom") == null)
+        	messages.set("Messages.General.Error.WorldOnBlacklistFrom", "&cCurrent world is on travel blacklist.");
         
         // Update the file version
         messages.set("File.Version", messagesVersion);
