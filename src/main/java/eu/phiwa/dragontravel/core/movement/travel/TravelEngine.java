@@ -17,6 +17,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Objects;
 
 public class TravelEngine {
@@ -103,6 +104,25 @@ public class TravelEngine {
             }
         }
 
+
+        // Check for forbidden source worlds
+    	List<String> worldblacklistTravelFrom = DragonTravel.getInstance().getConfig().getStringList("WorldBlacklistTravelFrom");
+        for(String world : worldblacklistTravelFrom) {
+            if(player.getWorld().getName().equalsIgnoreCase(world)) {
+            	// TODO: Add message
+                return;
+            }
+        }
+        
+        // Check for forbidden target worlds
+    	List<String> worldblacklistTravelTo = DragonTravel.getInstance().getConfig().getStringList("WorldBlacklistTravelTo");
+        for(String world : worldblacklistTravelTo) {
+            if(destination.getWorld().getName().equalsIgnoreCase(world)) {
+            	// TODO: Add message
+                return;
+            }
+        }
+	        
         Location temploc = player.getLocation();
 
         // Do not run checks if player is sent by an admin

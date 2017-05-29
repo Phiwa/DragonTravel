@@ -8,6 +8,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 public class Config {
@@ -15,7 +17,7 @@ public class Config {
     // Config
     private FileConfiguration config;
     private File configFile;
-    private double configVersion = 0.9;
+    private double configVersion = 1.0;
 
     // Required Item
     private Material requiredItem;
@@ -180,6 +182,20 @@ public class Config {
         // New options in version 0.9
         if (!config.isSet("DismountOnShift"))
         	config.set("DismountOnShift", false);
+        
+        // New options in version 1.0
+        if (!config.isSet("WorldBlacklistTravelTo")) {
+        	List<String> wblTo = new ArrayList<String>();
+	        wblTo.add("ExampleWorld1");
+	        wblTo.add("ExampleWorld2");	       
+	        config.set("WorldBlacklistTravelTo", wblTo);    
+        }
+        if (!config.isSet("WorldBlacklistTravelFrom")) {
+            List<String> wblFrom = new ArrayList<String>();
+            wblFrom.add("ExampleWorld3");
+            wblFrom.add("ExampleWorld4");
+        	config.set("WorldBlacklistTravelFrom", wblFrom);
+        }
         
         // Update the file version
         config.set("File.Version", configVersion);

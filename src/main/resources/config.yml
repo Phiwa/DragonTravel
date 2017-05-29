@@ -191,6 +191,20 @@ MinimumMountHeight: -1
 DamageCooldown: -1
 
 # <<< Sky Light Limits >>>
-#If this is true, the player must mount and dismount in places with direct access to skylight.
-#This only applies to travels. Flights are exempt of this rule.
+# If this is true, the player must mount and dismount in places with direct access to skylight.
+# This only applies to travels. Flights are exempt of this rule.
 RequireSkyLight: false
+
+# <<< World blacklist travel TO >>>
+# If a world is on this list, players are not able to travel there.
+# If a player already is in this world, he is still allowed to travel within this world
+# or to any other world.
+WorldBlacklistTravelTo:
+- ExampleWorld1
+- ExampleWorld2
+
+# <<< World blacklist travel FROM >>>
+# If a world is on this list, players are not able to start a travel.
+WorldBlacklistTravelFrom:
+- ExampleWorld3
+- ExampleWorld4

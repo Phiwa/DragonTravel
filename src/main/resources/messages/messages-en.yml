@@ -36,7 +36,7 @@
 #       and please report all bugs you find, otherwise I can't fix them. ;)
 
 File:
-    Version: 1.0
+    Version: 1.1
     Language: 'English'
 
 Messages:
@@ -61,6 +61,8 @@ Messages:
             BelowMinMountHeight: '&cYou are below the minimum height required to mount a dragon. Minimum height is &f{minheight}&c.'
             DamageCooldown: '&cYou must wait &f{seconds} &cmore seconds before you can mount a dragon.'
             WorldNotFound: '&cCould not find the specified world.'
+            WorldOnBlacklistTo: '&cTarget world is on travel blacklist.'
+            WorldOnBlacklistFrom: '&cCurrent world is on travel blacklist.'
             StatDragonNotExists: '&cThere is no stationary dragon &f{name}&c.'
     Payment:
         Free: '&aNo charge for you, hop on!'
