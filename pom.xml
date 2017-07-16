@@ -132,10 +132,23 @@
             <url>http://repo.gravitydevelopment.net/</url>
         </repository>
         
+        <!--  	
+        #	- com.sk89q
+        # 		- command-framework-bukkit
+        -->
         <repository>
             <id>elmakers-repo</id>
             <url>http://maven.elmakers.com/repository/</url>
         </repository>
+        
+        <!-- 
+        #	- com.sk89q (backup repo)
+        #  		- command-framework-bukkit
+        -->
+        <repository>
+            <id>extension-ws-repo</id>
+            <url>https://repo.extension.ws/content/repositories/public/</url>
+        </repository>    
         
     </repositories>
     <dependencies>
