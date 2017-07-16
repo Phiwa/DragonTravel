@@ -27,6 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
@@ -161,7 +162,7 @@ public class DragonTravel extends JavaPlugin {
                 for (Map.Entry<Player, IRyeDragon> entry : dragonManager.getRiderDragons().entrySet()) {
                     try {
                         Entity ent = entry.getValue().getEntity();
-                        if(ent.getPassenger == null || ent.getPassenger() != entry.getKey()){
+                        if(ent.getPassenger() == null || ent.getPassenger() != entry.getKey()){
                             ent.setPassenger(entry.getKey());
                         }
                     } catch (Exception ignored) {

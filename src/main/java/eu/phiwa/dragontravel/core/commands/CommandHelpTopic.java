@@ -100,9 +100,8 @@ public class CommandHelpTopic extends IndexHelpTopic {
 
     /**
      * Computes the Dameraur-Levenshtein Distance between two strings.
-     * Adapted from the algorithm at <a
-     * href="http://en.wikipedia.org/wiki/Damerau–Levenshtein_distance"
-     * >Wikipedia: Damerau–Levenshtein distance</a>
+     * Adapted from the algorithm at
+     * http://en.wikipedia.org/wiki/Damerau-Levenshtein_distance"
      *
      * @param s1 The first string being compared.
      * @param s2 The second string being compared.
