@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.phiwa</groupId>
     <artifactId>DragonTravel</artifactId>
-    <version>01.006.06</version>
+    <version>01.007.01</version>
     <build>
         <resources>
             <resource>
@@ -41,11 +41,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
-                <!--
-                <configuration>
-                    <outputDirectory>C:\Users\ollie\Downloads\CraftBukkit\target\plugins</outputDirectory>
-                </configuration>
-                -->
             </plugin>
             <plugin>
             	<groupId>org.apache.maven.plugins</groupId>
