@@ -104,12 +104,17 @@ public class TravelEngine {
             }
         }
 
+        // Check if world of destination exists
+        if(destination.getWorld() == null) {
+        	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.WorldNotFound"));
+        	return;
+        }
 
         // Check for forbidden source worlds
     	List<String> worldblacklistTravelFrom = DragonTravel.getInstance().getConfig().getStringList("WorldBlacklistTravelFrom");
         for(String world : worldblacklistTravelFrom) {
             if(player.getWorld().getName().equalsIgnoreCase(world)) {
-            	// TODO: Add message
+            	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.WorldOnBlacklistFrom"));
                 return;
             }
         }
@@ -118,7 +123,7 @@ public class TravelEngine {
     	List<String> worldblacklistTravelTo = DragonTravel.getInstance().getConfig().getStringList("WorldBlacklistTravelTo");
         for(String world : worldblacklistTravelTo) {
             if(destination.getWorld().getName().equalsIgnoreCase(world)) {
-            	// TODO: Add message
+            	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.WorldOnBlacklistTo"));
                 return;
             }
         }
