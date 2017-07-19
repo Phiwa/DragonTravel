@@ -1,4 +1,4 @@
-package eu.phiwa.dragontravel.nms.v1_11_R1;
+package eu.phiwa.dragontravel.nms.v1_12_R1;
 
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.server.IEntityRegister;

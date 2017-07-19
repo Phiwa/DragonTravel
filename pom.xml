@@ -173,6 +173,14 @@
     </repositories>
     <dependencies>
 
+		<dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit-1.12</artifactId>
+            <version>craftbukkit_v1_12_R1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/craftbukkit_v1_12_R1.jar</systemPath>
+        </dependency>
+
     	<dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.11</artifactId>

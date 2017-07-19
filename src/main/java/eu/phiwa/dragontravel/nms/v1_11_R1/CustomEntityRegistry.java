@@ -5,7 +5,7 @@
  * 
  */
 
-package eu.phiwa.dragontravel.core;
+package eu.phiwa.dragontravel.nms.v1_11_R1;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
