@@ -331,16 +331,21 @@ public final class DragonTravelCommands {
             // Disallow
             DragonTravel.getInstance().getDragonManager().getPlayerToggles().put(UUID.fromString(playerId), false);
         } else {
-            if (DragonTravel.getInstance().getDragonManager().getPlayerToggles().get(playerName)) {
-                // Disallow
-                DragonTravel.getInstance().getDragonManager().getPlayerToggles().put(UUID.fromString(playerId), false);
-            } else {
-                // Allow
-                DragonTravel.getInstance().getDragonManager().getPlayerToggles().put(UUID.fromString(playerId), true);
+            if (DragonTravel.getInstance().getDragonManager().getPlayerToggles().containsKey(UUID.fromString(playerId))) {
+            	if(DragonTravel.getInstance().getDragonManager().getPlayerToggles().get(UUID.fromString(playerId))) {
+            		// Disallow
+            		DragonTravel.getInstance().getDragonManager().getPlayerToggles().put(UUID.fromString(playerId), false);
+            	} else {
+            		// Allow
+            		DragonTravel.getInstance().getDragonManager().getPlayerToggles().put(UUID.fromString(playerId), true);
+            	}
+            }
+            else {
+            	DragonTravel.getInstance().getDragonManager().getPlayerToggles().put(UUID.fromString(playerId), false);
             }
         }
         // Fancy message sending with the ternary operator
-        sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage(DragonTravel.getInstance().getDragonManager().getPlayerToggles().get(playerName) ? "Messages.General.Successful.ToggledPTravelOn" : "Messages.General.Successful.ToggledPTravelOff"));
+        sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage(DragonTravel.getInstance().getDragonManager().getPlayerToggles().get(UUID.fromString(playerId)) ? "Messages.General.Successful.ToggledPTravelOn" : "Messages.General.Successful.ToggledPTravelOff"));
     }
 
     @Command(aliases = {"sethome"},
