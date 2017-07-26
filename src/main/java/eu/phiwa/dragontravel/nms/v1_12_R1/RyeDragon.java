@@ -35,7 +35,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     private Flight flight;
     private int currentWayPointIndex;
 
-    //Travel
+    // Travel
     private Location midLocA; // Middle location source world
     private Location midLocB; // Middle location target world
     private boolean finalMove = false;
@@ -205,11 +205,15 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         double myZ = locZ;
 
         if (finalMove) {
+        	// Go down to destination
             if ((int) locY > (int) toLoc.getY())
                 myY -= DragonTravel.getInstance().getConfigHandler().getSpeed();
+            // Go up to destination
             else if ((int) locY < (int) toLoc.getY())
                 myY += DragonTravel.getInstance().getConfigHandler().getSpeed();
+            // Reached destination
             else {
+            	// Interworld travel, dragon reached temporary destination in target world
                 if (!getEntity().getWorld().getName().equals(toLoc.getWorld().getName())) {
                     this.rider = (Player) getEntity().getPassenger();
                     midLocB.getChunk().load();
@@ -232,12 +236,17 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                             getEntity().remove();
                         }
                     }, 1L);
-                } else {
+                }
+                // Dragon reached final destination
+                else {
                     DragonTravel.getInstance().getDragonManager().removeRiderAndDragon(getEntity(), true);
                     return;
                 }
             }
+            
+            // Move player to new location on tick
             setPosition(myX, myY, myZ);
+            
             return;
         }
 
