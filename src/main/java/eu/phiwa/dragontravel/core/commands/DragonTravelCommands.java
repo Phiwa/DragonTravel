@@ -6,7 +6,6 @@ import eu.phiwa.dragontravel.core.DragonManager;
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.payment.ChargeType;
 import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
-import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
 import eu.phiwa.dragontravel.core.movement.flight.Waypoint;
 import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;

@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.phiwa</groupId>
     <artifactId>DragonTravel</artifactId>
-    <version>01.007.01</version>
+    <version>01.007.02</version>
     <build>
         <resources>
             <resource>
@@ -152,11 +152,12 @@
         <!--  	
         	org.bukkit.craftbukkit
         -->
+<!--
         <repository>
             <id>elmakers-repo</id>
             <url>http://maven.elmakers.com/repository/</url>
         </repository>
-       
+-->
         <!-- 
         	com.sk89q.command-framework-bukkit
         -->

@@ -161,24 +161,29 @@ public class TravelEngine {
 	        }
         }
 
+        boolean interworld;
+        
+        // Destination is in the player's current world
         if (Objects.equals(destination.getWorld().getName(), player.getWorld().getName())) {
             temploc.setYaw(getCorrectYawForPlayer(player, destination));
-            player.teleport(temploc);
-        } else {
+            interworld = false;
+        }
+        // Destination is in a different world
+        else {
             Location tempLoc2 = new Location(player.getWorld(), player.getLocation().getX() + 1, player.getLocation().getY() + 1, player.getLocation().getZ() + 1);
             temploc.setYaw(getCorrectYawForPlayer(player, tempLoc2));
-            player.teleport(temploc);
+            interworld = true;
         }
+        
+        player.teleport(temploc);
 
+        // Trying to mount player
         if (!DragonTravel.getInstance().getDragonManager().mount(player, true, dragonType))
             return;
 
         IRyeDragon dragon = DragonTravel.getInstance().getDragonManager().getRiderDragons().get(player);
         dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));
-        if (Objects.equals(destination.getWorld().getName(), player.getWorld().getName()))
-            dragon.startTravel(destination, false, dragonType);
-        else
-            dragon.startTravel(destination, true, dragonType);
+        dragon.startTravel(destination, interworld, dragonType);
 
     }
 
@@ -387,8 +392,6 @@ public class TravelEngine {
      * 						  the user started the journey by himself.
      */
     public void toStation(Player player, String stationName, Boolean checkForStation, CommandSender sendingPlayer) throws DragonException {
-
-    	CommandSender sender;
     	
         Station destination = DragonTravel.getInstance().getDbStationsHandler().getStation(stationName);
 

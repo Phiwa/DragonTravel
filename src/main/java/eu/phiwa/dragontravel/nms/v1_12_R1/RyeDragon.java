@@ -22,17 +22,22 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     private final int travelY = DragonTravel.getInstance().getConfigHandler().getTravelHeight();
 
     private DragonType dragonType = DragonType.STATIONARY;
-    private Location fromLoc;
-    private Location toLoc;
+    
     private Player rider;
-
+    
+    // Source location
+    private Location fromLoc;
+    
+    // Target location
+    private Location toLoc;
+    
     // Flight
     private Flight flight;
     private int currentWayPointIndex;
 
     //Travel
-    private Location midLocA;
-    private Location midLocB;
+    private Location midLocA; // Middle location source world
+    private Location midLocB; // Middle location target world
     private boolean finalMove = false;
 
     private double xPerTick;
