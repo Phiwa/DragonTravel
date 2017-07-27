@@ -6,6 +6,8 @@ import eu.phiwa.dragontravel.core.DragonManager;
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.payment.ChargeType;
 import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
+import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
+import eu.phiwa.dragontravel.core.movement.DragonType;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
 import eu.phiwa.dragontravel.core.movement.flight.Waypoint;
 import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
@@ -24,7 +26,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.help.HelpTopic;
 import org.bukkit.util.ChatPaginator;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -426,6 +431,37 @@ public final class DragonTravelCommands {
         }
     }
 
+    // WIP: Merging storage format for all kinds of movement (Travels and Flights)
+    // using the current implementation for flights
+    @Command(aliases = {"newtravel"},
+            desc = "Travel to another station",
+            //usage = "/dt newtravel <station name> [player=you]",
+            min = 1, max = 2,
+            help = "Brings you (or the given player) to the specified station")
+    public static void startStationTravelNew(CommandContext args, CommandSender sender) throws CommandException {
+    	String stationname = args.getString(0);
+    	Station station = DragonTravel.getInstance().getDbStationsHandler().getStation(stationname);
+    
+    	// Create a dummy flight with a single waypoint (target station)
+    	Map<String, Object> data = new HashMap<String, Object>();
+    	data.put("displayname", "DummyFlight_"+stationname);   	
+    	String dummyWp = station.getX()+"%"+station.getY()+"%"+station.getZ()+"%"+station.getWorldName();
+    	List<String> dummyWpList = new LinkedList<String>();
+    	dummyWpList.add(dummyWp);
+    	data.put("waypoints", dummyWpList);    	
+     	Flight dummyFlight = new Flight(data);
+     	
+     	Player player = (Player) sender;
+     	if (!DragonTravel.getInstance().getDragonManager().mount(player, true, DragonType.MANNED_FLIGHT)) {
+     		System.out.println("Could not mount player...");
+            return;
+     	}
+     	
+     	IRyeDragon dragon = DragonTravel.getInstance().getDragonManager().getRiderDragons().get(player);
+        dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToStation").replace("{stationname}", station.getDisplayName())));
+        dragon.startFlight(dummyFlight, DragonType.MANNED_FLIGHT);
+    }
+    
     @Command(aliases = {"travel"},
             desc = "Travel to another station",
             usage = "/dt travel <station name> [player=you]",
