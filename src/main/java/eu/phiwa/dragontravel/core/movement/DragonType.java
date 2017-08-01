@@ -10,6 +10,7 @@ public enum DragonType {
     FACTION_TRAVEL,
     STATION_TRAVEL,
     STATIONARY,
-    PET,;
+    PET,
+    MOVEMENT;
 
 }

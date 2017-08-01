@@ -7,6 +7,7 @@ import eu.phiwa.dragontravel.core.hooks.anticheat.CheatProtectionHandler;
 import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
 import eu.phiwa.dragontravel.core.movement.DragonType;
 import eu.phiwa.dragontravel.core.movement.flight.FlightEngine;
+import eu.phiwa.dragontravel.core.movement.newmovement.MovementEngine;
 import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
 import eu.phiwa.dragontravel.core.movement.travel.TravelEngine;
 
@@ -29,6 +30,7 @@ public class DragonManager {
 
     private FlightEngine flightEngine;
     private TravelEngine travelEngine;
+    private MovementEngine movementEngine;
 
     private final HashMap<UUID, Long> damageReceipts = new HashMap<>();
     private final HashMap<UUID, Boolean> playerToggles = new HashMap<>();
@@ -40,6 +42,7 @@ public class DragonManager {
         instance = this;
         flightEngine = new FlightEngine();
         travelEngine = new TravelEngine();
+        movementEngine = new MovementEngine();
     }
 
     public void dismount(Player player, Boolean isMultiWorld) {
@@ -320,6 +323,14 @@ public class DragonManager {
         this.travelEngine = travelEngine;
     }
 
+    public MovementEngine getMovementEngine() {
+        return movementEngine;
+    }
+    
+    public void setMovementEngine(MovementEngine movementEngine) {
+    	this.movementEngine = movementEngine;
+    }
+    
     public ConcurrentHashMap<Player, Location> getRiderStartPoints() {
         return riderStartPoints;
     }

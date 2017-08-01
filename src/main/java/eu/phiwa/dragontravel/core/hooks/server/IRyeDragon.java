@@ -2,6 +2,8 @@ package eu.phiwa.dragontravel.core.hooks.server;
 
 import eu.phiwa.dragontravel.core.movement.DragonType;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
+import eu.phiwa.dragontravel.core.movement.newmovement.DTMovement;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
@@ -30,4 +32,9 @@ public interface IRyeDragon {
     void fixWings();
 
     void setCustomNameVisible(boolean b);
+
+    
+	void setMovementMove();
+
+	void startMovement(DTMovement movement);
 }

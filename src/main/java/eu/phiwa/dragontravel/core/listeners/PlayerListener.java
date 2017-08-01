@@ -2,12 +2,18 @@ package eu.phiwa.dragontravel.core.listeners;
 
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
+import com.sk89q.minecraft.util.commands.CommandPermissionsException;
+
 import eu.phiwa.dragontravel.api.DragonException;
 import eu.phiwa.dragontravel.core.DragonManager;
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.payment.ChargeType;
 import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
 import eu.phiwa.dragontravel.core.movement.DragonType;
+import eu.phiwa.dragontravel.core.movement.flight.Flight;
+import eu.phiwa.dragontravel.core.movement.newmovement.DTMovement;
+import eu.phiwa.dragontravel.core.movement.travel.Station;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -100,136 +106,287 @@ public class PlayerListener implements Listener {
             case "Travel":
                 String stationname = lines[2].replaceAll(ChatColor.WHITE.toString(), "");
 
+                // Player does not have the permission to use this function
                 if (!PermissionsHandler.hasTravelPermission(player, "travel", stationname)) {
                     player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
                     return;
                 }
+                
+                // Check for mounting limit
+                if (DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.EnableForTravels") && !player.hasPermission("dt.ignoreusestations.travels")) {
 
-                if (stationname.equalsIgnoreCase((DragonTravel.getInstance().getConfig().getString("RandomDest.Name")))) {
-                    if (lines[3].length() != 0) {
-                        if (!DragonTravel.getInstance().getPaymentManager().chargePlayerCustom(ChargeType.TRAVEL_TORANDOM, player, Double.parseDouble(lines[3]))) {
-                            return;
-                        }
-                    } else {
-                        if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TORANDOM, player)) {
-                            return;
-                        }
-                    }
-                    try {
-                        DragonManager.getDragonManager().getTravelEngine().toRandomDest(player, !DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"), null);
-                    } catch (DragonException e) {
-                        e.printStackTrace();
-                    }
-                } else if (DragonTravel.getInstance().getDbStationsHandler().getStation(stationname) == null) {
-                    player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));
-                    return;
-                } else {
-                	
-                	if(lines[3].isEmpty()) {
-                		if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOSTATION, player)) {
-                			return;
-                		}
-                	}
-                	else {
-	                    if (!DragonTravel.getInstance().getPaymentManager().chargePlayerCustom(ChargeType.TRAVEL_TOSTATION, player, Double.parseDouble(lines[3]))) {
+                	// Do not check mounting limit if signs are excluded in config
+                	if(!DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns")) {
+                		
+	                	// Player is not at a station
+	                    if (!DragonTravel.getInstance().getDbStationsHandler().checkForStation(player)) {
+	                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.NotAtAStation"));
 	                        return;
 	                    }
                 	}
+                }
+
+                // Travelling to random destination
+                if (stationname.equalsIgnoreCase((DragonTravel.getInstance().getConfig().getString("RandomDest.Name")))) {
+                	
+                	// Check if "RequireItem" is enabled
+                    if (DragonTravel.getInstance().getConfigHandler().isRequireItemTravelStation()) {
+                    	
+                    	// Check if player has required item
+                        if (!player.getInventory().contains(DragonTravel.getInstance().getConfigHandler().getRequiredItem()) && !player.hasPermission("dt.notrequireitem.travel")) {
+                            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequiredItemMissing"));
+                            return;
+                        }
+                    }
+                	
+                	// If costs are provided on sign, use this amount
+                    if (lines[3].isEmpty()) {
+                    	
+                    	// Charge palyer custom amount on sign
+                        if(!DragonTravel.getInstance().getPaymentManager().chargePlayerCustom(ChargeType.TRAVEL_TORANDOM, player, Double.parseDouble(lines[3])))
+                            return;
+                    }
+                    // No costs provided on sign
+                    else {
+                    	
+                    	// Charge player normal amount
+                        if(!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TORANDOM, player))
+                            return;
+                    }
+
                     try {
-                        DragonManager.getDragonManager().getTravelEngine().toStation(player, stationname, !DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"), null);
+                    	DTMovement movement = DTMovement.fromRandom(player);
+                        DragonManager.getDragonManager().getMovementEngine().startMovement(player, movement);
                     } catch (DragonException e) {
                         e.printStackTrace();
                     }
                 }
+                // Trying to travel to a mnormal station, but it does not exist
+                else if (DragonTravel.getInstance().getDbStationsHandler().getStation(stationname) == null) {
+                    player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));
+                    return;
+                }
+                // Travelling to a normal station
+                else { 	
+                	Station station = DragonTravel.getInstance().getDbStationsHandler().getStation(stationname);
+                	
+                	// Station does not exist
+                	if(station == null) {
+                		player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));
+                		return;
+                	}
+                	
+                	// Check if "RequireItem" is enabled
+                    if (DragonTravel.getInstance().getConfigHandler().isRequireItemTravelStation()) {
+                    	
+                    	// Check if player has required item
+                        if (!player.getInventory().contains(DragonTravel.getInstance().getConfigHandler().getRequiredItem()) && !player.hasPermission("dt.notrequireitem.travel")) {
+                            player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequiredItemMissing"));
+                            return;
+                        }
+                    }
+                    
+                	// No costs provided on sign, use default amount
+                	if(lines[3].isEmpty()) {
+                		
+                		// Charge player normal amount
+                		if(!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOSTATION, player))
+                			return;
+                	}
+                	// If costs are provided on sign, use this amount
+                	else {
+                		
+                		// Charge player custom amount on sign
+	                    if(!DragonTravel.getInstance().getPaymentManager().chargePlayerCustom(ChargeType.TRAVEL_TOSTATION, player, Double.parseDouble(lines[3])))
+	                        return;
+                	}
+                	
+                    try {
+                    	DTMovement movement = DTMovement.fromStation(player, station);
+                    	DragonManager.getDragonManager().getMovementEngine().startMovement(player, movement);
+                    } catch (DragonException e) {
+                        e.printStackTrace();
+                    }
+                }
+                
                 break;
             case "Faction":
 
+            	// Check if Factions is loaded
                 if (Bukkit.getPluginManager().getPlugin("Factions") == null) {
                     player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionsNotInstalled"));
                     return;
                 }
 
+                // Player does not have the permission to use this function
+                if (!player.hasPermission("dt.ftravel")) {
+                    player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
+                    return;
+                }
+                
+                // Reformat sign code to be able parse it
                 String factiontag = lines[2].replaceAll(ChatColor.WHITE.toString(), "");
 
+                Faction faction = null;
+                
+                // No faction tag is specified, use the player's faction
                 if (factiontag.isEmpty()) {
 
-                    if (!player.hasPermission("dt.ftravel")) {
-                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
-                        return;
-                    }
+                	// Get player's faction
+                    faction = MPlayer.get(player).getFaction();
 
-                    Faction faction = MPlayer.get(player).getFaction();
-
+                    // Player has no faction
                     if (faction.isNone()) {
                         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NoFactionMember"));
                         return;
                     }
 
+                    // Player's faction has no home
                     if (!faction.hasHome()) {
                         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
                         return;
-                    } else
-                        try {
-                            DragonManager.getDragonManager().getTravelEngine().travel(player, faction.getHome().asBukkitLocation(), false, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"), DragonType.FACTION_TRAVEL, null);
-                        } catch (DragonException e) {
-                            e.printStackTrace();
-                        }
-                } else {
-
-                    if (!player.hasPermission("dt.ftravel")) {
-                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
-                        return;
                     }
+                        
+                }
+                // Faction tag specified on sign, use this faction
+                else {
 
-                    Faction faction = MPlayer.get(player).getFaction();
+                	// Get player's faction
+                    faction = MPlayer.get(player).getFaction();
 
+                    // Player has no faction
                     if (faction.isNone()) {
                         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NoFactionMember"));
                         return;
                     }
 
+                    // Player's faction is not the one specified on the sign
                     if (!faction.getName().equals(factiontag)) {
                         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NotYourFaction"));
                         return;
                     }
 
+                    // Specified faction has no home
                     if (!faction.hasHome()) {
                         player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
                         return;
-                    } else
-                        try {
-                            DragonManager.getDragonManager().getTravelEngine().travel(player, faction.getHome().asBukkitLocation(), false, DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Successful.TravellingToFactionHome"), DragonType.FACTION_TRAVEL, null);
-                        } catch (DragonException e) {
-                            e.printStackTrace();
-                        }
+                    }
                 }
+                
+                // Check if player is already riding a dragon
+                if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player)) {
+                	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.AlreadyMounted"));
+                    return;
+                }
+                
+                // Check for mounting limit
+                if (DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.EnableForTravels") && !player.hasPermission("dt.ignoreusestations.travels")) {
+
+                	// Player is not at a station
+                    if (!DragonTravel.getInstance().getDbStationsHandler().checkForStation(player)) {
+                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.NotAtAStation"));
+                        return;
+                    }
+                }
+                
+                // Check if "RequireItem" is enabled
+                if (DragonTravel.getInstance().getConfigHandler().isRequireItemTravelFactionhome()) {
+                	
+                	// Check if player has required item
+                    if (!player.getInventory().contains(DragonTravel.getInstance().getConfigHandler().getRequiredItem()) && !player.hasPermission("dt.notrequireitem.travel")) {
+                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequiredItemMissing"));
+                        return;
+                    }
+                }               
+                
+                // No costs provided on sign, use default amount
+                if (lines[3].isEmpty()) {
+                	
+                	// Charge player normal amount
+                	if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOFACTIONHOME, player))
+                        return;
+                }
+                // If costs are provided on sign, use this amount
+                else {
+                    
+                	// Charge player custom amount on sign
+                    if (!DragonTravel.getInstance().getPaymentManager().chargePlayerCustom(ChargeType.TRAVEL_TOFACTIONHOME, player, Double.parseDouble(lines[3])))
+                        return;
+                }
+                
+                try {
+                	DTMovement movement = DTMovement.fromFaction(player);
+                	DragonManager.getDragonManager().getMovementEngine().startMovement(player, movement);
+                } catch (DragonException e) {
+                    e.printStackTrace();
+                }
+
                 break;
             case "Flight":
                 String flightName = lines[2].replaceAll(ChatColor.WHITE.toString(), "");
 
+                // Player does not have the permission to use this function
                 if (!PermissionsHandler.hasFlightPermission(player, flightName)) {
                     player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
                     return;
                 }
 
-                if (DragonTravel.getInstance().getDbFlightsHandler().getFlight((flightName)) == null) {
+                Flight flight = DragonTravel.getInstance().getDbFlightsHandler().getFlight((flightName));
+                
+                // Flight does not exist
+                if (flight == null) {
                     player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Error.FlightDoesNotExist"));
-                } else {
-                    if (lines[3].length() != 0) {
-                        if (!DragonTravel.getInstance().getPaymentManager().chargePlayerCustom(ChargeType.FLIGHT, player, Double.parseDouble(lines[3]))) {
-                            return;
-                        }
-                    } else {
-                        if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.FLIGHT, player)) {
-                            return;
-                        }
-                    }
-                    try {
-                        DragonManager.getDragonManager().getFlightEngine().startFlight(player, flightName, !DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.ExcludeSigns"), null);
-                    } catch (DragonException e) {
-                        e.printStackTrace();
+                    return;
+                }
+                
+                // Check if player is already riding a dragon
+                if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player)) {
+                	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.AlreadyMounted"));
+                    return;
+                }
+                
+                // Check for mounting limit
+                if (DragonTravel.getInstance().getConfig().getBoolean("MountingLimit.EnableForFlights") && !player.hasPermission("dt.ignoreusestations.flights")) {
+
+                	// Player is not at a station
+                    if (!DragonTravel.getInstance().getDbStationsHandler().checkForStation(player)) {
+                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.NotAtAStation"));
+                        return;
                     }
                 }
+
+                // Check if "RequireItem" is enabled
+                if (DragonTravel.getInstance().getConfigHandler().isRequireItemFlight()) { 
+                	
+                	// Check if player has required item
+                    if (!player.getInventory().contains(DragonTravel.getInstance().getConfigHandler().getRequiredItem()) && !player.hasPermission("dt.notrequireitem.flight")) {
+                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.RequiredItemMissing"));
+                        return;
+                    }
+                }
+                
+                // No costs provided on sign, use default amount
+                if (lines[3].isEmpty()) {
+                    
+                	// Charge player normal amount
+                	if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.FLIGHT, player))
+                        return;
+                }
+                // If costs are provided on sign, use this amount
+                else {
+
+                	// Charge player custom amount on sign
+                    if (!DragonTravel.getInstance().getPaymentManager().chargePlayerCustom(ChargeType.FLIGHT, player, Double.parseDouble(lines[3])))
+                        return;
+                }
+                
+                try {
+                	DTMovement movement = DTMovement.fromFlight(flight);
+                	DragonManager.getDragonManager().getMovementEngine().startMovement(player, movement);
+                } catch (DragonException e) {
+                    e.printStackTrace();
+                }
+
                 break;
         }
     }
