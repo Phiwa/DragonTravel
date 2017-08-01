@@ -1,7 +1,7 @@
 #                 INSTRUCTIONS
 #          for the usage of this file
 File:
-  Version: 1.1
+  Version: 1.2
   Language: Francais
 Messages:
     General:
@@ -16,6 +16,8 @@ Messages:
             NameTaken: '&cCe nom est déjà pris.'
             NoPermission: '&l&4Vous n''avez pas la permission.'
             NotMounted: '&cVous n''êtes pas monté.'
+            AlreadyMounted: '&cVous êtes déjà monté.'
+            PlayerAlreadyMounted: '&cLe joueur êtes déjà monté.'
             RequireSkyLightPlayer: '&cVous devez avoir accès aux lumières du ciel!'
             RequireSkyLightDestination: '&cIl ne doit pas y avoir d''obstacle entre le ciel et votre destination, sinon le dragon ne pourra pas atterrir!'
             RequiredItemMissing: '&l&4Vous n''avez pas l''item nécessaire pour utiliser ce plugin.'

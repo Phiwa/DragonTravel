@@ -14,7 +14,7 @@ public class Messages {
     // Messages
     private FileConfiguration messages;
     private File messagesFile;
-    private final double messagesVersion = 1.1;
+    private final double messagesVersion = 1.2;
 
     private String language = "";
 
@@ -166,6 +166,12 @@ public class Messages {
         	messages.set("Messages.General.Error.WorldOnBlacklistTo", "&cTarget world is on travel blacklist.");
         if (messages.get("Messages.General.Error.WorldOnBlacklistFrom") == null)
         	messages.set("Messages.General.Error.WorldOnBlacklistFrom", "&cCurrent world is on travel blacklist.");
+        
+        // 1.2
+        if (messages.get("Messages.General.Error.AlreadyMounted") == null)
+        	messages.set("Messages.General.Error.AlreadyMounted", "&cYou are already riding a dragon.");
+        if (messages.get("Messages.General.Error.PlayerAlreadyMounted") == null)
+        	messages.set("Messages.General.Error.PlayerAlreadyMounted", "&cThe player is already riding a dragon.");
         
         // Update the file version
         messages.set("File.Version", messagesVersion);
