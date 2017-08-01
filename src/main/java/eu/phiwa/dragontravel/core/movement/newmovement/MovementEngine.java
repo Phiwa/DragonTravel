@@ -13,8 +13,9 @@ public class MovementEngine {
 	public void startMovement(Player player, DTMovement movement) throws DragonException {
 
 		// TODO: Switch to movements for all RyeDragon before CB 1.12 as well
-		// TODO: Check wing-flapping workaround (water), should not spawn water all the time
-		// TODO: Check dismount location (distance to waypoint for dist), is currently to large
+		// TODO: Use function currently placed in TravelEngine to get correct yaw
+		// TODO: Check wing-flapping workaround (water) => should not spawn water all the flight
+		// TODO: Check dismount location (distance to waypoint for dismount) => is currently to large
 		
      	if (!DragonTravel.getInstance().getDragonManager().mount(player, true, DragonType.MOVEMENT)) {
      		System.out.println("Could not mount player...");
