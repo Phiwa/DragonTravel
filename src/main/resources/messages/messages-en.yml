@@ -97,7 +97,7 @@ Messages:
             SentPlayer: '&aYou were sent on the flight &f{flightname} &aby an admin.'
         Error:
             FlightDoesNotExist: '&cFlight does not exist.'
-            FlightAlreadyExists: '&cFlight allready exists.'
+            FlightAlreadyExists: '&cFlight already exists.'
             FlightIsInDifferentWorld: '&cFlight is in a different world.'
             AlreadyInFlightCreationMode: '&cYou already are in flight-creation mode.'
             NotInFlightCreationMode: '&cYou are not in flight-creation mode.'
