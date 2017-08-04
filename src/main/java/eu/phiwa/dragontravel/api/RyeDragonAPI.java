@@ -1,6 +1,7 @@
 package eu.phiwa.dragontravel.api;
 
 import eu.phiwa.dragontravel.core.DragonManager;
+import eu.phiwa.dragontravel.core.movement.newmovement.DTMovement;
 import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -55,7 +56,8 @@ public class RyeDragonAPI {
      * @param loc    The location to send them to.
      */
     public void sendOnTravel(Player player, Location loc) throws DragonException {
-        DragonManager.getDragonManager().getTravelEngine().toCoordinates(player, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), loc.getWorld().getName(), false);
+    	DTMovement movement = DTMovement.fromLocation(loc);
+    	DragonManager.getDragonManager().getMovementEngine().startMovement(player, movement);
     }
 
     /**
