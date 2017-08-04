@@ -6,10 +6,8 @@ import eu.phiwa.dragontravel.api.events.DragonPrePlayerMountEvent;
 import eu.phiwa.dragontravel.core.hooks.anticheat.CheatProtectionHandler;
 import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
 import eu.phiwa.dragontravel.core.movement.DragonType;
-import eu.phiwa.dragontravel.core.movement.flight.FlightEngine;
 import eu.phiwa.dragontravel.core.movement.newmovement.MovementEngine;
 import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
-import eu.phiwa.dragontravel.core.movement.travel.TravelEngine;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -28,8 +26,6 @@ public class DragonManager {
 
     private static DragonManager instance;
 
-    private FlightEngine flightEngine;
-    private TravelEngine travelEngine;
     private MovementEngine movementEngine;
 
     private final HashMap<UUID, Long> damageReceipts = new HashMap<>();
@@ -40,8 +36,6 @@ public class DragonManager {
 
     private DragonManager() {
         instance = this;
-        flightEngine = new FlightEngine();
-        travelEngine = new TravelEngine();
         movementEngine = new MovementEngine();
     }
 
@@ -305,22 +299,6 @@ public class DragonManager {
 
     public ConcurrentHashMap<String, StationaryDragon> getStationaryDragons() {
         return stationaryDragons;
-    }
-
-    public FlightEngine getFlightEngine() {
-        return flightEngine;
-    }
-
-    public void setFlightEngine(FlightEngine flightEngine) {
-        this.flightEngine = flightEngine;
-    }
-
-    public TravelEngine getTravelEngine() {
-        return travelEngine;
-    }
-
-    public void setTravelEngine(TravelEngine travelEngine) {
-        this.travelEngine = travelEngine;
     }
 
     public MovementEngine getMovementEngine() {
