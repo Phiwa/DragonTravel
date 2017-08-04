@@ -2,14 +2,12 @@ package eu.phiwa.dragontravel.core.listeners;
 
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
-import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 
 import eu.phiwa.dragontravel.api.DragonException;
 import eu.phiwa.dragontravel.core.DragonManager;
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.payment.ChargeType;
 import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
-import eu.phiwa.dragontravel.core.movement.DragonType;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
 import eu.phiwa.dragontravel.core.movement.newmovement.DTMovement;
 import eu.phiwa.dragontravel.core.movement.travel.Station;
