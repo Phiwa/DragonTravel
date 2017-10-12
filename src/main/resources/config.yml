@@ -74,6 +74,7 @@ CommandPrevent:
 # to a random destination within the borders you can set below.
 RandomDest:
     Name: '_random_'
+    World: 'world'
     Limits:
         X-Axis:
             Min: -100

@@ -61,7 +61,14 @@ public class DTMovement {
     	
     	// Get limits from random location
     	// TODO: Add config option
-    	String worldname = DragonTravel.getInstance().getConfig().getString("RandomDest.World");
+    	String worldname = DragonTravel.getInstance().getConfig().getString("RandomDest.World", "world");
+    	
+    	if(Bukkit.getServer().getWorld(worldname) == null) {
+    		System.err.println("[DragonTravel] Player '"+player+"' just tried to travel to a random location, but the world specified in the config, does not exist!");
+    		// TODO: Localize
+	        player.sendMessage("An error occured!");
+    	}
+    	
         int minX = DragonTravel.getInstance().getConfig().getInt("RandomDest.Limits.X-Axis.Min");
         int maxX = DragonTravel.getInstance().getConfig().getInt("RandomDest.Limits.X-Axis.Max");
         int minZ = DragonTravel.getInstance().getConfig().getInt("RandomDest.Limits.Z-Axis.Min");
