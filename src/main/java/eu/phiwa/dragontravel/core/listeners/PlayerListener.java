@@ -217,7 +217,7 @@ public class PlayerListener implements Listener {
                 }
 
                 // Player does not have the permission to use this function
-                if (!player.hasPermission("dt.ftravel")) {
+                if (!player.hasPermission("dt.fhome")) {
                     player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
                     return;
                 }
