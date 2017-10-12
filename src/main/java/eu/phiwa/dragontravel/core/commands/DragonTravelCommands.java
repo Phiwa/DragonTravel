@@ -2,6 +2,11 @@ package eu.phiwa.dragontravel.core.commands;
 
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.exceptions.TownyException;
+import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.Town;
+import com.palmergames.bukkit.towny.object.TownyUniverse;
 import com.sk89q.minecraft.util.commands.*;
 import eu.phiwa.dragontravel.api.DragonException;
 import eu.phiwa.dragontravel.core.DragonManager;
@@ -855,6 +860,43 @@ public final class DragonTravelCommands {
             }
         }
         
+        
+        
+        
+        
+        
+        // Check if player is a resident
+    	Resident res = null;
+        
+        try {
+			res = TownyUniverse.getDataSource().getResident(player.getName());
+		  
+	        if(res == null) {
+	        	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Towny.Error.NoTown"));
+	        	return;
+	        }
+        
+	        // Get player's town
+	        Town town = null;       
+            town = res.getTown();         
+
+	      	if(town == null){
+	      		player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Towny.Error.NoTown"));
+	        	return;
+	      	}
+	      	
+	      	// Get town's spawn
+	        Location tspawn = null;        
+			tspawn = town.getSpawn();
+	       
+	  		if(tspawn == null){
+	      		player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Towny.Error.NoTown"));
+	        	return;
+	      	}
+        }
+        catch(NotRegisteredException e1) {}
+        catch(TownyException e2) {}
+
         // Charge player
         if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOTOWNSPAWN, player)) 
             return;
