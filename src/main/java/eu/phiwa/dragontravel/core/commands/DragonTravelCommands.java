@@ -713,6 +713,12 @@ public final class DragonTravelCommands {
                 return;
             }
         }
+        
+        // Check if player has a home    	
+	    if (DragonTravel.getInstance().getDbHomesHandler().getHome(player.getUniqueId().toString()) == null) {
+	        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.NoHomeSet"));
+	        return;
+	    }
 
         // Charge player
         if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOHOME, player))
