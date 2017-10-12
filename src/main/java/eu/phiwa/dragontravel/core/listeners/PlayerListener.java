@@ -159,7 +159,7 @@ public class PlayerListener implements Listener {
                         e.printStackTrace();
                     }
                 }
-                // Trying to travel to a mnormal station, but it does not exist
+                // Trying to travel to a normal station, but it does not exist
                 else if (DragonTravel.getInstance().getDbStationsHandler().getStation(stationname) == null) {
                     player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Stations.Error.StationDoesNotExist").replace("{stationname}", stationname));
                     return;
