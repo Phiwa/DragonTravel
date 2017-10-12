@@ -128,13 +128,14 @@ public class DTMovement {
             }
         }
 	
+        // Check if player has a faction
+        if(!MPlayer.get(player).hasFaction()) {
+        	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NoFactionMember"));
+    		return null;
+        }
+        
 	    // Get player's faction
 	    Faction faction = MPlayer.get(player).getFaction();
-	
-	    if (faction.isNone()) {
-	        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NoFactionMember"));
-	        return null;
-	    }
 	
 	    // Check if faction has a home
 	    if (!faction.hasHome()) {
