@@ -1,5 +1,7 @@
 package eu.phiwa.dragontravel.core.commands;
 
+import com.massivecraft.factions.entity.Faction;
+import com.massivecraft.factions.entity.MPlayer;
 import com.sk89q.minecraft.util.commands.*;
 import eu.phiwa.dragontravel.api.DragonException;
 import eu.phiwa.dragontravel.core.DragonManager;
@@ -779,6 +781,18 @@ public final class DragonTravelCommands {
                 return;
             }
         }
+        
+        // Check if player has a faction
+        if(!MPlayer.get(player).hasFaction()) {
+        	player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NoFactionMember"));
+    		return;
+        }
+        
+	    // Check if faction has a home
+	    if (!MPlayer.get(player).getFaction().hasHome()) {
+	        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
+	        return;
+	    }
         
         // Charge player
         if (!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TOFACTIONHOME, player))
