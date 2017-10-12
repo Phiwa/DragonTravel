@@ -211,4 +211,9 @@ public class DTMovement {
     	return movement;
     }
 	
+    public static DTMovement fromWaypoints(String displayname, List<Waypoint> waypoints) {
+    	DTMovement movement = new DTMovement(displayname, waypoints);
+    	return movement;
+    }
+    
 }
