@@ -17,6 +17,13 @@ public class MovementEngine {
 		// TODO: Check wing-flapping workaround (water) => should not spawn water all the flight
 		// TODO: Check dismount location (distance to waypoint for dismount) => is currently to large
 		
+		// If there are not waypoints, exit
+		if(movement.getWaypoints().size() == 0) {
+			// TODO: Localize
+	        player.sendMessage("An error occured!");
+			return;
+		}
+		
      	if (!DragonTravel.getInstance().getDragonManager().mount(player, true, DragonType.MOVEMENT)) {
      		System.out.println("Could not mount player...");
             return;
