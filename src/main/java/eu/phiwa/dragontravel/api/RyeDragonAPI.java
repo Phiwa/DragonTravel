@@ -1,11 +1,13 @@
 package eu.phiwa.dragontravel.api;
 
 import eu.phiwa.dragontravel.core.DragonManager;
+import eu.phiwa.dragontravel.core.movement.flight.Waypoint;
 import eu.phiwa.dragontravel.core.movement.newmovement.DTMovement;
 import eu.phiwa.dragontravel.core.movement.stationary.StationaryDragon;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -56,7 +58,32 @@ public class RyeDragonAPI {
      * @param loc    The location to send them to.
      */
     public void sendOnTravel(Player player, Location loc) throws DragonException {
+    	
+    	if(player == null)
+    		throw new DragonException("Player does not exist!");
+    	
+    	if(loc == null)
+    		throw new DragonException("Invalid target location!");
+    	
     	DTMovement movement = DTMovement.fromLocation(loc);
+    	DragonManager.getDragonManager().getMovementEngine().startMovement(player, movement);
+    }
+    
+    /**
+     * Send a player to a specified location.
+     *
+     * @param player The player to send.
+     * @param loc    The location to send them to.
+     */
+    public void sendOnFlight(Player player, List<Waypoint> waypoints) throws DragonException {
+    	
+    	if(player == null)
+    		throw new DragonException("Player does not exist!");
+    	
+    	if(waypoints == null || waypoints.size() == 0)
+    		throw new DragonException("Not enough waypoints, at least one waypoint is needed!");
+    	    	
+    	DTMovement movement = DTMovement.fromWaypoints("SomeMovement", waypoints);
     	DragonManager.getDragonManager().getMovementEngine().startMovement(player, movement);
     }
 
