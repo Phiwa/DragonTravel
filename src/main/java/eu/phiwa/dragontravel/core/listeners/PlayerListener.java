@@ -224,52 +224,31 @@ public class PlayerListener implements Listener {
                 
                 // Reformat sign code to be able parse it
                 String factiontag = lines[2].replaceAll(ChatColor.WHITE.toString(), "");
-
-                Faction faction = null;
                 
-                // No faction tag is specified, use the player's faction
-                if (factiontag.isEmpty()) {
+                // Get player's faction
+                 Faction faction = MPlayer.get(player).getFaction();
 
-                	// Get player's faction
-                    faction = MPlayer.get(player).getFaction();
-
-                    // Player has no faction
-                    if (faction.isNone()) {
-                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NoFactionMember"));
-                        return;
-                    }
-
-                    // Player's faction has no home
-                    if (!faction.hasHome()) {
-                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
-                        return;
-                    }
-                        
+                // Player has no faction
+                if (faction.isNone()) {
+                    player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NoFactionMember"));
+                    return;
                 }
-                // Faction tag specified on sign, use this faction
-                else {
 
-                	// Get player's faction
-                    faction = MPlayer.get(player).getFaction();
-
-                    // Player has no faction
-                    if (faction.isNone()) {
-                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NoFactionMember"));
-                        return;
-                    }
-
-                    // Player's faction is not the one specified on the sign
-                    if (!faction.getName().equals(factiontag)) {
-                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NotYourFaction"));
-                        return;
-                    }
-
-                    // Specified faction has no home
-                    if (!faction.hasHome()) {
-                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
-                        return;
-                    }
+                // Sign is faction specific
+                if (!factiontag.isEmpty()) {
+	                // Player's faction is not the one specified on the sign
+	                if (!faction.getName().equals(factiontag)) {
+	                    player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.NotYourFaction"));
+	                    return;
+	                }
                 }
+
+                // Specified faction has no home
+                if (!faction.hasHome()) {
+                    player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Factions.Error.FactionHasNoHome"));
+                    return;
+                }
+                
                 
                 // Check if player is already riding a dragon
                 if (DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player)) {
