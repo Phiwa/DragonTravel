@@ -137,18 +137,18 @@ public class PlayerListener implements Listener {
                         }
                     }
                 	
-                	// If costs are provided on sign, use this amount
-                    if (lines[3].isEmpty()) {
-                    	
-                    	// Charge palyer custom amount on sign
-                        if(!DragonTravel.getInstance().getPaymentManager().chargePlayerCustom(ChargeType.TRAVEL_TORANDOM, player, Double.parseDouble(lines[3])))
-                            return;
-                    }
-                    // No costs provided on sign
-                    else {
+                	// No costs provided on sign
+                    if (lines[3].isEmpty()) {      
                     	
                     	// Charge player normal amount
                         if(!DragonTravel.getInstance().getPaymentManager().chargePlayer(ChargeType.TRAVEL_TORANDOM, player))
+                            return;                  	
+                    }
+                    // If costs are provided on sign, use this amount
+                    else {
+                    	
+                    	// Charge palyer custom amount on sign
+                        if(!DragonTravel.getInstance().getPaymentManager().chargePlayerCustom(ChargeType.TRAVEL_TORANDOM, player, Double.parseDouble(lines[3])))
                             return;
                     }
 
