@@ -8,6 +8,7 @@ import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.payment.ChargeType;
 import eu.phiwa.dragontravel.core.hooks.permissions.PermissionsHandler;
 import eu.phiwa.dragontravel.core.movement.DragonType;
+import eu.phiwa.dragontravel.nms.CompatibilityUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -87,7 +88,7 @@ public class PlayerListener implements Listener {
         if (event.getAction().equals(Action.LEFT_CLICK_BLOCK) || event.getAction().equals(Action.LEFT_CLICK_AIR))
             return;
 
-        if (block.getType() != Material.SIGN_POST && block.getType() != Material.WALL_SIGN)
+        if (!CompatibilityUtils.typeIsSign(block.getType()))
             return;
 
         Sign sign = (Sign) block.getState();

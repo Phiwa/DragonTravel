@@ -1,6 +1,7 @@
 package eu.phiwa.dragontravel.core.listeners;
 
 import eu.phiwa.dragontravel.core.DragonTravel;
+import eu.phiwa.dragontravel.nms.CompatibilityUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -82,8 +83,8 @@ public class BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onSignDestroyed(BlockBreakEvent event) {
-		if (event.getBlock().getType() != Material.SIGN_POST && event.getBlock().getType() != Material.WALL_SIGN)
-			return;
+        if (!CompatibilityUtils.typeIsSign(event.getBlock().getType()))
+            return;
 
 		Sign sign = (Sign) event.getBlock().getState();
 		String[] lines = sign.getLines();
