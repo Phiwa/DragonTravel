@@ -165,7 +165,7 @@ public class DragonManager {
 
             if (!includeStationaryDragons) {
                 for (StationaryDragon sDragon : stationaryDragons.values()) {
-                    if (sDragon.getDragon().getCustomName().equals(entity.getCustomName()))
+                    if (sDragon.getDragon().getCustomDragonName().equals(entity.getCustomName()))
                         continue entity_check;
                 }
             }

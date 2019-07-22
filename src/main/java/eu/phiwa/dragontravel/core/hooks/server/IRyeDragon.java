@@ -23,9 +23,9 @@ public interface IRyeDragon {
 
     Entity getEntity();
 
-    String getCustomName();
+    String getCustomDragonName();
 
-    void setCustomName(String name);
+    void setCustomDragonName(String name);
 
     void fixWings();
 

@@ -50,7 +50,7 @@ public class StationaryDragon implements ConfigurationSerializable {
     private IRyeDragon createDragon(boolean isNew) {
         final IRyeDragon dragon = DragonTravel.getInstance().getNmsHandler().getRyeDragon(toLocation());
         dragon.fixWings();
-        dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', displayName));
+        dragon.setCustomDragonName(ChatColor.translateAlternateColorCodes('&', displayName));
         dragon.setCustomNameVisible(true);
         if (isNew)
             DragonTravel.getInstance().getDbStatDragonsHandler().createStatDragon(name, this);

@@ -182,7 +182,7 @@ public class TravelEngine {
             return;
 
         IRyeDragon dragon = DragonTravel.getInstance().getDragonManager().getRiderDragons().get(player);
-        dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', destName));
+        dragon.setCustomDragonName(ChatColor.translateAlternateColorCodes('&', destName));
         dragon.startTravel(destination, interworld, dragonType);
 
     }

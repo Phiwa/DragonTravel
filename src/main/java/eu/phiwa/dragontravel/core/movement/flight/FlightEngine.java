@@ -77,7 +77,7 @@ public class FlightEngine {
         } else
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.getDisplayName()));
         IRyeDragon dragon = DragonTravel.getInstance().getDragonManager().getRiderDragons().get(player);
-        dragon.setCustomName(ChatColor.translateAlternateColorCodes('&', DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.getDisplayName())));
+        dragon.setCustomDragonName(ChatColor.translateAlternateColorCodes('&', DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Flights.Successful.StartingFlight").replace("{flightname}", flight.getDisplayName())));
         dragon.startFlight(flight, DragonType.MANNED_FLIGHT);
     }
 

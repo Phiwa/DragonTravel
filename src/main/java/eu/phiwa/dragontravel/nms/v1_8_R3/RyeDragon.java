@@ -466,4 +466,15 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         }
     }
 
+    public String getCustomDragonName() {
+        // TODO: Solve name collision (getCustomName <> getCustomDragonName)
+        // Call native method
+        return getCustomName();
+    }
+
+    public void setCustomDragonName(String name) {
+        // TODO: Solve name collision (getCustomName <> getCustomDragonName)
+        // Call native method
+        setCustomName(name);
+    }
 }
