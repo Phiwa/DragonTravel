@@ -86,6 +86,14 @@
     </build>
     <repositories>
     
+        <!--
+            Repository containing all dependencies all fallback in case other repositories go down.
+        -->
+        <repository>
+            <id>phiwa-repo</id>
+            <url>http://maven.phiwa.eu</url>
+        </repository>
+
     	<!--
     		fr.neatmonster.nocheatplus
     	-->
@@ -93,8 +101,8 @@
             <id>md-5 releases</id>
             <url>http://repo.md-5.net/content/repositories/releases</url>
         </repository>
-        
-<!-- 
+
+<!-- NOT USED
         <repository>
             <id>Spigot-releases</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
@@ -104,20 +112,20 @@
 		<!--
 			com.herocraftonline.heroes.Heroes
 			net.milkbowl.vault.Vault
-		--> 
+		-->
         <repository>
             <id>yeti-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
 
-<!-- OFFLINE 
+<!-- OFFLINE
         <repository>
             <id>overcast releases</id>
             <url>http://repo.oc.tc/content/repositories/public/</url>
         </repository>
 -->
 
-<!-- 
+<!-- CURRENTLY NOT USED, metrics still available
         <repository>
             <id>Plugin Metrics</id>
             <url>http://repo.mcstats.org/content/repositories/public</url>
@@ -132,15 +140,16 @@
             <url>http://empcraft.com/maven2/</url>
         </repository>
 
-		<!-- 
+		<!--
 			com.massivecraft.factions
 			com.massivecraft.massivecore
 		-->
+<!-- OFFLINE
         <repository>
             <id>massive-repo</id>
             <url>https://repo.dustplanet.de/artifactory/ext-release-local</url>
         </repository>
-
+-->
 		<!--
 			net.gravitydevelopment.updater.updater
 		-->
@@ -148,161 +157,114 @@
             <id>gravity-repo</id>
             <url>http://repo.gravitydevelopment.net/</url>
         </repository>
-   
-        <!--  	
+
+        <!--
         	org.bukkit.craftbukkit
         -->
-<!--
+<!-- NOT USED
         <repository>
             <id>elmakers-repo</id>
             <url>http://maven.elmakers.com/repository/</url>
         </repository>
 -->
-        <!-- 
+        <!--
         	com.sk89q.command-framework-bukkit
         -->
+<!-- OFFLINE
         <repository>
             <id>extension-ws-repo</id>
             <url>https://repo.extension.ws/content/repositories/public/</url>
-        </repository>    
-        
+        </repository>
+-->
     </repositories>
     <dependencies>
+
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit-1.13.2</artifactId>
+            <version>craftbukkit_v1_13_R2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit-1.13</artifactId>
+            <version>craftbukkit_v1_13_R1</version>
+        </dependency>
 
 		<dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.12</artifactId>
             <version>craftbukkit_v1_12_R1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit_v1_12_R1.jar</systemPath>
         </dependency>
 
     	<dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.11</artifactId>
             <version>craftbukkit_v1_11_R1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit_v1_11_R1.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.10</artifactId>
             <version>craftbukkit_v1_10_R1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit_v1_10_R1.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.9.4</artifactId>
             <version>craftbukkit_v1_9_R2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit_v1_9_R2.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.9.2</artifactId>
             <version>craftbukkit_v1_9_R1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit_v1_9_R1.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.8.8</artifactId>
             <version>craftbukkit_v1_8_R3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit_v1_8_R3.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.8.3</artifactId>
-            <version>craftbukkit_v1_8_R1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit_v1_8_R1.jar</systemPath>
+            <version>craftbukkit_v1_8_R2</version>
         </dependency>
 
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit-1.7.9-R0.4</artifactId>
+            <artifactId>craftbukkit-1.8.1</artifactId>
+            <version>craftbukkit_v1_8_R1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit-1.7.10</artifactId>
             <version>craftbukkit_v1_7_R4</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit_v1_7_R4.jar</systemPath>
         </dependency>
 
 	    <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit-1.7.9-R0.3</artifactId>
+            <artifactId>craftbukkit-1.7.9</artifactId>
             <version>craftbukkit_v1_7_R3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/craftbukkit_v1_7_R3.jar</systemPath>
-        </dependency>           
+        </dependency>
 
-<!--         
-    	<dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.11-R0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.10-R0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.9.4-R0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.9.2-R0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.8.3-R0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.8-R0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.7.10-R0.1-SNAPSHOT</version>
-        </dependency>      
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.7.9-R0.3-SNAPSHOT</version>
-        </dependency>
--->
-        
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.5</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>com.herocraftonline.heroes</groupId>
             <artifactId>Heroes</artifactId>
             <version>1.5.3</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>factions</artifactId>
@@ -315,25 +277,23 @@
             <artifactId>massivecore</artifactId>
             <version>2.8.21</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.palmergames.bukkit</groupId>
             <artifactId>towny</artifactId>
             <version>0.84.0.9</version>
         </dependency>
-        
+
         <dependency>
             <groupId>fr.neatmonster</groupId>
             <artifactId>nocheatplus</artifactId>
             <version>3.13.7-RC</version>
         </dependency>
-        
+
         <dependency>
             <groupId>net.gravitydevelopment.anticheat</groupId>
             <artifactId>AntiCheat</artifactId>
-            <version>AntiCheatPlus.jar</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/AntiCheatPlus.jar</systemPath>
+            <version>2.1.4</version>
         </dependency>
 
         <dependency>
@@ -346,6 +306,7 @@
                     <artifactId>bukkit</artifactId>
                 </exclusion>
             </exclusions>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
