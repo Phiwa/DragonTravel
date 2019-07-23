@@ -1,11 +1,11 @@
 How to contribute
 =================
 
-* (Fork and) clone this repository
-* Adjust the code to add features or fix bugs
-* Build the plugin (see section below)
-* Test the changes!
-* Open a pull request and describe your changes
+1. (Fork and) clone this repository
+2. Adjust the code to add features or fix bugs
+3. Build the plugin (see section below)
+4. Test the changes!
+5. Open a pull request and describe your changes
 
 How to build this project
 =========================
