@@ -183,6 +183,17 @@ public class TravelEngine {
 
         IRyeDragon dragon = DragonTravel.getInstance().getDragonManager().getRiderDragons().get(player);
         dragon.setCustomDragonName(ChatColor.translateAlternateColorCodes('&', destName));
+        
+        // Fix player got fall damage by temporary subtract 5 from station height
+        // TODO: We need to discuss about how to better fix this in future
+        // Replace dragon by other mob can make this fix invalid and get player killed
+        // This will only happen if station recorded above height 5
+        double fixFallingDamageHeight = destination.getY();
+        if (fixFallingDamageHeight >= 5)
+        {
+            destination.setY(fixFallingDamageHeight - 5);
+        }
+        
         dragon.startTravel(destination, interworld, dragonType);
 
     }
