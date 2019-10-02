@@ -216,7 +216,7 @@ public class DragonManager {
             // Teleport player to a safe location
             Location saveTeleportLoc = getSafeLandingLoc(player.getLocation());
 
-            // Async method to remove invulnerable status after few seconds
+            // Async method use invulnerable status to prevent player falling damage
             //
             // This hack have conflict with this situation:
             // If a player have invulnerable set to true for unknown reason, and not gonna to set false back in a while,
