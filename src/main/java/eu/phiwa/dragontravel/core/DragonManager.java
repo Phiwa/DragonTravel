@@ -216,6 +216,27 @@ public class DragonManager {
             // Teleport player to a safe location
             Location saveTeleportLoc = getSafeLandingLoc(player.getLocation());
 
+            // Set player invulnerable to avoid fall damage
+            player.setInvulnerable(true);
+
+            // Async method to remove invulnerable status after few seconds
+
+            // Passing player into a runnable in line requires final variable
+            final Player finalPlayer = player;
+            Runnable playerRemoveInvulnerable = new Runnable() {
+                @Override
+                public void run() {
+                    finalPlayer.setInvulnerable(false);
+                }
+            };
+
+            // Fire the async method
+            Bukkit.getScheduler().runTaskLaterAsynchronously(
+                DragonTravel.getInstance(),
+                playerRemoveInvulnerable,
+                60    // 3 seconds
+            );
+
             // Eject player and remove dragon from world
             entity.eject();
             entity.remove();
