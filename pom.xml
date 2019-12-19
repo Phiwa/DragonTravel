@@ -179,6 +179,18 @@
     </repositories>
     <dependencies>
 
+        <!--
+          IMPORTANT NOTE :
+          PLEASE BUILD SPIGOT WITH BUILDTOOL AND PUT IT IN THE lib/ FOLDER !
+        -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.15-R0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Spigot.jar</systemPath>
+        </dependency>
+
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.13.2</artifactId>
