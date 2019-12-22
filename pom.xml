@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.phiwa</groupId>
     <artifactId>DragonTravel</artifactId>
-    <version>01.007.02</version>
+    <version>01.007.03</version>
     <build>
         <resources>
             <resource>
@@ -87,7 +87,7 @@
     <repositories>
     
         <!--
-            Repository containing all dependencies all fallback in case other repositories go down.
+            Repository containing all dependencies as a fallback in case other repositories go down.
         -->
         <repository>
             <id>phiwa-repo</id>
@@ -179,16 +179,10 @@
     </repositories>
     <dependencies>
 
-        <!--
-          IMPORTANT NOTE :
-          PLEASE BUILD SPIGOT WITH BUILDTOOL AND PUT IT IN THE lib/ FOLDER !
-        -->
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.15-R0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Spigot.jar</systemPath>
+            <artifactId>spigot-v1_15_R1</artifactId>
+            <version>v1_15_R1</version>
         </dependency>
 
         <dependency>
