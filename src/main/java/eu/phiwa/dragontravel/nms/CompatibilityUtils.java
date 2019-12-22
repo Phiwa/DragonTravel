@@ -31,7 +31,7 @@ public class CompatibilityUtils {
     public static boolean typeIsSign(Material t) {
         // Nasty trick to maintain compatibility with newer versions where the Material enum's fields might change
         //   e.g. SIGN_POST => LEGACY_SIGN_POST in CB v1_13_R1
-        System.out.println( t ); // debug
+//        System.out.println( t ); // debug
         return signTypes.contains(t.name());
     }
 }
