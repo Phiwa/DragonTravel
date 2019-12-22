@@ -46,6 +46,7 @@ public class DragonTravel extends JavaPlugin {
     private CommandHelpTopic help;
 
     private IEntityRegister entityRegister;
+    private boolean isEntityRegistered;
     private PaymentManager paymentManager;
     private DragonManager dragonManager;
     private FlightEditor flightEditor;
@@ -105,6 +106,14 @@ public class DragonTravel extends JavaPlugin {
         commands = new CustomCommandsManager();
         final CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, commands);
         cmdRegister.register(DragonTravelCommands.DragonTravelParentCommand.class);
+        instance = this;
+
+        nmsHandler = new NMSHandler();
+        entityRegister = nmsHandler.getEntityRegister();
+        dragonManager = DragonManager.getDragonManager();
+        flightEditor = new FlightEditor();
+
+        isEntityRegistered = entityRegister.registerEntity();
     }
 
     @Override
@@ -122,15 +131,8 @@ public class DragonTravel extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        instance = this;
-
-        nmsHandler = new NMSHandler();
-        entityRegister = nmsHandler.getEntityRegister();
-        dragonManager = DragonManager.getDragonManager();
-        flightEditor = new FlightEditor();
-        
-        if (!entityRegister.registerEntity()) return;
-        
+        if (!isEntityRegistered)
+            return;
 
         setupListeners();
         setupFileHandlers();

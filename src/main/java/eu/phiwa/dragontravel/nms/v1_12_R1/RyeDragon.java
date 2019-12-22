@@ -203,13 +203,14 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         double myX = locX;
         double myY = locY;
         double myZ = locZ;
+        double maxDiff = DragonTravel.getInstance().getConfigHandler().getSpeed() + 1;
 
         if (finalMove) {
-        	// Go down to destination
-            if ((int) locY > (int) toLoc.getY())
+            // Go down to destination
+            if ((int) locY > (int) toLoc.getY() + maxDiff)
                 myY -= DragonTravel.getInstance().getConfigHandler().getSpeed();
-            // Go up to destination
-            else if ((int) locY < (int) toLoc.getY())
+                // Go up to destination
+            else if ((int) locY < (int) toLoc.getY() - maxDiff)
                 myY += DragonTravel.getInstance().getConfigHandler().getSpeed();
             // Reached destination
             else {
@@ -265,7 +266,6 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 
         // For higher travel speeds the accuracy for dismounts needs 
         // to be decreased to prevent dragons from getting stuck
-        double maxDiff = DragonTravel.getInstance().getConfigHandler().getSpeed() + 1;
         if (Math.abs(myZ - (int) toLoc.getZ()) <= maxDiff
     	 && Math.abs(myX - (int) toLoc.getX()) <= maxDiff) {
             finalMove = true;

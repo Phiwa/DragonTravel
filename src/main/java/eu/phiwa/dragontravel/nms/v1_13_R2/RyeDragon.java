@@ -1,16 +1,20 @@
-package eu.phiwa.dragontravel.nms.v1_13_R1;
+// Copy of v1_13_R1
+// TODO During the flight the dragon freezes (not always).
+//  The player need to rejoin to unfreeze self.
+//  I don't know why, sry.
+package eu.phiwa.dragontravel.nms.v1_13_R2;
 
 import eu.phiwa.dragontravel.core.DragonTravel;
 import eu.phiwa.dragontravel.core.hooks.server.IRyeDragon;
 import eu.phiwa.dragontravel.core.movement.DragonType;
 import eu.phiwa.dragontravel.core.movement.flight.Flight;
-import net.minecraft.server.v1_13_R1.EntityEnderDragon;
-import net.minecraft.server.v1_13_R1.World;
+import net.minecraft.server.v1_13_R2.EntityEnderDragon;
+import net.minecraft.server.v1_13_R2.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_13_R1.util.CraftChatMessage;
-import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R2.util.CraftChatMessage;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -23,15 +27,15 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
     private final int travelY = DragonTravel.getInstance().getConfigHandler().getTravelHeight();
 
     private DragonType dragonType = DragonType.STATIONARY;
-    
+
     private Player rider;
-    
+
     // Source location
     private Location fromLoc;
-    
+
     // Target location
     private Location toLoc;
-    
+
     // Flight
     private Flight flight;
     private int currentWayPointIndex;
@@ -49,9 +53,9 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         this(loc, ((CraftWorld) loc.getWorld()).getHandle());
     }
 
-    public RyeDragon(Location loc, World notchWorld) { 	
-    	super(notchWorld);
-    	setPosition(loc.getX(), loc.getY(), loc.getZ());
+    public RyeDragon(Location loc, World notchWorld) {
+        super(notchWorld);
+        setPosition(loc.getX(), loc.getY(), loc.getZ());
         yaw = loc.getYaw() + 180;
         pitch = 0f;
         while (yaw > 360)
@@ -65,7 +69,7 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         super(notchWorld);
     }
 
-    
+
     /**
      * This method is a natural method of the Enderdragon extended by the RyeDragon.
      * It's fired when the dragon moves and fires the travel-method again to keep the dragon flying.
@@ -118,8 +122,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
             default:
                 break;
         }
-    }    
-    
+    }
+
     /**
      * Controls the dragon
      */
@@ -207,15 +211,15 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         double maxDiff = DragonTravel.getInstance().getConfigHandler().getSpeed() + 1;
 
         if (finalMove) {
-        	// Go down to destination
+            // Go down to destination
             if ((int) locY > (int) toLoc.getY() + maxDiff)
                 myY -= DragonTravel.getInstance().getConfigHandler().getSpeed();
-            // Go up to destination
+                // Go up to destination
             else if ((int) locY < (int) toLoc.getY() - maxDiff)
                 myY += DragonTravel.getInstance().getConfigHandler().getSpeed();
-            // Reached destination
+                // Reached destination
             else {
-            	// Interworld travel, dragon reached temporary destination in target world
+                // Interworld travel, dragon reached temporary destination in target world
                 if (!getEntity().getWorld().getName().equals(toLoc.getWorld().getName())) {
                     this.rider = (Player) getEntity().getPassenger();
                     midLocB.getChunk().load();
@@ -245,10 +249,10 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                     return;
                 }
             }
-            
+
             // Move player to new location on tick
             setPosition(myX, myY, myZ);
-            
+
             return;
         }
 
@@ -268,10 +272,10 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
         // For higher travel speeds the accuracy for dismounts needs 
         // to be decreased to prevent dragons from getting stuck
         if (Math.abs(myZ - (int) toLoc.getZ()) <= maxDiff
-    	 && Math.abs(myX - (int) toLoc.getX()) <= maxDiff) {
+                && Math.abs(myX - (int) toLoc.getX()) <= maxDiff) {
             finalMove = true;
         }
-        setPosition(myX, myY, myZ);        
+        setPosition(myX, myY, myZ);
     }
 
     /**
@@ -488,27 +492,27 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 
     // Old (until CB 1_12_R1), now only a compatibility-wrapper for our code
     public void setCustomDragonName(String name) {
-        net.minecraft.server.v1_13_R1.IChatBaseComponent nameInNewType = CraftChatMessage.fromString(name)[0]; // convert from "name"
+        net.minecraft.server.v1_13_R2.IChatBaseComponent nameInNewType = CraftChatMessage.fromString(name)[0]; // convert from "name"
 
         // Call new method
         setCustomName(nameInNewType);
     }
 
     // New (in CB 1_13_R1)
-    public void setCustomName(net.minecraft.server.v1_13_R1.IChatBaseComponent name) {
+    public void setCustomName(net.minecraft.server.v1_13_R2.IChatBaseComponent name) {
         super.setCustomName(name);
     }
 
     // Old (until CB 1_12_R1), now only a compatibility-wrapper for our code
     public String getCustomDragonName() {
         // Call new method
-        net.minecraft.server.v1_13_R1.IChatBaseComponent nameInNewType = getCustomName();
+        net.minecraft.server.v1_13_R2.IChatBaseComponent nameInNewType = getCustomName();
         String nameAsString = CraftChatMessage.fromComponent(nameInNewType); // convert from "nameInNewType"
         return nameAsString;
     }
 
     // New (in CB 1_13_R1)
-    public net.minecraft.server.v1_13_R1.IChatBaseComponent getCustomName() {
+    public net.minecraft.server.v1_13_R2.IChatBaseComponent getCustomName() {
         return super.getCustomName();
     }
 
