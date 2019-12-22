@@ -53,7 +53,7 @@ Installation
 Contribute
 ----------
 
-Feel free to contribute by forking the project on `GitHub <https://github.com/Phiwa/DragonTravel>`_
+Feel free to contribute by creating pull requests to the project on `GitHub <https://github.com/Phiwa/DragonTravel>`_
 
 
 Support
@@ -73,7 +73,7 @@ License
 
 The project is licensed under the BSD license.
 
-  | *Copyright (c) 2011-2019, Philipp "Phiwa" Wagner & Oliver Hayes (Seyah) All rights reserved.*
+  | *Copyright (c) 2011-2019, Philipp "Phiwa" Vesper & Oliver Hayes (Seyah) All rights reserved.*
   | *Redistribution and use in source and binary forms, with or without modification,*
   | *are permitted provided that the following conditions are met:*
   |
