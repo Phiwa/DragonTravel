@@ -5,7 +5,7 @@
 **Free BSD License**
 
 
-Copyright (c) 2011-2019, Philipp "*Phiwa*" Wagner & Oliver Hayes (*Seyah*)
+Copyright (c) 2011-2019, Philipp "*Phiwa*" Vesper & Oliver Hayes (*Seyah*)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
