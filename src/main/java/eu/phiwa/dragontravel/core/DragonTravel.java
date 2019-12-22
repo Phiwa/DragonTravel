@@ -46,6 +46,7 @@ public class DragonTravel extends JavaPlugin {
     private CommandHelpTopic help;
 
     private IEntityRegister entityRegister;
+    private boolean isEntityRegistered;
     private PaymentManager paymentManager;
     private DragonManager dragonManager;
     private FlightEditor flightEditor;
@@ -112,7 +113,7 @@ public class DragonTravel extends JavaPlugin {
         dragonManager = DragonManager.getDragonManager();
         flightEditor = new FlightEditor();
 
-        if (!entityRegister.registerEntity()) return;
+        isEntityRegistered = entityRegister.registerEntity();
     }
 
     @Override
@@ -130,6 +131,9 @@ public class DragonTravel extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if (!isEntityRegistered)
+            return;
+
         setupListeners();
         setupFileHandlers();
         CheatProtectionHandler.setup();
