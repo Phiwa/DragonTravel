@@ -105,6 +105,14 @@ public class DragonTravel extends JavaPlugin {
         commands = new CustomCommandsManager();
         final CommandsManagerRegistration cmdRegister = new CommandsManagerRegistration(this, commands);
         cmdRegister.register(DragonTravelCommands.DragonTravelParentCommand.class);
+        instance = this;
+
+        nmsHandler = new NMSHandler();
+        entityRegister = nmsHandler.getEntityRegister();
+        dragonManager = DragonManager.getDragonManager();
+        flightEditor = new FlightEditor();
+
+        if (!entityRegister.registerEntity()) return;
     }
 
     @Override
@@ -122,16 +130,6 @@ public class DragonTravel extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        instance = this;
-
-        nmsHandler = new NMSHandler();
-        entityRegister = nmsHandler.getEntityRegister();
-        dragonManager = DragonManager.getDragonManager();
-        flightEditor = new FlightEditor();
-        
-        if (!entityRegister.registerEntity()) return;
-        
-
         setupListeners();
         setupFileHandlers();
         CheatProtectionHandler.setup();
