@@ -32,6 +32,9 @@
 *.iws
 .idea/
 
+# VSCode
+/.vscode
+
 /src/main/resources/achievement
 /src/main/resources/lang
 
