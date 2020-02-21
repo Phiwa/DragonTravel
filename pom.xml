@@ -186,6 +186,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-v1_14_R1</artifactId>
+            <version>v1_14_R1</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit-1.13.2</artifactId>
             <version>craftbukkit_v1_13_R2</version>
