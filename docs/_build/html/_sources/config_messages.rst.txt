@@ -22,7 +22,7 @@ On startup, DragonTravel automatically loads the file with the name
 
 where
 
-    ''<lang>'
+    '<lang>'
 
 is the tag of the desired language specified in the config.
 

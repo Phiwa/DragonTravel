@@ -96,12 +96,12 @@ Layout 2 (Universal)
 
 This type of sign brings all players who click it to their faction's home. If a player is not a member of any faction he will get an error message.
 
-.. image:: /images/sign_faction_specific_create.png
+.. image:: /images/sign_faction_universal_create.png
    :height: 500px
    :width: 500px
    :align: center
 
-.. image:: /images/sign_faction_specific_layout.png
+.. image:: /images/sign_faction_universal_layout.png
    :height: 500px
    :width: 500px
    :align: center

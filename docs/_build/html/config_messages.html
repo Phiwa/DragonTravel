@@ -13,43 +13,40 @@
 
   
   
+  
+  
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="DragonTravel 01.007 documentation" href="index.html"/>
-        <link rel="next" title="API" href="api.html"/>
-        <link rel="prev" title="FAQ" href="faq.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="api.html" />
+    <link rel="prev" title="FAQ" href="faq.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -84,7 +81,10 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="flights_and_travels.html">Travels &amp; Flights</a></li>
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="permissions.html">Permissions</a></li>
@@ -107,34 +107,54 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">DragonTravel</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DragonTravel</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>Config &amp; Messages</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Config &amp; Messages</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/config_messages.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/config_messages.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -155,36 +175,37 @@
 <p>The messages file gives you the possibility to customize the messages DragonTravel prints to players.
 On startup, DragonTravel automatically loads the file with the name</p>
 <blockquote>
-<div>&#8216;messages-&lt;lang&gt;.yml&#8217;</div></blockquote>
+<div>‘messages-&lt;lang&gt;.yml’</div></blockquote>
 <p>where</p>
 <blockquote>
-<div>&#8216;&#8217;&lt;lang&gt;&#8217;</div></blockquote>
+<div>‘&lt;lang&gt;’</div></blockquote>
 <p>is the tag of the desired language specified in the config.</p>
 <p>DragonTravel ships with predefined language files for</p>
 <blockquote>
 <div><ul class="simple">
-<li>English (&#8216;en&#8217;)</li>
-<li>German (&#8216;de&#8217;)</li>
-<li>French (&#8216;fr&#8217;)</li>
+<li>English (‘en’)</li>
+<li>German (‘de’)</li>
+<li>French (‘fr’)</li>
 </ul>
 </div></blockquote>
 <p>If you set one of those tags in the config file, DragonTravel creates those message files on startup if they do not exist.</p>
-<p>If you do not want to use one of those files, you are free to create an own file with a different tag in the name (e.g. <em>&#8216;messages-stuff.yml&#8217;</em>)
-and set this tag (<em>&#8216;stuff&#8217;</em>) in the config, so DragonTravel loads your file on startup.</p>
+<p>If you do not want to use one of those files, you are free to create an own file with a different tag in the name (e.g. <em>‘messages-stuff.yml’</em>)
+and set this tag (<em>‘stuff’</em>) in the config, so DragonTravel loads your file on startup.</p>
 </div>
 </div>
 
 
            </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="faq.html" class="btn btn-neutral" title="FAQ" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="faq.html" class="btn btn-neutral float-left" title="FAQ" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -193,11 +214,11 @@ and set this tag (<em>&#8216;stuff&#8217;</em>) in the config, so DragonTravel l
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Phiwa.
+        &copy; Copyright 2020, Phiwa
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -210,35 +231,15 @@ and set this tag (<em>&#8216;stuff&#8217;</em>) in the config, so DragonTravel l
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'01.007',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>
