@@ -430,7 +430,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
                     counter++;
                 }
                 for (int z = -1; z <= 1; z++) {
-                    if (z == 0) continue;
+                                        if (z == 0 && y == 0) continue;
+
                     m[counter] = loc.clone().add(0, -y, z).getBlock().getType();
                     md[counter] = loc.clone().add(0, -y, z).getBlock().getState().getData();
                     loc.clone().add(0, -y, z).getBlock().setType(Material.BARRIER);
