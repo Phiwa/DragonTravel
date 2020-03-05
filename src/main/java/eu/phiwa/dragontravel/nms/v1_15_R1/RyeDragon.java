@@ -349,18 +349,8 @@ public class RyeDragon extends EntityEnderDragon implements IRyeDragon {
 	 */
 
     public void fixWings() {
-        if (rider != null)
-            ((LivingEntity) getEntity()).damage(2, rider);
-        Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                if (dragonType.equals(DragonType.STATIONARY)) {
-                    WingFixerTask wfTask = new WingFixerTask();
-                    wfTask.setId(Bukkit.getScheduler().scheduleSyncRepeatingTask(DragonTravel.getInstance(), wfTask, 1L, 21L));
-                }
-            }
-        }, 1L);
-
+        // Artifact of old workaround for wings flipping really fast.
+        // Method stub is required for interface.
     }
 
     public void setDragonType(DragonType dragonType) {
