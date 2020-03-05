@@ -201,6 +201,9 @@ public class DragonManager {
         IRyeDragon dragon = riderDragons.get(player);
         riderDragons.remove(player);
 
+        // Prevent fall damage when dismounting
+        player.setNoDamageTicks(60); 
+
         // Interworld (dismount before teleport)
         if (dismountAtCurrentLocation == null) {
             Location startLoc = riderStartPoints.get(player);
