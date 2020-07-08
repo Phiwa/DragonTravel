@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.phiwa</groupId>
     <artifactId>DragonTravel</artifactId>
-    <version>01.007.06</version>
+    <version>01.007.07</version>
     <build>
         <resources>
             <resource>
@@ -135,11 +135,12 @@
 		<!--
 			com.palmergames.bukkit.towny
 		-->
+<!-- OFFLINE
         <repository>
             <id>empcraft-repo</id>
             <url>http://empcraft.com/maven2/</url>
         </repository>
-
+-->
 		<!--
 			com.massivecraft.factions
 			com.massivecraft.massivecore
@@ -178,6 +179,12 @@
 -->
     </repositories>
     <dependencies>
+    
+    	<dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-v1_16_R1</artifactId>
+            <version>v1_16_R1</version>
+        </dependency>
 
         <dependency>
             <groupId>org.spigotmc</groupId>
