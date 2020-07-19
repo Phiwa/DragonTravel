@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.phiwa</groupId>
     <artifactId>DragonTravel</artifactId>
-    <version>01.007.07</version>
+    <version>01.007.08</version>
     <build>
         <resources>
             <resource>
@@ -85,98 +85,10 @@
         </plugins>
     </build>
     <repositories>
-    
-        <!--
-            Repository containing all dependencies as a fallback in case other repositories go down.
-        -->
         <repository>
             <id>phiwa-repo</id>
             <url>http://maven.phiwa.eu</url>
         </repository>
-
-    	<!--
-    		fr.neatmonster.nocheatplus
-    	-->
-        <repository>
-            <id>md-5 releases</id>
-            <url>http://repo.md-5.net/content/repositories/releases</url>
-        </repository>
-
-<!-- NOT USED
-        <repository>
-            <id>Spigot-releases</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </repository>
--->
-
-		<!--
-			com.herocraftonline.heroes.Heroes
-			net.milkbowl.vault.Vault
-		-->
-        <repository>
-            <id>yeti-repo</id>
-            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
-        </repository>
-
-<!-- OFFLINE
-        <repository>
-            <id>overcast releases</id>
-            <url>http://repo.oc.tc/content/repositories/public/</url>
-        </repository>
--->
-
-<!-- CURRENTLY NOT USED, metrics still available
-        <repository>
-            <id>Plugin Metrics</id>
-            <url>http://repo.mcstats.org/content/repositories/public</url>
-        </repository>
--->
-
-		<!--
-			com.palmergames.bukkit.towny
-		-->
-<!-- OFFLINE
-        <repository>
-            <id>empcraft-repo</id>
-            <url>http://empcraft.com/maven2/</url>
-        </repository>
--->
-		<!--
-			com.massivecraft.factions
-			com.massivecraft.massivecore
-		-->
-<!-- OFFLINE
-        <repository>
-            <id>massive-repo</id>
-            <url>https://repo.dustplanet.de/artifactory/ext-release-local</url>
-        </repository>
--->
-		<!--
-			net.gravitydevelopment.updater.updater
-		-->
-        <repository>
-            <id>gravity-repo</id>
-            <url>http://repo.gravitydevelopment.net/</url>
-        </repository>
-
-        <!--
-        	org.bukkit.craftbukkit
-        -->
-<!-- NOT USED
-        <repository>
-            <id>elmakers-repo</id>
-            <url>http://maven.elmakers.com/repository/</url>
-        </repository>
--->
-        <!--
-        	com.sk89q.command-framework-bukkit
-        -->
-<!-- OFFLINE
-        <repository>
-            <id>extension-ws-repo</id>
-            <url>https://repo.extension.ws/content/repositories/public/</url>
-        </repository>
--->
     </repositories>
     <dependencies>
     
@@ -298,14 +210,14 @@
         </dependency>
 
         <dependency>
-            <groupId>com.palmergames.bukkit</groupId>
-            <artifactId>towny</artifactId>
+            <groupId>com.palmergames.bukkit.towny</groupId>
+            <artifactId>Towny</artifactId>
             <version>0.84.0.9</version>
         </dependency>
 
         <dependency>
-            <groupId>fr.neatmonster</groupId>
-            <artifactId>nocheatplus</artifactId>
+            <groupId>fr.neatmonster.nocheatplus</groupId>
+            <artifactId>NoCheatPlus</artifactId>
             <version>3.13.7-RC</version>
         </dependency>
 
@@ -337,7 +249,7 @@
 
         <dependency>
             <groupId>net.gravitydevelopment.updater</groupId>
-            <artifactId>updater</artifactId>
+            <artifactId>Updater</artifactId>
             <version>2.4</version>
         </dependency>
 
