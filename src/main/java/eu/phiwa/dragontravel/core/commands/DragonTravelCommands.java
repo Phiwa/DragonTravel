@@ -447,7 +447,17 @@ public final class DragonTravelCommands {
 		            sender.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.NoPermission"));
 		            return;
 		        }
-		        player = (Player) sender;
+                player = (Player) sender;
+                
+                // Check if admin configured travels to be only started from signs
+                if(DragonTravel.getInstance().getConfigHandler().isOnlysigns()) {
+                    // Check if player is an admin an can therefore ignore the limit
+                    if (!player.hasPermission("dt.admin.*")) {
+                        player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.Travels.Error.OnlySigns"));
+                        return;
+                    }
+                }
+
 		        sender = null;
 	        	break;
 	        case 2:
