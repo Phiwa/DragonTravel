@@ -265,7 +265,7 @@ public class PlayerListener implements Listener {
             return;
         List<String> commands = DragonTravel.getInstance().getConfig().getStringList("CommandPrevent");
         for(String command : commands)
-            if(command.contains(event.getMessage()))
+            if(event.getMessage().contains(command)) {
                 event.setCancelled(true);
     }
 
