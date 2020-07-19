@@ -23,6 +23,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
 
 import java.util.List;
+import java.util.logging.Level;
 
 
 public class PlayerListener implements Listener {
@@ -267,6 +268,10 @@ public class PlayerListener implements Listener {
         for(String command : commands)
             if(event.getMessage().contains(command)) {
                 event.setCancelled(true);
+                event.getPlayer().sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Error.CommandPrevented"));
+                Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Player '" + event.getPlayer().getDisplayName() + "' tried to use the command '"
+                                       + event.getMessage() + "' while riding a dragon. The command was cancelled.");
+            }
     }
 
     /** 

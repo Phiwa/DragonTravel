@@ -1,7 +1,7 @@
 #                 INSTRUCTIONS
 #          for the usage of this file
 File:
-  Version: 1.1
+  Version: 1.2
   Language: Francais
 Messages:
     General:
@@ -26,7 +26,8 @@ Messages:
             WorldNotFound: '&cImpossible de trouver le monde spécifié.'
             WorldOnBlacklistTo: '&cLes dragons ne peuvent vous emmener dans le monde de destination.'
             WorldOnBlacklistFrom: '&cIl est interdit de sortir de ce monde en dragon.'
-            StatDragonNotExists: '&cAucun dragon stationnaire avec le nom &f{name}&c n'existe.' 
+            StatDragonNotExists: '&cAucun dragon stationnaire avec le nom &f{name}&c n''existe.' 
+            CommandPrevented: '&cCette commande n''est pas autorisée lorsque l''on chevauche un dragon.'
     Payment:
         Free: '&aPas de taxe pour vous, allez-y!'
         Resources:

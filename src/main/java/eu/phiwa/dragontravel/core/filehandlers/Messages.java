@@ -14,7 +14,7 @@ public class Messages {
     // Messages
     private FileConfiguration messages;
     private File messagesFile;
-    private final double messagesVersion = 1.1;
+    private final double messagesVersion = 1.2;
 
     private String language = "";
 
@@ -165,10 +165,16 @@ public class Messages {
         if (messages.get("Messages.General.Error.WorldOnBlacklistTo") == null)
         	messages.set("Messages.General.Error.WorldOnBlacklistTo", "&cTarget world is on travel blacklist.");
         if (messages.get("Messages.General.Error.WorldOnBlacklistFrom") == null)
-        	messages.set("Messages.General.Error.WorldOnBlacklistFrom", "&cCurrent world is on travel blacklist.");
+            messages.set("Messages.General.Error.WorldOnBlacklistFrom", "&cCurrent world is on travel blacklist.");
+        
+        // 1.2
+        if (messages.get("Messages.General.Error.CommandPrevented") == null)
+            messages.set("Messages.General.Error.CommandPrevented", "&cThis command is not allowed while riding a dragon.");
         
         // Update the file version
         messages.set("File.Version", messagesVersion);
+
+        Bukkit.getLogger().log(Level.INFO, "[DragonTravel] Updated messages file to " + messagesVersion);
     }
 
 

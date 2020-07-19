@@ -36,7 +36,7 @@
 #       and please report all bugs you find, otherwise I can't fix them. ;)
 
 File:
-    Version: 1.1
+    Version: 1.2
     Language: 'English'
 
 Messages:
@@ -64,6 +64,7 @@ Messages:
             WorldOnBlacklistTo: '&cTarget world is on travel blacklist.'
             WorldOnBlacklistFrom: '&cCurrent world is on travel blacklist.'
             StatDragonNotExists: '&cThere is no stationary dragon &f{name}&c.'
+            CommandPrevented: '&cThis command is not allowed while riding a dragon.'
     Payment:
         Free: '&aNo charge for you, hop on!'
         Resources:
