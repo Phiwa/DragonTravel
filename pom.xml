@@ -96,10 +96,6 @@
             <groupId>org.spigot</groupId>
             <artifactId>spigot-v1_16_R2</artifactId>
             <version>v1_16_R2</version>
-            <!-- I had to do this, because it doesn't exists on Phiwa's repo, and we can't use Spigot's because there is not NMS there -->
-            <!-- Please build Spigot 1.16.2 with BuildTool and place it in ./lib, thanks -->
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/spigot-1.16.2.jar</systemPath>
         </dependency>
 
         <dependency>
