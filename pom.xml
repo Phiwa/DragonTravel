@@ -87,7 +87,7 @@
     <repositories>
         <repository>
             <id>phiwa-repo</id>
-            <url>http://maven.phiwa.eu</url>
+            <url>https://maven.phiwa.eu</url>
         </repository>
     </repositories>
     <dependencies>
