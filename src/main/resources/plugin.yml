@@ -4,7 +4,7 @@ authors: [Phiwa, x3nec]
 version: ${project.version}
 load: POSTWORLD
 api-version: 1.13 # We need this in order to not get legacy block Materials
-softdepend: [Vault, AntiCheat, NoCheatPlus, Factions, Heroes, Towny]
+softdepend: [Vault, AntiCheat, NoCheatPlus, Factions, Heroes, Towny, Multiverse-Core]
 permissions:
     dt.*:
         default: op
