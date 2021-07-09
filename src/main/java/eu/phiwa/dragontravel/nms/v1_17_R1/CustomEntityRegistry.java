@@ -1,5 +1,5 @@
 /*
-This is just a copy/paste of NMS for v1_16_R1.
+This is just a copy/paste of NMS for v1_17_R1.
 */
 
 package eu.phiwa.dragontravel.nms.v1_17_R1;
