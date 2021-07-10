@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.phiwa</groupId>
     <artifactId>DragonTravel</artifactId>
-    <version>01.007.11</version>
+    <version>01.008.1</version>
     <build>
         <resources>
             <resource>
@@ -86,11 +86,21 @@
     </build>
     <repositories>
         <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
             <id>phiwa-repo</id>
             <url>https://maven.phiwa.eu</url>
         </repository>
     </repositories>
     <dependencies>
+
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.17.1-R0.1-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.spigot</groupId>
