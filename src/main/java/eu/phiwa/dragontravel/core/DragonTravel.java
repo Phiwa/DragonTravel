@@ -24,6 +24,8 @@ import eu.phiwa.dragontravel.core.movement.travel.Home;
 import eu.phiwa.dragontravel.core.movement.travel.Station;
 import net.gravitydevelopment.updater.Updater;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -122,7 +124,24 @@ public class DragonTravel extends JavaPlugin {
     	// Do not unload database if plugin failed to load
     	// because if unsupported server version
     	if(dbStatDragonsHandler != null)
-    		dbStatDragonsHandler.unloadStationaryDragons();      
+    		dbStatDragonsHandler.unloadStationaryDragons();
+
+    	for (World world : Bukkit.getWorlds()) {
+            for (Entity entity : world.getEntities()) {
+                // Check if EnderDragon
+                if (!(entity instanceof EnderDragon))
+                    continue;
+                if (entity.getPassengers().size() > 0) {
+                    Bukkit.getLogger().log(Level.INFO, String.format("Deleting Dragon: %s %s", entity.getName(), entity.getUniqueId()));
+                    Bukkit.getLogger().log(Level.INFO, String.format("Rider: %s", entity.getPassengers()));
+                    DragonManager.getDragonManager().removeRiderAndDragon(entity, false);
+                } else {
+                    Bukkit.getLogger().log(Level.INFO, String.format("Deleting Dragon: %s %s", entity.getName(), entity.getUniqueId()));
+                    Bukkit.getLogger().log(Level.INFO, String.format("Dragon has no Rider: %s", entity.getPassengers()));
+                    entity.remove();
+                }
+            }
+        }
         
         Bukkit.getLogger().log(Level.INFO, "[DragonTravel] -----------------------------------------------");
         Bukkit.getLogger().log(Level.INFO, String.format("[DragonTravel] Successfully disabled %s %s", getDescription().getName(), getDescription().getVersion()));
