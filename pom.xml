@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.phiwa</groupId>
     <artifactId>DragonTravel</artifactId>
-    <version>01.008.03</version>
+    <version>01.008.02</version>
     <build>
         <resources>
             <resource>
