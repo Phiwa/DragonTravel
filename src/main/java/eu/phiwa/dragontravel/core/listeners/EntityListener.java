@@ -13,6 +13,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.spigotmc.event.entity.EntityDismountEvent;
 
 public class EntityListener implements Listener {
 
@@ -65,5 +66,17 @@ public class EntityListener implements Listener {
 		IRyeDragon dragon = DragonTravel.getInstance().getDragonManager().getRiderDragons().get(player);
 		dragon.getEntity().remove();
 		DragonTravel.getInstance().getDragonManager().getRiderDragons().remove(player);
+	}
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerUnmount(EntityDismountEvent event) {
+
+		if (!(event.getEntity() instanceof Player))
+			return;
+
+		Player player = (Player) event.getEntity();
+
+		if (!DragonTravel.getInstance().getDragonManager().getRiderDragons().containsKey(player))
+			return;
+		event.setCancelled(true);
 	}
 }
