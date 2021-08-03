@@ -252,6 +252,11 @@ public class PlayerListener implements Listener {
         if (player.hasPermission("dt.ignoredamagerestriction"))
             return;
 
+        if (DragonManager.getDragonManager().isInDismountedList(player)) {
+            event.setCancelled(true);
+            DragonManager.getDragonManager().removeFromDismountedList(player);
+        }
+
         DragonTravel.getInstance().getDragonManager().getDamageReceipts().put(player.getUniqueId(), System.currentTimeMillis());
     }
 
