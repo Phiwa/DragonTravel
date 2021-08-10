@@ -254,8 +254,6 @@ public class DragonManager {
         CheatProtectionHandler.unexemptPlayerFromCheatChecks(player);
     }
 
-
-
     /**
      * Removes the given Dragon-Entity and its rider from the list of riders,
      * teleports the rider to a safe location on the ground below the specified location and removes the dragon from the world.
@@ -303,8 +301,6 @@ public class DragonManager {
 		return false;
     }
 
-
-
     public HashMap<UUID, Long> getDamageReceipts() {
         return damageReceipts;
     }
@@ -346,7 +342,11 @@ public class DragonManager {
     }
 
     public Runnable removeFromDismountedList(Player player) {
-        this.dismountedPlayer.remove(player);
+        try {
+            this.dismountedPlayer.remove(player);
+        } catch (UnsupportedOperationException e) {
+            return null;
+        }
         return null;
     }
 
