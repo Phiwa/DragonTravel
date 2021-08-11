@@ -18,7 +18,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,6 +37,7 @@ public class DragonManager {
     private final ConcurrentHashMap<Player, IRyeDragon> riderDragons = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Player, Location> riderStartPoints = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, StationaryDragon> stationaryDragons = new ConcurrentHashMap<>();
+    private List<Player> dismountedPlayer = new ArrayList<Player>();
 
     private DragonManager() {
         instance = this;
@@ -211,7 +214,9 @@ public class DragonManager {
             entity.remove();
             player.teleport(startLoc);
             DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, startLoc);
+            this.dismountedPlayer.add(player);
             Bukkit.getPluginManager().callEvent(event);
+            Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), DragonManager.getDragonManager().removeFromDismountedList(player), 1L);
             return;
         }
         // Normal dismount
@@ -228,7 +233,9 @@ public class DragonManager {
             player.teleport(saveTeleportLoc);
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.DismountedHere"));
             DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, saveTeleportLoc);
+            this.dismountedPlayer.add(player);
             Bukkit.getPluginManager().callEvent(event);
+            Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), DragonManager.getDragonManager().removeFromDismountedList(player), 1L);
         }
         // Back to start of travel
         else {
@@ -238,12 +245,15 @@ public class DragonManager {
             player.teleport(startLoc);
             player.sendMessage(DragonTravel.getInstance().getMessagesHandler().getMessage("Messages.General.Successful.DismountedToStart"));
             DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, startLoc);
+            this.dismountedPlayer.add(player);
             Bukkit.getPluginManager().callEvent(event);
+            Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), DragonManager.getDragonManager().removeFromDismountedList(player), 1L);
+
         }
 
         CheatProtectionHandler.unexemptPlayerFromCheatChecks(player);
     }
-    
+
     /**
      * Removes the given Dragon-Entity and its rider from the list of riders,
      * teleports the rider to a safe location on the ground below the specified location and removes the dragon from the world.
@@ -325,6 +335,19 @@ public class DragonManager {
 
     public ConcurrentHashMap<Player, Location> getRiderStartPoints() {
         return riderStartPoints;
+    }
+
+    public boolean isInDismountedList(Player player) {
+        return this.dismountedPlayer.contains(player);
+    }
+
+    public Runnable removeFromDismountedList(Player player) {
+        try {
+            this.dismountedPlayer.remove(player);
+        } catch (UnsupportedOperationException e) {
+            return null;
+        }
+        return null;
     }
 
     public static DragonManager getDragonManager() {

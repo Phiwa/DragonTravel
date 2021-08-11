@@ -249,6 +249,11 @@ public class PlayerListener implements Listener {
 
         Player player = (Player) event.getEntity();
 
+        if (DragonManager.getDragonManager().isInDismountedList(player)) {
+            event.setCancelled(true);
+            DragonManager.getDragonManager().removeFromDismountedList(player);
+        }
+
         if (player.hasPermission("dt.ignoredamagerestriction"))
             return;
 
