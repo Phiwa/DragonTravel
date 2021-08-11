@@ -248,10 +248,14 @@ public class PlayerListener implements Listener {
             return;
 
         Player player = (Player) event.getEntity();
-
-        if (DragonManager.getDragonManager().isInDismountedList(player)) {
-            event.setCancelled(true);
-            DragonManager.getDragonManager().removeFromDismountedList(player);
+        // If a player received fall damage, this might be fall damage caused by the dismount process
+        if(event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+            // If the player received fall damage, check if he just dismounted
+            if (DragonManager.getDragonManager().isInDismountedList(player)) {
+                // If it was dismount damage, prevent it
+                event.setCancelled(true);
+                DragonManager.getDragonManager().removeFromDismountedList(player);
+            }
         }
 
         if (player.hasPermission("dt.ignoredamagerestriction"))

@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.phiwa</groupId>
     <artifactId>DragonTravel</artifactId>
-    <version>01.008.02</version>
+    <version>01.008.03</version>
     <build>
         <resources>
             <resource>
@@ -54,7 +54,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>1.4</version>
+                <version>3.0.0</version>
                 <configuration>
                     <artifactSet>
                         <includes>
@@ -97,9 +97,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <groupId>org.spigot</groupId>
+            <artifactId>spigot-v1_17_R1</artifactId>
+            <version>v1_17_R1</version>
         </dependency>
 
         <dependency>

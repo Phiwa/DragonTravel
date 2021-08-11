@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class DragonManager {
 
@@ -37,7 +38,7 @@ public class DragonManager {
     private final ConcurrentHashMap<Player, IRyeDragon> riderDragons = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Player, Location> riderStartPoints = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, StationaryDragon> stationaryDragons = new ConcurrentHashMap<>();
-    private List<Player> dismountedPlayer = new ArrayList<Player>();
+    private List<Player> dismountedPlayer = new CopyOnWriteArrayList<Player>();
 
     private DragonManager() {
         instance = this;
@@ -172,8 +173,6 @@ public class DragonManager {
                         continue entity_check;
                 }
             }
-            System.out.println("-----");
-
 
             // Check if EnderDragon has a player as passenger
             if (entity.getPassenger() instanceof LivingEntity)
@@ -216,7 +215,7 @@ public class DragonManager {
             DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, startLoc);
             this.dismountedPlayer.add(player);
             Bukkit.getPluginManager().callEvent(event);
-            Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), DragonManager.getDragonManager().removeFromDismountedList(player), 1L);
+            Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), DragonManager.getDragonManager().removeFromDismountedList(player), 40L);
             return;
         }
         // Normal dismount
@@ -235,7 +234,7 @@ public class DragonManager {
             DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, saveTeleportLoc);
             this.dismountedPlayer.add(player);
             Bukkit.getPluginManager().callEvent(event);
-            Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), DragonManager.getDragonManager().removeFromDismountedList(player), 1L);
+            Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), DragonManager.getDragonManager().removeFromDismountedList(player), 40L);
         }
         // Back to start of travel
         else {
@@ -247,7 +246,7 @@ public class DragonManager {
             DragonPlayerDismountEvent event = new DragonPlayerDismountEvent(player, dragon, startLoc);
             this.dismountedPlayer.add(player);
             Bukkit.getPluginManager().callEvent(event);
-            Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), DragonManager.getDragonManager().removeFromDismountedList(player), 1L);
+            Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), DragonManager.getDragonManager().removeFromDismountedList(player), 40L);
 
         }
 
@@ -268,6 +267,9 @@ public class DragonManager {
             player = getRiderByEntity(entity);
         IRyeDragon dragon = riderDragons.get(player);
         riderDragons.remove(player);
+
+        Bukkit.getScheduler().runTaskLater(DragonTravel.getInstance(), DragonManager.getDragonManager().removeFromDismountedList(player), 40L);
+
         entity.eject();
         entity.remove();
 
@@ -342,12 +344,7 @@ public class DragonManager {
     }
 
     public Runnable removeFromDismountedList(Player player) {
-        try {
-            this.dismountedPlayer.remove(player);
-        } catch (UnsupportedOperationException e) {
-            return null;
-        }
-        return null;
+        return () -> getDragonManager().dismountedPlayer.remove(player);
     }
 
     public static DragonManager getDragonManager() {
