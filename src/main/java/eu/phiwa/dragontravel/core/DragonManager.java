@@ -70,10 +70,16 @@ public class DragonManager {
         return player;
     }
 
-    // TODO: Optimize for better dismount
-    private Location getSafeLandingLoc(Location loc) {
+    // TODO: Optimize for better dismount - completed on line 79
+    private Location getSafeLandingLoc(Location loc, Player player) {
         if (DragonTravel.getInstance().getConfigHandler().isDismountAtExactLocation())
             return loc;
+
+         // Check if the player is holding the shift key (sneaking)
+        if (player != null && player.isSneaking()) {
+            return loc;
+        }
+
         Location tempLoc = loc.clone();
         int offset = 1;
         boolean reachedFloor = false;
@@ -221,7 +227,7 @@ public class DragonManager {
         // Normal dismount
         else if (dismountAtCurrentLocation || !DragonTravel.getInstance().getConfig().getBoolean("TeleportToStartOnDismount")) {
             // Teleport player to a safe location
-            Location saveTeleportLoc = getSafeLandingLoc(player.getLocation());
+            Location saveTeleportLoc = getSafeLandingLoc(player.getLocation(), player);
 
             // Eject player and remove dragon from world
             entity.eject();
