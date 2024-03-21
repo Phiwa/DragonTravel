@@ -229,6 +229,35 @@ public class DragonManager {
             // Teleport player to a safe location
             Location saveTeleportLoc = getSafeLandingLoc(player.getLocation(), player);
 
+            // Async method use invulnerable status to prevent player falling damage
+            //
+            // This hack have conflict with this situation:
+            // If a player have invulnerable set to true for unknown reason, and not gonna to set false back in a while,
+            // then once this player take a travel, he will unexpected lose invulnerable after dismount.
+            //
+            // Only do things if player not already in invulnerable status
+            if (player.isInvulnerable() == false) {
+
+                // Set player invulnerable to avoid fall damage
+                player.setInvulnerable(true);
+
+                // Passing player into a runnable in line requires final variable
+                final Player finalPlayer = player;
+                Runnable playerRemoveInvulnerable = new Runnable() {
+                    @Override
+                    public void run() {
+                        finalPlayer.setInvulnerable(false);
+                    }
+                };
+
+                // Fire the async method
+                Bukkit.getScheduler().runTaskLaterAsynchronously(
+                        DragonTravel.getInstance(),
+                        playerRemoveInvulnerable,
+                        60    // 3 seconds
+                );
+            }
+
             // Eject player and remove dragon from world
             entity.eject();
             entity.remove();
